@@ -1,0 +1,19 @@
+# Mock files
+internal_mock/cache/
+internal_mock/config/
+internal_mock/result/
+
+# Build packages (take up too much space)
+*.rpm
+*.srpm
+
+# Build directories
+BUILD/
+PACKAGES/
+
+# Editor backup files
+# vim
+.*.swp
+# Emacs, KDevelop, GEdit, etc.
+*.*~
+*~
