@@ -1,0 +1,19 @@
+#! /bin/sh
+
+if test $# != 1; then
+  echo "usage: update-gio-modules host_triplet" 1>&2
+  exit 1
+fi
+
+echo "Warning: update-gio-modules is deprecated and will be removed in glib2-2.28.0"
+
+umask 022
+
+case "$host" in
+  alpha*|ia64*|powerpc64*|ppc64*|s390x*|sparc64*|x86_64*)
+    /usr/bin/gio-querymodules-64 /usr/lib64/gio/modules
+    ;;
+  *)
+    /usr/bin/gio-querymodules-32 /usr/lib/gio/modules
+    ;;
+esac
