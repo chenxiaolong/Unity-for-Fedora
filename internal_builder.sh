@@ -4,6 +4,10 @@
 
 GENERATED_RPMS=$(rpmspec -q --rpms ${SPECFILE})
 GENERATED_SRPM=$(rpmspec -q --srpm ${SPECFILE})
+# spectool doesn't like using just the filename
+for i in $(spectool -l -A "$(dirname ${0})/${SPECFILE}" | awk '{print $2}'); do
+  SOURCES+="${i##*/} "
+done
 FEDORA_VER="$(grep '%fedora' /etc/rpm/macros.dist | awk '{print $2}')"
 
 ##########################
@@ -15,12 +19,12 @@ create_dirs() {
   # in a single directory, which prevents having duplicate copies of files
   # and allow the directories to be cleaned up easily.
 
-  for i in BUILD PACKAGES; do
+  for i in SOURCES PACKAGES; do
     if [ ! -d ${i} ]; then
       mkdir ${i}
     fi
   done
-  for i in BUILD/BUILD BUILD/BUILDROOT PACKAGES/RPMS PACKAGES/SRPMS; do
+  for i in SOURCES/BUILD SOURCES/BUILDROOT PACKAGES/RPMS PACKAGES/SRPMS; do
     if [ ! -d ${i} ]; then
       mkdir ${i}
     fi
@@ -28,19 +32,32 @@ create_dirs() {
 }
 
 download_sources() {
-  spectool -g "${SPECFILE}"
+  pushd SOURCES > /dev/null
+  spectool -g "../${SPECFILE}"
+  popd > /dev/null
+}
+
+symlink_sources() {
+  for i in ${SOURCES}; do
+    # For files included in git, symlink them in SOURCES/
+    if [ -f "${i}" ]; then
+      if [ -f "SOURCES/${i}" ]; then
+        ln -s "$(dirname ${0})/${i}" SOURCES/
+      fi
+    fi
+  done
 }
 
 rpmbuild_here() {
   # Build packages in source directory to prevent pollution of the regular
   # rpmbuild directories
   rpmbuild \
-    --define "_builddir     $(pwd)/BUILD/BUILD" \
-    --define "_buildrootdir $(pwd)/BUILD/BUILDROOT" \
-    --define "_rpmdir       $(pwd)/PACKAGES/RPMS" \
-    --define "_sourcedir    $(pwd)" \
-    --define "_specdir      $(pwd)" \
-    --define "_srcrpmdir    $(pwd)/PACKAGES/SRPMS" \
+    --define "_builddir     $(pwd)/SOURCES/BUILD"     \
+    --define "_buildrootdir $(pwd)/SOURCES/BUILDROOT" \
+    --define "_rpmdir       $(pwd)/PACKAGES/RPMS"     \
+    --define "_sourcedir    $(pwd)/SOURCES"           \
+    --define "_specdir      $(pwd)"                   \
+    --define "_srcrpmdir    $(pwd)/PACKAGES/SRPMS"    \
     ${@}
 }
 
@@ -57,6 +74,7 @@ show_deps_msg() {
 make_srpm() {
   create_dirs
   download_sources
+  symlink_sources
   rpmbuild_here -bs "${SPECFILE}"
   if [ "${?}" != "0" ]; then
     show_deps_msg
@@ -66,6 +84,7 @@ make_srpm() {
 make_rpm() {
   create_dirs
   download_sources
+  symlink_sources
   rpmbuild_here -bb "${SPECFILE}" || show_deps_msg
   if [[ "$(uname -m)" == "x86_64" ]] && [[ "${MULTILIB}" == true ]]; then
     mock_here --taget=i686 -r 
@@ -85,23 +104,35 @@ make_all() {
 # BEGIN: Clean options #
 ########################
 # Clean up build directory
+clean_build() {
+  rm -rvf SOURCES/BUILD{,ROOT}
+}
+
+# Remove entire source directory
 clean_src() {
-  rm -rvf "$(dirname ${0})"/BUILD/BUILD{,ROOT}
+  clean_build
+
+  # Remove source symlinks
+  for i in ${SOURCES}; do
+    if [ -e "SOURCES/${i}" ]; then
+      rm "SOURCES/${i}"
+    fi
+  done
   # Only remove BUILD if there's no other files in it
-  find "$(dirname ${0})" -maxdepth 1 -type d -name BUILD -empty -delete
-  if [ -d "$(dirname ${0})/BUILD" ]; then
-    echo "BUILD directory not empty: not removing it"
+  find . -maxdepth 1 -type d -name SOURCES -empty -delete
+  if [ -d SOURCES ]; then
+    echo "SOURCES directory not empty: not removing it"
   fi
 }
 
 # Remove RPM's
 clean_rpm() {
-  rm -rvf "$(dirname ${0})"/PACKAGES/RPMS
+  rm -rvf PACKAGES/RPMS
 }
 
 # Remove SRPM's
 clean_srpm() {
-  rm -rvf "$(dirname ${0})"/PACKAGES/SRPMS
+  rm -rvf PACKAGES/SRPMS
 }
 
 # Remove build directories and (S)RPM's
@@ -110,8 +141,8 @@ clean_all() {
   clean_rpm
   clean_srpm
   # If PACKAGES is empty, then remove it too
-  find "$(dirname ${0})" -maxdepth 1 -type d -name PACKAGES -empty -delete
-  if [ -d "$(dirname ${0})/PACKAGES" ]; then
+  find . -maxdepth 1 -type d -name PACKAGES -empty -delete
+  if [ -d PACKAGES ]; then
     echo "PACKAGES directory not empty: not removing it"
   fi
 }
@@ -148,7 +179,18 @@ mock_config_set_dirs() {
 
 mock_config_copy_default() {
   # Copy default mock configuration files
-  cp /etc/mock/fedora-${FEDORA_VER}-{i386,x86_64}.cfg config/
+  case $(uname -m) in
+  x86_64)
+    # Add 32 bit mock config, so that multilib packages can be built
+    local CONFIG=("fedora-${FEDORA_VER}-x86_64" "fedora-${FEDORA_VER}-i386")
+    ;;
+  i686)
+    local CONFIG=("fedora-${FEDORA_VER}-i386")
+    ;;
+  esac
+  for i in ${CONFIG[@]}; do
+    cp /etc/mock/${i}.cfg config/
+  done
 }
 
 mock_config_symlink_logging() {
@@ -229,14 +271,13 @@ mock_verify() {
   local MISSING_CHROOTS=""
   for i in ${CONFIG[@]}; do
     if [ ! -d "cache/${i}" ]; then
-      MISSING_CHROOTS+="${i}"
+      MISSING_CHROOTS+="${i}\n"
     fi
   done
   if [ ! -z "${MISSING_CHROOTS}" ]; then
     echo ""
     echo "The following mock chroots are missing:"
-    echo "  ${MISSING_CHROOTS}"
-    echo ""
+    echo -e "  ${MISSING_CHROOTS}"
     echo -n "Reinitializing mock..."
     mock_initialize
     echo "DONE"
@@ -265,7 +306,7 @@ mock_verify() {
 
   # Problem: Incorrect/Missing directories in site-defaults.cfg
   # Fix: Run mock_config_set_dirs
-  BAD_SITE_DEFAULTS_CFG=false
+  local BAD_SITE_DEFAULTS_CFG=false
   if [ ! -f config/site-defaults.cfg ]; then
     echo ""
     echo "The mock directories configuration file is missing:"
@@ -277,16 +318,17 @@ mock_verify() {
     OUTPUT+="(site-defaults.cfg in $(pwd)/config)\n"
     # We need to change to the directory first and then run pwd to ensure
     # that there are no extra '.' or '..'
-    ORIGINAL_BASEDIR=$(cd $(grep 'config.*basedir' site-defaults.cfg | \
-                       awk -F\' '{print $4}'); pwd)
-    ORIGINAL_CACHEDIR=$(cd $(grep 'config.*cache_topdir' site-defaults.cfg | \
-                        awk -F\' '{print $4}'); pwd)
+    ORIGINAL_BASEDIR=$(grep 'config.*basedir' config/site-defaults.cfg | \
+                       awk -F\' '{print $4}')
+    ORIGINAL_CACHEDIR=$(grep 'config.*cache_topdir' config/site-defaults.cfg | \
+                        awk -F\' '{print $4}')
 
-    if [ "x${ORIGINAL_BASEDIR}" != "x$(pwd)/result" ]; then
+    if [ "x$(cd ${ORIGINAL_BASEDIR} 2>/dev/null && pwd)" != "x$(pwd)/result" ]; then
       OUTPUT+="  Original base directory: ${ORIGINAL_BASEDIR}\n"
       OUTPUT+="  Actual base directory: $(pwd)/result\n"
       BAD_SITE_DEFAULTS_CFG=true
-    elif [ "x${ORIGINAL_CACHEDIR}" != "x$(pwd)/cache" ]; then
+    fi
+    if [ "x$(cd ${ORIGINAL_CACHEDIR} 2>/dev/null && pwd)" != "x$(pwd)/cache" ]; then
       OUTPUT+="  Original cache directory: ${ORIGINAL_CACHEDIR}\n"
       OUTPUT+="  Actual cache directory: $(pwd)/cache\n"
       BAD_SITE_DEFAULTS_CFG=true
@@ -304,9 +346,23 @@ mock_verify() {
   
   # Problem: Missing configuration files
   # Fix: Run mock_config_copy_default
-  if [ ! -f config/fedora-${FEDORA_VER}-i386.cfg ] || \
-    [ ! -f config/fedora-${FEDORA_VER}-x86_64.cfg ]; then
-    echo "The mock configuration files are missing."
+  case $(uname -m) in
+  x86_64)
+    local CONFIG=("fedora-${FEDORA_VER}-x86_64" "fedora-${FEDORA_VER}-i386")
+    ;;
+  i686)
+    local CONFIG=("fedora-${FEDORA_VER}-i386")
+    ;;
+  esac
+  local MISSING_CONFIG=""
+  for i in ${CONFIG[@]}; do
+    if [ ! -f config/${i}.cfg ]; then
+      MISSING_CONFIG+="  config/${i}.cfg\n"
+    fi
+  done
+  if [ ! -z "${MISSING_CONFIG}" ]; then
+    echo "The following mock configuration files are missing:"
+    echo -e "${MISSING_CONFIG}"
     echo -n "Copying default configuration files..."
     mock_config_copy_default
     echo "DONE"
@@ -315,7 +371,11 @@ mock_verify() {
   # Problem: logging.ini configuration file symlink is missing
   # Fix: Run mock_config_symlink_logging
   if [ ! -e config/logging.ini ]; then
+    echo "The config/logging.ini symlink is missing."
+    echo ""
+    echo -n "Recreating symlink..."
     mock_config_symlink_logging
+    echo "DONE"
   fi
   
   # After all the checks...
@@ -384,10 +444,13 @@ build() {
     ;;
   ## Clean options ##
   clean)
-    clean_src
+    clean_build
     ;;
   clean-src)
     clean_src
+    ;;
+  clean-build)
+    clean_build
     ;;
   clean-rpm)
     clean_rpm
@@ -430,8 +493,9 @@ build() {
     echo "  check        - Run rpmlint on generated RPM's and SRPM's"
     echo ""
     echo "Clean Options:"
-    echo "  clean        - Same as clean-src"
-    echo "  clean-src    - Remove build directories (BUILD)"
+    echo "  clean        - Same as clean-build"
+    echo "  clean-src    - Remove entire source/build directory (SOURCES)"
+    echo "  clean-build  - Remove build directories (SOURCES/BUILD{,ROOT})"
     echo "  clean-rpm    - Remove built RPM's (PACKAGES/RPMS)"
     echo "  clean-srpm   - Remove generated SRPM's (PACKAGES/SRPMS)"
     echo "  clean-all    - Run clean-src, clean-rpm, and clean-rpm"
