@@ -8,7 +8,7 @@ internal_mock/result/
 *.srpm
 
 # Build directories
-BUILD/
+SOURCES/
 PACKAGES/
 
 # Editor backup files
