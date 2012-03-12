@@ -1,8 +1,11 @@
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
+
+# Not using F17 yet -> no /lib* to /usr/lib*
+%define libdir /%{_lib}
 
 Summary:	A library of handy utility functions
 Name:		glib2-ubuntu
-Version:	2.31.16
+Version:	2.31.20
 Release:	1.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -12,8 +15,9 @@ Source0:	http://download.gnome.org/sources/glib/2.31/glib-%{version}.tar.xz
 Source1:	https://launchpad.net/ubuntu/+archive/primary/+files/glib2.0_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 ##
-Provides:	glib2 = %{version}
-Obsoletes:	glib2 <= %{version}
+Provides:	glib2 = %{version}-%{release}
+Provides:	glib2(%{_arch}) = %{version}-%{release}
+Obsoletes:	glib2(%{_arch}) <= %{version}-%{release}
 ##
 
 BuildRequires:	pkgconfig
@@ -47,8 +51,8 @@ Summary:	A library of handy utility functions
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
-Provides:	glib2-devel = %{version}
-Obsoletes:	glib2-devel <= %{version}
+Provides:	glib2-devel(%{_arch}) = %{version}
+Obsoletes:	glib2-devel(%{_arch}) <= %{version}
 
 %description devel
 The glib2-devel package includes the header files for the GLib library.
@@ -60,8 +64,8 @@ Summary:	A library of handy utility functions
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
-Provides:	glib2-static = %{version}
-Obsoletes:	glib2-static <= %{version}
+Provides:	glib2-static(%{_arch}) = %{version}
+Obsoletes:	glib2-static(%{_arch}) <= %{version}
 
 %description static
 The glib2-static package includes static libraries of the GLib library.
@@ -189,8 +193,12 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 
 
 %changelog
+* Mon Mar 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.31.20-1.0ubuntu2
+- Version 2.31.20
+- Ubuntu release 0ubuntu2
+
 * Thu Feb 09 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.31.16-1.0ubuntu1
-- Initial release of glib2-ubuntu based off of F17's glib2 sources
+- Initial release of glib2-ubuntu based off of F16's glib2 sources
 - Version 2.31.16
 - Ubuntu revision 0ubuntu1
 
