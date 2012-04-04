@@ -15,9 +15,8 @@ Source0:	http://download.gnome.org/sources/glib/2.31/glib-%{version}.tar.xz
 Source1:	https://launchpad.net/ubuntu/+archive/primary/+files/glib2.0_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 ##
-Provides:	glib2 = %{version}-%{release}
-Provides:	glib2(%{_arch}) = %{version}-%{release}
-Obsoletes:	glib2(%{_arch}) <= %{version}-%{release}
+Provides:	glib2%{?_isa} = %{version}-%{release}
+Obsoletes:	glib2%{?_isa} <= %{version}-%{release}
 ##
 
 BuildRequires:	pkgconfig
@@ -49,10 +48,10 @@ as an event loop, threads, dynamic loading, and an object system.
 %package devel
 Summary:	A library of handy utility functions
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 
-Provides:	glib2-devel(%{_arch}) = %{version}
-Obsoletes:	glib2-devel(%{_arch}) <= %{version}
+Provides:	glib2-devel%{?_isa} = %{version}
+Obsoletes:	glib2-devel%{?_isa} <= %{version}
 
 %description devel
 The glib2-devel package includes the header files for the GLib library.
@@ -62,10 +61,10 @@ The glib2-devel package includes the header files for the GLib library.
 %package static
 Summary:	A library of handy utility functions
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
 
-Provides:	glib2-static(%{_arch}) = %{version}
-Obsoletes:	glib2-static(%{_arch}) <= %{version}
+Provides:	glib2-static%{?_isa} = %{version}
+Obsoletes:	glib2-static%{?_isa} <= %{version}
 
 %description static
 The glib2-static package includes static libraries of the GLib library.
