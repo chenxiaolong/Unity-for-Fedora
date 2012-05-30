@@ -134,12 +134,71 @@ make_rpm() {
       mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
       local FILENAME=$(rpmspec --target=i686 -q                        \
                        --queryformat="%{version}-%{release}.%{arch}\n" \
-                       glib2-ubuntu.spec | uniq)
+                       ${SPECFILE} | uniq)
       for i in ${MULTILIB_PACKAGES[@]}; do
         copy_rpm i686 "${i}-${FILENAME}.rpm"
       done
     fi
   fi
+}
+
+check_if_install() {
+  for k in ${DO_NOT_INSTALL[@]}; do
+    if [ "x${k}" == "x${1}" ]; then
+      return 1
+    fi
+  done
+  return 0
+}
+
+install_local() {
+  local MISSING_RPMS=""
+  local AVAILABLE_RPMS=""
+  for i in ${GENERATED_RPMS[@]}; do
+    local FILE_ARCH="${i##*.}"
+    #local FILE_LOCATION="$(find PACKAGES/RPMS/ -type f -mindepth 2 -maxdepth 2 \
+    #                       -name ${i}.rpm)"
+    #if [ -z "${FILE_LOCATION}" ]; then
+    if [ ! -f PACKAGES/RPMS/${FILE_ARCH}/${i}.rpm ]; then
+      MISSING_RPMS+="  ${i}.rpm\n"
+    else
+      check_if_install $(rpm -q --qf '%{name}' -p PACKAGES/RPMS/${FILE_ARCH}/${i}.rpm) \
+        && AVAILABLE_RPMS+=" PACKAGES/RPMS/${FILE_ARCH}/${i}.rpm"
+    fi
+  done
+
+  # Multilib packages
+  if [ "x$(uname -m)" == "xx86_64" ] && [ "x${MULTILIB}" == "xtrue" ]; then
+    local FILENAME=$(rpmspec --target=i686 -q                        \
+                     --queryformat="%{version}-%{release}.%{arch}\n" \
+                     ${SPECFILE} | uniq)
+    for i in ${MULTILIB_PACKAGES[@]}; do
+      local RPM_NAME="${i}-${FILENAME}.rpm"
+      if [ ! -f PACKAGES/RPMS/i686/${RPM_NAME} ]; then
+        MISSING_RPMS+="  ${RPM_NAME}\n"
+      else
+        check_if_install ${i} && AVAILABLE_RPMS+=" PACKAGES/RPMS/i686/${RPM_NAME}"
+      fi
+    done
+  fi
+
+  if [ ! -z "${MISSING_RPMS}" ]; then
+    echo "Cannot proceed; the following RPM's are missing:"
+    echo -e "${MISSING_RPMS}"
+    echo "Please rebuild the package."
+    return
+  fi
+
+  sudo yum install ${AVAILABLE_RPMS}
+}
+
+install_mock() {
+  echo hi
+}
+
+install_rpms() {
+  install_local
+  install_mock
 }
 
 #########################
@@ -531,7 +590,13 @@ build() {
     install_deps
     ;;
   install)
-    echo "Not implemented yet :("
+    install_rpms
+    ;;
+  install-local)
+    install_local
+    ;;
+  install-mock)
+    install_mock
     ;;
   ## Clean options ##
   clean)
@@ -576,27 +641,29 @@ build() {
     echo "Usage: ${0} [OPTION...]"
     echo ""
     echo "Options:"
-    echo "  srpm         - Generate SRPM"
-    echo "  rpm          - Generate RPM's (SRPM generated during process)"
-    echo "  builddep     - Install build dependencies"
-    echo "  install      - Install generated RPM's"
-    echo "  check        - Run rpmlint on generated RPM's and SRPM's"
+    echo "  srpm          - Generate SRPM"
+    echo "  rpm           - Generate RPM's (SRPM generated during process)"
+    echo "  builddep      - Install build dependencies"
+    echo "  install       - Install RPM's on local system and mock (recommended)"
+    echo "  install-local - Install RPM's on local system only"
+    echo "  install-mock  - Install RPM's in mock only"
+    echo "  check         - Run rpmlint on generated RPM's and SRPM's"
     echo ""
     echo "Clean Options:"
-    echo "  clean        - Same as clean-build"
-    echo "  clean-src    - Remove entire source/build directory (SOURCES)"
-    echo "  clean-build  - Remove build directories (SOURCES/BUILD{,ROOT})"
-    echo "  clean-rpm    - Remove built RPM's (PACKAGES/RPMS)"
-    echo "  clean-srpm   - Remove generated SRPM's (PACKAGES/SRPMS)"
-    echo "  clean-all    - Run clean-src, clean-rpm, and clean-rpm"
+    echo "  clean         - Same as clean-build"
+    echo "  clean-src     - Remove entire source/build directory (SOURCES)"
+    echo "  clean-build   - Remove build directories (SOURCES/BUILD{,ROOT})"
+    echo "  clean-rpm     - Remove built RPM's (PACKAGES/RPMS)"
+    echo "  clean-srpm    - Remove generated SRPM's (PACKAGES/SRPMS)"
+    echo "  clean-all     - Run clean-src, clean-rpm, and clean-rpm"
     echo ""
     echo "Mock Options:"
-    echo "  mock-init    - Intialize the mock build environment"
-    echo "  mock-check   - Verify the mock build environment"
+    echo "  mock-init     - Intialize the mock build environment"
+    echo "  mock-check    - Verify the mock build environment"
     echo ""
     echo "Help Options:"
-    echo "  dirstructure - Show directory structure information"
-    echo "  mock-info    - Show information about mock"
+    echo "  dirstructure  - Show directory structure information"
+    echo "  mock-info     - Show information about mock"
     echo ""
     echo "This package generates the following RPM's:"
     for i in ${GENERATED_RPMS[@]}; do
