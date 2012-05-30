@@ -4,6 +4,8 @@
 
 GENERATED_RPMS=$(rpmspec -q --rpms ${SPECFILE})
 GENERATED_SRPM=$(rpmspec -q --srpm ${SPECFILE})
+# Why would the srpm name have the arch in it??
+GENERATED_SRPM="${GENERATED_SRPM%.*}.src"
 # spectool doesn't like using just the filename
 for i in $(spectool -l -A "$(dirname ${0})/${SPECFILE}" | awk '{print $2}'); do
   SOURCES+="${i##*/} "
@@ -61,6 +63,21 @@ rpmbuild_here() {
     ${@}
 }
 
+mock_here() {
+  # Build packages in local mock directory
+  if [ "x${1}" == "xi686" ]; then
+    local CONFIG="fedora-${FEDORA_VER}-i386"
+  else
+    local CONFIG="fedora-${FEDORA_VER}-${1}"
+  fi
+  mock                                                    \
+    -v                                                    \
+    --configdir="$(dirname ${0})/../internal_mock/config" \
+    -r "${CONFIG}"                                        \
+    --target="${1}"                                       \
+    "${2}"
+}
+
 install_deps() {
   echo "Installing build dependencies..."
   sudo yum-builddep "${SPECFILE}"
@@ -81,19 +98,48 @@ make_srpm() {
   fi
 }
 
+copy_rpm() {
+  if [ "x${1}" == "xi686" ]; then
+    local MOCKARCH=i386
+  else
+    local MOCKARCH=${1}
+  fi
+  local FILEPATH="$(cd $(dirname ${0})/..; pwd)/internal_mock/result/fedora-${FEDORA_VER}-${MOCKARCH}/result/${2}"
+  local ARCH=$(rpm -q --qf '%{arch}' -p "${FILEPATH}")
+  if [ ! -d PACKAGES/RPMS/${ARCH} ]; then
+    mkdir -p PACKAGES/RPMS/${ARCH}
+  fi
+  cp "${FILEPATH}" PACKAGES/RPMS/${ARCH}/
+}
+
 make_rpm() {
   create_dirs
   download_sources
   symlink_sources
-  rpmbuild_here -bb "${SPECFILE}" || show_deps_msg
-  if [[ "$(uname -m)" == "x86_64" ]] && [[ "${MULTILIB}" == true ]]; then
-    mock_here --taget=i686 -r 
+  if [ "x${USE_RPMBUILD}" == "xtrue" ]; then
+    # If rpmbuild mode is used with a multilib package on x86_64, warn user
+    # that i686 packages won't be created.
+    if [[ "$(uname -m)" == "x86_64" ]] && [ "x${MULTILIB}" == "xtrue" ]; then
+      echo "WARNING: rpmbuild mode cannot generate i686 packages for multilib packages"
+    fi
+    rpmbuild_here -bb "${SPECFILE}" || show_deps_msg
+  else
+    make_srpm
+    mock_here $(uname -m) "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
+    # Copy the built RPM's to PACKAGES/RPMS
+    for i in ${GENERATED_RPMS[@]}; do
+      copy_rpm $(uname -m) "${i}.rpm"
+    done
+    if [ "x$(uname -m)" == "xx86_64" ] && [ "x${MULTILIB}" == "xtrue" ]; then
+      mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
+      local FILENAME=$(rpmspec --target=i686 -q                        \
+                       --queryformat="%{version}-%{release}.%{arch}\n" \
+                       glib2-ubuntu.spec | uniq)
+      for i in ${MULTILIB_PACKAGES[@]}; do
+        copy_rpm i686 "${i}-${FILENAME}.rpm"
+      done
+    fi
   fi
-}
-
-make_all() {
-  make_srpm
-  make_rpm
 }
 
 #########################
@@ -436,9 +482,6 @@ build() {
   builddep)
     install_deps
     ;;
-  all)
-    make_all
-    ;;
   install)
     echo "Not implemented yet :("
     ;;
@@ -486,9 +529,8 @@ build() {
     echo ""
     echo "Options:"
     echo "  srpm         - Generate SRPM"
-    echo "  rpm          - Generate RPM's"
+    echo "  rpm          - Generate RPM's (SRPM generated during process)"
     echo "  builddep     - Install build dependencies"
-    echo "  all          - Generate SRPM and RPM's"
     echo "  install      - Install generated RPM's"
     echo "  check        - Run rpmlint on generated RPM's and SRPM's"
     echo ""
@@ -510,11 +552,11 @@ build() {
     echo ""
     echo "This package generates the following RPM's:"
     for i in ${GENERATED_RPMS[@]}; do
-      echo "  ${i}"
+      echo "  ${i}.rpm"
     done
     echo ""
     echo "and the following SRPM:"
-    echo "  ${GENERATED_SRPM}"
+    echo "  ${GENERATED_SRPM}.rpm"
     echo ""
     echo "DO NOT manually install the RPM's (unless you know what you are doing)."
     echo "Use the 'install' option instead. The Unity-for-Fedora build scripts"
