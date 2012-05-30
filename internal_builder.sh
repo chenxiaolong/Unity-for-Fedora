@@ -112,6 +112,26 @@ copy_rpm() {
   cp "${FILEPATH}" PACKAGES/RPMS/${ARCH}/
 }
 
+copy_rpm_mock() {
+  # Copy RPM's to local repo
+  if [ "x${1}" == "xmultilib" ]; then
+    # If running in multilib mode, copy the RPM from the i386 repo to the x86_64 repo
+    cp "$(dirname ${0})/../internal_mock/repo/i386/${2}" \
+       "$(dirname ${0})/../internal_mock/repo/x86_64/"
+    return
+  else
+    # In normal mode, copy RPM's from mock result directory to the appropriate repo
+    if [ "x${1}" == "xi686" ]; then
+      local MOCKARCH=i386
+    else
+      local MOCKARCH=${1}
+    fi
+    local FILEPATH=
+    cp "$(cd $(dirname ${0})/..; pwd)/internal_mock/result/fedora-${FEDORA_VER}-${MOCKARCH}/result/${2}" \
+       "$(dirname ${0})/../internal_mock/repo/${MOCKARCH}/"
+  fi
+}
+
 make_rpm() {
   create_dirs
   download_sources
@@ -129,14 +149,22 @@ make_rpm() {
     # Copy the built RPM's to PACKAGES/RPMS
     for i in ${GENERATED_RPMS[@]}; do
       copy_rpm $(uname -m) "${i}.rpm"
+      copy_rpm_mock $(uname -m) "${i}.rpm"
     done
     if [ "x$(uname -m)" == "xx86_64" ] && [ "x${MULTILIB}" == "xtrue" ]; then
       mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
+      for i in $(rpmspec --target i686 -q --queryformat        \
+                 '%{name}-%{version}-%{release}.%{arch}.rpm\n' \
+                 ${SPECFILE}); do
+        copy_rpm_mock i686 "${i}"
+      done
+
       local FILENAME=$(rpmspec --target=i686 -q                        \
                        --queryformat="%{version}-%{release}.%{arch}\n" \
                        ${SPECFILE} | uniq)
       for i in ${MULTILIB_PACKAGES[@]}; do
         copy_rpm i686 "${i}-${FILENAME}.rpm"
+        copy_rpm_mock multilib "${i}-${FILENAME}.rpm"
       done
     fi
   fi
@@ -151,7 +179,7 @@ check_if_install() {
   return 0
 }
 
-install_local() {
+get_rpms() {
   local MISSING_RPMS=""
   local AVAILABLE_RPMS=""
   for i in ${GENERATED_RPMS[@]}; do
@@ -189,16 +217,11 @@ install_local() {
     return
   fi
 
-  sudo yum install ${AVAILABLE_RPMS}
-}
-
-install_mock() {
-  echo hi
+  echo ${AVAILABLE_RPMS}
 }
 
 install_rpms() {
-  install_local
-  install_mock
+  sudo yum install $(get_rpms)
 }
 
 #########################
@@ -592,12 +615,6 @@ build() {
   install)
     install_rpms
     ;;
-  install-local)
-    install_local
-    ;;
-  install-mock)
-    install_mock
-    ;;
   ## Clean options ##
   clean)
     clean_build
@@ -644,9 +661,7 @@ build() {
     echo "  srpm          - Generate SRPM"
     echo "  rpm           - Generate RPM's (SRPM generated during process)"
     echo "  builddep      - Install build dependencies"
-    echo "  install       - Install RPM's on local system and mock (recommended)"
-    echo "  install-local - Install RPM's on local system only"
-    echo "  install-mock  - Install RPM's in mock only"
+    echo "  install       - Install generated RPM's"
     echo "  check         - Run rpmlint on generated RPM's and SRPM's"
     echo ""
     echo "Clean Options:"
@@ -673,11 +688,10 @@ build() {
     echo "and the following SRPM:"
     echo "  ${GENERATED_SRPM}.rpm"
     echo ""
-    echo "DO NOT manually install the RPM's (unless you know what you are doing)."
-    echo "Use the 'install' option instead. The Unity-for-Fedora build scripts"
-    echo "create packages using mock, which builds packages cleanly inside a chroot."
-    echo "The 'install' option will install the packages both inside the chroot and"
-    echo "directly on the computer."
+    echo "Please use the 'install' option to install the RPM's. This ensures that"
+    echo "the i686 multilib packages are installed on x86_64 systems. Also, extra"
+    echo "packages, which may not be very useful to anyone, except for developers,"
+    echo "will be skipped automatically."
     ;;
   esac
 
