@@ -201,7 +201,7 @@ clean_all() {
 #######################
 mock_create_directories() {
   # Create cache, result, and configuration directories
-  for i in cache result config; do
+  for i in cache result config repo; do
     if [ ! -d "${i}" ]; then
       mkdir "${i}"
     fi
@@ -235,7 +235,18 @@ mock_config_copy_default() {
     ;;
   esac
   for i in ${CONFIG[@]}; do
-    cp /etc/mock/${i}.cfg config/
+    head -n -1 /etc/mock/${i}.cfg > config/${i}.cfg
+    # Add local repo
+    cat >> config/${i}.cfg << EOF
+
+[unity-for-fedora]
+name=unity-for-fedora
+baseurl=file:///$(pwd)/repo/${i##*-}
+"""
+EOF
+    if [ ! -d repo/${i##*-} ]; then
+      mkdir repo/${i##*-}
+    fi
   done
 }
 
@@ -301,6 +312,16 @@ mock_verify() {
     echo "DONE"
     # Return, since reinitialization will fix all the other problems
     return
+  fi
+
+  # Problem: Missing local repo
+  # Fix: Create it
+  if [ ! -d repo ]; then
+    echo ""
+    echo "The local repo is missing."
+    echo -n "Creating it..."
+    mkdir repo
+    echo "DONE"
   fi
   
   # Problem: Missing chroots
@@ -407,9 +428,35 @@ mock_verify() {
     fi
   done
   if [ ! -z "${MISSING_CONFIG}" ]; then
+    echo ""
     echo "The following mock configuration files are missing:"
     echo -e "${MISSING_CONFIG}"
     echo -n "Copying default configuration files..."
+    mock_config_copy_default
+    echo "DONE"
+  fi
+
+  # Problem: Configuration files do not contain unity-for-fedora local repo
+  # Fix: Run mock_config_copy_default
+  case $(uname -m) in
+  x86_64)
+    local CONFIG=("fedora-${FEDORA_VER}-x86_64" "fedora-${FEDORA_VER}-i386")
+    ;;
+  i686)
+    local CONFIG=("fedora-${FEDORA_VER}-i386")
+    ;;
+  esac
+  local MISSING_REPO=""
+  for i in ${CONFIG[@]}; do
+    if ! $(grep "\[unity-for-fedora\]" config/${i}.cfg &>/dev/null); then
+      MISSING_REPO+="  config/${i}.cfg\n"
+    fi
+  done
+  if [ ! -z "${MISSING_REPO}" ]; then
+    echo ""
+    echo "The following mock configuration files are missing the local repo:"
+    echo -e "${MISSING_REPO}"
+    echo -n "Recreating configuration files..."
     mock_config_copy_default
     echo "DONE"
   fi
@@ -417,6 +464,7 @@ mock_verify() {
   # Problem: logging.ini configuration file symlink is missing
   # Fix: Run mock_config_symlink_logging
   if [ ! -e config/logging.ini ]; then
+    echo ""
     echo "The config/logging.ini symlink is missing."
     echo ""
     echo -n "Recreating symlink..."
