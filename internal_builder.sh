@@ -132,6 +132,15 @@ copy_rpm_mock() {
   fi
 }
 
+update_repo() {
+  if [ "x${1}" == "xi686" ]; then
+    local MOCKARCH=i386
+  else
+    local MOCKARCH=${1}
+  fi
+  createrepo --no-database "$(dirname ${0})/../internal_mock/repo/${MOCKARCH}/"
+}
+
 make_rpm() {
   create_dirs
   download_sources
@@ -144,21 +153,37 @@ make_rpm() {
     fi
     rpmbuild_here -bb "${SPECFILE}" || show_deps_msg
   else
+    # Build source RPM for mock
     make_srpm
+
+    # Build RPM's using mock for CPU architecture
     mock_here $(uname -m) "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
-    # Copy the built RPM's to PACKAGES/RPMS
+
+    # Copy the built RPM's to PACKAGES/RPMS and the local repo
     for i in ${GENERATED_RPMS[@]}; do
       copy_rpm $(uname -m) "${i}.rpm"
       copy_rpm_mock $(uname -m) "${i}.rpm"
     done
+
+    # Update repo database
+    update_repo $(uname -m)
+
+    # If the package is multilib
     if [ "x$(uname -m)" == "xx86_64" ] && [ "x${MULTILIB}" == "xtrue" ]; then
+      # Build the i686 packages
       mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
+
+      # Copy the i686 packages to the i686 repo
       for i in $(rpmspec --target i686 -q --queryformat        \
                  '%{name}-%{version}-%{release}.%{arch}.rpm\n' \
                  ${SPECFILE}); do
         copy_rpm_mock i686 "${i}"
       done
 
+      # Update i686 repo database
+      update_repo i686
+
+      # Copy multilib packages to x86_64 repo and PACKAGES/RPMS/i686/
       local FILENAME=$(rpmspec --target=i686 -q                        \
                        --queryformat="%{version}-%{release}.%{arch}\n" \
                        ${SPECFILE} | uniq)
@@ -166,6 +191,9 @@ make_rpm() {
         copy_rpm i686 "${i}-${FILENAME}.rpm"
         copy_rpm_mock multilib "${i}-${FILENAME}.rpm"
       done
+
+      # Update x86_64 repo database
+      update_repo x86_64
     fi
   fi
 }
