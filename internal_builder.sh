@@ -80,7 +80,8 @@ mock_here() {
     "$(dirname ${0})/../internal_mock/result/${CONFIG}/result/" \
      -maxdepth 1 -type f -name '*.rpm')
   if [ -z "${RPM_COUNT}" ]; then
-    return 1
+    echo "Failed to build ${1} packages!"
+    exit 1
   fi
 }
 
@@ -164,8 +165,7 @@ make_rpm() {
     make_srpm
 
     # Build RPM's using mock for CPU architecture
-    mock_here $(uname -m) "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm" || \
-      (echo "Failed to build $(uname -m) packages!" && exit 1)
+    mock_here $(uname -m) "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
 
     # Copy the built RPM's to PACKAGES/RPMS and the local repo
     for i in ${GENERATED_RPMS[@]}; do
@@ -179,8 +179,7 @@ make_rpm() {
     # If the package is multilib
     if [ "x$(uname -m)" == "xx86_64" ] && [ "x${MULTILIB}" == "xtrue" ]; then
       # Build the i686 packages
-      mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm" || \
-        (echo "Failed to build i686 packages!" && exit 1)
+      mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
 
       # Copy the i686 packages to the i686 repo
       for i in $(rpmspec --target i686 -q --queryformat        \
