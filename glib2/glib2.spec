@@ -1,23 +1,16 @@
 %define _ubuntu_rel 0ubuntu2
 
-# Not using F17 yet -> no /lib* to /usr/lib*
-%define libdir /%{_lib}
-
 Summary:	A library of handy utility functions
-Name:		glib2-ubuntu
-Version:	2.31.20
+Name:		glib2
+Version:	2.32.1
 Release:	1.%{_ubuntu_rel}%{?dist}
+Epoch:		1
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
 #VCS:		git:git://git.gnome.org/glib
-Source0:	http://download.gnome.org/sources/glib/2.31/glib-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/glib/2.32/glib-%{version}.tar.xz
 Source1:	https://launchpad.net/ubuntu/+archive/primary/+files/glib2.0_%{version}-%{_ubuntu_rel}.debian.tar.gz
-
-##
-Provides:	glib2%{?_isa} = %{version}-%{release}
-Obsoletes:	glib2%{?_isa} <= %{version}-%{release}
-##
 
 BuildRequires:	pkgconfig
 BuildRequires:	gamin-devel
@@ -34,6 +27,7 @@ BuildRequires:	automake autoconf libtool
 BuildRequires:	gtk-doc
 BuildRequires:	python-devel
 BuildRequires:	libffi-devel
+BuildRequires:	elfutils-libelf-devel
 
 # required for GIO content-type support
 Requires:	shared-mime-info
@@ -48,10 +42,7 @@ as an event loop, threads, dynamic loading, and an object system.
 %package devel
 Summary:	A library of handy utility functions
 Group:		Development/Libraries
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-
-Provides:	glib2-devel%{?_isa} = %{version}
-Obsoletes:	glib2-devel%{?_isa} <= %{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 The glib2-devel package includes the header files for the GLib library.
@@ -61,10 +52,7 @@ The glib2-devel package includes the header files for the GLib library.
 %package static
 Summary:	A library of handy utility functions
 Group:		Development/Libraries
-Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
-
-Provides:	glib2-static%{?_isa} = %{version}
-Obsoletes:	glib2-static%{?_isa} <= %{version}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 The glib2-static package includes static libraries of the GLib library.
@@ -78,6 +66,8 @@ tar zxvf "%{SOURCE1}"
 # Do not apply these patches
   # Do not change path of glib-compile-schemas
     sed -i '/61_glib-compile-schemas-path.patch/d' debian/patches/series
+  # Debian/Ubuntu multiarch stuff
+    sed -i '/90-gio-modules-multiarch-compat.patch/d' debian/patches/series
 
 for i in $(cat debian/patches/series | grep -v '#'); do
   patch -Np1 -i "debian/patches/${i}"
@@ -192,6 +182,11 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 
 
 %changelog
+* Wed May 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.32.1-1.0ubuntu2
+- Version 2.32.1
+- Ubuntu release 0ubuntu2
+- Sync changes from fedpkg f17 commit: 9eb6e9b7fc448cbed7e1b832f7ce70dea6c5b9ea
+
 * Mon Mar 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.31.20-1.0ubuntu2
 - Version 2.31.20
 - Ubuntu release 0ubuntu2

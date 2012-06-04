@@ -1,0 +1,4 @@
+These packages use high epochs to override the default Fedora 17 packages, such
+as glib2, gnome-control-center, etc. In the Arch Linux version of this project,
+pacman will ask whether the original package is to be replaced with the
+'-ubuntu' version. Unfortunately, there's no way to do this in Fedora.
