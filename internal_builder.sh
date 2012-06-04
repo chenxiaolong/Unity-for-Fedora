@@ -138,7 +138,7 @@ update_repo() {
   else
     local MOCKARCH=${1}
   fi
-  createrepo --no-database "$(dirname ${0})/../internal_mock/repo/${MOCKARCH}/"
+  createrepo --update "$(dirname ${0})/../internal_mock/repo/${MOCKARCH}/"
 }
 
 make_rpm() {
@@ -207,6 +207,15 @@ check_if_install() {
   return 0
 }
 
+check_if_install_multilib() {
+  check_if_install ${1} && for k in ${MULTILIB_DO_NOT_INSTALL[@]}; do
+    if [ "x${k}" == "x${1}" ]; then
+      return 1
+    fi
+  done
+  return 0
+}
+
 get_rpms() {
   local MISSING_RPMS=""
   local AVAILABLE_RPMS=""
@@ -233,7 +242,7 @@ get_rpms() {
       if [ ! -f PACKAGES/RPMS/i686/${RPM_NAME} ]; then
         MISSING_RPMS+="  ${RPM_NAME}\n"
       else
-        check_if_install ${i} && AVAILABLE_RPMS+=" PACKAGES/RPMS/i686/${RPM_NAME}"
+        check_if_install_multilib ${i} && AVAILABLE_RPMS+=" PACKAGES/RPMS/i686/${RPM_NAME}"
       fi
     done
   fi
@@ -351,11 +360,14 @@ mock_config_copy_default() {
 
 [unity-for-fedora]
 name=unity-for-fedora
-baseurl=file:///$(pwd)/repo/${i##*-}
+baseurl=file://$(pwd)/repo/${i##*-}
 """
 EOF
-    if [ ! -d repo/${i##*-} ]; then
-      mkdir repo/${i##*-}
+    if [ ! -d repo/${i##*-}/ ]; then
+      mkdir repo/${i##*-}/
+    fi
+    if [ ! -d repo/${i##*-}/repodata/ ]; then
+      createrepo --database "$(dirname ${0})/../internal_mock/repo/${i##*-}/" &>/dev/null
     fi
   done
 }
@@ -567,6 +579,18 @@ mock_verify() {
     echo "The following mock configuration files are missing the local repo:"
     echo -e "${MISSING_REPO}"
     echo -n "Recreating configuration files..."
+    mock_config_copy_default
+    echo "DONE"
+  fi
+
+  # Problem: Missing local repo metadata
+  # Fix: Run mock_config_copy_default
+  local REPODATA="$(find repo/ -mindepth 2 -maxdepth 2 -type d -name repodata)"
+  if [ -z "${REPODATA}" ]; then
+    echo ""
+    echo "The local repo for mock is missing the metadata/database."
+    echo ""
+    echo -n "Recreating configuration files and repo database..."
     mock_config_copy_default
     echo "DONE"
   fi

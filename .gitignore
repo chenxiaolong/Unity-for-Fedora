@@ -2,6 +2,7 @@
 internal_mock/cache/
 internal_mock/config/
 internal_mock/result/
+internal_mock/repo/
 
 # Build packages (take up too much space)
 *.rpm
