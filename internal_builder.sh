@@ -244,7 +244,7 @@ get_rpms() {
   if [ "x$(uname -m)" == "xx86_64" ] && [ "x${MULTILIB}" == "xtrue" ]; then
     local FILENAME=$(rpmspec --target=i686 -q                        \
                      --queryformat="%{version}-%{release}.%{arch}\n" \
-                     ${SPECFILE} | uniq)
+                     ${SPECFILE} | grep -v 'noarch' | uniq)
     for i in ${MULTILIB_PACKAGES[@]}; do
       local RPM_NAME="${i}-${FILENAME}.rpm"
       if [ ! -f PACKAGES/RPMS/i686/${RPM_NAME} ]; then
