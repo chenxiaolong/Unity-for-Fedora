@@ -194,7 +194,7 @@ make_rpm() {
       # Copy multilib packages to x86_64 repo and PACKAGES/RPMS/i686/
       local FILENAME=$(rpmspec --target=i686 -q                        \
                        --queryformat="%{version}-%{release}.%{arch}\n" \
-                       ${SPECFILE} | uniq)
+                       ${SPECFILE} | grep -v 'noarch' | uniq)
       for i in ${MULTILIB_PACKAGES[@]}; do
         copy_rpm i686 "${i}-${FILENAME}.rpm"
         copy_rpm_mock multilib "${i}-${FILENAME}.rpm"
