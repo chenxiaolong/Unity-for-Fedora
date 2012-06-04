@@ -8,5 +8,5 @@ Build order:
 01: glib2                          -> glib 2.0 with Ubuntu patches
 02: gtk2                           -> GTK toolkit 2.0 with Ubuntu patches
 03: gtk3                           -> GTK toolkit 3.0 with Ubuntu patches
-
+04: GConf2                         -> A configuration database system
 
