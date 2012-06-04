@@ -4,6 +4,9 @@ internal_mock/config/
 internal_mock/result/
 internal_mock/repo/
 
+# Lock file
+internal.lock
+
 # Build packages (take up too much space)
 *.rpm
 *.srpm
