@@ -43,8 +43,8 @@ symlink_sources() {
   for i in ${SOURCES}; do
     # For files included in git, symlink them in SOURCES/
     if [ -f "${i}" ]; then
-      if [ -f "SOURCES/${i}" ]; then
-        ln -s "$(dirname ${0})/${i}" SOURCES/
+      if [ ! -f "SOURCES/${i}" ]; then
+        ln -s "$(cd $(dirname ${0}) && pwd)/${i}" SOURCES/
       fi
     fi
   done
@@ -76,6 +76,12 @@ mock_here() {
     -r "${CONFIG}"                                        \
     --target="${1}"                                       \
     "${2}"
+  local RPM_COUNT=$(find \
+    "$(dirname ${0})/../internal_mock/result/${CONFIG}/result/" \
+     -maxdepth 1 -type f -name '*.rpm')
+  if [ -z "${RPM_COUNT}" ]; then
+    return 1
+  fi
 }
 
 install_deps() {
@@ -95,6 +101,7 @@ make_srpm() {
   rpmbuild_here -bs "${SPECFILE}"
   if [ "${?}" != "0" ]; then
     show_deps_msg
+    exit 1
   fi
 }
 
@@ -157,7 +164,8 @@ make_rpm() {
     make_srpm
 
     # Build RPM's using mock for CPU architecture
-    mock_here $(uname -m) "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
+    mock_here $(uname -m) "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm" || \
+      (echo "Failed to build $(uname -m) packages!" && exit 1)
 
     # Copy the built RPM's to PACKAGES/RPMS and the local repo
     for i in ${GENERATED_RPMS[@]}; do
@@ -171,7 +179,8 @@ make_rpm() {
     # If the package is multilib
     if [ "x$(uname -m)" == "xx86_64" ] && [ "x${MULTILIB}" == "xtrue" ]; then
       # Build the i686 packages
-      mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
+      mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm" || \
+        (echo "Failed to build i686 packages!" && exit 1)
 
       # Copy the i686 packages to the i686 repo
       for i in $(rpmspec --target i686 -q --queryformat        \
@@ -643,9 +652,13 @@ dir_structure() {
 
 build() {
   if [ -f "$(dirname ${0})/../internal.lock" ]; then
-    echo "Another build is currently running. Please wait for it to finish."
-    echo "If you are absolutely sure that no other build is running, delete"
-    echo "the following file:"
+    echo "An error has occured. One of the following might have happened:"
+    echo ""
+    echo "- A previous build failed or was interrupted."
+    echo "- Another build is currently running."
+    echo ""
+    echo "If you are absolutely sure that no other build is running and that a"
+    echo "previous build did not fail, delete the lock file:"
     echo ""
     echo "  $(cd $(dirname ${0})/..; pwd)/internal.lock"
     exit 1
