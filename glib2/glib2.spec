@@ -1,3 +1,6 @@
+# Based off of Fedora 17's spec
+# Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+
 %define _ubuntu_rel 0ubuntu2
 
 Summary:	A library of handy utility functions
@@ -10,7 +13,7 @@ Group:		System Environment/Libraries
 URL:		http://www.gtk.org
 #VCS:		git:git://git.gnome.org/glib
 Source0:	http://download.gnome.org/sources/glib/2.32/glib-%{version}.tar.xz
-Source1:	https://launchpad.net/ubuntu/+archive/primary/+files/glib2.0_%{version}-%{_ubuntu_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/glib2.0_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 BuildRequires:	pkgconfig
 BuildRequires:	gamin-devel
@@ -62,7 +65,7 @@ The glib2-static package includes static libraries of the GLib library.
 %setup -q -n glib-%{version}
 
 # Apply Ubuntu patches
-tar zxvf "%{SOURCE1}"
+tar zxvf "%{SOURCE99}"
 # Do not apply these patches
   # Do not change path of glib-compile-schemas
     sed -i '/61_glib-compile-schemas-path.patch/d' debian/patches/series
@@ -182,7 +185,7 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 
 
 %changelog
-* Wed May 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.32.1-1.0ubuntu2
+* Wed May 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1:2.32.1-1.0ubuntu2
 - Version 2.32.1
 - Ubuntu release 0ubuntu2
 - Sync changes from fedpkg f17 commit: 9eb6e9b7fc448cbed7e1b832f7ce70dea6c5b9ea
