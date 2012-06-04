@@ -6,7 +6,7 @@
 Summary:	A library of handy utility functions
 Name:		glib2
 Version:	2.32.1
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Epoch:		1
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -68,7 +68,7 @@ The glib2-static package includes static libraries of the GLib library.
 tar zxvf "%{SOURCE99}"
 # Do not apply these patches
   # Do not change path of glib-compile-schemas
-    sed -i '/61_glib-compile-schemas-path.patch/d' debian/patches/series
+    sed -i '/61_glib-compile-binaries-path.patch/d' debian/patches/series
   # Debian/Ubuntu multiarch stuff
     sed -i '/90-gio-modules-multiarch-compat.patch/d' debian/patches/series
 
@@ -185,6 +185,9 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 
 
 %changelog
+* Mon Jun 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1:2.32.1-2.0ubuntu2
+- 61_glib-compile-binaries-path.patch was renamed, so the patch wasn't disabled
+
 * Wed May 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1:2.32.1-1.0ubuntu2
 - Version 2.32.1
 - Ubuntu release 0ubuntu2
