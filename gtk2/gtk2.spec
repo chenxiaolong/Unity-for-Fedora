@@ -404,7 +404,7 @@ fi
 
 
 %changelog
-* Mon Jun 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1:2.24.10-1.ubuntu6
+* Mon Jun 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1:2.24.10-1.0ubuntu6
 - Initial release based off of F17's gtk2 sources
 - Version 2.24.10
 - Ubuntu release 0ubuntu6
