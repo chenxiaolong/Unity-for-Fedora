@@ -1,0 +1,209 @@
+From f31856dc02da29a9de4253d2bbf6c98c28077546 Mon Sep 17 00:00:00 2001
+From: "Owen W. Taylor" <otaylor@fishsoup.net>
+Date: Mon, 30 Apr 2012 15:33:49 -0400
+Subject: [PATCH 2/2] GtkPlug: fix handling of key events for different
+ layouts
+
+GtkPlug directly handles X KeyPress/Release events, instead of using
+translation in GDK (which expects XI2 events for XI2). When this
+was done, the handling of the group was stubbed out and never replaced.
+
+Export gdk_keymap_x11_group_for_state() and gdk_keymap_x11_is_modifier()
+so we can fill out the fields correctly.
+
+Backported-By: Ray Strode
+
+https://bugzilla.gnome.org/show_bug.cgi?id=675167
+---
+ gdk/gdk.symbols                     |    2 ++
+ gdk/x11/gdkdevicemanager-core-x11.c |    4 ++--
+ gdk/x11/gdkdevicemanager-xi2.c      |    4 ++--
+ gdk/x11/gdkkeys-x11.c               |   43 +++++++++++++++++++++++++++++++----
+ gdk/x11/gdkprivate-x11.h            |    4 ----
+ gdk/x11/gdkx11keys.h                |    5 ++++
+ gtk/gtkplug.c                       |    8 +++----
+ 7 files changed, 53 insertions(+), 17 deletions(-)
+
+diff --git a/gdk/gdk.symbols b/gdk/gdk.symbols
+index 1f1936a..d3fc8e3 100644
+--- a/gdk/gdk.symbols
++++ b/gdk/gdk.symbols
+@@ -560,7 +560,9 @@ gdk_x11_get_xatom_by_name_for_display
+ gdk_x11_get_xatom_name
+ gdk_x11_get_xatom_name_for_display
+ gdk_x11_grab_server
++gdk_x11_keymap_get_group_for_state_libgtk_only
+ gdk_x11_keymap_get_type
++gdk_x11_keymap_key_is_modifier_libgtk_only
+ gdk_x11_lookup_xdisplay
+ gdk_x11_register_standard_event_type
+ gdk_x11_screen_get_monitor_output
+diff --git a/gdk/x11/gdkdevicemanager-core-x11.c b/gdk/x11/gdkdevicemanager-core-x11.c
+index 38a225c..ef1171e 100644
+--- a/gdk/x11/gdkdevicemanager-core-x11.c
++++ b/gdk/x11/gdkdevicemanager-core-x11.c
+@@ -145,7 +145,7 @@ translate_key_event (GdkDisplay              *display,
+   gdk_event_set_device (event, device_manager->core_keyboard);
+ 
+   event->key.state = (GdkModifierType) xevent->xkey.state;
+-  event->key.group = _gdk_x11_get_group_for_state (display, xevent->xkey.state);
++  event->key.group = gdk_x11_keymap_get_group_for_state_libgtk_only (keymap, xevent->xkey.state);
+   event->key.hardware_keycode = xevent->xkey.keycode;
+ 
+   event->key.keyval = GDK_KEY_VoidSymbol;
+@@ -161,7 +161,7 @@ translate_key_event (GdkDisplay              *display,
+   _gdk_x11_keymap_add_virt_mods (keymap, &state);
+   event->key.state |= state;
+ 
+-  event->key.is_modifier = _gdk_x11_keymap_key_is_modifier (keymap, event->key.hardware_keycode);
++  event->key.is_modifier = gdk_x11_keymap_key_is_modifier_libgtk_only (keymap, event->key.hardware_keycode);
+ 
+   _gdk_x11_event_translate_keyboard_string (&event->key);
+ 
+diff --git a/gdk/x11/gdkdevicemanager-xi2.c b/gdk/x11/gdkdevicemanager-xi2.c
+index 65ea9dd..621591c 100644
+--- a/gdk/x11/gdkdevicemanager-xi2.c
++++ b/gdk/x11/gdkdevicemanager-xi2.c
+@@ -1160,10 +1160,10 @@ gdk_x11_device_manager_xi2_translate_event (GdkEventTranslator *translator,
+ 
+         event->key.time = xev->time;
+         event->key.state = _gdk_x11_device_xi2_translate_state (&xev->mods, &xev->buttons, &xev->group);
+-        event->key.group = _gdk_x11_get_group_for_state (display, event->key.state);
++        event->key.group = xev->group.effective;
+ 
+         event->key.hardware_keycode = xev->detail;
+-        event->key.is_modifier = _gdk_x11_keymap_key_is_modifier (keymap, event->key.hardware_keycode);
++        event->key.is_modifier = gdk_x11_keymap_key_is_modifier_libgtk_only (keymap, event->key.hardware_keycode);
+ 
+         device = g_hash_table_lookup (device_manager->id_table,
+                                       GUINT_TO_POINTER (xev->deviceid));
+diff --git a/gdk/x11/gdkkeys-x11.c b/gdk/x11/gdkkeys-x11.c
+index 0ce16ad..54b2ff9 100644
+--- a/gdk/x11/gdkkeys-x11.c
++++ b/gdk/x11/gdkkeys-x11.c
+@@ -1429,11 +1429,28 @@ _gdk_x11_display_manager_keyval_convert_case (GdkDisplayManager *manager,
+     *upper = xupper;
+ }
+ 
++/**
++ * gdk_x11_keymap_get_group_for_state_libgtk_only:
++ * @keymap: a #GdkX11Keymap
++ * @state: raw state returned from X
++ *
++ * Extracts the group from the state field sent in an X Key event.
++ * This is only needed for code processing raw X events, since #GdkEventKey
++ * directly includes an is_modifier field.
++ *
++ * Returns: the index of the active keyboard group for the event
++ */
+ gint
+-_gdk_x11_get_group_for_state (GdkDisplay      *display,
+-                              GdkModifierType  state)
++gdk_x11_keymap_get_group_for_state_libgtk_only (GdkKeymap *keymap,
++                                                guint      state)
+ {
+-  GdkX11Display *display_x11 = GDK_X11_DISPLAY (display);
++  GdkDisplay *display;
++  GdkX11Display *display_x11;
++
++  g_return_val_if_fail (GDK_IS_X11_KEYMAP (keymap), 0);
++
++  display = keymap->display;
++  display_x11 = GDK_X11_DISPLAY (display);
+ 
+ #ifdef HAVE_XKB
+   if (display_x11->use_xkb)
+@@ -1498,13 +1515,29 @@ gdk_x11_keymap_add_virtual_modifiers (GdkKeymap       *keymap,
+     }
+ }
+ 
++/**
++ * gdk_x11_keymap_key_is_modifier_libgtk_only:
++ * @keymap: a #GdkX11Keymap
++ * @keycode: the hardware keycode from a key event
++ *
++ * Determines whether a particular key code represents a key that
++ * is a modifier. That is, it's a key that normally just affects
++ * the keyboard state and the behavior of other keys rather than
++ * producing a direct effect itself. This is only needed for code
++ * processing raw X events, since #GdkEventKey directly includes
++ * an is_modifier field.
++ *
++ * Returns: %TRUE if the hardware keycode is a modifier key
++ */
+ gboolean
+-_gdk_x11_keymap_key_is_modifier (GdkKeymap *keymap,
+-                                 guint      keycode)
++gdk_x11_keymap_key_is_modifier_libgtk_only (GdkKeymap *keymap,
++                                            guint      keycode)
+ {
+   GdkX11Keymap *keymap_x11 = GDK_X11_KEYMAP (keymap);
+   gint i;
+ 
++  g_return_val_if_fail (GDK_IS_X11_KEYMAP (keymap), FALSE);
++
+   update_keyrange (keymap_x11);
+   if (keycode < keymap_x11->min_keycode ||
+       keycode > keymap_x11->max_keycode)
+diff --git a/gdk/x11/gdkprivate-x11.h b/gdk/x11/gdkprivate-x11.h
+index b5f68b2..80380c0 100644
+--- a/gdk/x11/gdkprivate-x11.h
++++ b/gdk/x11/gdkprivate-x11.h
+@@ -155,12 +155,8 @@ gboolean _gdk_x11_moveresize_configure_done (GdkDisplay *display,
+ void     _gdk_x11_keymap_state_changed   (GdkDisplay      *display,
+                                           XEvent          *event);
+ void     _gdk_x11_keymap_keys_changed    (GdkDisplay      *display);
+-gint     _gdk_x11_get_group_for_state    (GdkDisplay      *display,
+-                                          GdkModifierType  state);
+ void     _gdk_x11_keymap_add_virt_mods   (GdkKeymap       *keymap,
+                                           GdkModifierType *modifiers);
+-gboolean _gdk_x11_keymap_key_is_modifier (GdkKeymap       *keymap,
+-                                          guint            keycode);
+ 
+ void _gdk_x11_windowing_init    (void);
+ 
+diff --git a/gdk/x11/gdkx11keys.h b/gdk/x11/gdkx11keys.h
+index dea8c73..3969d81 100644
+--- a/gdk/x11/gdkx11keys.h
++++ b/gdk/x11/gdkx11keys.h
+@@ -42,6 +42,11 @@ typedef struct _GdkX11KeymapClass GdkX11KeymapClass;
+ 
+ GType gdk_x11_keymap_get_type (void);
+ 
++gint gdk_x11_keymap_get_group_for_state_libgtk_only (GdkKeymap *keymap,
++                                                     guint      state);
++
++gboolean gdk_x11_keymap_key_is_modifier_libgtk_only (GdkKeymap *keymap,
++                                                     guint      keycode);
+ G_END_DECLS
+ 
+ #endif /* __GDK_X11_KEYMAP_H__ */
+diff --git a/gtk/gtkplug.c b/gtk/gtkplug.c
+index 048ef29..8d29d5a 100644
+--- a/gtk/gtkplug.c
++++ b/gtk/gtkplug.c
+@@ -982,6 +982,10 @@ gtk_plug_filter_func (GdkXEvent *gdk_xevent,
+         gdk_event_set_device (event, keyboard);
+ 
+         keymap = gdk_keymap_get_for_display (display);
++
++        event->key.group = gdk_x11_keymap_get_group_for_state_libgtk_only (keymap, xevent->xkey.state);
++        event->key.is_modifier = gdk_x11_keymap_key_is_modifier_libgtk_only (keymap, event->key.hardware_keycode);
++
+         gdk_keymap_translate_keyboard_state (keymap,
+                                              event->key.hardware_keycode,
+                                              event->key.state,
+@@ -996,10 +1000,6 @@ gtk_plug_filter_func (GdkXEvent *gdk_xevent,
+         event->key.length = 0;
+         event->key.string = g_strdup ("");
+ 
+-        /* FIXME: These should be filled in properly */
+-        event->key.group = 0;
+-        event->key.is_modifier = FALSE;
+-
+         return_val = GDK_FILTER_TRANSLATE;
+       }
+     }
+-- 
+1.7.10.2
+
