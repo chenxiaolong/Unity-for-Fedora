@@ -12,6 +12,14 @@ for i in $(spectool -l -A "$(dirname ${0})/${SPECFILE}" | awk '{print $2}'); do
 done
 FEDORA_VER="$(grep '%fedora' /etc/rpm/macros.dist | awk '{print $2}')"
 
+# Remove base package from RPM list if NO_BASE_PACKAGE is true
+if [ "x${NO_BASE_PACKAGE}" == "xtrue" ]; then
+  PKG_VERSION="$(rpmspec -q --qf '%{version}-%{release}\n' ${SPECFILE} | uniq)"
+  PKG_NAME="$(sed -n 's/^Name:[ \t]*\(.*\)$/\1/p' ${SPECFILE})"
+  GENERATED_RPMS=$(echo ${GENERATED_RPMS} | tr ' ' '\n' | \
+                   grep -v ${PKG_NAME}-${PKG_VERSION})
+fi
+
 ##########################
 # BEGIN: General options #
 ##########################
@@ -185,6 +193,10 @@ make_rpm() {
       for i in $(rpmspec --target i686 -q --queryformat        \
                  '%{name}-%{version}-%{release}.%{arch}.rpm\n' \
                  ${SPECFILE}); do
+        if [ "x${NO_BASE_PACKAGE}" == "xtrue" ] && \
+           [ "x${i}" == "x${PKG_NAME}-${PKG_VERSION}.i686.rpm" ]; then
+          continue
+        fi
         copy_rpm_mock i686 "${i}"
       done
 
