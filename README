@@ -9,4 +9,4 @@ Build order:
 02: gtk2                           -> GTK toolkit 2.0 with Ubuntu patches
 03: gtk3                           -> GTK toolkit 3.0 with Ubuntu patches
 04: GConf2                         -> A configuration database system
-
+05: libdbusmenu                    -> Library for passing menus over DBus
