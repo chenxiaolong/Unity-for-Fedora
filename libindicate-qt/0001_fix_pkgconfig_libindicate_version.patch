@@ -1,0 +1,13 @@
+Fix the version of the libindicate pkgconfig module
+diff -Nru libindicate-qt-0.2.5.91.orig/CMakeLists.txt libindicate-qt-0.2.5.91/CMakeLists.txt
+--- libindicate-qt-0.2.5.91.orig/CMakeLists.txt	2012-06-27 18:00:39.594622757 -0400
++++ libindicate-qt-0.2.5.91/CMakeLists.txt	2012-06-27 18:00:53.809620070 -0400
+@@ -17,7 +17,7 @@
+ 
+ add_definitions(-Wall)
+ 
+-pkg_check_modules(INDICATE REQUIRED indicate-0.5)
++pkg_check_modules(INDICATE REQUIRED indicate-0.7)
+ 
+ include_directories(
+     ${QT_INCLUDE_DIR}

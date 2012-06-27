@@ -10,3 +10,5 @@ Build order:
 03: gtk3                           -> GTK toolkit 3.0 with Ubuntu patches
 04: GConf2                         -> A configuration database system
 05: libdbusmenu                    -> Library for passing menus over DBus
+06: libindicate                    -> Libraries to raise 'flags' over DBUS
+07: libindicate-qt                 -> Qt bindings for libindicate
