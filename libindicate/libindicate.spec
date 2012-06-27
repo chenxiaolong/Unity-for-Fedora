@@ -40,7 +40,7 @@ indicator.
 
 %package -n python-indicate
 Summary:	Python 2 bindings for libindicate
-Group:		Development/Libraries
+Group:		System Environment/Libraries
 
 Requires:	%{name} = %{version}-%{release}
 
