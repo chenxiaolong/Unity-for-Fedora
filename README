@@ -14,3 +14,4 @@ Build order:
 07: libindicate-qt                 -> Qt bindings for libindicate
 08: libappindicator                -> Library to export menu bar to Unity
 09: appmenu-gtk                    -> Application menu module for GTK+
+10: appmenu-qt                     -> Application menu module for Qt
