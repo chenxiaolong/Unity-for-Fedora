@@ -13,3 +13,4 @@ Build order:
 06: libindicate                    -> Libraries to raise 'flags' over DBUS
 07: libindicate-qt                 -> Qt bindings for libindicate
 08: libappindicator                -> Library to export menu bar to Unity
+09: appmenu-gtk                    -> Application menu module for GTK+
