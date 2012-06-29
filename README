@@ -17,3 +17,5 @@ Build order:
 10: appmenu-qt                     -> Application menu module for Qt
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
+??: utouch-grail                   -> Gesture recognition and instantiation lib.
+
