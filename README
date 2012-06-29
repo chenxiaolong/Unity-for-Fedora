@@ -15,3 +15,4 @@ Build order:
 08: libappindicator                -> Library to export menu bar to Unity
 09: appmenu-gtk                    -> Application menu module for GTK+
 10: appmenu-qt                     -> Application menu module for Qt
+??: utouch-evemu                   -> Event emulation for the uTouch stack
