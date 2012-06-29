@@ -16,3 +16,4 @@ Build order:
 09: appmenu-gtk                    -> Application menu module for GTK+
 10: appmenu-qt                     -> Application menu module for Qt
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
+??: utouch-frame                   -> Touch frame library
