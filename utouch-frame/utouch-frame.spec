@@ -12,6 +12,7 @@ Source0:	https://launchpad.net/utouch-frame/trunk/utouch-frame-%{version}/+downl
 
 BuildRequires:	asciidoc
 BuildRequires:	automake
+BuildRequires:	gcc-c++
 BuildRequires:	libtool
 BuildRequires:	libX11-devel
 BuildRequires:	libXi-devel
