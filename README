@@ -18,4 +18,4 @@ Build order:
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
-
+??: utouch-geis                    -> Implementation of the GEIS interface
