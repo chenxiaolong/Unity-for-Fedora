@@ -1,17 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu3
-
 Name:		libdbusmenu
-Version:	0.6.1
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	0.6.2
+Release:	1%{?dist}
 Summary:	Small library that passes a menu structure across DBus
 
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv2 and LGPLv3
 URL:		https://launchpad.net/dbusmenu
 Source0:	https://launchpad.net/dbusmenu/0.6/%{version}/+download/libdbusmenu-%{version}.tar.gz
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libdbusmenu_%{version}-%{_ubuntu_rel}.diff.gz
 
 # Require Ubuntu versions of GTK2 and GTK3
 BuildRequires:	gtk2-devel >= 1:
@@ -165,10 +162,6 @@ mv %{name}-%{version} gtk3
 # Apply Ubuntu patches
 for i in gtk2 gtk3; do
   pushd ${i}
-  zcat "%{SOURCE99}" | patch -Np1
-  for j in $(grep -v '#' debian/patches/series); do
-    patch -Np1 -i "debian/patches/${j}"
-  done
 
   autoreconf -vfi
 
@@ -182,13 +175,13 @@ done
 %build
 pushd gtk2
 %configure --disable-scrollkeeper --enable-gtk-doc --enable-introspection \
-           --with-gtk=2
+           --with-gtk=2 --disable-static
 make %{?_smp_mflags}
 popd
 
 pushd gtk3
 %configure --disable-scrollkeeper --enable-gtk-doc --enable-introspection \
-           --with-gtk=3
+           --with-gtk=3 --disable-static
 make %{?_smp_mflags}
 popd
 
@@ -251,7 +244,7 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 %files glib
 %{_libdir}/libdbusmenu-glib.so.4
-%{_libdir}/libdbusmenu-glib.so.4.0.12
+%{_libdir}/libdbusmenu-glib.so.4.0.13
 %{_libdir}/girepository-1.0/Dbusmenu-0.4.typelib
 
 
@@ -264,7 +257,6 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-glib/server.h
 %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-glib/types.h
 %{_libdir}/pkgconfig/dbusmenu-glib-0.4.pc
-%{_libdir}/libdbusmenu-glib.a
 %{_libdir}/libdbusmenu-glib.so
 %{_datadir}/gir-1.0/Dbusmenu-0.4.gir
 %{_datadir}/vala/vapi/Dbusmenu-0.4.vapi
@@ -294,7 +286,7 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 %files gtk2
 %{_libdir}/libdbusmenu-gtk.so.4
-%{_libdir}/libdbusmenu-gtk.so.4.0.12
+%{_libdir}/libdbusmenu-gtk.so.4.0.13
 %{_libdir}/girepository-1.0/DbusmenuGtk-0.4.typelib
 
 
@@ -305,7 +297,6 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 %{_includedir}/libdbusmenu-gtk-0.4/libdbusmenu-gtk/menuitem.h
 %{_includedir}/libdbusmenu-gtk-0.4/libdbusmenu-gtk/parser.h
 %{_libdir}/pkgconfig/dbusmenu-gtk-0.4.pc
-%{_libdir}/libdbusmenu-gtk.a
 %{_libdir}/libdbusmenu-gtk.so
 %{_datadir}/gir-1.0/DbusmenuGtk-0.4.gir
 %{_datadir}/vala/vapi/DbusmenuGtk-0.4.vapi
@@ -313,7 +304,7 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 %files gtk3
 %{_libdir}/libdbusmenu-gtk3.so.4
-%{_libdir}/libdbusmenu-gtk3.so.4.0.12
+%{_libdir}/libdbusmenu-gtk3.so.4.0.13
 %{_libdir}/girepository-1.0/DbusmenuGtk3-0.4.typelib
 
 
@@ -324,7 +315,6 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 %{_includedir}/libdbusmenu-gtk3-0.4/libdbusmenu-gtk/menuitem.h
 %{_includedir}/libdbusmenu-gtk3-0.4/libdbusmenu-gtk/parser.h
 %{_libdir}/pkgconfig/dbusmenu-gtk3-0.4.pc
-%{_libdir}/libdbusmenu-gtk3.a
 %{_libdir}/libdbusmenu-gtk3.so
 %{_datadir}/gir-1.0/DbusmenuGtk3-0.4.gir
 %{_datadir}/vala/vapi/DbusmenuGtk3-0.4.vapi
@@ -352,17 +342,20 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 %files jsonloader
 %{_libdir}/libdbusmenu-jsonloader.so.4
-%{_libdir}/libdbusmenu-jsonloader.so.4.0.12
+%{_libdir}/libdbusmenu-jsonloader.so.4.0.13
 
 
 %files jsonloader-devel
 %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-jsonloader/json-loader.h
 %{_libdir}/pkgconfig/dbusmenu-jsonloader-0.4.pc
-%{_libdir}/libdbusmenu-jsonloader.a
 %{_libdir}/libdbusmenu-jsonloader.so
 
 
 %changelog
+* Fri Jun 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6.2-1
+- Update to version 0.6.2
+- Disable static libraries
+
 * Mon Jun 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6.1-1.0ubuntu3
 - Initial release
 - Version 0.6.1
