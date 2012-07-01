@@ -19,3 +19,4 @@ Build order:
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
 ??: utouch-geis                    -> Implementation of the GEIS interface
+??: metacity                       -> Lightweight GTK+ window manager

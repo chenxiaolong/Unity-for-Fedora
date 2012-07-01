@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Simulate Ubuntu's gconf defaults functionality
+if [ ! -f "${HOME}/.config/metacity.gconf-defaults" ]; then
+  defaults="/usr/share/metacity/metacity.gconf-defaults"
+  while read -r key value; do
+    # Check if value is an integer
+    if echo "${value}" | grep -Eq '^[0-9]+$'; then
+      TYPE=int
+    else
+      TYPE=string
+    fi
+    # Set values based on the gconf-defaults file
+    gconftool-2 --type "${TYPE}" --set "${key}" "${value}"
+  done < "${defaults}"
+
+  touch "${HOME}/.config/metacity.gconf-defaults"
+fi
+
+metacity.bin ${@}
