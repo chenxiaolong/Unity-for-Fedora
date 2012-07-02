@@ -66,6 +66,9 @@ Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2
 
+# Satisfy obs conflict on what provides PackageKit-backend
+BuildRequires:	PackageKit-yum
+
 %description
 Metacity is a window manager that integrates nicely with the GNOME desktop.
 It strives to be quiet, small, stable, get on with its job, and stay out of
