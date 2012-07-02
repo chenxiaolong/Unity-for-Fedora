@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Simulate Ubuntu's gconf defaults functionality
+
+# Set GConf defaults only if compiz-gnome is installed
+# Not checking with rpm - initial run too slow
+if [ -f /usr/bin/gtk-window-decorator ]; then
+  if [ ! -f "${HOME}/.config/compiz.gconf-defaults" ]; then
+    defaults="/usr/share/compiz/compiz.gconf-defaults"
+    while read -r key value; do
+      # Check value type
+      if echo "${value}" | grep -Eq '^[0-9]+$'; then
+        OPTIONS="--type int"
+      elif echo "${value}" | grep -Eq '^(true|false)+$'; then
+        OPTIONS="--type bool"
+      elif echo "${value}" | grep -Eq '^[0-9\.]+$'; then
+        OPTIONS="--type float"
+      elif echo "${value}" | grep -Eq '^\[.*\]$'; then
+        OPTIONS="--type list"
+        # Check list value type
+        if echo "${value}" | grep -Eq '^\[[0-9\ ]+\]$'; then
+          OPTIONS="${OPTIONS} --list-type int"
+        elif echo "${value}" | grep -Eq '^\[(true|false|\ )+\]$'; then
+          OPTIONS="${OPTIONS} --list-type bool"
+        elif echo "${value}" | grep -Eq '^\[[0-9\.\ ]+\]$'; then
+          OPTIONS="${OPTIONS} --list-type float"
+        else
+          OPTIONS="${OPTIONS} --list-type string"
+        fi
+      else
+        OPTIONS="--type string"
+      fi
+      # Set values based on the gconf-defaults file
+      gconftool-2 ${OPTIONS} --set "${key}" "${value}"
+    done < "${defaults}"
+
+    touch "${HOME}/.config/compiz.gconf-defaults"
+  fi
+fi
+
+compiz.bin ${@}

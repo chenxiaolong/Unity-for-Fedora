@@ -20,3 +20,4 @@ Build order:
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
 ??: utouch-geis                    -> Implementation of the GEIS interface
 ??: metacity                       -> Lightweight GTK+ window manager
+??: compiz                         -> Compiz core components
