@@ -21,3 +21,4 @@ Build order:
 ??: utouch-geis                    -> Implementation of the GEIS interface
 ??: metacity                       -> Lightweight GTK+ window manager
 ??: compiz                         -> Compiz core components
+??: compiz-plugins-main            -> Compiz main plugins
