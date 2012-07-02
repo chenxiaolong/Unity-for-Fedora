@@ -22,3 +22,4 @@ Build order:
 ??: metacity                       -> Lightweight GTK+ window manager
 ??: compiz                         -> Compiz core components
 ??: compiz-plugins-main            -> Compiz main plugins
+??: compiz-plugins-extra           -> Compiz extra plugins
