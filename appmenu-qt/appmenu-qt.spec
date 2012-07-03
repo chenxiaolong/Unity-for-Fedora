@@ -1,3 +1,5 @@
+# Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+
 Name:		appmenu-qt
 Version:	0.2.6
 Release:	1%{?dist}
