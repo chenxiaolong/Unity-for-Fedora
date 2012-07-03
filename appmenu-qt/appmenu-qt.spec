@@ -11,6 +11,8 @@ URL:		https://launchpad.net/appmenu-qt
 Source0:	https://launchpad.net/appmenu-qt/trunk/%{version}/+download/appmenu-qt-%{version}.tar.bz2
 
 BuildRequires:	cmake
+BuildRequires:	gcc-c++
+
 BuildRequires:	dbusmenu-qt-devel
 BuildRequires:	qt-devel
 
