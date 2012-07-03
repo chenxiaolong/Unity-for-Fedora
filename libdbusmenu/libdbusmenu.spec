@@ -11,8 +11,10 @@ URL:		https://launchpad.net/dbusmenu
 Source0:	https://launchpad.net/dbusmenu/0.6/%{version}/+download/libdbusmenu-%{version}.tar.gz
 
 # Require Ubuntu versions of GTK2 and GTK3
-BuildRequires:	gtk2-devel >= 1:
-BuildRequires:	gtk3-devel >= 1:
+#BuildRequires:	gtk2-devel >= 1:
+#BuildRequires:	gtk3-devel >= 1:
+BuildRequires:	gtk2-devel
+BuildRequires:	gtk3-devel
 
 BuildRequires:	atk-devel
 BuildRequires:	dbus-glib-devel
@@ -59,7 +61,8 @@ Group:		Development/Libraries
 Requires:	%{name}-glib = %{version}-%{release}
 Requires:	dbus-glib-devel
 # gtk2 with Ubuntu patches
-Requires:	gtk2 >= 1:
+#Requires:	gtk2 >= 1:
+Requires:	gtk2
 
 %description glib-devel
 This package contains the development files for the dbusmenu-glib library
@@ -90,7 +93,8 @@ Group:		Development/Libraries
 Requires:	%{name}-gtk2 = %{version}-%{release}
 Requires:	%{name}-glib-devel = %{version}-%{release}
 # gtk2 with Ubuntu patches
-Requires:	gtk2-devel >= 1:
+#Requires:	gtk2-devel >= 1:
+Requires:	gtk2-devel
 Requires:	dbus-glib-devel
 
 %description gtk2-devel
@@ -112,7 +116,8 @@ Group:		Development/Libraries
 Requires:	%{name}-gtk3 = %{version}-%{release}
 Requires:	%{name}-glib-devel = %{version}-%{release}
 # gtk3 with Ubuntu patches
-Requires:	gtk3-devel >= 1:
+#Requires:	gtk3-devel >= 1:
+Requires:	gtk3-devel
 Requires:	dbus-glib-devel
 
 %description gtk3-devel
