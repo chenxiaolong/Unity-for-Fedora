@@ -77,7 +77,7 @@ Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	python-utouch-geis%{?_isa} = %{version}-%{release}
 
 %description tools
-This package testing tools for the utouch-geis library.
+This package contains the testing tools for the utouch-geis library.
 
 
 %prep
