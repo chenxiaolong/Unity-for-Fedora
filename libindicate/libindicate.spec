@@ -2,6 +2,9 @@
 
 %global __provides_exclude_from %{python_sitearch}/indicate/_indicate.so
 
+# This following line is for the scripts in my git repo
+%define _ubuntu_match_rel 0ubuntu1
+
 Name:		libindicate
 Version:	0.6.92
 Release:	1%{?dist}

@@ -1,5 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+# The following line is for the scripts in my git repo
 %define _ubuntu_match_rel 0ubuntu2
 
 Name:		libappindicator
