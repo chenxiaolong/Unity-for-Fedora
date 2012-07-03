@@ -1,0 +1,13 @@
+diff -Nru libcompizconfig-0.9.5.94.orig/cmake/LibCompizConfigCommon.cmake libcompizconfig-0.9.5.94/cmake/LibCompizConfigCommon.cmake
+--- libcompizconfig-0.9.5.94.orig/cmake/LibCompizConfigCommon.cmake	2012-07-02 20:33:15.084987375 -0400
++++ libcompizconfig-0.9.5.94/cmake/LibCompizConfigCommon.cmake	2012-07-02 21:10:28.788577132 -0400
+@@ -122,7 +122,7 @@
+ 
+     install (
+ 	TARGETS ${bname}
+-	DESTINATION ${COMPIZ_DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/compizconfig/backends
++	DESTINATION ${COMPIZ_DESTDIR}${libdir}/compizconfig/backends
+     )
+ 
+     if (NOT _COMPIZCONFIG_INTERNAL)
+Binary files libcompizconfig-0.9.5.94.orig/.CMakeLists.txt.swp and libcompizconfig-0.9.5.94/.CMakeLists.txt.swp differ
