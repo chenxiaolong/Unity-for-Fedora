@@ -25,3 +25,4 @@ Build order:
 ??: compiz-plugins-main            -> Compiz main plugins
 ??: compiz-plugins-extra           -> Compiz extra plugins
 ??: libcompizconfig                -> Compiz configuration system library
+??: compizconfig-backend-gconf     -> GConf backend for Compiz
