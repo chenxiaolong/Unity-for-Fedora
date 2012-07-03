@@ -15,7 +15,6 @@ License:	LGPLv2 and LGPLv3
 URL:		https://launchpad.net/libindicate
 Source0:	https://launchpad.net/libindicate/0.7/%{version}/+download/libindicate-%{version}.tar.gz
 
-Patch0:		0001_no_disable_introspection.patch
 Patch1:		0002_missing_documentation.patch
 Patch2:		0003_libpyglib-linking.patch
 
@@ -175,9 +174,11 @@ library.
 
 %prep
 %setup -q
-%patch0 -p1 -b .introspection
 %patch1 -p1 -b .documentation
 %patch2 -p1 -b .libpygliblink
+
+# Build fix (thanks to Damian!)
+sed -i '/#include "glib\/gmessages.h"/d' libindicate/indicator.c
 
 autoreconf -vfi
 
@@ -187,12 +188,14 @@ autoreconf -vfi
 mkdir build-gtk2 build-gtk3
 
 pushd build-gtk2
-%configure --with-gtk=2 --disable-scrollkeeper --enable-gtk-doc
+%configure --with-gtk=2 --disable-scrollkeeper --enable-gtk-doc \
+           --enable-introspection=yes
 make -j1
 popd
 
 pushd build-gtk3
-%configure --with-gtk=3 --disable-scrollkeeper --enable-gtk-doc
+%configure --with-gtk=3 --disable-scrollkeeper --enable-gtk-doc \
+           --enable-introspection=yes
 make %{?_smp_mflags}
 popd
 
