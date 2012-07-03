@@ -1,3 +1,5 @@
+# Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+
 %global __provides_exclude_from %{python_sitearch}/indicate/_indicate.so
 
 Name:		libindicate
