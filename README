@@ -10,11 +10,12 @@ Build order:
 03: gtk3                           -> GTK toolkit 3.0 with Ubuntu patches
 04: GConf2                         -> A configuration database system
 05: libdbusmenu                    -> Library for passing menus over DBus
-06: libindicate                    -> Libraries to raise 'flags' over DBUS
-07: libindicate-qt                 -> Qt bindings for libindicate
-08: libappindicator                -> Library to export menu bar to Unity
-09: appmenu-gtk                    -> Application menu module for GTK+
-10: appmenu-qt                     -> Application menu module for Qt
+06: libindicator                   -> Symbols and functions for indicators
+07: libindicate                    -> Libraries to raise 'flags' over DBUS
+08: libindicate-qt                 -> Qt bindings for libindicate
+09: libappindicator                -> Library to export menu bar to Unity
+10: appmenu-gtk                    -> Application menu module for GTK+
+11: appmenu-qt                     -> Application menu module for Qt
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
