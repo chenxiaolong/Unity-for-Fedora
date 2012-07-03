@@ -196,7 +196,7 @@ popd
 pushd build-gtk3
 %configure --with-gtk=3 --disable-scrollkeeper --enable-gtk-doc \
            --enable-introspection=yes
-make %{?_smp_mflags}
+make -j1
 popd
 
 
