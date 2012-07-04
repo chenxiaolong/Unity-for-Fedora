@@ -23,6 +23,7 @@ Build order:
 16: libqtgconf                     -> Qt bindings for GConf
 17: dconf-qt                       -> Qt bindings for DConf
 18: sni-qt                         -> Turns Qt tray icons into appindicators
+19: ido                            -> Widgets and objects used for indicators
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
