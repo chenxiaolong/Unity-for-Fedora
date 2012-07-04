@@ -31,7 +31,7 @@ Build order:
 24: activity-log-manager ************
 25: gnome-screensaver ***************
 26: metacity                       -> Lightweight GTK+ window manager
-27: indicator-applet ****************
+27: indicator-applet               -> GNOME panel indicator applet
 28: indicator-application ***********
 29: indicator-appmenu ***************
 30: libtimezonemap ******************
