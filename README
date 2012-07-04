@@ -33,7 +33,7 @@ Build order:
 26: metacity                       -> Lightweight GTK+ window manager
 27: indicator-applet               -> GNOME panel indicator applet
 28: indicator-application          -> Takes menus and puts them in the panel
-29: indicator-appmenu ***************
+29: indicator-appmenu              -> An indicator to host the menus from apps
 30: libtimezonemap ******************
 31: indicator-datetime **************
 32: indicator-messages **************
