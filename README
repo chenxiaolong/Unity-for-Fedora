@@ -24,13 +24,53 @@ Build order:
 17: dconf-qt                       -> Qt bindings for DConf
 18: sni-qt                         -> Turns Qt tray icons into appindicators
 19: ido                            -> Widgets and objects used for indicators
-??: utouch-evemu                   -> Event emulation for the uTouch stack
-??: utouch-frame                   -> Touch frame library
-??: utouch-grail                   -> Gesture recognition and instantiation lib.
-??: utouch-geis                    -> Implementation of the GEIS interface
-??: metacity                       -> Lightweight GTK+ window manager
-??: compiz                         -> Compiz core components
-??: compiz-plugins-main            -> Compiz main plugins
-??: compiz-plugins-extra           -> Compiz extra plugins
-??: libcompizconfig                -> Compiz configuration system library
-??: compizconfig-backend-gconf     -> GConf backend for Compiz
+20: gsettings-desktop-schemas *******
+21: gnome-settings-daemon ***********
+22: gnome-session *******************
+23: gnome-control-center ************
+24: activity-log-manager ************
+25: gnome-screensaver ***************
+26: metacity                       -> Lightweight GTK+ window manager
+27: indicator-applet ****************
+28: indicator-application ***********
+29: indicator-appmenu ***************
+30: libtimezonemap ******************
+31: indicator-datetime **************
+32: indicator-messages **************
+33: indicator-multiload *************
+34: indicator-power *****************
+35: indicator-session ***************
+36: indicator-sound *****************
+37: NetworkManager-gnome ************
+38: gnome-bluetooth *****************
+39: overlay-scrollbar ***************
+40: plasma-widget-menubar ***********
+41: xfce4-indicator-plugin **********
+42: utouch-evemu                   -> Event emulation for the uTouch stack
+43: utouch-frame                   -> Touch frame library
+44: **fixesproto ********************
+45: libXfixes ***********************
+46: xorg-x11-server-Xorg ************
+47: utouch-grail                   -> Gesture recognition and instantiation lib.
+48: utouch-geis                    -> Implementation of the GEIS interface
+49: nux *****************************
+50: unity-asset-pool ****************
+51: **gnome-menus2 ******************
+52: libunity ************************
+53: libunity-misc *******************
+54: nautilus ************************
+55: unity-lens-applications *********
+56: unity-lens-files ****************
+57: unity-lens-music ****************
+58: unity-scope-video ***************
+58: unity-lens-video ****************
+59: compiz                         -> Compiz core components
+60: libcompizconfig                -> Compiz configuration system library
+61: compizconfig-backend-gconf     -> GConf backend for Compiz
+62: python-compizconfig *************
+63: **ccsm **************************
+64: compiz-plugins-main            -> Compiz main plugins
+65: compiz-plugins-extra           -> Compiz extra plugins
+66: **libgdu ************************
+67: unity ***************************
+68: unity-2d ************************
