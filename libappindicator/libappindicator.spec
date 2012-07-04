@@ -128,12 +128,12 @@ This package contains the development files for the appindicator-sharp library.
 mkdir build-gtk2 build-gtk3
 
 pushd build-gtk2
-%configure --with-gtk=2 --enable-gtk-doc
+%configure --with-gtk=2 --enable-gtk-doc --disable-static
 make %{?_smp_mflags}
 popd
 
 pushd build-gtk3
-%configure --with-gtk=3 --enable-gtk-doc
+%configure --with-gtk=3 --enable-gtk-doc --disable-static
 make %{?_smp_mflags}
 popd
 
@@ -171,16 +171,16 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files -n python-appindicator
+%dir %{python_sitearch}/appindicator/
 %{python_sitearch}/appindicator/__init__.py*
-%{python_sitearch}/appindicator/_appindicator.a
 %{python_sitearch}/appindicator/_appindicator.so
 %{_datadir}/pygtk/2.0/defs/appindicator.defs
 
 
 %files devel
+%dir %{_includedir}/libappindicator-0.1/
 %{_includedir}/libappindicator-0.1/libappindicator/app-indicator-enum-types.h
 %{_includedir}/libappindicator-0.1/libappindicator/app-indicator.h
-%{_libdir}/libappindicator.a
 %{_libdir}/libappindicator.so
 %{_libdir}/pkgconfig/appindicator-0.1.pc
 %{_datadir}/gir-1.0/AppIndicator-0.1.gir
@@ -195,9 +195,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files gtk3-devel
+%dir %{_includedir}/libappindicator3-0.1/
 %{_includedir}/libappindicator3-0.1/libappindicator/app-indicator-enum-types.h
 %{_includedir}/libappindicator3-0.1/libappindicator/app-indicator.h
-%{_libdir}/libappindicator3.a
 %{_libdir}/libappindicator3.so
 %{_libdir}/pkgconfig/appindicator3-0.1.pc
 %{_datadir}/gir-1.0/AppIndicator3-0.1.gir
@@ -206,6 +206,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files docs
+%dir %{_datadir}/gtk-doc/html/libappindicator/
 %{_datadir}/gtk-doc/html/libappindicator/annotation-glossary.html
 %{_datadir}/gtk-doc/html/libappindicator/api-index-0-5.html
 %{_datadir}/gtk-doc/html/libappindicator/api-index-deprecated.html
@@ -224,14 +225,17 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files sharp
+%dir %{_libdir}/appindicator-sharp-0.1/
 %{_libdir}/appindicator-sharp-0.1/appindicator-sharp.dll
 %{_libdir}/appindicator-sharp-0.1/appindicator-sharp.dll.config
 %{_libdir}/appindicator-sharp-0.1/policy.0.0.appindicator-sharp.config
 %{_libdir}/appindicator-sharp-0.1/policy.0.0.appindicator-sharp.dll
 %{_libdir}/appindicator-sharp-0.1/policy.0.1.appindicator-sharp.config
 %{_libdir}/appindicator-sharp-0.1/policy.0.1.appindicator-sharp.dll
+%dir %{_prefix}/lib/mono/appindicator-sharp/
 %{_prefix}/lib/mono/appindicator-sharp/appindicator-sharp.dll
 %{_prefix}/lib/mono/appindicator-sharp/policy.0.0.appindicator-sharp.dll
+%dir %{_prefix}/lib/mono/gac/appindicator-sharp/
 %{_prefix}/lib/mono/gac/appindicator-sharp/*/appindicator-sharp.dll
 %{_prefix}/lib/mono/gac/appindicator-sharp/*/appindicator-sharp.dll.config
 %{_prefix}/lib/mono/gac/policy.0.0.appindicator-sharp/*/policy.0.0.appindicator-sharp.dll
