@@ -20,6 +20,7 @@ Build order:
 13: libqtbamf                      -> Qt bindings for bamf
 14: dee                            -> Synchronize multiple instances over DBus
 15: libqtdee                       -> Qt bindings and QML plugin for Dee
+16: libqtgconf                     -> Qt bindings for GConf
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
