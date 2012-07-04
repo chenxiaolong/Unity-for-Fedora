@@ -62,6 +62,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %files
 %{_libdir}/libQtDee.so.2
 %{_libdir}/libQtDee.so.2.0.0
+%dir %{_libdir}/qt4/imports/dee/
 %{_libdir}/qt4/imports/dee/libQtDeeQml.so
 %{_libdir}/qt4/imports/dee/qmldir
 
