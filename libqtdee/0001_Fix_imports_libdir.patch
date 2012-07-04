@@ -1,0 +1,12 @@
+diff -Nru libqtdee-0.2.4.orig/CMakeLists.txt libqtdee-0.2.4/CMakeLists.txt
+--- libqtdee-0.2.4.orig/CMakeLists.txt	2012-07-03 22:45:40.818443720 -0400
++++ libqtdee-0.2.4/CMakeLists.txt	2012-07-03 22:45:58.963432444 -0400
+@@ -82,7 +82,7 @@
+ add_custom_target(check)
+ 
+ # Install
+-set(IMPORT_INSTALL_DIR lib/qt4/imports/dee)
++set(IMPORT_INSTALL_DIR lib${LIB_SUFFIX}/qt4/imports/dee)
+ set(INCLUDE_INSTALL_DIR include/QtDee)
+ 
+ ## QtDee

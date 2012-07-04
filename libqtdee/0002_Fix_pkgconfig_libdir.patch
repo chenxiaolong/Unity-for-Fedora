@@ -1,0 +1,12 @@
+diff -Nru libqtdee-0.2.4.orig/CMakeLists.txt libqtdee-0.2.4/CMakeLists.txt
+--- libqtdee-0.2.4.orig/CMakeLists.txt	2012-07-03 22:47:19.723381308 -0400
++++ libqtdee-0.2.4/CMakeLists.txt	2012-07-03 22:47:39.921368285 -0400
+@@ -95,7 +95,7 @@
+     )
+ 
+ install(FILES libqtdee.pc
+-    DESTINATION lib/pkgconfig
++    DESTINATION lib${LIB_SUFFIX}/pkgconfig
+     )
+ 
+ ## QtDeeQml

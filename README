@@ -18,6 +18,8 @@ Build order:
 11: appmenu-qt                     -> Application menu module for Qt
 12: bamf                           -> Application matching framework
 13: libqtbamf                      -> Qt bindings for bamf
+14: dee                            -> Synchronize multiple instances over DBus
+15: libqtdee                       -> Qt bindings and QML plugin for Dee
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
