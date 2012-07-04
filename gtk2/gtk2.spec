@@ -3,6 +3,8 @@
 
 %define _ubuntu_rel 0ubuntu6
 
+# 'fedora_' is prefixed to the sources and patches to group them together in OBS
+
 # Note that this is NOT a relocatable package
 
 %define glib2_base_version 2.27.3
@@ -30,27 +32,27 @@ Group:		System Environment/Libraries
 URL:		http://www.gtk.org
 #VCS:		git:git://git.gnome.org/gtk+#gtk-2-24
 Source:		http://download.gnome.org/sources/gtk+/2.24/gtk+-%{version}.tar.xz
-Source2:	update-gtk-immodules
-Source3:	im-cedilla.conf
+Source2:	fedora_update-gtk-immodules
+Source3:	fedora_im-cedilla.conf
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gtk+2.0_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 # Biarch changes
-Patch0:		gtk-lib64.patch
-Patch1:		system-python.patch
+Patch0:		fedora_gtk-lib64.patch
+Patch1:		fedora_system-python.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=583273
-Patch2:		icon-padding.patch
-Patch4:		fresh-tooltips.patch
+Patch2:		fedora_icon-padding.patch
+Patch4:		fedora_fresh-tooltips.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=599618
-Patch8:		tooltip-positioning.patch
+Patch8:		fedora_tooltip-positioning.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=592582
-#Patch14:	gtk2-landscape-pdf-print.patch
+#Patch14:	fedora_gtk2-landscape-pdf-print.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=611313
 # Included in Ubuntu patch 062_dnd_menubar.patch
-Patch15:	window-dragging.patch
+Patch15:	fedora_window-dragging.patch
 
 # fix dso.
-Patch17:	gtk2-fixdso.patch
+Patch17:	fedora_gtk2-fixdso.patch
 
 # Patch from Arch Linux TU, György Balló, to fix build with the Ubuntu menuproxy
 # code
@@ -111,7 +113,7 @@ suites.
 %package immodules
 Summary:	Input methods for GTK+
 Group:		System Environment/Libraries
-Requires:	gtk2 = %{epoch}:%{version}-%{release}
+Requires:	gtk2%{?_isa} = %{epoch}:%{version}-%{release}
 # for /etc/X11/xinit/xinput.d
 Requires:	imsettings
 
@@ -123,7 +125,7 @@ as part of GTK+.
 %package immodule-xim
 Summary:	XIM support for GTK+
 Group:		System Environment/Libraries
-Requires:	gtk2 = %{epoch}:%{version}-%{release}
+Requires:	gtk2%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description immodule-xim
 The gtk2-immodule-xim package contains XIM support for GTK+.
@@ -132,7 +134,7 @@ The gtk2-immodule-xim package contains XIM support for GTK+.
 %package devel
 Summary:	Development files for GTK+
 Group:		Development/Libraries
-Requires:	gtk2 = %{epoch}:%{version}-%{release}
+Requires:	gtk2%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:	pango-devel >= %{pango_version}
 Requires:	atk-devel >= %{atk_version}
 Requires:	glib2-devel >= %{glib2_version}
@@ -159,7 +161,7 @@ package.
 %package devel-docs
 Summary:	Developer documentation for GTK+
 Group:		Development/Libraries
-Requires:	gtk2 = %{epoch}:%{version}-%{release}
+Requires:	gtk2%{?_isa} = %{epoch}:%{version}-%{release}
 #BuildArch:	noarch
 
 %description devel-docs
@@ -290,7 +292,7 @@ cp %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/update-gtk-immodules
 
 # Input method frameworks want this
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d
-cp %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d
+cp %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d/im-cedilla.conf
 
 # Remove unpackaged files
 rm $RPM_BUILD_ROOT%{_libdir}/*.la
