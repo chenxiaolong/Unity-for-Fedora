@@ -13,8 +13,9 @@ Source0:	https://launchpad.net/ido/0.3/%{version}/+download/ido-%{version}.tar.g
 BuildRequires:	gtk-doc
 
 BuildRequires:	glib2-devel
-BuildRequires:	gtk2-devel
-BuildRequires:	gtk3-devel	
+# Ubuntu's gtk2 and gtk3 packages are required
+BuildRequires:	gtk2-devel >= 1:
+BuildRequires:	gtk3-devel >= 1:
 
 %description
 This package contains the GTK 2 version of the ido library.
@@ -26,7 +27,7 @@ Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	glib2-devel
-Requires:	gtk2-devel
+Requires:	gtk2-devel >= 1:
 
 %description devel
 This package contains the development files for the GTK 2 version of the ido
@@ -47,7 +48,7 @@ Group:		Development/Libraries
 
 Requires:	%{name}3%{?_isa} = %{version}-%{release}
 Requires:	glib2-devel
-Requires:	gtk3-devel
+Requires:	gtk3-devel >= 1:
 
 %description -n %{name}3-devel
 This package contains the development files for the GTK 3 version of the ido
