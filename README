@@ -35,7 +35,7 @@ Build order:
 28: indicator-application          -> Takes menus and puts them in the panel
 29: indicator-appmenu              -> An indicator to host the menus from apps
 30: libtimezonemap                 -> GTK+3 timezone map widget
-31: indicator-datetime **************
+31: indicator-datetime             -> A very, very simple clock
 32: indicator-messages **************
 33: indicator-multiload *************
 34: indicator-power *****************
