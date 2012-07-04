@@ -16,6 +16,7 @@ Build order:
 09: libappindicator                -> Library to export menu bar to Unity
 10: appmenu-gtk                    -> Application menu module for GTK+
 11: appmenu-qt                     -> Application menu module for Qt
+12: bamf                           -> Application matching framework
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
