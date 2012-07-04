@@ -1,0 +1,12 @@
+diff -Nru libqtbamf-0.2.4.orig/CMakeLists.txt libqtbamf-0.2.4/CMakeLists.txt
+--- libqtbamf-0.2.4.orig/CMakeLists.txt	2012-07-03 21:26:55.891034134 -0400
++++ libqtbamf-0.2.4/CMakeLists.txt	2012-07-03 21:28:02.484961406 -0400
+@@ -132,7 +132,7 @@
+ 
+ # FIXME: Generate from ${CMAKE_INSTALL_PREFIX}
+ install(FILES libqtbamf.pc
+-    DESTINATION lib/pkgconfig
++    DESTINATION lib${LIB_SUFFIX}/pkgconfig
+     )
+ 
+ ## QtBamfQml

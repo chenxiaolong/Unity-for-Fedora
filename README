@@ -17,6 +17,7 @@ Build order:
 10: appmenu-gtk                    -> Application menu module for GTK+
 11: appmenu-qt                     -> Application menu module for Qt
 12: bamf                           -> Application matching framework
+13: libqtbamf                      -> Qt bindings for bamf
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
