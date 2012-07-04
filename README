@@ -21,6 +21,7 @@ Build order:
 14: dee                            -> Synchronize multiple instances over DBus
 15: libqtdee                       -> Qt bindings and QML plugin for Dee
 16: libqtgconf                     -> Qt bindings for GConf
+17: dconf-qt                       -> Qt bindings for DConf
 ??: utouch-evemu                   -> Event emulation for the uTouch stack
 ??: utouch-frame                   -> Touch frame library
 ??: utouch-grail                   -> Gesture recognition and instantiation lib.
