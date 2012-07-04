@@ -17,6 +17,8 @@ Patch0:		0001_fix_pkgconfig_libindicate_version.patch
 Patch1:		0002_build_with_fvisibility_hidden.patch
 
 BuildRequires:	cmake
+BuildRequires:	gcc-c++
+
 BuildRequires:	qt-devel
 BuildRequires:	libindicate-devel >= 0.6.90
 
