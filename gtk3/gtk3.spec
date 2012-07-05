@@ -1,6 +1,8 @@
 # Based off of Fedora 17's spec
 # Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+# 'fedora_' is prefixed to the sources and patches to group them together in OBS
+
 %define _ubuntu_rel 0ubuntu0.2
 
 %global glib2_version 2.32.0
@@ -22,12 +24,12 @@ Group:		System Environment/Libraries
 URL:		http://www.gtk.org
 #VCS:		git:git://git.gnome.org/gtk+
 Source:		http://download.gnome.org/sources/gtk+/3.4/gtk+-%{version}.tar.xz
-Source1:	im-cedilla.conf
+Source1:	fedora_im-cedilla.conf
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 # upstream fix
-Patch0:		0002-GtkPlug-fix-handling-of-key-events-for-different-lay.patch
+Patch0:		fedora_0002-GtkPlug-fix-handling-of-key-events-for-different-lay.patch
 
 BuildRequires:	gnome-common autoconf automake intltool gettext
 BuildRequires:	atk-devel >= %{atk_version}
