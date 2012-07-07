@@ -11,8 +11,8 @@ URL:		https://launchpad.net/appmenu-gtk
 Source0:	https://launchpad.net/appmenu-gtk/0.4/%{version}/+download/appmenu-gtk-%{version}.tar.gz
 
 # Require Ubuntu version of GTK2 and GTK3
-BuildRequires:	gtk2-devel >= 1:
-BuildRequires:	gtk3-devel >= 1:
+BuildRequires:	gtk2-ubuntu-devel
+BuildRequires:	gtk3-ubuntu-devel
 
 BuildRequires:	libtool
 BuildRequires:	libX11-devel
