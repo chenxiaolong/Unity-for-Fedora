@@ -23,6 +23,10 @@ BuildRequires:	libindicator-gtk3-devel
 BuildRequires:	libX11-devel
 BuildRequires:	libxml2-devel
 
+# Satisfy OBS conflict on gtk2
+BuildRequires:	gtk2
+BuildRequires:	gtk2-devel
+
 %description
 This package contains an applet for the GNOME panel to display Ayatana
 appindicators.
