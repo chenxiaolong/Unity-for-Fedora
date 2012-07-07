@@ -3,9 +3,11 @@
 # Partially based off of Fedora 17's metacity spec file
 # This package is required for Compiz and Unity 2D
 
+%define _obsolete_ver 2.25.0-100
+
 %define _ubuntu_rel 1ubuntu11
 
-Name:		metacity
+Name:		metacity-ubuntu
 Version:	2.34.1
 Release:	1.%{_ubuntu_rel}%{?dist}
 # Require "metacity >= 1:" in other packages to use this package
@@ -76,6 +78,12 @@ BuildRequires:	gtk2
 BuildRequires:	gtk3
 BuildRequires:	gtk3-devel
 
+# Replace official verison
+Provides:	metacity%{?_isa} = %{version}-%{release}
+Provides:	metacity         = %{version}-%{release}
+Obsoletes:	metacity%{?_isa} < %{_obsolete_ver}
+Obsoletes:	metacity         < %{_obsolete_ver}
+
 %description
 Metacity is a window manager that integrates nicely with the GNOME desktop.
 It strives to be quiet, small, stable, get on with its job, and stay out of
@@ -88,6 +96,12 @@ Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
 
+# Replace official version
+Provides:	metacity-devel%{?_isa} = %{version}-%{release}
+Provides:	metacity-devel         = %{version}-%{release}
+Obsoletes:	metacity-devel%{?_isa} < %{_obsolete_ver}
+Obsoletes:	metacity-devel         < %{_obsolete_ver}
+
 %description devel
 This package contains the files needed for compiling programs using
 the metacity-private library. Note that you are not supposed to write
@@ -96,7 +110,7 @@ API. This package exists purely for technical reasons.
 
 
 %prep
-%setup -q
+%setup -q -n metacity-%{version}
 
 # Apply Ubuntu's patches
 tar zxvf %{SOURCE99}
@@ -134,7 +148,7 @@ install -m644 debian/metacity-common.gconf-defaults \
               $RPM_BUILD_ROOT%{_datadir}/metacity/metacity.gconf-defaults
 install -m755 '%{SOURCE1}' $RPM_BUILD_ROOT%{_bindir}/metacity
 
-%find_lang %{name}
+%find_lang metacity
 
 
 %post
@@ -153,7 +167,7 @@ fi
 %postun -p /usr/sbin/ldconfig
 
 
-%files -f %{name}.lang
+%files -f metacity.lang
 %doc README AUTHORS COPYING NEWS HACKING doc/theme-format.txt doc/metacity-theme.dtd rationales.txt
 %{_bindir}/metacity
 %{_bindir}/metacity.bin
