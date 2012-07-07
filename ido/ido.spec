@@ -14,8 +14,10 @@ BuildRequires:	gtk-doc
 
 BuildRequires:	glib2-devel
 # Ubuntu's gtk2 and gtk3 packages are required
-BuildRequires:	gtk2-devel >= 1:
-BuildRequires:	gtk3-devel >= 1:
+BuildRequires:	gtk2-ubuntu-devel
+BuildRequires:	gtk3-ubuntu-devel
+
+Requires:	gtk2-ubuntu
 
 %description
 This package contains the GTK 2 version of the ido library.
@@ -27,7 +29,8 @@ Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	glib2-devel
-Requires:	gtk2-devel >= 1:
+# Ubuntu's gtk2 required
+Requires:	gtk2-ubuntu-devel
 
 %description devel
 This package contains the development files for the GTK 2 version of the ido
@@ -37,6 +40,8 @@ library.
 %package -n %{name}3
 Summary:	Widgets and other objects used for indicators - GTK 3
 Group:		System Environment/Libraries
+
+Requires:	gtk3-ubuntu
 
 %description -n %{name}3
 This package contains the GTK 3 version of the ido library.
@@ -48,7 +53,8 @@ Group:		Development/Libraries
 
 Requires:	%{name}3%{?_isa} = %{version}-%{release}
 Requires:	glib2-devel
-Requires:	gtk3-devel >= 1:
+# Ubuntu's gtk3 required
+Requires:	gtk3-ubuntu-devel
 
 %description -n %{name}3-devel
 This package contains the development files for the GTK 3 version of the ido
