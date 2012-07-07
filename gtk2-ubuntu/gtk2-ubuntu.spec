@@ -116,7 +116,7 @@ projects ranging from small one-off tools to complete application
 suites.
 
 
-%package -n gtk2-immodules-ubuntu
+%package immodules
 Summary:	Input methods for GTK+
 Group:		System Environment/Libraries
 Requires:	gtk2-ubuntu%{?_isa} = %{version}-%{release}
@@ -128,12 +128,12 @@ Provides:	gtk2-immodules         = %{version}-%{release}
 Obsoletes:	gtk2-immodules%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk2-immodules         < %{_obsolete_ver}
 
-%description -n gtk2-immodules-ubuntu
+%description immodules
 The gtk2-immodules package contains standalone input methods that are shipped
 as part of GTK+.
 
 
-%package -n gtk2-immodule-xim-ubuntu
+%package immodule-xim
 Summary:	XIM support for GTK+
 Group:		System Environment/Libraries
 Requires:	gtk2-ubuntu%{?_isa} = %{version}-%{release}
@@ -143,11 +143,11 @@ Provides:	gtk2-immodule-xim         = %{version}-%{release}
 Obsoletes:	gtk2-immodule-xim%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk2-immodule-xim         < %{_obsolete_ver}
 
-%description -n gtk2-immodule-xim-ubuntu
+%description immodule-xim
 The gtk2-immodule-xim package contains XIM support for GTK+.
 
 
-%package -n gtk2-devel-ubuntu
+%package devel
 Summary:	Development files for GTK+
 Group:		Development/Libraries
 Requires:	gtk2-ubuntu%{?_isa} = %{version}-%{release}
@@ -172,14 +172,14 @@ Provides:	gtk2-devel         = %{version}-%{release}
 Obsoletes:	gtk2-devel%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk2-devel         < %{_obsolete_ver}
 
-%description -n gtk2-devel-ubuntu
+%description devel
 This package contains the libraries amd header files that are needed
 for writing applications with the GTK+ widget toolkit. If you plan
 to develop applications with GTK+, consider installing the gtk2-devel-docs
 package.
 
 
-%package -n gtk2-devel-docs-ubuntu
+%package devel-docs
 Summary:	Developer documentation for GTK+
 Group:		Development/Libraries
 Requires:	gtk2-ubuntu%{?_isa} = %{version}-%{release}
@@ -190,7 +190,7 @@ Provides:	gtk2-devel-docs         = %{version}-%{release}
 Obsoletes:	gtk2-devel-docs%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk2-devel-docs         < %{_obsolete_ver}
 
-%description -n gtk2-devel-docs-ubuntu
+%description devel-docs
 This package contains developer documentation for the GTK+ widget toolkit.
 
 
@@ -345,11 +345,11 @@ echo %ghost %{_sysconfdir}/gtk-2.0/$host/gtk.immodules >> gtk20.lang
 /usr/bin/update-gtk-immodules %{_host}
 
 
-%post -n gtk2-immodules-ubuntu
+%post immodules
 /usr/bin/update-gtk-immodules %{_host}
 
 
-%post -n gtk2-immodule-xim-ubuntu
+%post immodule-xim
 /usr/bin/update-gtk-immodules %{_host}
 
 
@@ -360,11 +360,11 @@ if [ $1 -gt 0 ]; then
 fi
 
 
-%postun -n gtk2-immodules-ubuntu
+%postun immodules
 /usr/bin/update-gtk-immodules %{_host}
 
 
-%postun -n gtk2-immodule-xim-ubuntu
+%postun immodule-xim
 /usr/bin/update-gtk-immodules %{_host}
 
 
@@ -391,7 +391,7 @@ fi
 %{_libdir}/girepository-1.0
 
 
-%files -n gtk2-immodules-ubuntu
+%files immodules
 %{_libdir}/gtk-2.0/%{bin_version}/immodules/im-am-et.so
 %{_libdir}/gtk-2.0/%{bin_version}/immodules/im-cedilla.so
 %{_libdir}/gtk-2.0/%{bin_version}/immodules/im-cyrillic-translit.so
@@ -406,11 +406,11 @@ fi
 %config(noreplace) %{_sysconfdir}/gtk-2.0/im-multipress.conf
 
 
-%files -n gtk2-immodule-xim-ubuntu
+%files immodule-xim
 %{_libdir}/gtk-2.0/%{bin_version}/immodules/im-xim.so
 
 
-%files -n gtk2-devel-ubuntu -f gtk20-properties.lang
+%files devel -f gtk20-properties.lang
 %{_libdir}/lib*.so
 %{_libdir}/gtk-2.0/include
 %{_includedir}/*
@@ -422,7 +422,7 @@ fi
 %{_datadir}/gir-1.0
 
 
-%files -n gtk2-devel-docs-ubuntu
+%files devel-docs
 %{_datadir}/gtk-doc
 # oops, man pages went missing
 # %{_mandir}/man1/*
@@ -432,6 +432,9 @@ fi
 
 
 %changelog
+* Fri Jul 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.10-1.0ubuntu6
+- Stop using epochs to override official version
+
 * Mon Jun 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1:2.24.10-1.0ubuntu6
 - Initial release based off of F17's gtk2 sources
 - Version 2.24.10
