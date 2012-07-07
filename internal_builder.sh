@@ -268,17 +268,20 @@ get_rpms() {
   fi
 
   if [ ! -z "${MISSING_RPMS}" ]; then
-    echo "Cannot proceed; the following RPM's are missing:"
-    echo -e "${MISSING_RPMS}"
-    echo "Please rebuild the package."
-    return
+    echo "Cannot proceed; the following RPM's are missing:" >&2
+    echo -e "${MISSING_RPMS}" >&2
+    echo "Please rebuild the package." >&2
+    exit 1
   fi
 
   echo ${AVAILABLE_RPMS}
 }
 
 install_rpms() {
-  sudo yum install $(get_rpms)
+  local PKG_LIST=$(get_rpms)
+  if [ ! -z "${PKG_LIST}" ]; then
+    sudo yum install ${PKG_LIST}
+  fi
 }
 
 #########################
