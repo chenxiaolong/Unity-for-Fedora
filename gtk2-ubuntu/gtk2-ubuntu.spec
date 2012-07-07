@@ -1,6 +1,8 @@
 # Based off of Fedora 17's spec
 # Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _obsolete_ver 2.24.10-100
+
 %define _ubuntu_rel 0ubuntu6
 
 # 'fedora_' is prefixed to the sources and patches to group them together in OBS
@@ -23,10 +25,9 @@
 %define bin_version 2.10.0
 
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
-Name:		gtk2
+Name:		gtk2-ubuntu
 Version:	2.24.10
 Release:	1.%{_ubuntu_rel}%{?dist}
-Epoch:		1
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
@@ -103,6 +104,11 @@ Requires(post):	pango >= %{pango_version}
 Requires(post):	libtiff >= 3.6.1
 Requires:	libXrandr >= %{xrandr_version}
 
+Provides:	gtk2%{?_isa} = %{version}-%{release}
+Provides:	gtk2         = %{version}-%{release}
+Obsoletes:	gtk2%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk2         < %{_obsolete_ver}
+
 %description
 GTK+ is a multi-platform toolkit for creating graphical user
 interfaces. Offering a complete set of widgets, GTK+ is suitable for
@@ -110,31 +116,41 @@ projects ranging from small one-off tools to complete application
 suites.
 
 
-%package immodules
+%package -n gtk2-immodules-ubuntu
 Summary:	Input methods for GTK+
 Group:		System Environment/Libraries
-Requires:	gtk2%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gtk2-ubuntu%{?_isa} = %{version}-%{release}
 # for /etc/X11/xinit/xinput.d
 Requires:	imsettings
 
-%description immodules
+Provides:	gtk2-immodules%{?_isa} = %{version}-%{release}
+Provides:	gtk2-immodules         = %{version}-%{release}
+Obsoletes:	gtk2-immodules%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk2-immodules         < %{_obsolete_ver}
+
+%description -n gtk2-immodules-ubuntu
 The gtk2-immodules package contains standalone input methods that are shipped
 as part of GTK+.
 
 
-%package immodule-xim
+%package -n gtk2-immodule-xim-ubuntu
 Summary:	XIM support for GTK+
 Group:		System Environment/Libraries
-Requires:	gtk2%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gtk2-ubuntu%{?_isa} = %{version}-%{release}
 
-%description immodule-xim
+Provides:	gtk2-immodule-xim%{?_isa} = %{version}-%{release}
+Provides:	gtk2-immodule-xim         = %{version}-%{release}
+Obsoletes:	gtk2-immodule-xim%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk2-immodule-xim         < %{_obsolete_ver}
+
+%description -n gtk2-immodule-xim-ubuntu
 The gtk2-immodule-xim package contains XIM support for GTK+.
 
 
-%package devel
+%package -n gtk2-devel-ubuntu
 Summary:	Development files for GTK+
 Group:		Development/Libraries
-Requires:	gtk2%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gtk2-ubuntu%{?_isa} = %{version}-%{release}
 Requires:	pango-devel >= %{pango_version}
 Requires:	atk-devel >= %{atk_version}
 Requires:	glib2-devel >= %{glib2_version}
@@ -151,20 +167,30 @@ Requires:	automake
 Provides:	gail-devel = %{version}-%{release}
 Obsoletes:	gail-devel < 2.13.0-1
 
-%description devel
+Provides:	gtk2-devel%{?_isa} = %{version}-%{release}
+Provides:	gtk2-devel         = %{version}-%{release}
+Obsoletes:	gtk2-devel%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk2-devel         < %{_obsolete_ver}
+
+%description -n gtk2-devel-ubuntu
 This package contains the libraries amd header files that are needed
 for writing applications with the GTK+ widget toolkit. If you plan
 to develop applications with GTK+, consider installing the gtk2-devel-docs
 package.
 
 
-%package devel-docs
+%package -n gtk2-devel-docs-ubuntu
 Summary:	Developer documentation for GTK+
 Group:		Development/Libraries
-Requires:	gtk2%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gtk2-ubuntu%{?_isa} = %{version}-%{release}
 #BuildArch:	noarch
 
-%description devel-docs
+Provides:	gtk2-devel-docs%{?_isa} = %{version}-%{release}
+Provides:	gtk2-devel-docs         = %{version}-%{release}
+Obsoletes:	gtk2-devel-docs%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk2-devel-docs         < %{_obsolete_ver}
+
+%description -n gtk2-devel-docs-ubuntu
 This package contains developer documentation for the GTK+ widget toolkit.
 
 
@@ -288,7 +314,7 @@ case "$host" in
 esac
 
 # Install wrappers for the binaries
-cp %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/update-gtk-immodules
+install -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/update-gtk-immodules
 
 # Input method frameworks want this
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinput.d
@@ -319,11 +345,11 @@ echo %ghost %{_sysconfdir}/gtk-2.0/$host/gtk.immodules >> gtk20.lang
 /usr/bin/update-gtk-immodules %{_host}
 
 
-%post immodules
+%post -n gtk2-immodules-ubuntu
 /usr/bin/update-gtk-immodules %{_host}
 
 
-%post immodule-xim
+%post -n gtk2-immodule-xim-ubuntu
 /usr/bin/update-gtk-immodules %{_host}
 
 
@@ -334,11 +360,11 @@ if [ $1 -gt 0 ]; then
 fi
 
 
-%postun immodules
+%postun -n gtk2-immodules-ubuntu
 /usr/bin/update-gtk-immodules %{_host}
 
 
-%postun immodule-xim
+%postun -n gtk2-immodule-xim-ubuntu
 /usr/bin/update-gtk-immodules %{_host}
 
 
@@ -365,7 +391,7 @@ fi
 %{_libdir}/girepository-1.0
 
 
-%files immodules
+%files -n gtk2-immodules-ubuntu
 %{_libdir}/gtk-2.0/%{bin_version}/immodules/im-am-et.so
 %{_libdir}/gtk-2.0/%{bin_version}/immodules/im-cedilla.so
 %{_libdir}/gtk-2.0/%{bin_version}/immodules/im-cyrillic-translit.so
@@ -380,11 +406,11 @@ fi
 %config(noreplace) %{_sysconfdir}/gtk-2.0/im-multipress.conf
 
 
-%files immodule-xim
+%files -n gtk2-immodule-xim-ubuntu
 %{_libdir}/gtk-2.0/%{bin_version}/immodules/im-xim.so
 
 
-%files devel -f gtk20-properties.lang
+%files -n gtk2-devel-ubuntu -f gtk20-properties.lang
 %{_libdir}/lib*.so
 %{_libdir}/gtk-2.0/include
 %{_includedir}/*
@@ -396,7 +422,7 @@ fi
 %{_datadir}/gir-1.0
 
 
-%files devel-docs
+%files -n gtk2-devel-docs-ubuntu
 %{_datadir}/gtk-doc
 # oops, man pages went missing
 # %{_mandir}/man1/*
