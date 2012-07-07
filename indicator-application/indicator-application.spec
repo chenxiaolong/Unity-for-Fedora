@@ -24,6 +24,10 @@ BuildRequires:	libdbusmenu-gtk3-devel
 BuildRequires:	libindicator-devel
 BuildRequires:	libindicator-gtk3-devel
 
+# Dependencies use gtk3-ubuntu, so don't install gtk3
+#!BuildIgnore:	gtk3
+#!BuildIgnore:	gtk3-devel
+
 %description
 This package contains a library and indicator that takes menus from applications
 and places them in the panel.
