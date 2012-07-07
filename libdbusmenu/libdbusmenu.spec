@@ -11,10 +11,8 @@ URL:		https://launchpad.net/dbusmenu
 Source0:	https://launchpad.net/dbusmenu/0.6/%{version}/+download/libdbusmenu-%{version}.tar.gz
 
 # Require Ubuntu versions of GTK2 and GTK3
-#BuildRequires:	gtk2-devel >= 1:
-#BuildRequires:	gtk3-devel >= 1:
-BuildRequires:	gtk2-devel
-BuildRequires:	gtk3-devel
+BuildRequires:	gtk2-ubuntu-devel
+BuildRequires:	gtk3-ubuntu-devel
 
 BuildRequires:	atk-devel
 BuildRequires:	dbus-glib-devel
@@ -61,8 +59,7 @@ Group:		Development/Libraries
 Requires:	%{name}-glib = %{version}-%{release}
 Requires:	dbus-glib-devel
 # gtk2 with Ubuntu patches
-#Requires:	gtk2 >= 1:
-Requires:	gtk2
+Requires:	gtk2-ubuntu-devel
 
 %description glib-devel
 This package contains the development files for the dbusmenu-glib library
@@ -82,6 +79,8 @@ This package includes the documentation for the dbusmenu-glib library
 Summary:	Small library that passes a menu structure across DBus - GTK2 version
 Group:		System Environment/Libraries
 
+Requires:	gtk2-ubuntu
+
 %description gtk2
 This package contains the shared libraries for dbusmenu-gtk2
 
@@ -93,8 +92,7 @@ Group:		Development/Libraries
 Requires:	%{name}-gtk2 = %{version}-%{release}
 Requires:	%{name}-glib-devel = %{version}-%{release}
 # gtk2 with Ubuntu patches
-#Requires:	gtk2-devel >= 1:
-Requires:	gtk2-devel
+Requires:	gtk2-ubuntu-devel
 Requires:	dbus-glib-devel
 
 %description gtk2-devel
@@ -104,6 +102,8 @@ This package contains the development files for the dbusmenu-gtk2 library
 %package gtk3
 Summary:	Small library that passes a menu structure across DBus - GTK3 version
 Group:		System Environment/Libraries
+
+Requires:	gtk3-ubuntu
 
 %description gtk3
 This package contains the shared libraries for dbusmenu-gtk3
@@ -116,8 +116,7 @@ Group:		Development/Libraries
 Requires:	%{name}-gtk3 = %{version}-%{release}
 Requires:	%{name}-glib-devel = %{version}-%{release}
 # gtk3 with Ubuntu patches
-#Requires:	gtk3-devel >= 1:
-Requires:	gtk3-devel
+Requires:	gtk3-ubuntu-devel
 Requires:	dbus-glib-devel
 
 %description gtk3-devel
