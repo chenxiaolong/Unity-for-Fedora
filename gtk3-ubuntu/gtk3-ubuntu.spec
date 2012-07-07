@@ -1,6 +1,8 @@
 # Based off of Fedora 17's spec
 # Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _obsolete_ver 3.5.0-100
+
 # 'fedora_' is prefixed to the sources and patches to group them together in OBS
 
 %define _ubuntu_rel 0ubuntu0.2
@@ -15,10 +17,9 @@
 %global bin_version 3.0.0
 
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
-Name:		gtk3
+Name:		gtk3-ubuntu
 Version:	3.4.2
 Release:	1.%{_ubuntu_rel}%{?dist}
-Epoch:		1
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
@@ -66,6 +67,11 @@ Requires:	libXrandr >= %{xrandr_version}
 # gtk3 no longer provides the GtkThemeEngine interface used there
 Obsoletes:	gtk3-engines <= 2.91.5-5.fc15
 
+Provides:	gtk3%{?_isa} = %{version}-%{release}
+Provides:	gtk3         = %{version}-%{release}
+Obsoletes:	gtk3%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk3         < %{_obsolete_ver}
+
 %description
 GTK+ is a multi-platform toolkit for creating graphical user
 interfaces. Offering a complete set of widgets, GTK+ is suitable for
@@ -75,31 +81,41 @@ suites.
 This package contains version 3 of GTK+.
 
 
-%package immodules
+%package -n gtk3-immodules-ubuntu
 Summary:	Input methods for GTK+
 Group:		System Environment/Libraries
-Requires:	gtk3%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gtk3-ubuntu%{?_isa} = %{version}-%{release}
 # for /etc/X11/xinit/xinput.d
 Requires:	imsettings
 
-%description immodules
+Provides:	gtk3-immodules%{?_isa} = %{version}-%{release}
+Provides:	gtk3-immodules         = %{version}-%{release}
+Obsoletes:	gtk3-immodules%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk3-immodules         < %{_obsolete_ver}
+
+%description -n gtk3-immodules-ubuntu
 The gtk3-immodules package contains standalone input methods that
 are shipped as part of GTK+ 3.
 
 
-%package immodule-xim
+%package -n gtk3-immodule-xim-ubuntu
 Summary:	XIM support for GTK+
 Group:		System Environment/Libraries
-Requires:	gtk3%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gtk3-ubuntu%{?_isa} = %{version}-%{release}
 
-%description immodule-xim
+Provides:	gtk3-immodule-xim%{?_isa} = %{version}-%{release}
+Provides:	gtk3-immodule-xim         = %{version}-%{release}
+Obsoletes:	gtk3-immodule-xim%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk3-immodule-xim         < %{_obsolete_ver}
+
+%description -n gtk3-immodule-xim-ubuntu
 The gtk3-immodule-xim package contains XIM support for GTK+ 3.
 
 
-%package devel
+%package -n gtk3-devel-ubuntu
 Summary:	Development files for GTK+
 Group:		Development/Libraries
-Requires:	gtk3 = %{epoch}:%{version}-%{release}
+Requires:	gtk3-ubuntu = %{version}-%{release}
 Requires:	gdk-pixbuf2-devel
 Requires:	libX11-devel, libXcursor-devel, libXinerama-devel
 Requires:	libXext-devel, libXi-devel, libXrandr-devel
@@ -109,19 +125,29 @@ Requires:	automake
 
 Obsoletes:	gtk3-engines-devel <= 2.91.5-5.fc15
 
-%description devel
+Provides:	gtk3-devel%{?_isa} = %{version}-%{release}
+Provides:	gtk3-devel         = %{version}-%{release}
+Obsoletes:	gtk3-devel%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk3-devel         < %{_obsolete_ver}
+
+%description -n gtk3-devel-ubuntu
 This package contains the libraries and header files that are needed
 for writing applications with version 3 of the GTK+ widget toolkit. If
 you plan to develop applications with GTK+, consider installing the
 gtk3-devel-docs package.
 
 
-%package devel-docs
+%package -n gtk3-devel-docs-ubuntu
 Summary:	Developer documentation for GTK+
 Group:		Development/Libraries
-Requires:	gtk3 = %{epoch}:%{version}-%{release}
+Requires:	gtk3-ubuntu = %{version}-%{release}
 
-%description devel-docs
+Provides:	gtk3-devel-docs%{?_isa} = %{version}-%{release}
+Provides:	gtk3-devel-docs         = %{version}-%{release}
+Obsoletes:	gtk3-devel-docs%{?_isa} < %{_obsolete_ver}
+Obsoletes:	gtk3-devel-docs         < %{_obsolete_ver}
+
+%description -n gtk3-devel-docs-ubuntu
 This package contains developer documentation for version 3 of the GTK+
 widget toolkit.
 
@@ -194,15 +220,15 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%post devel
+%post -n gtk3-devel-ubuntu
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%post immodules
+%post -n gtk3-immodules-ubuntu
 gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
-%post immodule-xim
+%post -n gtk3-immodule-xim-ubuntu
 gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
@@ -214,15 +240,15 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%postun devel
+%postun -n gtk3-devel-ubuntu
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%postun immodules
+%postun -n gtk3-immodules-ubuntu
 gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
-%postun immodule-xim
+%postun -n gtk3-immodule-xim-ubuntu
 gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
@@ -252,7 +278,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.ColorChooser.gschema.xml
 
 
-%files immodules
+%files -n gtk3-immodules-ubuntu
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-am-et.so
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-cyrillic-translit.so
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-inuktitut.so
@@ -265,11 +291,11 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %config(noreplace) %{_sysconfdir}/gtk-3.0/im-multipress.conf
 
 
-%files immodule-xim
+%files -n gtk3-immodule-xim-ubuntu
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-xim.so
 
 
-%files devel -f gtk30-properties.lang
+%files -n gtk3-devel-ubuntu -f gtk30-properties.lang
 %{_libdir}/lib*.so
 %{_includedir}/*
 %{_datadir}/aclocal/*
@@ -282,11 +308,14 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/glib-2.0/schemas/org.gtk.Demo.gschema.xml
 
 
-%files devel-docs
+%files -n gtk3-devel-docs-ubuntu
 %{_datadir}/gtk-doc
 
 
 %changelog
+* Fri Jul 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu0.2
+- Stop using epochs to override official packages
+
 * Mon Jun 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1:3.4.2-1.0ubuntu0.2
 - Version 3.4.2
 - Ubuntu release 0ubuntu0.2
