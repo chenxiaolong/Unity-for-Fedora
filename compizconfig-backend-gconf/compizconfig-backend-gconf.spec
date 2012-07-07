@@ -27,6 +27,10 @@ BuildRequires:	libcompizconfig-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxslt-devel
 
+# Satisfy OBS conflict on gtk3 (installed by build dependencies)
+BuildRequires:	gtk3
+BuildRequires:	gtk3-devel
+
 %description
 This package contains the GConf 2 configuration backend for Compiz.
 
