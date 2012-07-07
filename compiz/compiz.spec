@@ -56,7 +56,7 @@ BuildRequires:	libxslt-devel
 BuildRequires:	mesa-libGL-devel
 BuildRequires:	mesa-libGLU-devel
 # Ubuntu's metacity required for the keybinding files
-BuildRequires:	metacity-devel >= 1:
+BuildRequires:	metacity-ubuntu-devel
 BuildRequires:	pango-devel
 #BuildRequires:	perl-XML-Parser
 BuildRequires:	startup-notification-devel
