@@ -39,6 +39,10 @@ Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2
 
+# Satisfy obs conflict on gtk3 (installed by build dependencies)
+BuildRequires:  gtk3
+BuildRequires:  gtk3-devel
+
 %description
 This package provides extra plugins and themes contributed by the community
 giving a rich desktop experience.
