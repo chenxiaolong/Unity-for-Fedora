@@ -41,6 +41,10 @@ BuildRequires:	polkit-devel
 # OBS build fix
 BuildRequires:	PackageKit-yum
 
+# OBS dependency solver fix: dependencies use gtk3-ubuntu, so don't install gtk3
+#!BuildIgnore:  gtk3
+#!BuildIgnore:  gtk3-devel
+
 %description
 This package contains an indicator for displaying the date and time in the
 panel.
