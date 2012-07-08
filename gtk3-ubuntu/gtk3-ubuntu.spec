@@ -81,7 +81,7 @@ suites.
 This package contains version 3 of GTK+.
 
 
-%package -n gtk3-immodules-ubuntu
+%package immodules
 Summary:	Input methods for GTK+
 Group:		System Environment/Libraries
 Requires:	gtk3-ubuntu%{?_isa} = %{version}-%{release}
@@ -93,12 +93,12 @@ Provides:	gtk3-immodules         = %{version}-%{release}
 Obsoletes:	gtk3-immodules%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk3-immodules         < %{_obsolete_ver}
 
-%description -n gtk3-immodules-ubuntu
+%description immodules
 The gtk3-immodules package contains standalone input methods that
 are shipped as part of GTK+ 3.
 
 
-%package -n gtk3-immodule-xim-ubuntu
+%package immodule-xim
 Summary:	XIM support for GTK+
 Group:		System Environment/Libraries
 Requires:	gtk3-ubuntu%{?_isa} = %{version}-%{release}
@@ -108,11 +108,11 @@ Provides:	gtk3-immodule-xim         = %{version}-%{release}
 Obsoletes:	gtk3-immodule-xim%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk3-immodule-xim         < %{_obsolete_ver}
 
-%description -n gtk3-immodule-xim-ubuntu
+%description immodule-xim
 The gtk3-immodule-xim package contains XIM support for GTK+ 3.
 
 
-%package -n gtk3-devel-ubuntu
+%package devel
 Summary:	Development files for GTK+
 Group:		Development/Libraries
 Requires:	gtk3-ubuntu = %{version}-%{release}
@@ -130,14 +130,14 @@ Provides:	gtk3-devel         = %{version}-%{release}
 Obsoletes:	gtk3-devel%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk3-devel         < %{_obsolete_ver}
 
-%description -n gtk3-devel-ubuntu
+%description devel
 This package contains the libraries and header files that are needed
 for writing applications with version 3 of the GTK+ widget toolkit. If
 you plan to develop applications with GTK+, consider installing the
 gtk3-devel-docs package.
 
 
-%package -n gtk3-devel-docs-ubuntu
+%package devel-docs
 Summary:	Developer documentation for GTK+
 Group:		Development/Libraries
 Requires:	gtk3-ubuntu = %{version}-%{release}
@@ -147,7 +147,7 @@ Provides:	gtk3-devel-docs         = %{version}-%{release}
 Obsoletes:	gtk3-devel-docs%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk3-devel-docs         < %{_obsolete_ver}
 
-%description -n gtk3-devel-docs-ubuntu
+%description devel-docs
 This package contains developer documentation for version 3 of the GTK+
 widget toolkit.
 
@@ -220,15 +220,15 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%post -n gtk3-devel-ubuntu
+%post devel
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%post -n gtk3-immodules-ubuntu
+%post immodules
 gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
-%post -n gtk3-immodule-xim-ubuntu
+%post immodule-xim
 gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
@@ -240,15 +240,15 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%postun -n gtk3-devel-ubuntu
+%postun devel
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%postun -n gtk3-immodules-ubuntu
+%postun immodules
 gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
-%postun -n gtk3-immodule-xim-ubuntu
+%postun immodule-xim
 gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
@@ -278,7 +278,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.ColorChooser.gschema.xml
 
 
-%files -n gtk3-immodules-ubuntu
+%files immodules
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-am-et.so
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-cyrillic-translit.so
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-inuktitut.so
@@ -291,11 +291,11 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %config(noreplace) %{_sysconfdir}/gtk-3.0/im-multipress.conf
 
 
-%files -n gtk3-immodule-xim-ubuntu
+%files immodule-xim
 %{_libdir}/gtk-3.0/%{bin_version}/immodules/im-xim.so
 
 
-%files -n gtk3-devel-ubuntu -f gtk30-properties.lang
+%files devel -f gtk30-properties.lang
 %{_libdir}/lib*.so
 %{_includedir}/*
 %{_datadir}/aclocal/*
@@ -308,7 +308,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/glib-2.0/schemas/org.gtk.Demo.gschema.xml
 
 
-%files -n gtk3-devel-docs-ubuntu
+%files devel-docs
 %{_datadir}/gtk-doc
 
 
