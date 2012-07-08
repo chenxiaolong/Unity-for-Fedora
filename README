@@ -52,7 +52,7 @@ Build order:
 50: unity-asset-pool               -> Design assets for Unity
 51: **gnome-menus2 ******************
 52: libunity                       -> Library for integrating Unity
-53: libunity-misc *******************
+53: libunity-misc                  -> Differently licensed stuff for Unity
 54: nautilus ************************
 55: unity-lens-applications *********
 56: unity-lens-files ****************
