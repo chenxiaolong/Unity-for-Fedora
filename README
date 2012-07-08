@@ -34,7 +34,7 @@ Build order:
 32: indicator-messages             -> Collects messages that need a response
 33: indicator-multiload *************
 34: indicator-power                -> Indicator to show battery information
-35: indicator-session ***************
+35: indicator-session              -> Indicator for session management
 36: indicator-sound *****************
 37: NetworkManager-gnome ************
 38: gnome-bluetooth *****************
