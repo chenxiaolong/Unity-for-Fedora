@@ -49,7 +49,7 @@ Build order:
 47: utouch-grail                   -> Gesture recognition and instantiation lib.
 48: utouch-geis                    -> Implementation of the GEIS interface
 49: nux *****************************
-50: unity-asset-pool ****************
+50: unity-asset-pool               -> Design assets for Unity
 51: **gnome-menus2 ******************
 52: libunity ************************
 53: libunity-misc *******************
