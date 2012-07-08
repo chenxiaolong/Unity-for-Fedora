@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-SPEC_VER="$(rpmspec -q --qf '%{version}\n' gtk2.spec | head -1)"
-UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' gtk2.spec)"
+SPEC_VER="$(rpmspec -q --qf '%{version}\n' gtk2-ubuntu.spec | head -1)"
+UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' gtk2-ubuntu.spec)"
 
 echo "Getting latest Ubuntu version..."
 UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/precise/source/gtk+2.0' -O - | sed -n 's/.*>gtk+2.0_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
