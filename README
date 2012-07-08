@@ -50,11 +50,11 @@ Build order:
 48: utouch-geis                    -> Implementation of the GEIS interface
 49: nux *****************************
 50: unity-asset-pool               -> Design assets for Unity
-51: **gnome-menus2 ******************
+51: gnome-menus301                 -> GNOME menu specifications
 52: libunity                       -> Library for integrating Unity
 53: libunity-misc                  -> Differently licensed stuff for Unity
 54: nautilus ************************
-55: unity-lens-applications *********
+55: unity-lens-applications        -> Unity applications lens
 56: unity-lens-files ****************
 57: unity-lens-music ****************
 58: unity-scope-video ***************
