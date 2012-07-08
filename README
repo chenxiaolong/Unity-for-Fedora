@@ -51,7 +51,7 @@ Build order:
 49: nux *****************************
 50: unity-asset-pool               -> Design assets for Unity
 51: **gnome-menus2 ******************
-52: libunity ************************
+52: libunity                       -> Library for integrating Unity
 53: libunity-misc *******************
 54: nautilus ************************
 55: unity-lens-applications *********
