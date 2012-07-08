@@ -35,7 +35,7 @@ Build order:
 33: indicator-multiload *************
 34: indicator-power                -> Indicator to show battery information
 35: indicator-session              -> Indicator for session management
-36: indicator-sound *****************
+36: indicator-sound                -> Indicator displaying a unified sound menu
 37: NetworkManager-gnome ************
 38: gnome-bluetooth *****************
 39: overlay-scrollbar ***************
