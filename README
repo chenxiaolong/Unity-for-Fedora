@@ -57,15 +57,15 @@ Build order:
 55: unity-lens-applications        -> Unity applications lens
 56: unity-lens-files               -> Unity files lens
 57: unity-lens-music               -> Unity music lens
-58: unity-scope-video ***************
-58: unity-lens-video ****************
-59: compiz                         -> Compiz core components
-60: libcompizconfig                -> Compiz configuration system library
-61: compizconfig-backend-gconf     -> GConf backend for Compiz
-62: python-compizconfig *************
-63: **ccsm **************************
-64: compiz-plugins-main            -> Compiz main plugins
-65: compiz-plugins-extra           -> Compiz extra plugins
-66: **libgdu ************************
-67: unity ***************************
-68: unity-2d ************************
+58: unity-lens-video               -> Unity-video lens
+59: unity-scope-video-remote ********
+60: compiz                         -> Compiz core components
+61: libcompizconfig                -> Compiz configuration system library
+62: compizconfig-backend-gconf     -> GConf backend for Compiz
+63: python-compizconfig *************
+64: **ccsm **************************
+65: compiz-plugins-main            -> Compiz main plugins
+66: compiz-plugins-extra           -> Compiz extra plugins
+67: **libgdu ************************
+68: unity ***************************
+69: unity-2d ************************
