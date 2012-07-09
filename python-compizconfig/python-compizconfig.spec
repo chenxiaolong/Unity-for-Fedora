@@ -48,7 +48,7 @@ done
 
 
 %build
-%{__python} setup.py build
+CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
 
 
 %install
