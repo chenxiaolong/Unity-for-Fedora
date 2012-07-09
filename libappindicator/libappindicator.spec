@@ -33,6 +33,10 @@ BuildRequires:	mono-devel
 BuildRequires:	pygtk2-devel
 BuildRequires:	vala-tools
 
+# OBS dependency solver fix: dependencies use gtk3-ubuntu, so don't install gtk3
+#!BuildIgnore:  gtk3
+#!BuildIgnore:  gtk3-devel
+
 %description
 A library to allow applications to export a menu into the Unity Menu bar. Based
 on KSNI it also works in KDE and will fallback to generic Systray support if
