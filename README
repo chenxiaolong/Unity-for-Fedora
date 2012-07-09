@@ -66,6 +66,6 @@ Build order:
 64: ccsm                           -> Compiz settings manager
 65: compiz-plugins-main            -> Compiz main plugins
 66: compiz-plugins-extra           -> Compiz extra plugins
-67: **libgdu ************************
+67: libgdu                         -> GNOME Disk Utility library
 68: unity ***************************
 69: unity-2d ************************
