@@ -37,6 +37,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %doc COPYING
 %{python_sitelib}/unity_lens_video-0.3.6-py2.7.egg-info
+%dir %{_prefix}/lib/unity-lens-video/
 %{_prefix}/lib/unity-lens-video/unity-lens-video
 %{_datadir}/dbus-1/services/unity-lens-video.service
 
