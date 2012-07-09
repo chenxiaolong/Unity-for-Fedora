@@ -55,8 +55,8 @@ Build order:
 53: libunity-misc                  -> Differently licensed stuff for Unity
 54: nautilus ************************
 55: unity-lens-applications        -> Unity applications lens
-56: unity-lens-files ****************
-57: unity-lens-music ****************
+56: unity-lens-files               -> Unity files lens
+57: unity-lens-music               -> Unity music lens
 58: unity-scope-video ***************
 58: unity-lens-video ****************
 59: compiz                         -> Compiz core components
