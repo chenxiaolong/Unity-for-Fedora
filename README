@@ -58,7 +58,7 @@ Build order:
 56: unity-lens-files               -> Unity files lens
 57: unity-lens-music               -> Unity music lens
 58: unity-lens-video               -> Unity-video lens
-59: unity-scope-video-remote ********
+59: unity-scope-video-remote       -> Remote video search for Unity video lens
 60: compiz                         -> Compiz core components
 61: libcompizconfig                -> Compiz configuration system library
 62: compizconfig-backend-gconf     -> GConf backend for Compiz
