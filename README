@@ -49,7 +49,7 @@ Build order:
 47: utouch-grail                   -> Gesture recognition and instantiation lib.
 48: utouch-geis                    -> Implementation of the GEIS interface
 49: gcc46                          -> GNU Compiler Collection version 4.6
-50: nux *****************************
+50: nux                            -> An OpenGL toolkit
 51: unity-asset-pool               -> Design assets for Unity
 52: gnome-menus301                 -> GNOME menu specifications
 53: libunity                       -> Library for integrating Unity
