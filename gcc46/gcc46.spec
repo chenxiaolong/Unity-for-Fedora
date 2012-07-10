@@ -1,16 +1,16 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-# Install to another prefix
-%global _prefix /opt/gcc46-x86_%{__isa_bits}
-%global _infodir %{_datadir}/info
-%global _mandir %{_datadir}/man
-
 # This package will not contain subpackages (except for devel and static). It
 # makes the spec file far too complicated for no good reason. (The official
 # Fedora GCC spec file is 2641 lines without changelog!)
 
 # This is only a temporary package until nux and Unity are fixed, so it should
 # be easy to install and remove.
+
+# Install to another prefix
+%global _prefix /opt/gcc46-x86_%{__isa_bits}
+%global _infodir %{_datadir}/info
+%global _mandir %{_datadir}/man
 
 Name:		gcc46
 Version:	4.6.3
@@ -22,16 +22,25 @@ Group:		Development/Languages
 License:	GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions and LGPLv2+ and BSD
 URL:		http://gcc.gnu.org
 Source0:	ftp://ftp.gnu.org/gnu/gcc/gcc-4.6.3/gcc-4.6.3.tar.bz2
+Source1:	filter_provides_opensuse.sh
+
+# Do not provide any libraries. It'll cause a huge mess when the package is put
+# in a repository.
+%if %{defined fedora}
+%filter_provides_in %{_libdir}/.*\.so\..*$
+%filter_provides_in %{_libdir}/gcc/%{_target_platform}/%{version}/liblto_plugin\.so\..*$
+%filter_setup
+%endif
+
+%if %{defined suse_version}
+%define _use_internal_dependency_generator 0
+%define __find_provides %{SOURCE1}
+%endif
 
 BuildRequires:	binutils
 
 %if %{defined suse_version}
 BuildRequires:	gettext-tools
-
-%ifarch x86_64
-# 32 bit glibc-devel needed
-BuildRequires:	glibc-devel-32bit
-%endif
 
 BuildRequires:	cloog-devel
 BuildRequires:	mpc-devel
@@ -39,11 +48,6 @@ BuildRequires:	mpc-devel
 
 %if %{defined fedora}
 BuildRequires:	gettext
-
-%ifarch x86_64
-# glibc-devel.i686 needed
-BuildRequires:	/usr/lib/libc.so
-%endif
 
 BuildRequires:	cloog-ppl-devel
 BuildRequires:	libmpc-devel
