@@ -48,24 +48,25 @@ Build order:
 46: xorg-x11-server-Xorg ************
 47: utouch-grail                   -> Gesture recognition and instantiation lib.
 48: utouch-geis                    -> Implementation of the GEIS interface
-49: nux *****************************
-50: unity-asset-pool               -> Design assets for Unity
-51: gnome-menus301                 -> GNOME menu specifications
-52: libunity                       -> Library for integrating Unity
-53: libunity-misc                  -> Differently licensed stuff for Unity
-54: nautilus ************************
-55: unity-lens-applications        -> Unity applications lens
-56: unity-lens-files               -> Unity files lens
-57: unity-lens-music               -> Unity music lens
-58: unity-lens-video               -> Unity-video lens
-59: unity-scope-video-remote       -> Remote video search for Unity video lens
-60: compiz                         -> Compiz core components
-61: libcompizconfig                -> Compiz configuration system library
-62: compizconfig-backend-gconf     -> GConf backend for Compiz
-63: python-compizconfig            -> Python 2 bindings for libcompizconfig
-64: ccsm                           -> Compiz settings manager
-65: compiz-plugins-main            -> Compiz main plugins
-66: compiz-plugins-extra           -> Compiz extra plugins
-67: libgdu                         -> GNOME Disk Utility library
-68: unity ***************************
-69: unity-2d ************************
+49: gcc46                          -> GNU Compiler Collection version 4.6
+50: nux *****************************
+51: unity-asset-pool               -> Design assets for Unity
+52: gnome-menus301                 -> GNOME menu specifications
+53: libunity                       -> Library for integrating Unity
+54: libunity-misc                  -> Differently licensed stuff for Unity
+55: nautilus ************************
+56: unity-lens-applications        -> Unity applications lens
+57: unity-lens-files               -> Unity files lens
+58: unity-lens-music               -> Unity music lens
+59: unity-lens-video               -> Unity-video lens
+60: unity-scope-video-remote       -> Remote video search for Unity video lens
+61: compiz                         -> Compiz core components
+62: libcompizconfig                -> Compiz configuration system library
+63: compizconfig-backend-gconf     -> GConf backend for Compiz
+64: python-compizconfig            -> Python 2 bindings for libcompizconfig
+65: ccsm                           -> Compiz settings manager
+66: compiz-plugins-main            -> Compiz main plugins
+67: compiz-plugins-extra           -> Compiz extra plugins
+68: libgdu                         -> GNOME Disk Utility library
+69: unity ***************************
+70: unity-2d ************************
