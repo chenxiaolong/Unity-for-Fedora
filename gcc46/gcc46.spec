@@ -28,7 +28,7 @@ Source1:	filter_provides_opensuse.sh
 # in a repository.
 %if %{defined fedora}
 %filter_provides_in %{_libdir}/.*\.so\..*$
-%filter_provides_in %{_libdir}/gcc/%{_target_platform}/%{version}/liblto_plugin\.so\..*$
+%filter_provides_in %{_libexecdir}/gcc/%{_target_platform}/%{version}/liblto_plugin\.so\..*$
 %filter_setup
 %endif
 
