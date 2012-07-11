@@ -21,6 +21,9 @@ BuildRequires:	utouch-evemu-devel
 BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 # Description from Ubuntu's package
 This library handles the buildup and synchronization of a set of simultaneous
