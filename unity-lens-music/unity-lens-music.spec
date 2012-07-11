@@ -19,6 +19,9 @@ BuildRequires:	libunity-devel
 BuildRequires:	sqlite-devel
 BuildRequires:	vala-tools
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This package contains the music lens which can be used to browse media files.
 
