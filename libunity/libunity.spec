@@ -20,6 +20,9 @@ BuildRequires:	libgee06-devel
 BuildRequires:	python2
 BuildRequires:	vala-tools
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 A library for instrumenting- and integrating with all aspects of the Unity
 shell.
