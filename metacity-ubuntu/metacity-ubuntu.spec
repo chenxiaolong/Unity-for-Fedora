@@ -3,15 +3,13 @@
 # Partially based off of Fedora 17's metacity spec file
 # This package is required for Compiz and Unity 2D
 
-%define _obsolete_ver 2.25.0-100
+%define _obsolete_ver 2.35.0-100
 
 %define _ubuntu_rel 1ubuntu11
 
 Name:		metacity-ubuntu
 Version:	2.34.1
 Release:	1.%{_ubuntu_rel}%{?dist}
-# Require "metacity >= 1:" in other packages to use this package
-Epoch:		1
 Summary:	Unobtrusive window manager
 
 Group:		User Interface/Desktops
@@ -94,7 +92,7 @@ your attention.
 Summary:	Development files for metacity
 Group:		Development/Libraries
 
-Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 # Replace official version
 Provides:	metacity-devel%{?_isa} = %{version}-%{release}
