@@ -19,6 +19,9 @@ BuildRequires:	gtk3-ubuntu-devel
 
 Requires:	gtk2-ubuntu
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This package contains the GTK 2 version of the ido library.
 
