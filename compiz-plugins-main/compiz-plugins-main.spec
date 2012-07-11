@@ -40,9 +40,12 @@ Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2
 
-# Satisfy obs conflict on gtk3 (installed by build dependencies)
+# Satisfy OBS conflict on gtk3 (installed by build dependencies)
 BuildRequires:	gtk3
 BuildRequires:	gtk3-devel
+
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
 
 %description
 This package provides the primary and most well tested set of plugins from the
