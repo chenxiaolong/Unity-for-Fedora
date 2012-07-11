@@ -20,6 +20,9 @@ BuildRequires:	libdbusmenu-glib-devel
 BuildRequires:	libdbusmenu-gtk2-devel
 BuildRequires:	libdbusmenu-gtk3-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 (This package contains no files)
 
