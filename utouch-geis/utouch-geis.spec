@@ -31,6 +31,9 @@ BuildRequires:	xcb-proto
 BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 GEIS is a library for applications and toolkit programmers which provides a
 consistent platform independent interface for any system-wide input gesture
