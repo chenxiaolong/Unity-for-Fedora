@@ -39,6 +39,9 @@ BuildRequires:	vala-tools
 #!BuildIgnore:  gtk3
 #!BuildIgnore:  gtk3-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 A system sound indicator which provides easy control of the PulseAudio sound
 daemon. The sound menu also provides integration with several multimedia
