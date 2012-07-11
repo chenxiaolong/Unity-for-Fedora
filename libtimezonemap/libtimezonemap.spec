@@ -20,6 +20,9 @@ BuildRequires:	json-glib-devel
 
 Requires:	%{name}-data = %{version}-%{release}
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This package contains a timezone map widget for GTK+3.
 
