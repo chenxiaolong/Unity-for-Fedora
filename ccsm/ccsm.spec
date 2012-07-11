@@ -28,9 +28,12 @@ Requires:	hicolor-icon-theme
 Requires:	pygtk2
 Requires:	python-compizconfig
 
-# Satisfy obs conflict on gtk3 (installed by build dependencies)
+# Satisfy OBS conflict on gtk3 (installed by build dependencies)
 BuildRequires:  gtk3
 BuildRequires:  gtk3-devel
+
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
 
 BuildArch:	noarch
 
