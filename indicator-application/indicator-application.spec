@@ -28,6 +28,9 @@ BuildRequires:	libindicator-gtk3-devel
 #!BuildIgnore:	gtk3
 #!BuildIgnore:	gtk3-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This package contains a library and indicator that takes menus from applications
 and places them in the panel.
