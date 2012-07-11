@@ -30,6 +30,9 @@ BuildRequires:	PackageKit-yum
 BuildRequires:	gtk2
 BuildRequires:	gtk2-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This package contains an indicator to show the battery status. It replaces the
 gnome-power-manager icon in desktop environments where regular tray icons are
