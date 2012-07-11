@@ -33,6 +33,9 @@ BuildRequires:	vala-tools
 #!BuildIgnore:	gtk3
 #!BuildIgnore:	gtk3-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This package contains an indicator to host the menus from an application.
 
