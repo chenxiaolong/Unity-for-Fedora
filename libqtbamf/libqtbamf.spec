@@ -22,6 +22,8 @@ BuildRequires:	qt-devel
 # No %{_isa} because the library is multilib, but bamf-daemon is not
 Requires:	bamf-daemon
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
 
 # Description from Ubuntu
 %description
