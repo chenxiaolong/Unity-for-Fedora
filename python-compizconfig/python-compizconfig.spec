@@ -29,9 +29,12 @@ BuildRequires:	libXtst-devel
 BuildRequires:	Pyrex
 BuildRequires:	python2-devel
 
-# Satisfy obs conflict on gtk3 too (installed by build dependencies)
+# Satisfy OBS conflict on gtk3 (installed by build dependencies)
 BuildRequires:  gtk3
 BuildRequires:  gtk3-devel
+
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
 
 %description
 This package contains the Python 2 bindings for the compizconfig libraries.
