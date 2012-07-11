@@ -73,6 +73,7 @@ Source24:       %{website}/xineramaproto-%{_ver_xineramaproto}.tar.bz2
 Source25:       %{website}/xproto-%{_ver_xproto}.tar.bz2
 Source26:       %{website}/xproxymanagementprotocol-%{_ver_xproxymanagementprotocol}.tar.bz2
 
+Source98:	make-git-snapshot.sh
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/x11proto-fixes_5.0-2ubuntu1.diff.gz
 
 BuildArch:	noarch
