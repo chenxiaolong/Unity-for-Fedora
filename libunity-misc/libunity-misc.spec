@@ -30,6 +30,9 @@ BuildRequires:	glib2-devel
 BuildRequires:	gtk3-devel
 BuildRequires:	libX11-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 libunity-misc is a shared library that provides miscellaneous functions for
 Unity.
