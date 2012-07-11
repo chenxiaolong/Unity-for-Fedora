@@ -16,6 +16,9 @@ BuildRequires:	gcc-c++
 BuildRequires:	dbusmenu-qt-devel
 BuildRequires:	qt-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This package allows Qt to export its menus over DBus.
 
