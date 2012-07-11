@@ -19,6 +19,9 @@ BuildRequires:	gcc-c++
 BuildRequires:	dbusmenu-qt-devel
 BuildRequires:	qt-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This package contains a Qt plugin which turns all QSystemTrayIcon into
 StatusNotifierItems (appindicators).
