@@ -44,7 +44,7 @@ Build order:
 42: utouch-evemu                   -> Event emulation for the uTouch stack
 43: utouch-frame                   -> Touch frame library
 44: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-45: libXfixes ***********************
+45: libXfixes                      -> X.Org fixes extension library
 46: xorg-x11-server-Xorg ************
 47: utouch-grail                   -> Gesture recognition and instantiation lib.
 48: utouch-geis                    -> Implementation of the GEIS interface
