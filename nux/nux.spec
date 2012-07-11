@@ -55,6 +55,9 @@ BuildRequires:  gtk3-devel
 # notify-python, which is required by the build dependencies)
 BuildRequires:	notification-daemon
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 # Description from Ubuntu
 %description
 Nux is a graphical user interface toolkit for applications that mixes OpenGL
@@ -112,7 +115,7 @@ find -type f \( -name '*.h' -o -name '*.cpp' \) -exec chmod 644 {} \;
 
 
 %build
-# Remove '_gnu' from target triplet
+# Remove '-gnu' from target triplet
 %global _gnu %{nil}
 
 CC=%{_bindir}/%{_target_platform}-gcc-4.6
