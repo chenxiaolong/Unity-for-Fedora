@@ -39,6 +39,9 @@ BuildRequires:	PackageKit-yum
 #!BuildIgnore:  gtk3
 #!BuildIgnore:  gtk3-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 Quick! Change your status. Switch users. Close your session. All provided by the
 The Session Menu these tasks are conveniently placed in the upper-right corner
