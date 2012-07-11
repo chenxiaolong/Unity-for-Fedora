@@ -14,6 +14,7 @@ Source1:	50_check_unity_support
 
 # GCC 4.6 required or else Unity will segfault
 BuildRequires:	gcc46-devel
+BuildRequires:	gcc46-static
 
 BuildRequires:	doxygen
 BuildRequires:	graphviz
@@ -42,6 +43,17 @@ BuildRequires:	pcre-devel
 BuildRequires:	utouch-geis-devel
 
 Requires:	%{name}-common = %{version}-%{release}
+
+# Satisfy obs conflict on gtk2: use gtk2
+BuildRequires:  gtk2
+
+# Satisfy obs conflict on gtk3 too (installed by build dependencies)
+BuildRequires:  gtk3
+BuildRequires:  gtk3-devel
+
+# Satisfy obs conflict on desktop-notification-daemon (installed by
+# notify-python, which is required by the build dependencies)
+BuildRequires:	notification-daemon
 
 # Description from Ubuntu
 %description
