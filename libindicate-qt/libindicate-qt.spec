@@ -22,6 +22,9 @@ BuildRequires:	gcc-c++
 BuildRequires:	qt-devel
 BuildRequires:	libindicate-devel >= 0.6.90
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 This project provides a set of Qt bindings for libindicate, the indicator
 system developed by Canonical Desktop Experience team.
