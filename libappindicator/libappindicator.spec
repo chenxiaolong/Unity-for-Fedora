@@ -37,6 +37,9 @@ BuildRequires:	vala-tools
 #!BuildIgnore:  gtk3
 #!BuildIgnore:  gtk3-devel
 
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
 %description
 A library to allow applications to export a menu into the Unity Menu bar. Based
 on KSNI it also works in KDE and will fallback to generic Systray support if
