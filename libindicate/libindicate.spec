@@ -39,6 +39,9 @@ BuildRequires:	vala-tools
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes-devel
+BuildRequires:	libXfixes-devel
+
 %description
 A small library for applications to raise "flags" on DBus for other components
 of the desktop to pick up and visualize. Currently used by the messaging

@@ -42,6 +42,10 @@ BuildRequires:	vala-tools
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes
+BuildRequires:	libXfixes
+BuildRequires:	libXfixes-devel
+
 %description
 A system sound indicator which provides easy control of the PulseAudio sound
 daemon. The sound menu also provides integration with several multimedia

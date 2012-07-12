@@ -66,15 +66,19 @@ Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2
 
-# Satisfy obs conflict on what provides PackageKit-backend
+# Satisfy OBS conflict on what provides PackageKit-backend
 BuildRequires:	PackageKit-yum
 
-# Satisfy obs conflict on gtk2: use gtk2
+# Satisfy OBS conflict on gtk2: use gtk2
 BuildRequires:	gtk2
 
-# Satisfy obs conflict on gtk3 too (installed by build dependencies)
+# Satisfy OBS conflict on gtk3 too (installed by build dependencies)
 BuildRequires:	gtk3
 BuildRequires:	gtk3-devel
+
+# Satisfy OBS conflict on libXfixes
+BuildRequires:	libXfixes
+BuildRequires:	libXfixes-devel
 
 # Replace official verison
 Provides:	metacity%{?_isa} = %{version}-%{release}

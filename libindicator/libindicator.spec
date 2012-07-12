@@ -26,6 +26,9 @@ BuildRequires:	gtk3-devel
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes-devel
+BuildRequires:	libXfixes-devel
+
 %description
 A set of symbols and convenience functions that all Ayatana indicators are
 likely to use.

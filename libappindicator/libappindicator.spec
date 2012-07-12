@@ -40,6 +40,9 @@ BuildRequires:	vala-tools
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes-devel
+BuildRequires:	libXfixes-devel
+
 %description
 A library to allow applications to export a menu into the Unity Menu bar. Based
 on KSNI it also works in KDE and will fallback to generic Systray support if

@@ -30,6 +30,10 @@ BuildRequires:	xapian-core-devel
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes
+BuildRequires:	libXfixes
+BuildRequires:	libXfixes-devel
+
 %description
 This package contains the applications lens which can be used to launch
 applications for the Unity shell.

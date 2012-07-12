@@ -33,6 +33,10 @@ BuildRequires:	telepathy-glib-devel
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes
+BuildRequires:	libXfixes
+BuildRequires:	libXfixes-devel
+
 %description
 A place on the user's desktop that collects messages that need a response. This
 menu provides a condensed and collected view of all of those messages for quick

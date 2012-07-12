@@ -25,6 +25,9 @@ Requires:	bamf-daemon
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes-devel
+BuildRequires:	libXfixes-devel
+
 # Description from Ubuntu
 %description
 Qt binding and QML plugin for the bamf dbus daemon semi-automatically

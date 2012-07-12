@@ -42,6 +42,10 @@ BuildRequires:	PackageKit-yum
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes
+BuildRequires:	libXfixes
+BuildRequires:	libXfixes-devel
+
 %description
 Quick! Change your status. Switch users. Close your session. All provided by the
 The Session Menu these tasks are conveniently placed in the upper-right corner

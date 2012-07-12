@@ -23,6 +23,10 @@ BuildRequires:	vala-tools
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
+# Satisfy OBS conflict on libXfixes
+BuildRequires:	libXfixes
+BuildRequires:	libXfixes-devel
+
 %description
 A library for instrumenting- and integrating with all aspects of the Unity
 shell.
