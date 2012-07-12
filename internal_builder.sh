@@ -129,32 +129,18 @@ copy_rpm() {
 }
 
 copy_rpm_mock() {
-  # Copy RPM's to local repo
-  if [ "x${1}" == "xmultilib" ]; then
-    # If running in multilib mode, copy the RPM from the i386 repo to the x86_64 repo
-    cp "$(dirname ${0})/../internal_mock/repo/i386/${2}" \
-       "$(dirname ${0})/../internal_mock/repo/x86_64/"
-    return
-  else
-    # In normal mode, copy RPM's from mock result directory to the appropriate repo
-    if [ "x${1}" == "xi686" ]; then
-      local MOCKARCH=i386
-    else
-      local MOCKARCH=${1}
-    fi
-    local FILEPATH=
-    cp "$(cd $(dirname ${0})/..; pwd)/internal_mock/result/fedora-${FEDORA_VER}-${MOCKARCH}/result/${2}" \
-       "$(dirname ${0})/../internal_mock/repo/${MOCKARCH}/"
-  fi
-}
-
-update_repo() {
+  # Copy RPM's from mock result directory to the local repo
   if [ "x${1}" == "xi686" ]; then
     local MOCKARCH=i386
   else
     local MOCKARCH=${1}
   fi
-  createrepo --update "$(dirname ${0})/../internal_mock/repo/${MOCKARCH}/"
+  cp "$(cd $(dirname ${0})/..; pwd)/internal_mock/result/fedora-${FEDORA_VER}-${MOCKARCH}/result/${2}" \
+     "$(dirname ${0})/../internal_mock/repo/"
+}
+
+update_repo() {
+  createrepo --update "$(dirname ${0})/../internal_mock/repo/"
 }
 
 make_rpm() {
@@ -182,14 +168,14 @@ make_rpm() {
     done
 
     # Update repo database
-    update_repo $(uname -m)
+    update_repo
 
     # If the package is multilib
     if [ "x$(uname -m)" == "xx86_64" ] && [ "x${MULTILIB}" == "xtrue" ]; then
       # Build the i686 packages
       mock_here i686 "./PACKAGES/SRPMS/${GENERATED_SRPM}.rpm"
 
-      # Copy the i686 packages to the i686 repo
+      # Copy the i686 packages to the local repo
       for i in $(rpmspec --target i686 -q --queryformat        \
                  '%{name}-%{version}-%{release}.%{arch}.rpm\n' \
                  ${SPECFILE}); do
@@ -200,20 +186,16 @@ make_rpm() {
         copy_rpm_mock i686 "${i}"
       done
 
-      # Update i686 repo database
-      update_repo i686
-
-      # Copy multilib packages to x86_64 repo and PACKAGES/RPMS/i686/
+      # Copy multilib packages to PACKAGES/RPMS/i686/
       local FILENAME=$(rpmspec --target=i686 -q                        \
                        --queryformat="%{version}-%{release}.%{arch}\n" \
                        ${SPECFILE} | grep -v 'noarch' | uniq)
       for i in ${MULTILIB_PACKAGES[@]}; do
         copy_rpm i686 "${i}-${FILENAME}.rpm"
-        copy_rpm_mock multilib "${i}-${FILENAME}.rpm"
       done
 
-      # Update x86_64 repo database
-      update_repo x86_64
+      # Update local repo database
+      update_repo
     fi
   fi
 }
@@ -383,14 +365,14 @@ mock_config_copy_default() {
 
 [unity-for-fedora]
 name=unity-for-fedora
-baseurl=file://$(pwd)/repo/${i##*-}
+baseurl=file://$(pwd)/repo
 """
 EOF
-    if [ ! -d repo/${i##*-}/ ]; then
-      mkdir repo/${i##*-}/
+    if [ ! -d repo/ ]; then
+      mkdir repo/
     fi
-    if [ ! -d repo/${i##*-}/repodata/ ]; then
-      createrepo --database "$(dirname ${0})/../internal_mock/repo/${i##*-}/" &>/dev/null
+    if [ ! -d repo/repodata/ ]; then
+      createrepo --database "$(dirname ${0})/../internal_mock/repo/" &>/dev/null
     fi
   done
 }
@@ -608,7 +590,7 @@ mock_verify() {
 
   # Problem: Missing local repo metadata
   # Fix: Run mock_config_copy_default
-  local REPODATA="$(find repo/ -mindepth 2 -maxdepth 2 -type d -name repodata)"
+  local REPODATA="$(find repo/ -maxdepth 1 -type d -name repodata)"
   if [ -z "${REPODATA}" ]; then
     echo ""
     echo "The local repo for mock is missing the metadata/database."
