@@ -5,7 +5,7 @@
 
 Name:		libcompizconfig
 Version:	0.9.7.0
-Release:	1.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
+Release:	2.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
 Summary:	Settings library for Compiz plugins
 
 Group:		System Environment/Libraries
@@ -17,6 +17,9 @@ Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libcompizconfig_%
 
 # Do not hardcode library directory to %{_prefix}/lib/
 Patch0:		0001_Fix_compizconfig_backend_install_dir.patch
+
+# Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompizConfig.cmake
+Patch1:		0002_Do_not_hardcode_lib_PKG_CONFIG_PATH.patch
 
 BuildRequires:	cmake
 BuildRequires:	gcc-c++
@@ -66,6 +69,7 @@ settings support.
 %setup -q -n %{name}-0.9.5.94
 
 %patch0 -p1 -b .libdir
+%patch1 -p1 -b .pkg_config_path
 
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
@@ -149,6 +153,9 @@ mv $RPM_BUILD_ROOT{%{_datadir},%{_sysconfdir}}/gconf/
 
 
 %changelog
+* Thu Jul 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.0-2.bzr428.0ubuntu6
+- Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompizConfig.cmake
+
 * Mon Jul 02 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.0-1.bzr428.0ubuntu6
 - Initial release
 - Version 0.9.7.0~bzr428
