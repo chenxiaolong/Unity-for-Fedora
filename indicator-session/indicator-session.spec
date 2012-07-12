@@ -2,13 +2,16 @@
 
 Name:		indicator-session
 Version:	0.3.96
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Indicator for session management and status information
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-session
 Source0:	https://launchpad.net/indicator-session/0.4/%{version}/+download/indicator-session-%{version}.tar.gz
+
+# Use gnome-packagekit instead of Ubuntu's update-manager
+Patch0:		0001_Use_gnome-packagekit.patch
 
 BuildRequires:	gettext
 BuildRequires:	gnome-doc-utils
@@ -27,6 +30,8 @@ BuildRequires:	libindicator-gtk3-devel
 #BuildRequires:	PackageKit-backend-devel
 BuildRequires:	PackageKit-glib-devel
 BuildRequires:	polkit-devel
+
+Requires:	gnome-packagekit
 
 # From Ubuntu packaging
 Requires:	gnome-settings-daemon
@@ -64,6 +69,8 @@ This package contains the GTK 2 version of the session indicator.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .packagekit
 
 
 %build
@@ -149,6 +156,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Thu Jul 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.96-2
+- Use gpk-update-viewer to show updates
+
 * Sat Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.96-1
 - Initial release
 - Version 0.3.96
