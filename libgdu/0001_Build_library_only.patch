@@ -1,6 +1,6 @@
 diff -Nru gnome-disk-utility-3.0.2.orig/configure.ac gnome-disk-utility-3.0.2/configure.ac
---- gnome-disk-utility-3.0.2.orig/configure.ac	2012-07-09 00:47:22.526808326 -0400
-+++ gnome-disk-utility-3.0.2/configure.ac	2012-07-09 01:11:20.398550659 -0400
+--- gnome-disk-utility-3.0.2.orig/configure.ac	2012-07-12 01:36:35.473686703 -0400
++++ gnome-disk-utility-3.0.2/configure.ac	2012-07-12 01:49:45.025143088 -0400
 @@ -110,15 +110,9 @@
  # GNOME
  # *****
@@ -17,15 +17,14 @@ diff -Nru gnome-disk-utility-3.0.2.orig/configure.ac gnome-disk-utility-3.0.2/co
  # ***************************
  # Check for required packages
  # ***************************
-@@ -128,31 +122,18 @@
- GIO2_REQUIRED=2.22
+@@ -129,17 +123,11 @@
  DBUS_GLIB_REQUIRED=0.74
  GNOME_KEYRING_REQUIRED=2.22
--GTK3_REQUIRED=2.90.7
+ GTK3_REQUIRED=2.90.7
 -UNIQUE_REQUIRED=2.90.1
 -LIBNOTIFY_REQUIRED=0.6.1
 -NAUTILUS_REQUIRED=2.91.0
--AVAHI_UI_REQUIRED=0.6.25
+ AVAHI_UI_REQUIRED=0.6.25
  
  UDISKS_REQUIRED=1.0.0
  UDISKS_NEXT_ABI_INCOMPATIBLE_VERSION=1.1.0
@@ -36,20 +35,18 @@ diff -Nru gnome-disk-utility-3.0.2.orig/configure.ac gnome-disk-utility-3.0.2/co
  PKG_CHECK_MODULES(GLIB2, [glib-2.0 >= $GLIB2_REQUIRED])
  PKG_CHECK_MODULES(GOBJECT2, [gobject-2.0 >= $GOBJECT2_REQUIRED])
  PKG_CHECK_MODULES(GIO2, [gio-2.0 >= $GIO2_REQUIRED])
- PKG_CHECK_MODULES(GIO_UNIX2, [gio-unix-2.0 >= $GIO2_REQUIRED])
+@@ -147,10 +135,7 @@
  PKG_CHECK_MODULES(GTHREAD2, [gthread-2.0 >= $GLIB2_REQUIRED])
  PKG_CHECK_MODULES(DBUS_GLIB, [dbus-glib-1 >= $DBUS_GLIB_REQUIRED])
--PKG_CHECK_MODULES(GTK3, [gtk+-3.0 >= $GTK3_REQUIRED])
+ PKG_CHECK_MODULES(GTK3, [gtk+-3.0 >= $GTK3_REQUIRED])
 -PKG_CHECK_MODULES(UNIQUE, [unique-3.0 >= $UNIQUE_REQUIRED])
 -PKG_CHECK_MODULES(LIBNOTIFY, [libnotify  >= $LIBNOTIFY_REQUIRED])
  PKG_CHECK_MODULES(UDISKS, [udisks  >= $UDISKS_REQUIRED udisks < $UDISKS_NEXT_ABI_INCOMPATIBLE_VERSION])
 -PKG_CHECK_MODULES(X11, [x11])
  PKG_CHECK_MODULES(LIBATASMART, [libatasmart >= 0.14])
--PKG_CHECK_MODULES(AVAHI_UI, [avahi-ui-gtk3 >= $AVAHI_UI_REQUIRED])
+ PKG_CHECK_MODULES(AVAHI_UI, [avahi-ui-gtk3 >= $AVAHI_UI_REQUIRED])
  
- # *************
- # Remote Access
-@@ -185,15 +166,6 @@
+@@ -185,15 +170,6 @@
  AC_SUBST(GNOME_KEYRING_CFLAGS)
  AM_CONDITIONAL(ENABLE_GNOME_KEYRING, [test "$have_gnome_keyring" = "yes"])
  
@@ -65,7 +62,7 @@ diff -Nru gnome-disk-utility-3.0.2.orig/configure.ac gnome-disk-utility-3.0.2/co
  # ********************
  # Internationalization
  # ********************
-@@ -205,28 +177,6 @@
+@@ -205,28 +181,6 @@
  AM_GLIB_GNU_GETTEXT
  AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[gettext domain])
  
@@ -94,15 +91,13 @@ diff -Nru gnome-disk-utility-3.0.2.orig/configure.ac gnome-disk-utility-3.0.2/co
  # *************************************
  # *************************************
  
-@@ -240,26 +190,7 @@
- src/Makefile
- src/gdu/Makefile
+@@ -242,24 +196,8 @@
  src/gdu/gdu.pc
--src/gdu-gtk/Makefile
--src/gdu-gtk/gdu-gtk.pc
+ src/gdu-gtk/Makefile
+ src/gdu-gtk/gdu-gtk.pc
 -src/palimpsest/Makefile
 -src/notification/Makefile
--src/format-tool/Makefile
+ src/format-tool/Makefile
 -src/nautilus-extension/Makefile
  po/Makefile.in
 -data/Makefile
@@ -121,7 +116,7 @@ diff -Nru gnome-disk-utility-3.0.2.orig/configure.ac gnome-disk-utility-3.0.2/co
  ])
  
  AC_OUTPUT
-@@ -282,8 +213,6 @@
+@@ -282,8 +220,6 @@
          cppflags:                   ${CPPFLAGS}
  
          Maintainer mode:            ${USE_MAINTAINER_MODE}
@@ -131,8 +126,8 @@ diff -Nru gnome-disk-utility-3.0.2.orig/configure.ac gnome-disk-utility-3.0.2/co
          GNOME Keyring support:      ${have_gnome_keyring}
          Remote Access:              ${have_remote_access}
 diff -Nru gnome-disk-utility-3.0.2.orig/Makefile.am gnome-disk-utility-3.0.2/Makefile.am
---- gnome-disk-utility-3.0.2.orig/Makefile.am	2012-07-09 00:47:22.526808326 -0400
-+++ gnome-disk-utility-3.0.2/Makefile.am	2012-07-09 00:47:29.790802150 -0400
+--- gnome-disk-utility-3.0.2.orig/Makefile.am	2012-07-12 01:36:35.473686703 -0400
++++ gnome-disk-utility-3.0.2/Makefile.am	2012-07-12 01:36:42.646664398 -0400
 @@ -1,6 +1,6 @@
  ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
  
@@ -142,15 +137,15 @@ diff -Nru gnome-disk-utility-3.0.2.orig/Makefile.am gnome-disk-utility-3.0.2/Mak
  EXTRA_DIST = \
  	autogen.sh		\
 diff -Nru gnome-disk-utility-3.0.2.orig/src/Makefile.am gnome-disk-utility-3.0.2/src/Makefile.am
---- gnome-disk-utility-3.0.2.orig/src/Makefile.am	2012-07-09 00:47:22.534808320 -0400
-+++ gnome-disk-utility-3.0.2/src/Makefile.am	2012-07-09 01:00:44.999797984 -0400
+--- gnome-disk-utility-3.0.2.orig/src/Makefile.am	2012-07-12 01:36:35.733685887 -0400
++++ gnome-disk-utility-3.0.2/src/Makefile.am	2012-07-12 01:47:46.999369606 -0400
 @@ -1,8 +1,4 @@
 -SUBDIRS = gdu gdu-gtk palimpsest notification format-tool
 -
 -if ENABLE_NAUTILUS
 -SUBDIRS += nautilus-extension
 -endif
-+SUBDIRS = gdu
++SUBDIRS = gdu gdu-gtk format-tool
  
  clean-local :
  	rm -f *~

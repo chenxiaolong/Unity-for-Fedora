@@ -18,8 +18,10 @@ BuildRequires:	libtool
 BuildRequires:	gnome-common
 BuildRequires:	intltool
 
+BuildRequires:	avahi-ui-devel
 BuildRequires:	dbus-glib-devel
 BuildRequires:	glib2-devel
+BuildRequires:	gtk3-devel
 BuildRequires:	libatasmart-devel
 BuildRequires:	libgnome-keyring-devel
 BuildRequires:	udisks-devel
@@ -38,6 +40,16 @@ Requires:	%{name}%{?_isa} = %{version}-%{release}
 This package contains the development files for the GNOME Disk Utility library.
 
 
+%package tools
+Summary:	GNOME library for dealing with storage devices - Tools
+Group:		Applications/System
+
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+
+%description tools
+This package currently contains gdu-format-tool needed by Unity.
+
+
 %prep
 %setup -q -n gnome-disk-utility-%{version}
 
@@ -48,8 +60,6 @@ rm -rvf \
   data/ \
   doc/ \
   help/ \
-  src/format-tool/ \
-  src/gdu-gtk \
   src/nautilus-extension \
   src/notification \
   src/palimpsest
@@ -79,11 +89,15 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %doc AUTHORS NEWS README
 %{_libdir}/libgdu.so.0
 %{_libdir}/libgdu.so.0.0.0
+%{_libdir}/libgdu-gtk.so.0
+%{_libdir}/libgdu-gtk.so.0.0.0
 
 
 %files devel
 %doc AUTHORS NEWS README
 %dir %{_includedir}/gnome-disk-utility/
+%dir %{_includedir}/gnome-disk-utility/gdu/
+%dir %{_includedir}/gnome-disk-utility/gdu-gtk/
 %{_includedir}/gnome-disk-utility/gdu/gdu-adapter.h
 %{_includedir}/gnome-disk-utility/gdu/gdu-callbacks.h
 %{_includedir}/gnome-disk-utility/gdu/gdu-device.h
@@ -106,8 +120,46 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_includedir}/gnome-disk-utility/gdu/gdu-volume-hole.h
 %{_includedir}/gnome-disk-utility/gdu/gdu-volume.h
 %{_includedir}/gnome-disk-utility/gdu/gdu.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-add-component-linux-md-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-add-pv-linux-lvm2-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-ata-smart-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-button-element.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-button-table.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-confirmation-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-connect-to-server-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-create-linux-lvm2-volume-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-create-linux-md-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-create-partition-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-details-element.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-details-table.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-disk-selection-widget.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-drive-benchmark-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-edit-linux-lvm2-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-edit-linux-md-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-edit-name-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-edit-partition-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-error-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-format-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-gtk-enums.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-gtk-enumtypes.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-gtk-types.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-gtk.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-partition-dialog.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-pool-tree-model.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-pool-tree-view.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-size-widget.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-time-label.h
+%{_includedir}/gnome-disk-utility/gdu-gtk/gdu-volume-grid.h
 %{_libdir}/libgdu.so
+%{_libdir}/libgdu-gtk.so
 %{_libdir}/pkgconfig/gdu.pc
+%{_libdir}/pkgconfig/gdu-gtk.pc
+
+
+%files tools
+%doc AUTHORS NEWS README
+%{_libexecdir}/gdu-format-tool
 
 
 %changelog
