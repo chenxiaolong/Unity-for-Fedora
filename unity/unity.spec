@@ -24,6 +24,9 @@ Patch0:		0001_fix_gtest_directory.patch
 # Fix directories in source code and CMake (/usr/lib hardcoded)
 Patch1:		0002_fix_directories.patch
 
+# Ignore error about deprecated paths in GSettings schemas
+Patch2:		0003_Ignore_deprecated_schema_path.patch
+
 # GCC 4.6 is required or else Unity will segfault
 BuildRequires:	gcc46-devel
 BuildRequires:	gcc46-static
@@ -33,6 +36,7 @@ BuildRequires:	libXfixes-ubuntu-devel
 BuildRequires:	xorg-x11-proto-ubuntu-devel
 
 BuildRequires:	cmake
+BuildRequires:	doxygen
 BuildRequires:	gcc-c++
 BuildRequires:	gettext
 BuildRequires:	intltool
@@ -135,6 +139,7 @@ This package contains files common to Unity and Unity 2D.
 
 %patch0 -p1 -b .gtestdir
 %patch1 -p1 -b .fixdirs
+%patch2 -p1 -b .gsettingsfail
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
