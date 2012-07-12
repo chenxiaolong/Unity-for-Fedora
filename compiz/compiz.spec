@@ -123,6 +123,8 @@ Compiz.
 %prep
 %setup -q
 
+%patch0 -p1 -b .pkg_config_path
+
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
 for i in $(grep -v '#' debian/patches/series); do
