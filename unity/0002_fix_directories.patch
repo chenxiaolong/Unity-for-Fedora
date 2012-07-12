@@ -1,0 +1,194 @@
+diff -Nru unity-5.12.0.orig/plugins/unityshell/src/DeviceLauncherIcon.cpp unity-5.12.0/plugins/unityshell/src/DeviceLauncherIcon.cpp
+--- unity-5.12.0.orig/plugins/unityshell/src/DeviceLauncherIcon.cpp	2012-07-11 19:27:10.176938603 -0400
++++ unity-5.12.0/plugins/unityshell/src/DeviceLauncherIcon.cpp	2012-07-12 01:59:58.864732176 -0400
+@@ -356,7 +356,7 @@
+ {
+   glib::Error error;
+ 
+-  gchar const* args[] = { "/usr/lib/gnome-disk-utility/gdu-format-tool",
++  gchar const* args[] = { "/usr/libexec/gdu-format-tool",
+                           "--device-file",
+                           self->device_file_.Value(),
+                           NULL};
+diff -Nru unity-5.12.0.orig/plugins/unityshell/src/FavoriteStoreGSettings.cpp unity-5.12.0/plugins/unityshell/src/FavoriteStoreGSettings.cpp
+--- unity-5.12.0.orig/plugins/unityshell/src/FavoriteStoreGSettings.cpp	2012-07-11 19:27:10.198938604 -0400
++++ unity-5.12.0/plugins/unityshell/src/FavoriteStoreGSettings.cpp	2012-07-11 19:31:39.446913419 -0400
+@@ -75,7 +75,7 @@
+   {
+     glib::Error error;
+     std::string cmd(PREFIXDIR);
+-    cmd += "/lib/unity/migrate_favorites.py";
++    cmd += "/libexec/migrate_favorites.py";
+ 
+     glib::String output;
+ 
+diff -Nru unity-5.12.0.orig/services/CMakeLists.txt unity-5.12.0/services/CMakeLists.txt
+--- unity-5.12.0.orig/services/CMakeLists.txt	2012-07-11 19:27:10.262938606 -0400
++++ unity-5.12.0/services/CMakeLists.txt	2012-07-11 19:30:02.035930455 -0400
+@@ -50,7 +50,7 @@
+ link_directories(${LIB_PATHS})
+ 
+ add_executable(unity-panel-service ${PANEL_SOURCES})
+-install(TARGETS unity-panel-service DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/unity/)
++install(TARGETS unity-panel-service DESTINATION ${CMAKE_INSTALL_PREFIX}/libexec/)
+ 
+ configure_file(com.canonical.Unity.Panel.Service.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/com.canonical.Unity.Panel.Service.service)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/com.canonical.Unity.Panel.Service.service DESTINATION ${CMAKE_INSTALL_PREFIX}/share/dbus-1/services)
+diff -Nru unity-5.12.0.orig/services/com.canonical.Unity.Panel.Service.service.cmake unity-5.12.0/services/com.canonical.Unity.Panel.Service.service.cmake
+--- unity-5.12.0.orig/services/com.canonical.Unity.Panel.Service.service.cmake	2012-07-11 19:27:10.264938606 -0400
++++ unity-5.12.0/services/com.canonical.Unity.Panel.Service.service.cmake	2012-07-11 19:29:50.910931923 -0400
+@@ -1,3 +1,3 @@
+ [D-BUS Service]
+ Name=com.canonical.Unity.Panel.Service
+-Exec=${CMAKE_INSTALL_PREFIX}/lib/unity/unity-panel-service
++Exec=${CMAKE_INSTALL_PREFIX}/libexec/unity-panel-service
+diff -Nru unity-5.12.0.orig/tools/build-compiz-glib unity-5.12.0/tools/build-compiz-glib
+--- unity-5.12.0.orig/tools/build-compiz-glib	2012-07-11 19:27:10.266938609 -0400
++++ unity-5.12.0/tools/build-compiz-glib	2012-07-12 01:18:37.097902553 -0400
+@@ -1,5 +1,16 @@
+ #!/bin/bash
+ 
++if [ "x$(uname -m)" == "xx86_64" ]; then
++  if $(find /etc/ -maxdepth 1 -name '*-release' -exec cat {} \; | \
++       grep -i -e 'Fedora'); then
++    LIBDIRNAME=lib64
++  else
++    LIBDIRNAME=lib
++  fi
++else
++  LIBDIRNAME=lib
++fi
++
+ #
+ # A script to build compiz++ by Scott Moreau oreaus@gmail.com
+ # Modifications by Jason Smith jason.smith@canonical.com
+@@ -20,8 +31,8 @@
+ SRC_DIR=$HOME/staging/build/compiz/script-src
+ PLUGIN_DIR=$SRC_DIR/plugins
+ PREFIX=$HOME/staging/
+-PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
+-LD_LIBRARY_PATH=$PREFIX/lib
++PKG_CONFIG_PATH=$PREFIX/${LIBDIRNAME}/pkgconfig
++LD_LIBRARY_PATH=$PREFIX/${LIBDIRNAME}
+ # These are the dependencies for ubuntu. This script should work on other distros provided the dependencies are met
+ DEPENDENCIES="git-core cmake libcairo2-dev librsvg2-dev libglib2.0-dev libpng12-dev libdbus-1-dev libboost-dev libboost-serialization-dev libxml2-dev libgl1-mesa-dev libglu1-mesa-dev libwnck-dev libgconf2-dev libx11-xcb-dev libxslt1-dev libnotify-dev libprotobuf-dev libmetacity-dev libgnome-window-settings-dev libgnome-desktop-dev gnome-control-center-dev intltool cython python2.6-dev"
+ COMPONENTS=(core libcompizconfig compizconfig-python ccsm compizconfig-backend-gconf plugins-main plugins-extra plugins-unsupported)
+@@ -59,7 +70,7 @@
+ 	if [[ "$COMPONENT" = "compizconfig-python" ]]; then
+ 	    cd $SRC_DIR/$COMPONENT
+ 	    echo "Installing $COMPONENT..."
+-	    PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig python ./setup.py install --prefix=$PREFIX
++	    PKG_CONFIG_PATH=$PREFIX/${LIBDIRNAME}/pkgconfig python ./setup.py install --prefix=$PREFIX
+ 	elif [[ "$COMPONENT" = "ccsm" ]]; then
+ 	    cd $SRC_DIR/$COMPONENT
+ 	    echo "Installing $COMPONENT..."
+@@ -93,7 +104,7 @@
+ # Hack to fix ccsm from complaining and causing incorrect plugin config option ordering
+ rm -rf $HOME/.cache/compizconfig-1 2&1>/dev/null
+ 
+-LD_LIBRARY_PATH=\$PREFIX/lib/ PYTHONPATH=\$PREFIX/lib/python2.6/site-packages \$PREFIX/bin/ccsm
++LD_LIBRARY_PATH=\$PREFIX/${LIBDIRNAME}/ PYTHONPATH=\$PREFIX/${LIBDIRNAME}/python2.6/site-packages \$PREFIX/bin/ccsm
+ EOF
+ 
+ chmod +x ccsm++
+@@ -124,7 +135,7 @@
+ # Kill ccsm
+ pkill ccsm
+ 
+-LD_LIBRARY_PATH=\$PREFIX/lib/ \$PREFIX/bin/compiz --replace ccp &
++LD_LIBRARY_PATH=\$PREFIX/${LIBDIRNAME}/ \$PREFIX/bin/compiz --replace ccp &
+ \$PREFIX/bin/gtk-window-decorator &
+ \$PREFIX/bin/ccsm++ &
+ EOF
+diff -Nru unity-5.12.0.orig/tools/CMakeLists.txt unity-5.12.0/tools/CMakeLists.txt
+--- unity-5.12.0.orig/tools/CMakeLists.txt	2012-07-11 19:27:10.266938609 -0400
++++ unity-5.12.0/tools/CMakeLists.txt	2012-07-11 19:30:57.714921667 -0400
+@@ -1,7 +1,7 @@
+ #
+ # Some unity tools
+ #
+-install(FILES makebootchart.py migrate_favorites.py PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/unity/)
++install(FILES makebootchart.py migrate_favorites.py PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION ${CMAKE_INSTALL_PREFIX}/libexec/)
+ 
+ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/unity.cmake ${CMAKE_BINARY_DIR}/bin/unity)
+ install(FILES ${CMAKE_BINARY_DIR}/bin/unity PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ
+diff -Nru unity-5.12.0.orig/tools/unity.cmake unity-5.12.0/tools/unity.cmake
+--- unity-5.12.0.orig/tools/unity.cmake	2012-07-11 19:27:10.266938609 -0400
++++ unity-5.12.0/tools/unity.cmake	2012-07-12 01:20:49.378790439 -0400
+@@ -27,17 +27,26 @@
+ import subprocess
+ import sys
+ import time
++import platform
++
++if platform.architecture()[0] == "64bit":
++  if platform.linux_distribution()[0] == "Fedora":
++    library_dir = "lib64"
++  else:
++    library_dir = "lib"
++else:
++  library_dir = "lib"
+ 
+ home_dir = os.path.expanduser("~%s" % os.getenv("SUDO_USER"))
+ supported_prefix = "/usr/local"
+ 
+ well_known_local_path = ("%s/share/locale/*/LC_MESSAGES/*unity*" % supported_prefix,
+                          "%s/share/man/man1/*unity*" % supported_prefix,
+-                         "%s/lib/*unity*" % supported_prefix,
++                         "%s/%s/*unity*" % (supported_prefix, library_dir),
+                          "%s/share/dbus-1/services/*Unity*" % supported_prefix,
+                          "%s/bin/*unity*" % supported_prefix,
+                          "%s/include/Unity*"  % supported_prefix,
+-                         "%s/lib/pkgconfig/unity*"  % supported_prefix,
++                         "%s/%s/pkgconfig/unity*"  % (supported_prefix, library_dir),
+                          "%s/.compiz-1/*/*gtkloader*" % home_dir,
+                          "%s/.config/compiz-1/gsettings/schemas/*gtkloader*" % home_dir,
+                          "%s/.gconf/schemas/*gtkloader*" % home_dir,
+@@ -50,8 +59,8 @@
+                          "%s/share/ccsm/icons/*/*/*/*unity*" % supported_prefix,
+                          "%s/share/unity" % supported_prefix,
+                          "%s/.compiz-1/unity*" % home_dir,
+-                         "%s/lib/*nux*"  % supported_prefix,
+-                         "%s/lib/pkgconfig/nux*"  % supported_prefix,
++                         "%s/%s/*nux*"  % (supported_prefix, library_dir),
++                         "%s/%s/pkgconfig/nux*"  % (supported_prefix, library_dir),
+                          "%s/include/Nux*"  % supported_prefix
+                          )
+ 
+diff -Nru unity-5.12.0.orig/UnityCore/CMakeLists.txt unity-5.12.0/UnityCore/CMakeLists.txt
+--- unity-5.12.0.orig/UnityCore/CMakeLists.txt	2012-07-11 19:27:10.102938600 -0400
++++ unity-5.12.0/UnityCore/CMakeLists.txt	2012-07-12 02:54:44.603813306 -0400
+@@ -118,8 +118,8 @@
+ 
+ install (TARGETS ${CORE_LIB_NAME}
+          RUNTIME DESTINATION bin
+-         ARCHIVE DESTINATION lib
+-         LIBRARY DESTINATION lib
++         ARCHIVE DESTINATION lib${LIB_SUFFIX}
++         LIBRARY DESTINATION lib${LIB_SUFFIX}
+         )
+ 
+ #
+@@ -131,8 +131,8 @@
+ # PkgConfig file
+ #
+ set (EXEC_PREFIX "${CMAKE_INSTALL_PREFIX}")
+-set (LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
++set (LIBDIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+ set (INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
+ 
+ configure_file (unity-core.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/${CORE_LIB_NAME}.pc @ONLY)
+-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${CORE_LIB_NAME}.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
++install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${CORE_LIB_NAME}.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig)
+diff -Nru unity-5.12.0.orig/UnityCore/DBusIndicators.cpp unity-5.12.0/UnityCore/DBusIndicators.cpp
+--- unity-5.12.0.orig/UnityCore/DBusIndicators.cpp	2012-07-11 19:27:10.103938600 -0400
++++ unity-5.12.0/UnityCore/DBusIndicators.cpp	2012-07-11 19:29:38.060933473 -0400
+@@ -127,7 +127,7 @@
+ 
+     // This is obviously hackish, but this part of the code is mostly hackish...
+     // Let's attempt to run it from where we expect it to be
+-    std::string cmd = PREFIXDIR + std::string("/lib/unity/unity-panel-service");
++    std::string cmd = PREFIXDIR + std::string("/libexec/unity-panel-service");
+     std::cerr << "\nWARNING: Couldn't load panel from installed services, "
+               << "so trying to load panel from known location: "
+               << cmd << "\n";
