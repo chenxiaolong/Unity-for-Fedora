@@ -8,7 +8,7 @@
 
 Name:		compiz
 Version:	0.9.7.8
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
@@ -20,6 +20,9 @@ Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}.
 Source1:	compiz.wrapper
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}-%{_ubuntu_rel}.debian.tar.gz
+
+# Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
+Patch0:		0001_Fix_library_directory.patch
 
 BuildRequires:	cmake
 BuildRequires:	desktop-file-utils
@@ -437,6 +440,9 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/compiz.desktop
 
 
 %changelog
+* Thu Jul 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.8-2.0ubuntu1
+- Fix the hardcoded /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
+
 * Sat Jul 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.8-1.0ubuntu1
 - Initial release
 - Version 0.9.7.8

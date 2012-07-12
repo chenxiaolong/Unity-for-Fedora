@@ -1,0 +1,28 @@
+Do not hardcode /lib/ when setting PKG_CONFIG_PATH. This will cause CMake to set
+PKG_CONFIG_PATH to /usr/lib/pkgconfig on a 64 bit system when compiling Unity,
+which causes a 'mysterious' empty panel in Unity (error when trying to run
+unity-panel-service: /usr/lib/indicators3 not found).
+
+diff -Nru compiz-0.9.7.8.orig/cmake/FindCompiz.cmake compiz-0.9.7.8/cmake/FindCompiz.cmake
+--- compiz-0.9.7.8.orig/cmake/FindCompiz.cmake	2012-07-12 16:00:59.377142587 -0400
++++ compiz-0.9.7.8/cmake/FindCompiz.cmake	2012-07-12 16:01:46.831096275 -0400
+@@ -56,16 +56,16 @@
+ 
+ 	# add install prefix to pkgconfig search path if needed
+         string (REGEX REPLACE "([\\+\\(\\)\\^\\\$\\.\\-\\*\\?\\|])" "\\\\\\1" PKGCONFIG_REGEX ${CMAKE_INSTALL_PREFIX})
+-	set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
++	set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib${LIB_SUFFIX}/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
+ 
+ 	if (NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+ 
+ 	    if (NOT "$ENV{PKG_CONFIG_PATH}" MATCHES "${PKGCONFIG_REGEX}")
+ 		if ("" STREQUAL "$ENV{PKG_CONFIG_PATH}")
+-		    set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
++		    set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
+ 	    	else ()
+ 		    set (ENV{PKG_CONFIG_PATH}
+-		         "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
++		         "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+ 		endif ()
+ 	    endif ()
+ 
