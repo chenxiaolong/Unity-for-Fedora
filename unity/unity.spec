@@ -75,8 +75,9 @@ BuildRequires:	xcb-util-wm-devel
 Requires:	unity-common%{?_isa} = %{version}-%{release}
 
 Requires:	compiz-plugins-main
-Requires:	nux-tools
 Requires:	gnome-python2-gconf
+Requires:	libXfixes-ubuntu
+Requires:	nux-tools
 Requires:	unity-asset-pool
 
 Requires(pre):	GConf2
