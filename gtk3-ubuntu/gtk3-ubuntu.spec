@@ -5,7 +5,7 @@
 
 # 'fedora_' is prefixed to the sources and patches to group them together in OBS
 
-%define _ubuntu_rel 0ubuntu0.2
+%define _ubuntu_rel 0ubuntu0.3
 
 %global glib2_version 2.32.0
 %global pango_version 1.30.0
@@ -316,6 +316,9 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
 %changelog
+* Thu Jul 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu0.3
+- Update to Ubuntu release 0ubuntu0.3
+
 * Fri Jul 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu0.2
 - Stop using epochs to override official packages
 
