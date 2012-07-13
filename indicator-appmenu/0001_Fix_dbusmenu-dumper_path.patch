@@ -1,0 +1,16 @@
+diff -Nru indicator-appmenu-0.3.97.orig/tools/current-menu-dump.in indicator-appmenu-0.3.97/tools/current-menu-dump.in
+--- indicator-appmenu-0.3.97.orig/tools/current-menu-dump.in	2012-07-12 20:44:48.684349895 -0400
++++ indicator-appmenu-0.3.97/tools/current-menu-dump.in	2012-07-12 20:45:46.450333278 -0400
+@@ -2,11 +2,7 @@
+ 
+ TMPFILE=`mktemp`
+ CURMENU="@LIBEXECDIR@/current-menu"
+-if [ -x /usr/lib/libdbusmenu/dbusmenu-dumper ]; then
+-  DBUSDUMP="/usr/lib/libdbusmenu/dbusmenu-dumper"
+-else
+-  DBUSDUMP="/usr/lib/dbusmenu-dumper"
+-fi
++DBUSDUMP="@LIBEXECDIR@/dbusmenu-dumper"
+ 
+ $CURMENU > $TMPFILE
+ 

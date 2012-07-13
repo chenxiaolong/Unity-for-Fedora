@@ -10,6 +10,8 @@ License:	GPLv3
 URL:		https://launchpad.net/indicator-appmenu
 Source0:	https://launchpad.net/indicator-appmenu/0.4/%{version}/+download/indicator-appmenu-%{version}.tar.gz
 
+Patch0:		0001_Fix_dbusmenu-dumper_path.patch
+
 BuildRequires:	gnome-doc-utils
 BuildRequires:	intltool
 
@@ -67,6 +69,8 @@ This package contains debugging tools for the appmenu indicator.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .dbusmenu-dumper
 
 
 %build
