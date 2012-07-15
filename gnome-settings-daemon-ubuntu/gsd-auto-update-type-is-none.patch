@@ -1,0 +1,13 @@
+diff --git a/data/org.gnome.settings-daemon.plugins.updates.gschema.xml.in.in b/data/org.gnome.settings-daemon.plugins.updates.gschema.xml.in.in
+index c09096a..ef53b1c 100644
+--- a/data/org.gnome.settings-daemon.plugins.updates.gschema.xml.in.in
++++ b/data/org.gnome.settings-daemon.plugins.updates.gschema.xml.in.in
+@@ -31,7 +31,7 @@
+       <_description>Automatically download updates in the background without confirmation. Updates will be auto-downloaded when using wired network connnections, and also WiFi if 'connection-use-wifi' is enabled and mobile broadband if 'connection-use-mobile' is enabled.</_description>
+     </key>
+     <key name="auto-update-type" enum="org.gnome.settings-daemon.GsdUpdateType">
+-      <default>'security'</default>
++      <default>'none'</default>
+       <_summary>Automatically install these types of updates</_summary>
+       <_description>Automatically install these types of updates.</_description>
+     </key>
