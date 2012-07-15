@@ -35,6 +35,7 @@ BuildRequires:	colord-devel
 BuildRequires:	cups-devel
 BuildRequires:	dbus-glib-devel
 BuildRequires:	fontconfig-devel
+BuildRequires:	GConf2-devel
 BuildRequires:	gnome-desktop3-devel
 BuildRequires:	gsettings-desktop-schemas-devel
 BuildRequires:	gstreamer-devel
@@ -59,6 +60,13 @@ BuildRequires:	systemd-devel
 BuildRequires:	upower-devel
 BuildRequires:	xorg-x11-drv-wacom-devel
 BuildRequires:	xorg-x11-proto-devel
+
+# Satisfy OBS conflict on GTK 2 (installed by dependencies)
+BuildRequires:	gtk2
+BuildRequires:	gtk2-devel
+
+# Satisfy OBS conflict on what provides PackageKit-backend
+BuildRequires:	PackageKit-yum
 
 Requires:	control-center-filesystem
 
@@ -129,6 +137,21 @@ gcc -o gnome-settings-daemon/gnome-update-wallpaper-cache \
          gdk-x11-3.0 \
          gio-2.0 \
          gnome-desktop-3.0)
+
+
+%post
+touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
+
+%postun
+if [ ${1} -eq 0 ]; then
+  touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
+  gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
+fi
+
+%posttrans
+gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %install
