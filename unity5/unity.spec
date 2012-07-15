@@ -31,7 +31,7 @@ Patch2:		0003_Ignore_deprecated_schema_path.patch
 BuildRequires:	gcc46-devel
 BuildRequires:	gcc46-static
 
-# Ubuntu's patches fixesproto and libXfixes is needed
+# Ubuntu's patched fixesproto and libXfixes is needed
 BuildRequires:	libXfixes-ubuntu-devel
 BuildRequires:	xorg-x11-proto-ubuntu-devel
 

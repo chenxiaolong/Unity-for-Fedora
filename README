@@ -68,5 +68,5 @@ Build order:
 66: compiz-plugins-main            -> Compiz main plugins
 67: compiz-plugins-extra           -> Compiz extra plugins
 68: libgdu                         -> GNOME Disk Utility library
-69: unity                          -> A desktop experience designed for efficiency
+69: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
 70: unity-2d                       -> 2D implementation of Unity
