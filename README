@@ -19,7 +19,7 @@ Build order:
 17: dconf-qt                       -> Qt bindings for DConf
 18: sni-qt                         -> Turns Qt tray icons into appindicators
 19: ido                            -> Widgets and objects used for indicators
-20: gsettings-desktop-schemas *******
+20: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
 21: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
 22: gnome-session *******************
 23: gnome-control-center           -> Utilities to configure the GNOME desktop

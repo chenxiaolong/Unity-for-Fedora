@@ -46,7 +46,7 @@ BuildRequires:	gnome-desktop3-devel
 BuildRequires:	gnome-menus-devel
 BuildRequires:	gnome-online-accounts-devel
 BuildRequires:	gnome-settings-daemon-ubuntu-devel
-BuildRequires:	gsettings-desktop-schemas-devel
+BuildRequires:	gsettings-desktop-schemas-ubuntu-devel
 BuildRequires:	gtk3-ubuntu-devel
 BuildRequires:	iso-codes-devel
 BuildRequires:	libcanberra-devel
