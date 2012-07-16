@@ -80,6 +80,12 @@ BuildRequires:	gtk3-devel
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
 
+# Satisfy OBS conflict on gsettings-desktop-schemas
+BuildRequires:	gsettings-desktop-schemas
+
+# Satisfy OBS conflict on gnome-settings-daemon
+BuildRequires:	gnome-settings-daemon
+
 # Replace official verison
 Provides:	metacity%{?_isa} = %{version}-%{release}
 Provides:	metacity         = %{version}-%{release}

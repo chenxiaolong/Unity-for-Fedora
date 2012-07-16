@@ -34,6 +34,9 @@ BuildRequires:	xorg-x11-proto-devel
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
 
+# Satisfy OBS conflict on gsettings-desktop-schemas
+BuildRequires:	gsettings-desktop-schemas
+
 %description
 This package contains an applet for the GNOME panel to display Ayatana
 appindicators.

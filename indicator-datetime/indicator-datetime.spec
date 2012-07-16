@@ -52,6 +52,15 @@ BuildRequires:	xorg-x11-proto-devel
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
 
+# Satisfy OBS conflict on gsettings-desktop-schemas
+BuildRequires:	gsettings-desktop-schemas
+
+# Satisfy OBS conflict on control-center
+BuildRequires:	control-center-ubuntu
+BuildRequires:	control-center-ubuntu-devel
+
+Requires:	control-center-ubuntu
+
 %description
 This package contains an indicator for displaying the date and time in the
 panel.

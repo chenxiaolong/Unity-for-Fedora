@@ -38,6 +38,7 @@ BuildRequires:	dbus-glib-devel
 BuildRequires:	GConf2-devel
 BuildRequires:	glib2-devel
 BuildRequires:	glibmm24-devel
+BuildRequires:	gnome-settings-daemon-ubuntu
 BuildRequires:	gtk2-devel
 BuildRequires:	gtk3-devel
 BuildRequires:	libICE-devel
@@ -74,6 +75,9 @@ Requires:	GConf2
 
 # Satisfy OBS conflict on what provides PackageKit-backend
 BuildRequires:  PackageKit-yum
+
+# Satisfy OBS conflict on gsettings-desktop-schemas
+BuildRequires:	gsettings-desktop-schemas
 
 %description
 Compiz is an OpenGL compositing manager that uses GLX_EXT_texture_from_pixmap

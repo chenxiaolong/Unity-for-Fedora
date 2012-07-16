@@ -37,6 +37,12 @@ BuildRequires:	xorg-x11-proto-devel
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
 
+# Satisfy OBS conflict on gsettings-desktop-schemas
+BuildRequires:	gsettings-desktop-schemas
+
+# Satisfy OBS conflict on control-center-filesystem
+BuildRequires:	control-center-filesystem
+
 %description
 This package contains an indicator to show the battery status. It replaces the
 gnome-power-manager icon in desktop environments where regular tray icons are
