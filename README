@@ -21,7 +21,7 @@ Build order:
 19: ido                            -> Widgets and objects used for indicators
 20: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
 21: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
-22: gnome-session *******************
+22: gnome-session                  -> GNOME Session Manager
 23: gnome-control-center           -> Utilities to configure the GNOME desktop
 24: activity-log-manager ************
 25: gnome-screensaver ***************

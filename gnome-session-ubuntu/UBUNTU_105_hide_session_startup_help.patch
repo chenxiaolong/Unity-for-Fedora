@@ -1,0 +1,11 @@
+diff -Nru gnome-session-3.4.2.orig/capplet/gsm-properties-dialog.c gnome-session-3.4.2/capplet/gsm-properties-dialog.c
+--- gnome-session-3.4.2.orig/capplet/gsm-properties-dialog.c	2012-07-16 14:19:33.822145645 -0400
++++ gnome-session-3.4.2/capplet/gsm-properties-dialog.c	2012-07-16 14:25:27.293789057 -0400
+@@ -474,7 +474,6 @@
+         GtkTargetList     *targetlist;
+ 
+         gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+-                                GTK_STOCK_HELP, GTK_RESPONSE_HELP,
+                                 GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
+                                 NULL);
+ 
