@@ -22,7 +22,7 @@ Build order:
 20: gsettings-desktop-schemas *******
 21: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
 22: gnome-session *******************
-23: gnome-control-center ************
+23: gnome-control-center           -> Utilities to configure the GNOME desktop
 24: activity-log-manager ************
 25: gnome-screensaver ***************
 26: metacity                       -> Lightweight GTK+ window manager
@@ -69,4 +69,5 @@ Build order:
 67: compiz-plugins-extra           -> Compiz extra plugins
 68: libgdu                         -> GNOME Disk Utility library
 69: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
-70: unity-2d                       -> 2D implementation of Unity
+70: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+71: unity-2d                       -> 2D implementation of Unity

@@ -1,0 +1,563 @@
+diff --git a/panels/printers/pp-new-printer-dialog.c b/panels/printers/pp-new-printer-dialog.c
+index 0b21502..0427683 100644
+--- a/panels/printers/pp-new-printer-dialog.c
++++ b/panels/printers/pp-new-printer-dialog.c
+@@ -53,6 +53,10 @@
+ #define FIREWALLD_PATH "/org/fedoraproject/FirewallD"
+ #define FIREWALLD_IFACE "org.fedoraproject.FirewallD"
+ 
++#define FIREWALLD1_BUS "org.fedoraproject.FirewallD1"
++#define FIREWALLD1_PATH "/org/fedoraproject/FirewallD1"
++#define FIREWALLD1_IFACE "org.fedoraproject.FirewallD1.zone"
++
+ #define SCP_BUS   "org.fedoraproject.Config.Printing"
+ #define SCP_PATH  "/org/fedoraproject/Config/Printing"
+ #define SCP_IFACE "org.fedoraproject.Config.Printing"
+@@ -312,6 +316,18 @@ store_device_parameter (gpointer key,
+     }
+ }
+ 
++static gboolean
++is_missing_method_error (GError *error)
++{
++  if (error &&
++      error->domain == G_DBUS_ERROR &&
++      (error->code == G_DBUS_ERROR_SERVICE_UNKNOWN ||
++       error->code == G_DBUS_ERROR_UNKNOWN_METHOD))
++    return TRUE;
++  else
++    return FALSE;
++}
++
+ static void
+ devices_get_cb (GObject      *source_object,
+                 GAsyncResult *res,
+@@ -567,10 +583,7 @@ devices_get_cb (GObject      *source_obj
+ 
+           if (error)
+             {
+-              if (bus == NULL ||
+-                  (error->domain == G_DBUS_ERROR &&
+-                   (error->code == G_DBUS_ERROR_SERVICE_UNKNOWN ||
+-                    error->code == G_DBUS_ERROR_UNKNOWN_METHOD)))
++              if (bus == NULL || is_missing_method_error (error))
+                 g_warning ("Install system-config-printer which provides \
+ DBus method \"GroupPhysicalDevices\" to group duplicates in device list.");
+ 
+@@ -758,96 +771,115 @@ line_split (gchar *line)
+   return result;
+ }
+ 
+-static void
+-service_enable (gchar *service_name,
+-                gint   service_timeout)
++static gboolean
++is_zone_immutable (const gchar *zone_name)
+ {
+   GDBusConnection *bus;
+-  GVariant   *output = NULL;
+-  GError     *error = NULL;
++  GVariant        *output;
++  GError          *error = NULL;
++  gboolean         result = FALSE;
+ 
+   bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, &error);
+   if (!bus)
+     {
+       g_warning ("%s", error->message);
+       g_error_free (error);
+-      return;
++      return FALSE;
+     }
+ 
+   output = g_dbus_connection_call_sync (bus,
+-                                        FIREWALLD_BUS,
+-                                        FIREWALLD_PATH,
+-                                        FIREWALLD_IFACE,
+-                                        "enableService",
+-                                        g_variant_new ("(si)",
+-                                                       service_name,
+-                                                       service_timeout),
+-                                        NULL,
++                                        FIREWALLD1_BUS,
++                                        FIREWALLD1_PATH,
++                                        FIREWALLD1_IFACE,
++                                        "isImmutable",
++                                        g_variant_new ("(s)", zone_name),
++                                        G_VARIANT_TYPE ("(b)"),
+                                         G_DBUS_CALL_FLAGS_NONE,
+-                                        60000,
++                                        -1,
+                                         NULL,
+                                         &error);
+ 
+-  g_object_unref (bus);
+-
+   if (output)
+     {
++      g_variant_get (output, "(b)", &result);
+       g_variant_unref (output);
+     }
+   else
+     {
+-      g_warning ("%s", error->message);
++      if (!is_missing_method_error (error))
++        g_warning ("%s", error->message);
+       g_error_free (error);
+     }
++
++  g_object_unref (bus);
++
++  return result;
+ }
+ 
+-static void
+-service_disable (gchar *service_name)
++static GList *
++get_active_zones ()
+ {
+   GDBusConnection *bus;
+-  GVariant   *output = NULL;
+-  GError     *error = NULL;
++  GVariant        *output;
++  GError          *error = NULL;
++  GList           *result = NULL;
+ 
+   bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, &error);
+   if (!bus)
+     {
+       g_warning ("%s", error->message);
+       g_error_free (error);
+-      return;
++      return NULL;
+     }
+ 
+   output = g_dbus_connection_call_sync (bus,
+-                                        FIREWALLD_BUS,
+-                                        FIREWALLD_PATH,
+-                                        FIREWALLD_IFACE,
+-                                        "disableService",
+-                                        g_variant_new ("(s)", service_name),
++                                        FIREWALLD1_BUS,
++                                        FIREWALLD1_PATH,
++                                        FIREWALLD1_IFACE,
++                                        "getActiveZones",
+                                         NULL,
++                                        G_VARIANT_TYPE ("(a{sas})"),
+                                         G_DBUS_CALL_FLAGS_NONE,
+-                                        60000,
++                                        -1,
+                                         NULL,
+                                         &error);
+ 
+-  g_object_unref (bus);
+-
+   if (output)
+     {
++      GVariantIter *iter;
++      const gchar  *zone;
++      GVariant     *item;
++
++      g_variant_get (output, "(a{sas})", &iter);
++      while ((item = g_variant_iter_next_value (iter)))
++        {
++          g_variant_get (item, "{sas}", &zone, NULL);
++          if (!is_zone_immutable (zone))
++            result = g_list_append (result, g_strdup (zone));
++        }
++
+       g_variant_unref (output);
+     }
+   else
+     {
+-      g_warning ("%s", error->message);
++      if (!is_missing_method_error (error))
++        g_warning ("%s", error->message);
+       g_error_free (error);
+     }
++
++  g_object_unref (bus);
++
++  return result;
+ }
+ 
+ static gboolean
+-service_enabled (gchar *service_name)
++service_enabled_in_zone (gchar *service_name,
++                         gchar *zone)
+ {
+   GDBusConnection *bus;
+-  GVariant   *output = NULL;
+-  GError     *error = NULL;
+-  gint        query_result = 0;
++  gboolean         result = FALSE;
++  GVariant        *output;
++  GError          *error = NULL;
+ 
+   bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, &error);
+   if (!bus)
+@@ -858,36 +890,298 @@ service_enabled (gchar *service_name)
+     }
+ 
+   output = g_dbus_connection_call_sync (bus,
+-                                        FIREWALLD_BUS,
+-                                        FIREWALLD_PATH,
+-                                        FIREWALLD_IFACE,
++                                        FIREWALLD1_BUS,
++                                        FIREWALLD1_PATH,
++                                        FIREWALLD1_IFACE,
+                                         "queryService",
+-                                        g_variant_new ("(s)", service_name),
+-                                        G_VARIANT_TYPE ("(i)"),
++                                        g_variant_new ("(ss)",
++                                                       zone,
++                                                       service_name),
++                                        G_VARIANT_TYPE ("(b)"),
+                                         G_DBUS_CALL_FLAGS_NONE,
+-                                        60000,
++                                        -1,
+                                         NULL,
+                                         &error);
+ 
+-  g_object_unref (bus);
+-
+   if (output)
+     {
+-      if (g_variant_n_children (output) == 1)
+-        g_variant_get (output, "(i)", &query_result);
++      g_variant_get (output, "(b)", &result);
+       g_variant_unref (output);
+     }
+   else
+     {
++      if (!is_missing_method_error (error))
++        g_warning ("%s", error->message);
++
++      g_error_free (error);
++    }
++
++  g_object_unref (bus);
++
++  return result;
++}
++
++static void
++service_enable (gchar *service_name,
++                gint   service_timeout)
++{
++  GDBusConnection *bus;
++  GVariant        *output;
++  GError          *error = NULL;
++  GList           *zones, *iter;
++
++  bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, &error);
++  if (!bus)
++    {
++      g_warning ("%s", error->message);
++      g_error_free (error);
++      return;
++    }
++
++  zones = get_active_zones ();
++
++  if (zones)
++    {
++      for (iter = zones; iter; iter = g_list_next (iter))
++        {
++          if (!service_enabled_in_zone (service_name, (gchar *) iter->data))
++            {
++              output = g_dbus_connection_call_sync (bus,
++                                                    FIREWALLD1_BUS,
++                                                    FIREWALLD1_PATH,
++                                                    FIREWALLD1_IFACE,
++                                                    "addService",
++                                                    g_variant_new ("(ssi)",
++                                                                   (gchar *) iter->data,
++                                                                   service_name,
++                                                                   service_timeout),
++                                                    NULL,
++                                                    G_DBUS_CALL_FLAGS_NONE,
++                                                    -1,
++                                                    NULL,
++                                                    &error);
++
++              if (output)
++                {
++                  g_variant_unref (output);
++                }
++              else
++                {
++                  if (!is_missing_method_error (error))
++                    g_warning ("%s", error->message);
++                  g_error_free (error);
++                }
++            }
++        }
++
++      g_list_free_full (zones, g_free);
++    }
++  else
++    {
++      output = g_dbus_connection_call_sync (bus,
++                                            FIREWALLD_BUS,
++                                            FIREWALLD_PATH,
++                                            FIREWALLD_IFACE,
++                                            "enableService",
++                                            g_variant_new ("(si)",
++                                                           service_name,
++                                                           service_timeout),
++                                            NULL,
++                                            G_DBUS_CALL_FLAGS_NONE,
++                                            -1,
++                                            NULL,
++                                            &error);
++
++      if (output)
++        {
++          g_variant_unref (output);
++        }
++      else
++        {
++          if (!is_missing_method_error (error))
++            g_warning ("%s", error->message);
++          g_error_free (error);
++        }
++    }
++
++  g_object_unref (bus);
++}
++
++static void
++service_disable (gchar *service_name)
++{
++  GDBusConnection *bus;
++  GVariant        *output;
++  GError          *error = NULL;
++  GList           *zones, *iter;
++
++  bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, &error);
++  if (!bus)
++    {
++      g_warning ("%s", error->message);
++      g_error_free (error);
++      return;
++    }
++
++  zones = get_active_zones ();
++
++  if (zones)
++    {
++      for (iter = zones; iter; iter = g_list_next (iter))
++        {
++          output = g_dbus_connection_call_sync (bus,
++                                                FIREWALLD1_BUS,
++                                                FIREWALLD1_PATH,
++                                                FIREWALLD1_IFACE,
++                                                "removeService",
++                                                g_variant_new ("(ss)",
++                                                               (gchar *) iter->data,
++                                                               service_name),
++                                                NULL,
++                                                G_DBUS_CALL_FLAGS_NONE,
++                                                -1,
++                                                NULL,
++                                                &error);
++
++          if (output)
++            {
++              g_variant_unref (output);
++            }
++          else
++            {
++              if (!is_missing_method_error (error))
++                g_warning ("%s", error->message);
++              g_error_free (error);
++            }
++        }
++
++      g_list_free_full (zones, g_free);
++    }
++  else
++    {
++      output = g_dbus_connection_call_sync (bus,
++                                            FIREWALLD_BUS,
++                                            FIREWALLD_PATH,
++                                            FIREWALLD_IFACE,
++                                            "disableService",
++                                            g_variant_new ("(s)",
++                                                           service_name),
++                                            NULL,
++                                            G_DBUS_CALL_FLAGS_NONE,
++                                            -1,
++                                            NULL,
++                                            &error);
++
++      if (output)
++        {
++          g_variant_unref (output);
++        }
++      else
++        {
++          if (!is_missing_method_error (error))
++            g_warning ("%s", error->message);
++          g_error_free (error);
++        }
++    }
++
++  g_object_unref (bus);
++}
++
++static gboolean
++service_enabled (gchar *service_name)
++{
++  GDBusConnection *bus;
++  gboolean         result = FALSE;
++  GVariant        *output;
++  GError          *error = NULL;
++  GList           *zones, *iter;
++
++  bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, &error);
++  if (!bus)
++    {
+       g_warning ("%s", error->message);
+       g_error_free (error);
+       return FALSE;
+     }
+ 
+-  if (query_result > 0)
+-    return TRUE;
++  zones = get_active_zones ();
++
++  if (zones)
++    {
++      gboolean zone_result = FALSE;
++
++      result = TRUE;
++
++      for (iter = zones; iter; iter = g_list_next (iter))
++        {
++          output = g_dbus_connection_call_sync (bus,
++                                                FIREWALLD1_BUS,
++                                                FIREWALLD1_PATH,
++                                                FIREWALLD1_IFACE,
++                                                "queryService",
++                                                g_variant_new ("(ss)",
++                                                               (gchar *) iter->data,
++                                                               service_name),
++                                                G_VARIANT_TYPE ("(b)"),
++                                                G_DBUS_CALL_FLAGS_NONE,
++                                                -1,
++                                                NULL,
++                                                &error);
++
++          if (output)
++            {
++              g_variant_get (output, "(b)", &zone_result);
++              g_variant_unref (output);
++            }
++          else
++            {
++              if (!is_missing_method_error (error))
++                g_warning ("%s", error->message);
++
++              g_error_free (error);
++            }
++
++          result = result && zone_result;
++        }
++
++      g_list_free_full (zones, g_free);
++    }
+   else
+-    return FALSE;
++    {
++      gint query_result = 0;
++
++      output = g_dbus_connection_call_sync (bus,
++                                            FIREWALLD_BUS,
++                                            FIREWALLD_PATH,
++                                            FIREWALLD_IFACE,
++                                            "queryService",
++                                            g_variant_new ("(s)", service_name),
++                                            G_VARIANT_TYPE ("(i)"),
++                                            G_DBUS_CALL_FLAGS_NONE,
++                                            -1,
++                                            NULL,
++                                            &error);
++
++      if (output)
++        {
++          g_variant_get (output, "(i)", &query_result);
++          g_variant_unref (output);
++
++          if (query_result > 0)
++            result = TRUE;
++        }
++      else
++        {
++          if (!is_missing_method_error (error))
++            g_warning ("%s", error->message);
++
++          g_error_free (error);
++        }
++    }
++
++  g_object_unref (bus);
++
++  return result;
+ }
+ 
+ static gboolean
+@@ -930,8 +1224,7 @@ dbus_method_available (gchar *name,
+     }
+   else
+     {
+-      if (error->domain == G_DBUS_ERROR &&
+-          error->code == G_DBUS_ERROR_SERVICE_UNKNOWN)
++      if (is_missing_method_error (error))
+         result = FALSE;
+       else
+         result = TRUE;
+@@ -1317,7 +1610,11 @@ populate_devices_list (PpNewPrinterDialo
+ 
+   actualize_devices_list (pp);
+ 
+-  if (dbus_method_available (FIREWALLD_BUS,
++  if (dbus_method_available (FIREWALLD1_BUS,
++                             FIREWALLD1_PATH,
++                             FIREWALLD1_IFACE,
++                             "getServices") ||
++      dbus_method_available (FIREWALLD_BUS,
+                              FIREWALLD_PATH,
+                              FIREWALLD_IFACE,
+                              "getServices"))
+@@ -1772,10 +2069,14 @@ new_printer_add_button_cb (GtkButton *bu
+           printer_set_default_media_size (pp->devices[device_id].display_name);
+ 
+           if (pp->devices[device_id].device_uri &&
+-              dbus_method_available (FIREWALLD_BUS,
+-                                     FIREWALLD_PATH,
+-                                     FIREWALLD_IFACE,
+-                                     "getServices"))
++              (dbus_method_available (FIREWALLD1_BUS,
++                                      FIREWALLD1_PATH,
++                                      FIREWALLD1_IFACE,
++                                      "getServices") ||
++               dbus_method_available (FIREWALLD_BUS,
++                                      FIREWALLD_PATH,
++                                      FIREWALLD_IFACE,
++                                      "getServices")))
+             {
+               if (g_str_has_prefix (pp->devices[device_id].device_uri, "dnssd:") ||
+                   g_str_has_prefix (pp->devices[device_id].device_uri, "mdns:"))
+@@ -1856,9 +2157,7 @@ new_printer_add_button_cb (GtkButton *bu
+ 
+               if (bus == NULL ||
+                   (error &&
+-                   error->domain == G_DBUS_ERROR &&
+-                   (error->code == G_DBUS_ERROR_SERVICE_UNKNOWN ||
+-                    error->code == G_DBUS_ERROR_UNKNOWN_METHOD)))
++                   is_missing_method_error (error)))
+                 {
+                   g_warning ("Install system-config-printer which provides \
+ DBus method \"MissingExecutables\" to find missing executables and filters.");
