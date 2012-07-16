@@ -50,7 +50,7 @@ BuildRequires:	libXcomposite-devel
 BuildRequires:	libXcursor-devel
 BuildRequires:	libXdamage-devel
 BuildRequires:	libXext-devel
-BuildRequires:	libXfixes-devel
+BuildRequires:	libXfixes-ubuntu-devel
 BuildRequires:	libXinerama-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libXrandr-devel
@@ -96,7 +96,7 @@ Requires:	libX11-devel
 Requires:	libXcomposite-devel
 Requires:	libXcursor-devel
 Requires:	libXdamage-devel
-Requires:	libXfixes-devel
+Requires:	libXfixes-ubuntu-devel
 Requires:	libXinerama-devel
 Requires:	libxml2-devel
 Requires:	libXrandr-devel
