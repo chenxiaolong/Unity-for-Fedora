@@ -8,7 +8,7 @@
 
 Name:		control-center-ubuntu
 Version:	3.4.2
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	Utilities to configure the GNOME desktop
 
 Group:		User Interface/Desktops
@@ -113,6 +113,9 @@ Requires:	gnome-icon-theme-symbolic
 # Printers
 Requires:	cups-pk-helper
 
+# Ubuntu's new sound panel (requires XDG_CURRENT_DESKTOP to be set)
+Requires:	gnome-session-ubuntu
+
 # Replace official version
 # Provide epoch 1 since Fedora's package is at epoch 1
 Provides:	control-center%{?_isa} = 1:%{version}-%{release}
@@ -175,6 +178,10 @@ tar zxvf '%{SOURCE99}'
     sed -i '/53_use_ubuntu_help.patch/d' debian/patches/series
   # Don't use Ubuntu branding.
     sed -i '/56_use_ubuntu_info_branding.patch/d' debian/patches/series
+  # Do not revert the port to systemd's timedated
+    sed -i '/revert_git_datetime_port.patch/d' debian/patches/series
+  # Fedora does not have ubuntu-system-service
+    sed -i '/50_ubuntu_systemwide_prefs.patch/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
@@ -292,6 +299,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 # GNOME Control Center libraries
 %{_libdir}/libgnome-control-center.so.1
 %{_libdir}/libgnome-control-center.so.1.0.0
+
+# PolicyKit policies
+%{_datadir}/polkit-1/actions/org.gnome.controlcenter.datetime.policy
 
 # Desktop files
 %dir %{_datadir}/indicators/
@@ -442,6 +452,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Jul 16 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.3
+- Do not revert the port to systemd's timedated
+- Fedora does not have ubuntu-system-service
+
 * Sun Jul 15 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu0.3
 - Initial release
 - Based off of Fedora 17's spec file
