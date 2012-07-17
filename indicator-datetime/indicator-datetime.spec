@@ -5,7 +5,7 @@
 
 Name:		indicator-datetime
 Version:	0.3.94
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Indicator for displaying the date and time
 
 Group:		User Interface/Desktops
@@ -14,7 +14,10 @@ URL:		https://launchpad.net/indicator-datetime
 Source0:	https://launchpad.net/indicator-datetime/0.4/%{version}/+download/indicator-datetime-%{version}.tar.gz
 
 Patch0:		0001_non-locale_parsing.patch
+Patch1:		0002_Read_etc_sysconfig_clock.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gettext
 BuildRequires:	intltool
 
@@ -80,6 +83,9 @@ This package contains the development files for the datetime indicator.
 %setup -q
 
 %patch0 -p1
+%patch1 -p1
+
+autoreconf -vfi
 
 
 %build
@@ -108,6 +114,9 @@ pushd build-gtk3
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
 
+desktop-file-validate \
+ $RPM_BUILD_ROOT%{_datadir}/applications/indicator-datetime-preferences.desktop
+
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
@@ -125,10 +134,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
 %doc AUTHORS ChangeLog
+%{_libdir}/control-center-1/panels/libindicator-datetime.so
 %{_libdir}/indicators3/7/libdatetime.so
 %{_libexecdir}/indicator-datetime-service
+%{_datadir}/applications/indicator-datetime-preferences.desktop
 %{_datadir}/dbus-1/services/indicator-datetime.service
 %{_datadir}/glib-2.0/schemas/com.canonical.indicator.datetime.gschema.xml
+%dir %{_datadir}/indicator-datetime/
+%{_datadir}/indicator-datetime/datetime-dialog.ui
 
 
 %files gtk2
@@ -137,6 +150,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Mon Jul 16 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.94-2
+- Read timezone from /etc/sysconfig/clock
+
 * Wed Jul 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.94-1
 - Initial release
 - Version 0.3.94
