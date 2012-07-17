@@ -63,6 +63,9 @@ BuildRequires:	gsettings-desktop-schemas
 BuildRequires:	control-center-ubuntu
 BuildRequires:	control-center-ubuntu-devel
 
+# Satisfy OBS conflict on gnome-bluetooth-libs
+BuildRequires:	gnome-bluetooth-libs
+
 Requires:	control-center-ubuntu
 
 %description
