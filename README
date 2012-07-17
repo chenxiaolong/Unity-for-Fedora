@@ -37,7 +37,7 @@ Build order:
 35: indicator-session              -> Indicator for session management
 36: indicator-sound                -> Indicator displaying a unified sound menu
 37: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
-38: gnome-bluetooth *****************
+38: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
 39: overlay-scrollbar ***************
 40: plasma-widget-menubar ***********
 41: xfce4-indicator-plugin **********
