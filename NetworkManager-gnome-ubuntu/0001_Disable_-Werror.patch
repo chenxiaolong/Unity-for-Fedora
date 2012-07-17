@@ -1,0 +1,13 @@
+diff -Nru network-manager-applet-0.9.4.0.orig/m4/compiler_warnings.m4 network-manager-applet-0.9.4.0/m4/compiler_warnings.m4
+--- network-manager-applet-0.9.4.0.orig/m4/compiler_warnings.m4	2012-07-17 02:39:25.265741413 -0400
++++ network-manager-applet-0.9.4.0/m4/compiler_warnings.m4	2012-07-17 02:39:58.525930537 -0400
+@@ -25,9 +25,6 @@
+ 		unset SAVE_CFLAGS
+ 	done
+ 	unset option
+-	if test "x$set_more_warnings" = xerror; then
+-		CFLAGS="$CFLAGS -Werror"
+-	fi
+ else
+ 	AC_MSG_RESULT(no)
+ fi
