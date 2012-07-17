@@ -200,6 +200,10 @@ desktop-file-install \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications/ \
   debian/gnome-wm.desktop
 
+# /usr/lib/nux -> /usr/libexec
+sed -i 's,lib/nux,libexec,' \
+  $RPM_BUILD_ROOT%{_datadir}/gnome-session/sessions/ubuntu.session
+
 %find_lang gnome-session-3.0
 
 
