@@ -18,6 +18,7 @@ Patch1:		0002_Read_etc_sysconfig_clock.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 BuildRequires:	intltool
 
