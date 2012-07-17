@@ -86,6 +86,9 @@ BuildRequires:	gsettings-desktop-schemas
 # Satisfy OBS conflict on gnome-settings-daemon
 BuildRequires:	gnome-settings-daemon
 
+# Satisfy OBS conflict on gnome-bluetooth-libs
+BuildRequires:	gnome-bluetooth-libs
+
 # Replace official verison
 Provides:	metacity%{?_isa} = %{version}-%{release}
 Provides:	metacity         = %{version}-%{release}
