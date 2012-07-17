@@ -23,6 +23,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
+BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
@@ -31,10 +32,21 @@ BuildRequires:	rarian-compat
 BuildRequires:	dbus-glib-devel
 BuildRequires:	GConf2-devel
 BuildRequires:	gobject-introspection-devel
-BuildRequires:	gtk3-devel
+# Dependencies use gtk3-ubuntu
+BuildRequires:	gtk3-ubuntu-devel
 BuildRequires:	libappindicator-gtk3-devel
 BuildRequires:	libnotify-devel
 BuildRequires:	nautilus-sendto-devel
+
+# Satisfy OBS conflict on libXfixes
+BuildRequires:	libXfixes
+BuildRequires:	libXfixes-devel
+
+# Satisfy OBS conflict on xorg-x11-proto-devel
+BuildRequires:	xorg-x11-proto-devel
+
+# Satisfy OBS conflict on gsettings-desktop-schemas
+BuildRequires:	gsettings-desktop-schemas
 
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	bluez
