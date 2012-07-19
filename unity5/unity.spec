@@ -177,6 +177,11 @@ rm -rf $RPM_BUILD_ROOT
 cd build
 make install DESTDIR=$RPM_BUILD_ROOT
 
+# Use Fedora logo
+rm $RPM_BUILD_ROOT%{_datadir}/unity/5/launcher_bfb.png
+ln -s %{_datadir}/pixmaps/fedora-logo-sprite.png \
+  $RPM_BUILD_ROOT%{_datadir}/unity/5/launcher_bfb.png
+
 # Install Compiz profile upgrade helpers
 install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/compizconfig/upgrades/
 install -m644 ../debian/profile_upgrade/com.canonical.unity.unity.03.upgrade \
