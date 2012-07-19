@@ -1,13 +1,10 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_ver 5.12
-%define _ubuntu_rel 0ubuntu1.1
-
 %define _gconf_schemas compiz-gtkloader compiz-unitymtgrabhandles compiz-unityshell
 
 Name:		unity
-Version:	5.12.0
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	5.14.0
+Release:	1%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
 Group:		User Interface/Desktops
@@ -15,8 +12,8 @@ License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/unity
 Source0:	https://launchpad.net/unity/5.0/%{version}/+download/unity-%{version}.tar.bz2
 
-# Ubuntu's packaging contains quite a few backported patches
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/unity_%{_ubuntu_ver}-%{_ubuntu_rel}.diff.gz
+# From Ubuntu's unity 5.12-0ubuntu1.1 packaging
+Source1:	com.canonical.unity.unity.03.upgrade
 
 # Fix the gtest search in CMake
 Patch0:		0001_fix_gtest_directory.patch
@@ -50,7 +47,7 @@ BuildRequires:	dee-devel
 BuildRequires:	GConf2-devel
 BuildRequires:	glib2-devel
 BuildRequires:	gnome-desktop3-devel
-BuildRequires:	gsettings-desktop-schemas-devel
+BuildRequires:	gsettings-desktop-schemas-ubuntu-devel
 BuildRequires:	gtk3-devel
 BuildRequires:	json-glib-devel
 BuildRequires:	libcompizconfig-devel
@@ -76,6 +73,7 @@ Requires:	unity-common%{?_isa} = %{version}-%{release}
 
 Requires:	compiz-plugins-main
 Requires:	gnome-python2-gconf
+Requires:	fedora-logos
 Requires:	libXfixes-ubuntu
 Requires:	nux-tools
 Requires:	unity-asset-pool
@@ -142,9 +140,6 @@ This package contains files common to Unity and Unity 2D.
 %patch1 -p1 -b .fixdirs
 %patch2 -p1 -b .gsettingsfail
 
-# Apply Ubuntu's patches
-zcat '%{SOURCE99}' | patch -Np1
-
 
 %build
 mkdir build
@@ -184,8 +179,7 @@ ln -s %{_datadir}/pixmaps/fedora-logo-sprite.png \
 
 # Install Compiz profile upgrade helpers
 install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/compizconfig/upgrades/
-install -m644 ../debian/profile_upgrade/com.canonical.unity.unity.03.upgrade \
-              $RPM_BUILD_ROOT%{_sysconfdir}/compizconfig/upgrades/
+install -m644 '%{SOURCE1}' $RPM_BUILD_ROOT%{_sysconfdir}/compizconfig/upgrades/
 
 # Put GConf schemas in correct directory
 mv $RPM_BUILD_ROOT{%{_datadir},%{_sysconfdir}}/gconf/
@@ -297,6 +291,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Thu Jul 19 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.14.0-1
+- Add com.canonical.unity.unity.03.upgrade from Ubuntu's packaging
+- Remove lines related to Ubuntu's packaging to simplify spec file
+- The 'big fat button' (launcher_bfb.png) now uses the Fedora logo
+
+* Thu Jul 19 2012 Damian Ivanov <damiantorrpm@gmail.com> - 5.14.0
+- Update to 5.14.0
+
 * Wed Jul 11 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.12.0-1.0ubuntu1.1
 - Initial release
 - Version 5.12.0
