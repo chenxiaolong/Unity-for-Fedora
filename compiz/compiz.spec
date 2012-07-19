@@ -79,6 +79,9 @@ BuildRequires:  PackageKit-yum
 # Satisfy OBS conflict on gsettings-desktop-schemas
 BuildRequires:	gsettings-desktop-schemas
 
+# Satisfy OBS conflict on gnome-bluetooth-libs
+BuildRequires:	gnome-bluetooth-libs
+
 %description
 Compiz is an OpenGL compositing manager that uses GLX_EXT_texture_from_pixmap
 for binding redirected top-level windows to texture objects. It has a flexible
