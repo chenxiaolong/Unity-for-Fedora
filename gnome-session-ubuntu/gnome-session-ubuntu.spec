@@ -9,7 +9,7 @@
 
 Name:		gnome-session-ubuntu
 Version:	3.4.2
-Release:	2.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Release:	3.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME session manager
 
 Group:		User Interface/Desktops
@@ -27,14 +27,19 @@ Patch0:		gnome-session-3.3.1-llvmpipe.patch
 Patch1:		gnome-session-3.3.92-nv30.patch
 
 # Refreshed all of the patches for GNOME session 3.4.1
-Patch100:	UBUNTU_01_gnome-wm.patch
+
+# Uses Debian's alternatives system (Fedora has it too, but other packages need
+# to use it)
+#Patch100:	UBUNTU_01_gnome-wm.patch
 Patch101:	UBUNTU_02_fallback_desktop.patch
 Patch102:	UBUNTU_103_kill_the_fail_whale.patch
 Patch103:	UBUNTU_104_dont_show_fallback_warning.patch
 Patch104:	UBUNTU_105_hide_session_startup_help.patch
-Patch105:	UBUNTU_12_no_gdm_fallback.patch
+# systemd should make this patch obsolete
+#Patch105:	UBUNTU_12_no_gdm_fallback.patch
 Patch106:	UBUNTU_20_hide_nodisplay.patch
-Patch107:	UBUNTU_21_up_start_on_demand.patch
+# systemd should make this patch obsolete too
+#Patch107:	UBUNTU_21_up_start_on_demand.patch
 Patch108:	UBUNTU_22_support_autostart_delay.patch
 Patch109:	UBUNTU_50_ubuntu_sessions.patch
 Patch110:	UBUNTU_51_remove_session_saving_from_gui.patch
@@ -137,16 +142,18 @@ tar zxvf '%{SOURCE99}'
 %patch1 -p1
 
 # Apply Ubuntu's patches
-%patch100 -p1
+#patch100 -p1
 %patch101 -p1
 %patch102 -p1
 %patch103 -p1
 %patch104 -p1
-%patch105 -p1
+#patch105 -p1
 %patch106 -p1
-%patch107 -p1
+#patch107 -p1
 %patch108 -p1
-%patch109 -p1
+# Needed because 01_gnome-wm.patch is disabled
+cat '%{PATCH109}' | sed 's/gnome-wm/metacity/g' | patch -s -p1 --fuzz=0
+#patch109 -p1
 %patch110 -p1
 %patch111 -p1
 %patch112 -p1
@@ -181,7 +188,7 @@ desktop-file-validate \
 
 # Install Ubuntu's files
 install -m755 debian/scripts/gnome-session-fallback $RPM_BUILD_ROOT%{_bindir}/
-install -m755 debian/scripts/gnome-wm $RPM_BUILD_ROOT%{_bindir}/
+#install -m755 debian/scripts/gnome-wm $RPM_BUILD_ROOT%{_bindir}/
 
 install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 install -m755 '%{SOURCE98}' $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
@@ -193,12 +200,13 @@ install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome/applications/
 ln -s %{_sysconfdir}/gnome/defaults.list \
   $RPM_BUILD_ROOT%{_datadir}/gnome/applications/
 
-install -m644 debian/gnome-session-common.gsettings-override \
-  $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/10_%{name}.gschema.override
+# Defaults to Ubuntu session
+#install -m644 debian/gnome-session-common.gsettings-override \
+#  $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/10_%{name}.gschema.override
 
-desktop-file-install \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications/ \
-  debian/gnome-wm.desktop
+#desktop-file-install \
+#  --dir $RPM_BUILD_ROOT%{_datadir}/applications/ \
+#  debian/gnome-wm.desktop
 
 # /usr/lib/nux -> /usr/libexec
 sed -i 's,lib/nux,libexec,' \
@@ -229,15 +237,15 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %{_bindir}/gnome-session-fallback
 %{_bindir}/gnome-session-properties
 %{_bindir}/gnome-session-quit
-%{_bindir}/gnome-wm
+#%{_bindir}/gnome-wm
 %{_libexecdir}/gnome-session-check-accelerated
 %{_libexecdir}/gnome-session-check-accelerated-helper
 %{_sysconfdir}/X11/xinit/xinitrc.d/55gnome-session_gnomerc
 %{_sysconfdir}/gnome/defaults.list
 %{_datadir}/GConf/gsettings/gnome-session.convert
-%{_datadir}/applications/gnome-wm.desktop
+#%{_datadir}/applications/gnome-wm.desktop
 %{_datadir}/applications/session-properties.desktop
-%{_datadir}/glib-2.0/schemas/10_gnome-session-ubuntu.gschema.override
+#%{_datadir}/glib-2.0/schemas/10_gnome-session-ubuntu.gschema.override
 %{_datadir}/glib-2.0/schemas/org.gnome.SessionManager.gschema.xml
 %dir %{_datadir}/gnome/
 %dir %{_datadir}/gnome/applications/
@@ -276,6 +284,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Thu Jul 19 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-3.ubuntu3.2.1.0ubuntu8
+- Disable obsolete patches
+- Do not install gnome-wm
+
 * Mon Jul 16 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.ubuntu3.2.1.0ubuntu8
 - Install Ubuntu's files
 
