@@ -14,7 +14,10 @@ License:	GPLv2 and LGPLv3
 URL:		https://launchpad.net/utouch-geis
 Source0:	https://launchpad.net/utouch-geis/trunk/utouch-geis-%{version}/+download/utouch-geis-%{version}.tar.xz
 
+Patch0:		0001_evemu.patch
+
 BuildRequires:	asciidoc
+BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	dbus-devel
 BuildRequires:	desktop-file-utils
@@ -87,6 +90,8 @@ This package contains the testing tools for the utouch-geis library.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .evemu
 
 autoreconf -vfi
 
