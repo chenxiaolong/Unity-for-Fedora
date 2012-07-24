@@ -25,7 +25,7 @@ BuildRequires:	libX11-devel
 BuildRequires:	libxcb-devel
 BuildRequires:	libXi-devel
 BuildRequires:	python2-devel
-BuildRequires:	utouch-evemu-devel
+BuildRequires:	evemu-devel
 BuildRequires:	utouch-grail-devel
 BuildRequires:	xcb-proto
 BuildRequires:	xorg-x11-server-devel
