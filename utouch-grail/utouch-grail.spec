@@ -10,7 +10,10 @@ License:	GPLv3
 URL:		https://launchpad.net/utouch-grail
 Source0:	https://launchpad.net/utouch-grail/trunk/utouch-grail-3.0.5/+download/utouch-grail-3.0.5.tar.gz
 
+Patch0:		0001_evemu.patch
+
 BuildRequires:	asciidoc
+BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	gcc-c++
 BuildRequires:	libtool
@@ -56,6 +59,8 @@ This package testing tools for the utouch-grail library.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .evemu
 
 autoreconf -vfi
 

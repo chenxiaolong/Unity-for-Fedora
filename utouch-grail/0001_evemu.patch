@@ -1,0 +1,12 @@
+diff -Nru utouch-grail-3.0.5.orig/configure.ac utouch-grail-3.0.5/configure.ac
+--- utouch-grail-3.0.5.orig/configure.ac	2012-07-24 13:12:48.985618472 -0700
++++ utouch-grail-3.0.5/configure.ac	2012-07-24 13:13:12.129615783 -0700
+@@ -26,7 +26,7 @@
+ AC_PROG_INSTALL
+ 
+ PKG_CHECK_MODULES([MTDEV], [mtdev >= 1.1])
+-PKG_CHECK_MODULES([EVEMU], [utouch-evemu >= 1.0.5])
++PKG_CHECK_MODULES([EVEMU], [evemu >= 1.0.5])
+ PKG_CHECK_MODULES([FRAME], [utouch-frame >= 2.2.0])
+ 
+ PKG_CHECK_MODULES([XINPUT],
