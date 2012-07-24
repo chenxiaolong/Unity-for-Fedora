@@ -18,7 +18,7 @@ BuildRequires:	libX11-devel
 BuildRequires:	libXext-devel
 BuildRequires:	libXi-devel
 BuildRequires:	mtdev-devel
-BuildRequires:	utouch-evemu-devel
+BuildRequires:	evemu-devel
 BuildRequires:	utouch-frame-devel
 BuildRequires:	xorg-x11-proto-devel
 BuildRequires:	xmlto
