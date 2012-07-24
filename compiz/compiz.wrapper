@@ -4,9 +4,9 @@
 
 # Set GConf defaults only if compiz-gnome is installed
 # Not checking with rpm - initial run too slow
-if [ -f /usr/bin/gtk-window-decorator ]; then
+defaults="/usr/share/compiz/compiz.gconf-defaults"
+if [ -f "${defaults}" ]; then
   if [ ! -f "${HOME}/.config/compiz.gconf-defaults" ]; then
-    defaults="/usr/share/compiz/compiz.gconf-defaults"
     while read -r key value; do
       # Check value type
       if echo "${value}" | grep -Eq '^[0-9]+$'; then

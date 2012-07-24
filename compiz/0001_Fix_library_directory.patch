@@ -3,9 +3,29 @@ PKG_CONFIG_PATH to /usr/lib/pkgconfig on a 64 bit system when compiling Unity,
 which causes a 'mysterious' empty panel in Unity (error when trying to run
 unity-panel-service: /usr/lib/indicators3 not found).
 
-diff -Nru compiz-0.9.7.8.orig/cmake/FindCompiz.cmake compiz-0.9.7.8/cmake/FindCompiz.cmake
---- compiz-0.9.7.8.orig/cmake/FindCompiz.cmake	2012-07-12 16:00:59.377142587 -0400
-+++ compiz-0.9.7.8/cmake/FindCompiz.cmake	2012-07-12 16:01:46.831096275 -0400
+diff -Nru compiz-0.9.8+bzr3249.orig/cmake/base.cmake compiz-0.9.8+bzr3249/cmake/base.cmake
+--- compiz-0.9.8+bzr3249.orig/cmake/base.cmake	2012-06-29 09:06:55.000000000 -0700
++++ compiz-0.9.8+bzr3249/cmake/base.cmake	2012-07-20 11:36:24.109586220 -0700
+@@ -77,13 +77,13 @@
+ 
+ # add install prefix to pkgconfig search path if needed
+ string (REGEX REPLACE "([\\+\\(\\)\\^\\\$\\.\\-\\*\\?\\|])" "\\\\\\1" PKGCONFIG_REGEX ${CMAKE_INSTALL_PREFIX})
+-set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
++set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib${LIB_SUFFIX}/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
+ 
+ if (NOT "$ENV{PKG_CONFIG_PATH}" MATCHES "${PKGCONFIG_REGEX}")
+     if ("" STREQUAL "$ENV{PKG_CONFIG_PATH}")
+-	set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
++	set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
+     else ()
+ 	set (ENV{PKG_CONFIG_PATH}
+-	    "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
++	    "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+     endif ()
+ endif ()
+diff -Nru compiz-0.9.8+bzr3249.orig/cmake/FindCompiz.cmake compiz-0.9.8+bzr3249/cmake/FindCompiz.cmake
+--- compiz-0.9.8+bzr3249.orig/cmake/FindCompiz.cmake	2012-06-29 09:06:55.000000000 -0700
++++ compiz-0.9.8+bzr3249/cmake/FindCompiz.cmake	2012-07-20 11:25:12.119857930 -0700
 @@ -56,16 +56,16 @@
  
  	# add install prefix to pkgconfig search path if needed
@@ -26,3 +46,45 @@ diff -Nru compiz-0.9.7.8.orig/cmake/FindCompiz.cmake compiz-0.9.7.8/cmake/FindCo
  		endif ()
  	    endif ()
  
+diff -Nru compiz-0.9.8+bzr3249.orig/compizconfig/libcompizconfig/cmake/FindCompizConfig.cmake compiz-0.9.8+bzr3249/compizconfig/libcompizconfig/cmake/FindCompizConfig.cmake
+--- compiz-0.9.8+bzr3249.orig/compizconfig/libcompizconfig/cmake/FindCompizConfig.cmake	2012-06-29 09:06:55.000000000 -0700
++++ compiz-0.9.8+bzr3249/compizconfig/libcompizconfig/cmake/FindCompizConfig.cmake	2012-07-20 11:31:22.336157316 -0700
+@@ -53,14 +53,14 @@
+ 
+ 	# add install prefix to pkgconfig search path if needed
+         string (REGEX REPLACE "([\\+\\(\\)\\^\\\$\\.\\-\\*\\?\\|])" "\\\\\\1" PKGCONFIG_REGEX ${CMAKE_INSTALL_PREFIX})
+-	set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
++	set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib${LIB_SUFFIX}/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
+ 
+ 	if (NOT "$ENV{PKG_CONFIG_PATH}" MATCHES "${PKGCONFIG_REGEX}")
+ 	    if ("" STREQUAL "$ENV{PKG_CONFIG_PATH}")
+-		set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
++		set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
+ 	    else ()
+ 		set (ENV{PKG_CONFIG_PATH}
+-		    "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
++		    "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+ 	    endif ()
+ 	endif ()
+ 
+diff -Nru compiz-0.9.8+bzr3249.orig/compizconfig/libcompizconfig/cmake/LibCompizConfigCommon.cmake compiz-0.9.8+bzr3249/compizconfig/libcompizconfig/cmake/LibCompizConfigCommon.cmake
+--- compiz-0.9.8+bzr3249.orig/compizconfig/libcompizconfig/cmake/LibCompizConfigCommon.cmake	2012-06-29 09:06:55.000000000 -0700
++++ compiz-0.9.8+bzr3249/compizconfig/libcompizconfig/cmake/LibCompizConfigCommon.cmake	2012-07-20 11:29:35.430359675 -0700
+@@ -106,7 +106,7 @@
+ 
+ 	set_target_properties (
+ 	    ${bname} PROPERTIES
+-	    INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib"
++	    INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}"
+ 	    COMPILE_FLAGS "${${_BACKEND}_CFLAGSADD}"
+ 	    LINK_FLAGS "${${_BACKEND}_LDFLAGSADD}"
+ 	)
+@@ -122,7 +122,7 @@
+ 
+     install (
+ 	TARGETS ${bname}
+-	DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/compizconfig/backends
++	DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/compizconfig/backends
+     )
+ 
+     if (NOT _COMPIZCONFIG_INTERNAL)
