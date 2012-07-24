@@ -1,0 +1,12 @@
+diff -Nru utouch-frame-2.2.3.orig/configure.ac utouch-frame-2.2.3/configure.ac
+--- utouch-frame-2.2.3.orig/configure.ac	2012-07-24 13:08:50.241518595 -0700
++++ utouch-frame-2.2.3/configure.ac	2012-07-24 13:09:32.486553196 -0700
+@@ -26,7 +26,7 @@
+ AC_PROG_INSTALL
+ 
+ PKG_CHECK_MODULES([MTDEV], [mtdev >= 1.1])
+-PKG_CHECK_MODULES([EVEMU], [utouch-evemu >= 1.0.5])
++PKG_CHECK_MODULES([EVEMU], [evemu >= 1.0.5])
+ 
+ PKG_CHECK_MODULES(XINPUT, x11 xext [xi >= 1.5.99.1] [inputproto >= 2.1.99.6],
+                   HAVE_XI22="yes"; AC_DEFINE(HAVE_XI22, 1, [XI22 available]),

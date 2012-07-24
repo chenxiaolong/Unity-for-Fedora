@@ -10,6 +10,8 @@ License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/utouch-frame
 Source0:	https://launchpad.net/utouch-frame/trunk/utouch-frame-%{version}/+download/utouch-frame-%{version}.tar.xz
 
+Patch0:		0001_evemu.patch
+
 BuildRequires:	asciidoc
 BuildRequires:	automake
 BuildRequires:	gcc-c++
@@ -55,6 +57,8 @@ This package testing tools for the utouch-frame library.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .evemu
 
 autoreconf -vfi
 
