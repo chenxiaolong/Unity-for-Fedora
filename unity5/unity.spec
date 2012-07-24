@@ -71,7 +71,8 @@ BuildRequires:	xcb-util-wm-devel
 
 Requires:	unity-common%{?_isa} = %{version}-%{release}
 
-Requires:	compiz-plugins-main
+Requires:	compiz-gnome
+Requires:	compiz-plugins
 Requires:	gnome-python2-gconf
 Requires:	fedora-logos
 Requires:	libXfixes-ubuntu
