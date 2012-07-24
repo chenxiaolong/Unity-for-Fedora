@@ -41,7 +41,7 @@ Build order:
 39: overlay-scrollbar ***************
 40: plasma-widget-menubar ***********
 41: xfce4-indicator-plugin **********
-42: utouch-evemu                   -> Event emulation for the uTouch stack
+42: evemu                          -> Linux Evdev Event Emulation
 43: utouch-frame                   -> Touch frame library
 44: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
 45: libXfixes                      -> X.Org fixes extension library
