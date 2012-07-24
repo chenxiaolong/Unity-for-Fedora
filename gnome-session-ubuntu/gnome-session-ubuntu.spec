@@ -77,6 +77,7 @@ BuildRequires:	systemd-devel
 BuildRequires:	upower-devel
 BuildRequires:	xorg-x11-xtrans-devel
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on GTK 2 (installed by dependencies)
 BuildRequires:	gtk2
 BuildRequires:	gtk2-devel
@@ -96,6 +97,7 @@ BuildRequires:	xorg-x11-proto-devel
 
 # Satisfy OBS conflict on control-center-filesystem
 BuildRequires:	control-center-filesystem
+%endif
 
 Requires:	control-center-filesystem
 Requires:	dbus-x11

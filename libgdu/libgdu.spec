@@ -26,6 +26,7 @@ BuildRequires:	libatasmart-devel
 BuildRequires:	libgnome-keyring-devel
 BuildRequires:	udisks-devel
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on gtk2
 BuildRequires:	gtk2
 BuildRequires:	gtk2-devel
@@ -36,6 +37,7 @@ BuildRequires:	xorg-x11-proto-devel
 # Satisfy OBS conflict on libXfixes
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
+%endif
 
 %description
 This package contains the GNOME Disk Utility libraries from GNOME 3.0.

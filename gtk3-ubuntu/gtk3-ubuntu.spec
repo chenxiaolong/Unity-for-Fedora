@@ -72,8 +72,10 @@ Provides:	gtk3         = %{version}-%{release}
 Obsoletes:	gtk3%{?_isa} < %{_obsolete_ver}
 Obsoletes:	gtk3         < %{_obsolete_ver}
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
+%endif
 
 %description
 GTK+ is a multi-platform toolkit for creating graphical user

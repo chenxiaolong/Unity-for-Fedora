@@ -21,8 +21,10 @@ BuildRequires:	evemu-devel
 BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
+%endif
 
 %description
 # Description from Ubuntu's package

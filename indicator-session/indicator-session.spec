@@ -37,6 +37,7 @@ Requires:	gnome-packagekit
 Requires:	gnome-settings-daemon
 Requires:	upower
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on what provides PackageKit-backend
 BuildRequires:	PackageKit-yum
 
@@ -50,6 +51,7 @@ BuildRequires:	xorg-x11-proto-devel
 # Satisfy OBS conflict on libXfixes
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
+%endif
 
 %description
 Quick! Change your status. Switch users. Close your session. All provided by the

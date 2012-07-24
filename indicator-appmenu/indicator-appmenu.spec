@@ -31,6 +31,7 @@ BuildRequires:	readline-devel
 BuildRequires:	sqlite-devel
 BuildRequires:	vala-tools
 
+%if 0%{?opensuse_bs}
 # OBS dependency solver fix: dependencies use gtk3-ubuntu, so don't install gtk3
 #!BuildIgnore:	gtk3
 #!BuildIgnore:	gtk3-devel
@@ -41,6 +42,7 @@ BuildRequires:	xorg-x11-proto-devel
 # Satisfy OBS conflict on libXfixes
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
+%endif
 
 %description
 This package contains an indicator to host the menus from an application.

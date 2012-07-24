@@ -23,6 +23,7 @@ BuildRequires:	upower-devel
 Requires:	control-center
 Requires:	gnome-settings-daemon
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on what provides PackageKit-backend
 BuildRequires:	PackageKit-yum
 
@@ -42,6 +43,7 @@ BuildRequires:	gsettings-desktop-schemas
 
 # Satisfy OBS conflict on control-center-filesystem
 BuildRequires:	control-center-filesystem
+%endif
 
 %description
 This package contains an indicator to show the battery status. It replaces the

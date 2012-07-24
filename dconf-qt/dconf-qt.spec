@@ -23,12 +23,14 @@ BuildRequires:	dconf-devel
 BuildRequires:	glib2-devel
 BuildRequires:	qt-devel
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
 # Satisfy OBS conflict on libXfixes
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
+%endif
 
 %description
 This package contains the Qt 4 bindings for the DConf configuration system.

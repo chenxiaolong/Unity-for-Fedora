@@ -44,6 +44,7 @@ BuildRequires:	utouch-geis-devel
 
 Requires:	%{name}-common = %{version}-%{release}
 
+%if 0%{?opensuse_bs}
 # Satisfy obs conflict on gtk2: use gtk2
 BuildRequires:  gtk2
 
@@ -61,6 +62,7 @@ BuildRequires:	xorg-x11-proto-devel
 # Satisfy OBS conflict on libXfixes
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
+%endif
 
 # Description from Ubuntu
 %description

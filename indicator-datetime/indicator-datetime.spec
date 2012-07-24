@@ -42,7 +42,8 @@ BuildRequires:	libindicator-gtk3-devel
 BuildRequires:	libtimezonemap-devel
 BuildRequires:	polkit-devel
 
-# OBS build fix
+%if 0%{?opensuse_bs}
+# Satisfy OBS conflict on what provides PackageKit-backend
 BuildRequires:	PackageKit-yum
 
 # OBS dependency solver fix: dependencies use gtk3-ubuntu, so don't install gtk3
@@ -65,6 +66,7 @@ BuildRequires:	control-center-ubuntu-devel
 
 # Satisfy OBS conflict on gnome-bluetooth-libs
 BuildRequires:	gnome-bluetooth-libs
+%endif
 
 Requires:	control-center-ubuntu
 

@@ -66,6 +66,7 @@ Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on what provides PackageKit-backend
 BuildRequires:	PackageKit-yum
 
@@ -88,6 +89,7 @@ BuildRequires:	gnome-settings-daemon
 
 # Satisfy OBS conflict on gnome-bluetooth-libs
 BuildRequires:	gnome-bluetooth-libs
+%endif
 
 # Replace official verison
 Provides:	metacity%{?_isa} = %{version}-%{release}

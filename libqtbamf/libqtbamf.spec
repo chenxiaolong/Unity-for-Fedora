@@ -22,11 +22,13 @@ BuildRequires:	qt-devel
 # No %{_isa} because the library is multilib, but bamf-daemon is not
 Requires:	bamf-daemon
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
 # Satisfy OBS conflict on libXfixes-devel
 BuildRequires:	libXfixes-devel
+%endif
 
 # Description from Ubuntu
 %description

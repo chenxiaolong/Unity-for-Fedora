@@ -27,12 +27,14 @@ BuildRequires:	libzeitgeist-devel
 BuildRequires:	vala-tools
 BuildRequires:	xapian-core-devel
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
 # Satisfy OBS conflict on libXfixes
 BuildRequires:	libXfixes
 BuildRequires:	libXfixes-devel
+%endif
 
 %description
 This package contains the applications lens which can be used to launch

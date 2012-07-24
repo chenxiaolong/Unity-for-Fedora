@@ -33,6 +33,7 @@ BuildRequires:	mono-devel
 BuildRequires:	pygtk2-devel
 BuildRequires:	vala-tools
 
+%if 0%{?opensuse_bs}
 # OBS dependency solver fix: dependencies use gtk3-ubuntu, so don't install gtk3
 #!BuildIgnore:  gtk3
 #!BuildIgnore:  gtk3-devel
@@ -42,6 +43,7 @@ BuildRequires:	xorg-x11-proto-devel
 
 # Satisfy OBS conflict on libXfixes-devel
 BuildRequires:	libXfixes-devel
+%endif
 
 %description
 A library to allow applications to export a menu into the Unity Menu bar. Based

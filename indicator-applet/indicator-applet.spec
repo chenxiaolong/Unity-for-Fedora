@@ -23,6 +23,7 @@ BuildRequires:	libindicator-gtk3-devel
 BuildRequires:	libX11-devel
 BuildRequires:	libxml2-devel
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on gtk2
 BuildRequires:	gtk2
 BuildRequires:	gtk2-devel
@@ -36,6 +37,7 @@ BuildRequires:	libXfixes-devel
 
 # Satisfy OBS conflict on gsettings-desktop-schemas
 BuildRequires:	gsettings-desktop-schemas
+%endif
 
 %description
 This package contains an applet for the GNOME panel to display Ayatana

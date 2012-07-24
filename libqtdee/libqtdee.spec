@@ -19,11 +19,13 @@ BuildRequires:	gcc-c++
 BuildRequires:	dee-devel
 BuildRequires:	qt-devel
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
 # Satisfy OBS conflict on libXfixes-devel
 BuildRequires:	libXfixes-devel
+%endif
 
 %description
 This package provides the Qt 4 bindings for the dee library.

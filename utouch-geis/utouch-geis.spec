@@ -31,8 +31,10 @@ BuildRequires:	xcb-proto
 BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
+%endif
 
 %description
 GEIS is a library for applications and toolkit programmers which provides a

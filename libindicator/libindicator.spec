@@ -23,11 +23,13 @@ BuildRequires:	dbus-glib-devel
 BuildRequires:	gtk2-devel
 BuildRequires:	gtk3-devel
 
+%if 0%{?opensuse_bs}
 # Satisfy OBS conflict on xorg-x11-proto-devel
 BuildRequires:	xorg-x11-proto-devel
 
 # Satisfy OBS conflict on libXfixes-devel
 BuildRequires:	libXfixes-devel
+%endif
 
 %description
 A set of symbols and convenience functions that all Ayatana indicators are
