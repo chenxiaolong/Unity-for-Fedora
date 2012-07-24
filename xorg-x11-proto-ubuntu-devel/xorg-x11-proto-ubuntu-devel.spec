@@ -122,8 +122,6 @@ done
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 for i in $(ls -1); do
   pushd ${i}
   make install DESTDIR=$RPM_BUILD_ROOT

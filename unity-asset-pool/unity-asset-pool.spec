@@ -30,8 +30,6 @@ This package contains icons and other images for Unity.
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 # Install Unity themes (use cp since there are symlinks)
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/unity/themes/
 cp launcher/* $RPM_BUILD_ROOT%{_datadir}/unity/themes/

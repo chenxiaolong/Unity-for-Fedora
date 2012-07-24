@@ -70,8 +70,6 @@ popd
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 pushd build-gtk2
 make install DESTDIR=$RPM_BUILD_ROOT
 popd

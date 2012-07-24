@@ -128,7 +128,6 @@ popd
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Install Ubuntu's files

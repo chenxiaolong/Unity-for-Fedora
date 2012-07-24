@@ -61,7 +61,6 @@ done
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install -O1 --skip-build --prefix %{_prefix} --root $RPM_BUILD_ROOT
 
 # Fix desktop file

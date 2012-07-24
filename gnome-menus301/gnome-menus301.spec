@@ -58,8 +58,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 # Install library only
 make -C libmenu install DESTDIR=$RPM_BUILD_ROOT
 make -C python install DESTDIR=$RPM_BUILD_ROOT

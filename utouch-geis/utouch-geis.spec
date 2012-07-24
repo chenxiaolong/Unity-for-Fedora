@@ -101,7 +101,6 @@ make -C doc doc-html
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT pythondir=%{python_sitearch}
 
 # Install HTML documentation

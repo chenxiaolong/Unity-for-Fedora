@@ -197,8 +197,6 @@ popd
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 pushd gtk2
 make install DESTDIR=$RPM_BUILD_ROOT
 popd

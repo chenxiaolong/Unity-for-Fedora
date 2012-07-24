@@ -59,7 +59,6 @@ CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
 
