@@ -61,13 +61,7 @@ Build order:
 59: unity-lens-video               -> Unity-video lens
 60: unity-scope-video-remote       -> Remote video search for Unity video lens
 61: compiz                         -> Compiz core components
-62: libcompizconfig                -> Compiz configuration system library
-63: compizconfig-backend-gconf     -> GConf backend for Compiz
-64: python-compizconfig            -> Python 2 bindings for libcompizconfig
-65: ccsm                           -> Compiz settings manager
-66: compiz-plugins-main            -> Compiz main plugins
-67: compiz-plugins-extra           -> Compiz extra plugins
-68: libgdu                         -> GNOME Disk Utility library
-69: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
-70: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
-71: unity-2d                       -> 2D implementation of Unity
+62: libgdu                         -> GNOME Disk Utility library
+63: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
+64: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+65: unity-2d                       -> 2D implementation of Unity
