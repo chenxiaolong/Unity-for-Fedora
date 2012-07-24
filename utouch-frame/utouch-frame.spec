@@ -17,7 +17,7 @@ BuildRequires:	libtool
 BuildRequires:	libX11-devel
 BuildRequires:	libXi-devel
 BuildRequires:	mtdev-devel
-BuildRequires:	utouch-evemu-devel
+BuildRequires:	evemu-devel
 BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
 
