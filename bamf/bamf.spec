@@ -142,14 +142,14 @@ popd
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
-%post -p /usr/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
-%post -n %{name}3 -p /usr/sbin/ldconfig
+%post -n %{name}3 -p /sbin/ldconfig
 
-%postun -n %{name}3 -p /usr/sbin/ldconfig
+%postun -n %{name}3 -p /sbin/ldconfig
 
 
 %files

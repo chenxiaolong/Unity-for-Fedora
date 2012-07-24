@@ -215,9 +215,9 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
-%post core -p /usr/sbin/ldconfig
+%post core -p /sbin/ldconfig
 
-%postun core -p /usr/sbin/ldconfig
+%postun core -p /sbin/ldconfig
 
 
 %files -f build/unity.lang

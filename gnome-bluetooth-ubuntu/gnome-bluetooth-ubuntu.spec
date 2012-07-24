@@ -175,9 +175,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
-%post libs -p /usr/sbin/ldconfig
+%post libs -p /sbin/ldconfig
 
-%postun libs -p /usr/sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 
 %files

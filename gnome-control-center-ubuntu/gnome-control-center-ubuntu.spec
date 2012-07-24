@@ -246,13 +246,13 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %post
-/usr/sbin/ldconfig
+/sbin/ldconfig
 update-desktop-database &>/dev/null || :
 update-mime-database %{_datadir}/mime/ &>/dev/null || :
 touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 %postun
-/usr/sbin/ldconfig
+/sbin/ldconfig
 update-desktop-database &>/dev/null || :
 update-mime-database %{_datadir}/mime/ &>/dev/null || :
 if [ ${1} -eq 0 ]; then

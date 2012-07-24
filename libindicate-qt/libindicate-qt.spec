@@ -63,10 +63,9 @@ cd build
 make install DESTDIR=$RPM_BUILD_ROOT
 
 
-%post -p /usr/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %files

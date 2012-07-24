@@ -163,7 +163,7 @@ install -m755 '%{SOURCE1}' $RPM_BUILD_ROOT%{_bindir}/metacity
 
 
 %post
-/usr/sbin/ldconfig
+/sbin/ldconfig
 %gconf_schema_upgrade metacity
 
 %pre
@@ -175,7 +175,7 @@ fi
 %preun
 %gconf_schema_remove metacity
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %files -f metacity.lang

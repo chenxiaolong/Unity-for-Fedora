@@ -118,7 +118,7 @@ mv $RPM_BUILD_ROOT{%{_datadir},%{_sysconfdir}}/gconf/
 
 
 %post
-/usr/sbin/ldconfig
+/sbin/ldconfig
 %gconf_schema_upgrade compiz-ccp
 
 
@@ -126,7 +126,7 @@ mv $RPM_BUILD_ROOT{%{_datadir},%{_sysconfdir}}/gconf/
 %gconf_schema_remove compiz-ccp
 
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %files

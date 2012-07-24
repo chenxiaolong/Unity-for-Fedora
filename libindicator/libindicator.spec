@@ -139,14 +139,14 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 rm $RPM_BUILD_ROOT%{_libdir}/libdummy-indicator-*.so
 
 
-%post -p /usr/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
-%post gtk3 -p /usr/sbin/ldconfig
+%post gtk3 -p /sbin/ldconfig
 
-%postun gtk3 -p /usr/sbin/ldconfig
+%postun gtk3 -p /sbin/ldconfig
 
 
 %files

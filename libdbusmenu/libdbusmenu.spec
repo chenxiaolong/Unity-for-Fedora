@@ -223,24 +223,24 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 #find $RPM_BUILD_ROOT/ -type d -empty -delete
 
 
-%post glib -p /usr/sbin/ldconfig
+%post glib -p /sbin/ldconfig
 
-%postun glib -p /usr/sbin/ldconfig
-
-
-%post gtk2 -p /usr/sbin/ldconfig
-
-%postun gtk2 -p /usr/sbin/ldconfig
+%postun glib -p /sbin/ldconfig
 
 
-%post gtk3 -p /usr/sbin/ldconfig
+%post gtk2 -p /sbin/ldconfig
 
-%postun gtk3 -p /usr/sbin/ldconfig
+%postun gtk2 -p /sbin/ldconfig
 
 
-%post jsonloader -p /usr/sbin/ldconfig
+%post gtk3 -p /sbin/ldconfig
 
-%postun jsonloader -p /usr/sbin/ldconfig
+%postun gtk3 -p /sbin/ldconfig
+
+
+%post jsonloader -p /sbin/ldconfig
+
+%postun jsonloader -p /sbin/ldconfig
 
 
 %files tools

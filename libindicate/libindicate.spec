@@ -225,20 +225,19 @@ mv $RPM_BUILD_ROOT%{_docdir}/libindicate/examples/* \
                $RPM_BUILD_ROOT%{_docdir}/%{name}-docs-%{version}/examples/
 
 
-%post -p /usr/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -p /usr/sbin/ldconfig
-
-
-%post gtk3 -p /usr/sbin/ldconfig
-
-%postun gtk3 -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
-%post gtk2 -p /usr/sbin/ldconfig
+%post gtk3 -p /sbin/ldconfig
 
-%postun gtk2 -p /usr/sbin/ldconfig
+%postun gtk3 -p /sbin/ldconfig
 
+
+%post gtk2 -p /sbin/ldconfig
+
+%postun gtk2 -p /sbin/ldconfig
 
 
 %files

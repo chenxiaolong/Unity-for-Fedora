@@ -3,6 +3,8 @@
 # This package uses the same structure as the official (outdated) Fedora
 # package. Feel free to merge it :)
 
+%define _ubuntu_rel 0ubuntu1
+
 Name:		dee
 Version:	1.0.10
 Release:	1.%{_ubuntu_rel}%{?dist}
@@ -69,6 +71,9 @@ This package contains the documentation for the dee library.
 %prep
 %setup -q
 
+# Apply Ubuntu's patches
+zcat '%{SOURCE99}' | patch -Np1
+
 autoreconf -vfi
 
 
@@ -85,9 +90,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
-%post -p /usr/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %files

@@ -121,9 +121,9 @@ sed -i '/^#[ \t]*\!/d' $RPM_BUILD_ROOT%{python_sitearch}/geisview/__init__.py
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
-%post -p /usr/sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %files
