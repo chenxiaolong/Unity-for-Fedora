@@ -85,6 +85,8 @@ BuildRequires:	python-devel
 BuildRequires:	startup-notification-devel
 BuildRequires:	xorg-x11-proto-devel
 
+BuildRequires:	Pyrex
+
 Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2
