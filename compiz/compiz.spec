@@ -101,6 +101,13 @@ BuildRequires:	gsettings-desktop-schemas
 
 # Satisfy OBS conflict on gnome-bluetooth-libs
 BuildRequires:	gnome-bluetooth-libs
+
+# Satisfy OBS conflict on control-center
+BuildRequires:	control-center
+BuildRequires:	control-center-filesystem
+
+# Satisfy OBS conflict on gnome-settings-daemon (required by control-center)
+BuildRequires:	gnome-settings-daemon
 %endif
 
 %description
