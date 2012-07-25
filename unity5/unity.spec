@@ -70,6 +70,12 @@ BuildRequires:	utouch-geis-devel
 BuildRequires:	utouch-grail-devel
 BuildRequires:	xcb-util-wm-devel
 
+%if 0%{?opensuse_bs}
+# OBS dependency solver fix: we use libXfixes-ubuntu, so don't install libXfixes
+#!BuildIgnore:	libXfixes
+#!BuildIgnore:	libXfixes-devel
+%endif
+
 Requires:	unity-common%{?_isa} = %{version}-%{release}
 
 Requires:	compiz-gnome
