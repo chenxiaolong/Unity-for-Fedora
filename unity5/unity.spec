@@ -43,6 +43,7 @@ BuildRequires:	bamf3-devel
 BuildRequires:	boost-devel
 BuildRequires:	cairo-devel
 BuildRequires:	compiz-devel
+BuildRequires:	compiz-plugins
 BuildRequires:	dee-devel
 BuildRequires:	GConf2-devel
 BuildRequires:	glib2-devel
