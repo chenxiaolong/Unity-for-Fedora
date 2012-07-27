@@ -1,0 +1,12 @@
+diff -Nru nux-3.0.0.orig/configure.ac nux-3.0.0/configure.ac
+--- nux-3.0.0.orig/configure.ac	2012-07-27 10:44:56.105611776 -0700
++++ nux-3.0.0/configure.ac	2012-07-27 10:45:09.849580515 -0700
+@@ -150,7 +150,7 @@
+                   xxf86vm
+                   sigc++-2.0
+ 		              xinerama
+-                  libutouch-geis
++                  libgeis
+                   )
+ AC_SUBST(NUX_GRAPHICS_CFLAGS)
+ AC_SUBST(NUX_GRAPHICS_LIBS)

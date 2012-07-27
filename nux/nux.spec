@@ -1,21 +1,30 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		nux
-Version:	2.12.0
+Version:	3.0.0
 Release:	1%{?dist}
 # Summary from Ubuntu
 Summary:	Visual rendering toolkit for real-time applications
 
 Group:		System Environment/Libraries
-License:	GPLv3 and LGPLv3
+License:	GPLv3 and LGPLv2+
 URL:		https://launchpad.net/nux
-Source0:	https://launchpad.net/nux/2.0/2.12/+download/nux-%{version}.tar.gz
+Source0:	https://launchpad.net/nux/3.0/3.0/+download/nux_%{version}.orig.tar.gz
 Source1:	50_check_unity_support
+
+# utouch-geis was renamed to geis upstream
+Patch0:		0001_geis.patch
+
+# Disable documentation as it causes autoreconf to fail (Ubuntu doesn't package
+# the documentation anyway)
+Patch1:		0002_disable_documentation.patch
 
 # GCC 4.6 required or else Unity will segfault
 BuildRequires:	gcc46-devel
 BuildRequires:	gcc46-static
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 
@@ -40,7 +49,7 @@ BuildRequires:	mesa-libGLU-devel
 BuildRequires:	pango-devel
 BuildRequires:	pciutils-devel
 BuildRequires:	pcre-devel
-BuildRequires:	utouch-geis-devel
+BuildRequires:	geis-devel
 
 Requires:	%{name}-common = %{version}-%{release}
 
@@ -119,6 +128,11 @@ This package contains various tools for the nux library.
 # Avoid rpmlint spurious-executable-perm error in debuginfo package
 find -type f \( -name '*.h' -o -name '*.cpp' \) -exec chmod 644 {} \;
 
+%patch0 -p1 -b .geis_renamed
+%patch1 -p1 -b .disable_documentation
+
+autoreconf -vfi
+
 
 %build
 # Remove '-gnu' from target triplet
@@ -165,60 +179,54 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 %files
 %doc AUTHORS
-%{_libdir}/libnux-2.0.so.0
-%{_libdir}/libnux-2.0.so.0.1200.0
-%{_libdir}/libnux-core-2.0.so.0
-%{_libdir}/libnux-core-2.0.so.0.1200.0
-%{_libdir}/libnux-graphics-2.0.so.0
-%{_libdir}/libnux-graphics-2.0.so.0.1200.0
-%{_libdir}/libnux-image-2.0.so.0
-%{_libdir}/libnux-image-2.0.so.0.1200.0
+%{_libdir}/libnux-3.0.so.0
+%{_libdir}/libnux-3.0.so.0.0.0
+%{_libdir}/libnux-core-3.0.so.0
+%{_libdir}/libnux-core-3.0.so.0.0.0
+%{_libdir}/libnux-graphics-3.0.so.0
+%{_libdir}/libnux-graphics-3.0.so.0.0.0
 
 
 %files devel
 %doc AUTHORS
-%dir %{_includedir}/Nux-2.0/
-%dir %{_includedir}/Nux-2.0/Nux
-%dir %{_includedir}/Nux-2.0/Nux/ProgramFramework/
-%dir %{_includedir}/Nux-2.0/NuxCore/
-%dir %{_includedir}/Nux-2.0/NuxCore/Character/
-%dir %{_includedir}/Nux-2.0/NuxCore/FileManager/
-%dir %{_includedir}/Nux-2.0/NuxCore/Math/
-%dir %{_includedir}/Nux-2.0/NuxCore/TinyXML/
-%dir %{_includedir}/Nux-2.0/NuxGraphics/
-%dir %{_includedir}/Nux-2.0/NuxImage/
-%{_includedir}/Nux-2.0/Nux/Readme.txt
-%{_includedir}/Nux-2.0/Nux/*.h
-%{_includedir}/Nux-2.0/Nux/ProgramFramework/*.h
-%{_includedir}/Nux-2.0/NuxCore/*.h
-%{_includedir}/Nux-2.0/NuxCore/Character/*.h
-%{_includedir}/Nux-2.0/NuxCore/FileManager/*.h
-%{_includedir}/Nux-2.0/NuxCore/Math/*.h
-%{_includedir}/Nux-2.0/NuxCore/TinyXML/*.h
-%{_includedir}/Nux-2.0/NuxGraphics/*.h
-%{_includedir}/Nux-2.0/NuxImage/*.h
-%{_libdir}/libnux-2.0.so
-%{_libdir}/libnux-core-2.0.so
-%{_libdir}/libnux-graphics-2.0.so
-%{_libdir}/libnux-image-2.0.so
-%{_libdir}/pkgconfig/nux-2.0.pc
-%{_libdir}/pkgconfig/nux-core-2.0.pc
-%{_libdir}/pkgconfig/nux-graphics-2.0.pc
-%{_libdir}/pkgconfig/nux-image-2.0.pc
+%dir %{_includedir}/Nux-3.0/
+%dir %{_includedir}/Nux-3.0/Nux
+%dir %{_includedir}/Nux-3.0/Nux/ProgramFramework/
+%dir %{_includedir}/Nux-3.0/NuxCore/
+%dir %{_includedir}/Nux-3.0/NuxCore/Character/
+%dir %{_includedir}/Nux-3.0/NuxCore/FileManager/
+%dir %{_includedir}/Nux-3.0/NuxCore/Math/
+%dir %{_includedir}/Nux-3.0/NuxCore/TinyXML/
+%dir %{_includedir}/Nux-3.0/NuxGraphics/
+%{_includedir}/Nux-3.0/Nux/Readme.txt
+%{_includedir}/Nux-3.0/Nux/*.h
+%{_includedir}/Nux-3.0/Nux/ProgramFramework/*.h
+%{_includedir}/Nux-3.0/NuxCore/*.h
+%{_includedir}/Nux-3.0/NuxCore/Character/*.h
+%{_includedir}/Nux-3.0/NuxCore/FileManager/*.h
+%{_includedir}/Nux-3.0/NuxCore/Math/*.h
+%{_includedir}/Nux-3.0/NuxCore/TinyXML/*.h
+%{_includedir}/Nux-3.0/NuxGraphics/*.h
+%{_libdir}/libnux-3.0.so
+%{_libdir}/libnux-core-3.0.so
+%{_libdir}/libnux-graphics-3.0.so
+%{_libdir}/pkgconfig/nux-3.0.pc
+%{_libdir}/pkgconfig/nux-core-3.0.pc
+%{_libdir}/pkgconfig/nux-graphics-3.0.pc
 
 
 %files common
 %doc AUTHORS
 %dir %{_datadir}/nux/
-%dir %{_datadir}/nux/2.0/
-%dir %{_datadir}/nux/2.0/Fonts/
-%dir %{_datadir}/nux/2.0/UITextures/
-%{_datadir}/nux/2.0/Fonts/*.txt
-%{_datadir}/nux/2.0/Fonts/*.png
-%{_datadir}/nux/2.0/UITextures/*.png
-%{_datadir}/nux/2.0/UITextures/*.tga
-%{_datadir}/nux/2.0/UITextures/Painter.xml
-%{_datadir}/nux/2.0/UITextures/UIArchive.iar
+%dir %{_datadir}/nux/3.0/
+%dir %{_datadir}/nux/3.0/Fonts/
+%dir %{_datadir}/nux/3.0/UITextures/
+%{_datadir}/nux/3.0/Fonts/*.txt
+%{_datadir}/nux/3.0/Fonts/*.png
+%{_datadir}/nux/3.0/UITextures/*.png
+%{_datadir}/nux/3.0/UITextures/*.tga
+%{_datadir}/nux/3.0/UITextures/Painter.xml
+%{_datadir}/nux/3.0/UITextures/UIArchive.iar
 
 
 %files tools
@@ -228,6 +236,9 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 
 %changelog
+* Fri Jul 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.0-1
+- Version 3.0.0
+
 * Tue Jul 10 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.12.0-1
 - Initial release
 - Version 2.12.0
