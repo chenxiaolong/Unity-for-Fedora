@@ -38,11 +38,11 @@ Build order:
 36: indicator-sound                -> Indicator displaying a unified sound menu
 37: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
 38: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-39: overlay-scrollbar ***************
+39: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
 40: plasma-widget-menubar ***********
 41: xfce4-indicator-plugin **********
-42: evemu                          -> Linux Evdev Event Emulation
-43: utouch-frame                   -> Touch frame library
+42: evemu                          -> Linux Evdev Event Emulation Library
+43: frame                          -> Open Input Framework Frame Library
 44: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
 45: libXfixes                      -> X.Org fixes extension library
 46: xorg-x11-server-Xorg ************
