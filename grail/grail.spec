@@ -1,16 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-Name:		utouch-grail
-Version:	3.0.5
+Name:		grail
+Version:	3.0.6
 Release:	1%{?dist}
 Summary:	Gesture Recognition And Instantiation Library
 
 Group:		System Environment/Libraries
 License:	GPLv3
-URL:		https://launchpad.net/utouch-grail
-Source0:	https://launchpad.net/utouch-grail/trunk/utouch-grail-3.0.5/+download/utouch-grail-3.0.5.tar.gz
-
-Patch0:		0001_evemu.patch
+URL:		https://launchpad.net/grail
+Source0:	https://launchpad.net/grail/trunk/%{version}/+download/grail-%{version}.tar.gz
 
 BuildRequires:	asciidoc
 BuildRequires:	autoconf
@@ -22,9 +20,14 @@ BuildRequires:	libXext-devel
 BuildRequires:	libXi-devel
 BuildRequires:	mtdev-devel
 BuildRequires:	evemu-devel
-BuildRequires:	utouch-frame-devel
+BuildRequires:	frame-devel
 BuildRequires:	xorg-x11-proto-devel
 BuildRequires:	xmlto
+
+Provides:	utouch-grail%{?_isa} = %{version}-%{release}
+Provides:	utouch-grail         = %{version}-%{release}
+Obsoletes:	utouch-grail%{?_isa} < %{version}-%{release}
+Obsoletes:	utouch-grail         < %{version}-%{release}
 
 %description
 When a multitouch gesture is performed on a device, the recognizer emits one or
@@ -37,14 +40,19 @@ alternative gestures until a match is confirmed.
 
 
 %package devel
-Summary:	Development files for the utouch-grail library
+Summary:	Development files for the grail library
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	utouch-frame-devel
+Requires:	frame-devel
+
+Provides:	utouch-grail-devel%{?_isa} = %{version}-%{release}
+Provides:	utouch-grail-devel         = %{version}-%{release}
+Obsoletes:	utouch-grail-devel%{?_isa} < %{version}-%{release}
+Obsoletes:	utouch-grail-devel         < %{version}-%{release}
 
 %description devel
-This package contains the development files for the utouch-grail library.
+This package contains the development files for the grail library.
 
 
 %package tools
@@ -53,14 +61,17 @@ Group:		Development/Tools
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
+Provides:	utouch-grail-tools%{?_isa} = %{version}-%{release}
+Provides:	utouch-grail-tools         = %{version}-%{release}
+Obsoletes:	utouch-grail-tools%{?_isa} < %{version}-%{release}
+Obsoletes:	utouch-grail-tools         < %{version}-%{release}
+
 %description tools
-This package testing tools for the utouch-grail library.
+This package contains testing tools for the grail library.
 
 
 %prep
 %setup -q
-
-%patch0 -p1 -b .evemu
 
 autoreconf -vfi
 
@@ -83,37 +94,34 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files
-%doc ChangeLog README
-%{_libdir}/libutouch-grail.so.1
-%{_libdir}/libutouch-grail.so.1.3.0
+%doc README
+%{_libdir}/libgrail.so.5
+%{_libdir}/libgrail.so.5.0.0
 
 
 %files devel
-%doc ChangeLog README
-%{_includedir}/grail-bits.h
-%{_includedir}/grail-types.h
-%{_includedir}/grail.h
-%{_includedir}/utouch/grail.h
-%{_libdir}/libutouch-grail.so
-%{_libdir}/pkgconfig/utouch-grail.pc
+%doc README
+%{_includedir}/oif/grail.h
+%{_libdir}/libgrail.so
+%{_libdir}/pkgconfig/grail.pc
 
 
 %files tools
-%{_bindir}/grail-gesture
 %{_bindir}/grail-test-3-1
 %{_bindir}/grail-test-atomic
 %{_bindir}/grail-test-edge
-%{_bindir}/grail-test-mtdev
 %{_bindir}/grail-test-propagation
-%{_mandir}/man1/grail-gesture.1.gz
 %{_mandir}/man1/grail-test-3-1.1.gz
 %{_mandir}/man1/grail-test-atomic.1.gz
 %{_mandir}/man1/grail-test-edge.1.gz
-%{_mandir}/man1/grail-test-mtdev.1.gz
 %{_mandir}/man1/grail-test-propagation.1.gz
 
 
 %changelog
+* Fri Jul 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.6-1
+- Version 3.0.6
+- Upstream renamed from utouch-grail to grail
+
 * Fri Jun 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.5-1
 - Initial release
 - Version 3.0.5
