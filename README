@@ -47,7 +47,7 @@ Build order:
 45: libXfixes                      -> X.Org fixes extension library
 46: xorg-x11-server-Xorg ************
 47: grail                          -> Gesture recognition and instantiation lib.
-48: utouch-geis                    -> Implementation of the GEIS interface
+48: geis                           -> Implementation of the GEIS interface
 49: gcc46                          -> GNU Compiler Collection version 4.6
 50: nux                            -> An OpenGL toolkit
 51: unity-asset-pool               -> Design assets for Unity
