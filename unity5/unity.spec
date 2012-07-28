@@ -4,7 +4,7 @@
 
 Name:		unity
 Version:	5.14.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
 Group:		User Interface/Desktops
@@ -23,6 +23,9 @@ Patch1:		0002_fix_directories.patch
 
 # Ignore error about deprecated paths in GSettings schemas
 Patch2:		0003_Ignore_deprecated_schema_path.patch
+
+# utouch-geis was renamed to geis
+Patch3:		0004_geis.patch
 
 # GCC 4.6 is required or else Unity will segfault
 BuildRequires:	gcc46-devel
@@ -147,6 +150,7 @@ This package contains files common to Unity and Unity 2D.
 %patch0 -p1 -b .gtestdir
 %patch1 -p1 -b .fixdirs
 %patch2 -p1 -b .gsettingsfail
+%patch3 -p1 -b .geis
 
 
 %build
@@ -297,6 +301,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri Jul 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.14.0-2
+- utouch-geis was renamed to geis
+
 * Thu Jul 19 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.14.0-1
 - Add com.canonical.unity.unity.03.upgrade from Ubuntu's packaging
 - Remove lines related to Ubuntu's packaging to simplify spec file
