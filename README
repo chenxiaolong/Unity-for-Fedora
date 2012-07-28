@@ -24,7 +24,7 @@ Build order:
 22: gnome-control-center           -> Utilities to configure the GNOME desktop
 23: gnome-session                  -> GNOME Session Manager
 24: activity-log-manager ************
-25: gnome-screensaver ***************
+25: gnome-screensaver-ubuntu ********
 26: metacity                       -> Lightweight GTK+ window manager
 27: indicator-applet               -> GNOME panel indicator applet
 28: indicator-application          -> Takes menus and puts them in the panel
@@ -45,23 +45,24 @@ Build order:
 43: frame                          -> Open Input Framework Frame Library
 44: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
 45: libXfixes                      -> X.Org fixes extension library
-46: xorg-x11-server-Xorg ************
+46: xorg-x11-server-Xorg-ubuntu *****
 47: grail                          -> Gesture recognition and instantiation lib.
 48: geis                           -> Implementation of the GEIS interface
 49: gcc46                          -> GNU Compiler Collection version 4.6
-50: nux                            -> An OpenGL toolkit
-51: unity-asset-pool               -> Design assets for Unity
-52: gnome-menus301                 -> GNOME menu specifications
-53: libunity                       -> Library for integrating Unity
-54: libunity-misc                  -> Differently licensed stuff for Unity
-55: nautilus ************************
-56: unity-lens-applications        -> Unity applications lens
-57: unity-lens-files               -> Unity files lens
-58: unity-lens-music               -> Unity music lens
-59: unity-lens-video               -> Unity-video lens
-60: unity-scope-video-remote       -> Remote video search for Unity video lens
-61: compiz                         -> Compiz core components
-62: libgdu                         -> GNOME Disk Utility library
-63: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
-64: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
-65: unity-2d                       -> 2D implementation of Unity
+50: nux2                           -> An OpenGL toolkit (Ubuntu 12.04 version)
+51: nux3                           -> An OpenGL toolkit (Ubuntu 12.10 version)
+52: unity-asset-pool               -> Design assets for Unity
+53: gnome-menus301                 -> GNOME menu specifications
+54: libunity                       -> Library for integrating Unity
+55: libunity-misc                  -> Differently licensed stuff for Unity
+56: nautilus-ubuntu *****************
+57: unity-lens-applications        -> Unity applications lens
+58: unity-lens-files               -> Unity files lens
+59: unity-lens-music               -> Unity music lens
+60: unity-lens-video               -> Unity-video lens
+61: unity-scope-video-remote       -> Remote video search for Unity video lens
+62: compiz                         -> Compiz core components
+63: libgdu                         -> GNOME Disk Utility library (for unity5)
+64: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
+65: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+66: unity-2d                       -> 2D implementation of Unity
