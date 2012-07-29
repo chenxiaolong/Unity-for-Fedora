@@ -19,7 +19,7 @@
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name:		gtk3-ubuntu
 Version:	3.4.2
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
@@ -31,6 +31,9 @@ Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_%{version
 
 # upstream fix
 Patch0:		fedora_0002-GtkPlug-fix-handling-of-key-events-for-different-lay.patch
+
+# Fix hardcoded '/lib/' in 100_overlay_scrollbar_loading.patch
+Patch90:	0001_lib64_fix_100_overlay_scrollbar_loading.patch
 
 BuildRequires:	gnome-common autoconf automake intltool gettext
 BuildRequires:	atk-devel >= %{atk_version}
@@ -166,9 +169,15 @@ tar zxvf "%{SOURCE99}"
 # Do not apply these patches
   # Debian/Ubuntu's multiarch
     sed -i '/061_multiarch_module_fallback.patch/d' debian/patches/series
+  # Included in Fedora's patches
+    sed -i '/git_layouts_handling.patch/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
+  if [ "x${i}" == "x100_overlay_scrollbar_loading.patch" ]; then
+%patch90 -p1
+  else
+    patch -Np1 -i "debian/patches/${i}"
+  fi
 done
 
 
@@ -318,6 +327,9 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
 %changelog
+* Sat Jul 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.3
+- Fix hardcoded path in patch for overlay scrollbars
+
 * Thu Jul 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu0.3
 - Update to Ubuntu release 0ubuntu0.3
 
