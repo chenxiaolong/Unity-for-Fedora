@@ -27,7 +27,7 @@
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name:		gtk2-ubuntu
 Version:	2.24.10
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
@@ -58,6 +58,9 @@ Patch17:	fedora_gtk2-fixdso.patch
 # Patch from Arch Linux TU, György Balló, to fix build with the Ubuntu menuproxy
 # code
 Patch90:	fix-ubuntumenuproxy-build.patch
+
+# Fix hardcoded '/lib/' in 100_overlay_scrollbar_loading.patch
+Patch91:	0001_lib64_fix_100_overlay_scrollbar_loading.patch
 
 BuildRequires:	atk-devel >= %{atk_version}
 BuildRequires:	glib2-devel >= %{glib2_version}
@@ -229,7 +232,12 @@ tar zxvf "%{SOURCE99}"
     sed -i '/091_bugzilla_tooltip_refresh.patch/d' debian/patches/series
 
 for i in $(cat debian/patches/series | grep -v '#'); do
-  patch -Np1 -i "debian/patches/${i}"
+  # Use my patch which uses '/lib64/' on x86_64
+  if [ "x${i}" == "x100_overlay_scrollbar_loading.patch" ]; then
+%patch91 -p1
+  else
+    patch -Np1 -i "debian/patches/${i}"
+  fi
 done
 
 %patch90 -p1 -b .menuproxy
@@ -437,6 +445,9 @@ fi
 
 
 %changelog
+* Sat Jul 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.10-2.0ubuntu6
+- Fix hardcoded path in patch for overlay scrollbars
+
 * Fri Jul 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.10-1.0ubuntu6
 - Stop using epochs to override official version
 
