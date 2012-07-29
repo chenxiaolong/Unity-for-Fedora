@@ -45,11 +45,12 @@ BuildRequires:	libXfixes-ubuntu-devel
 BuildRequires:	xorg-x11-proto-ubuntu-devel
 
 BuildRequires:	cmake
+BuildRequires:	desktop-file-utils
 BuildRequires:	doxygen
 BuildRequires:	gcc-c++
 BuildRequires:	gettext
 BuildRequires:	intltool
-BuildRequires:	python-distutils-extra
+BuildRequires:	python-setuptools
 
 BuildRequires:	atk-devel
 BuildRequires:	bamf3-devel
