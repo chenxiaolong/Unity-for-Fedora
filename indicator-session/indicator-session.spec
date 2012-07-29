@@ -106,7 +106,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %postun
-if [ ${1} -eq 0; then
+if [ ${1} -eq 0 ]; then
   glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 fi
 
