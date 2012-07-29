@@ -49,6 +49,7 @@ BuildRequires:	doxygen
 BuildRequires:	gcc-c++
 BuildRequires:	gettext
 BuildRequires:	intltool
+BuildRequires:	python-distutils-extra
 
 BuildRequires:	atk-devel
 BuildRequires:	bamf3-devel
