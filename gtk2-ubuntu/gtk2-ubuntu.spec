@@ -1,9 +1,12 @@
 # Based off of Fedora 17's spec
 # Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _obsolete_ver 2.24.10-100
+# Required when the package is not built in koji
+%global _host %{_target_platform}
 
-%define _ubuntu_rel 0ubuntu6
+%define _obsolete_ver 2.25.0-100
+
+%define _ubuntu_rel 0ubuntu1
 
 # 'fedora_' is prefixed to the sources and patches to group them together in OBS
 
@@ -26,8 +29,8 @@
 
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name:		gtk2-ubuntu
-Version:	2.24.10
-Release:	2.%{_ubuntu_rel}%{?dist}
+Version:	2.24.11
+Release:	1.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
@@ -445,6 +448,10 @@ fi
 
 
 %changelog
+* Sun Jul 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.11-1.0ubuntu1
+- Version 2.24.11
+- Ubuntu release 0ubuntu1
+
 * Sat Jul 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.10-2.0ubuntu6
 - Fix hardcoded path in patch for overlay scrollbars
 
