@@ -18,8 +18,9 @@ BuildRequires:	libX11-devel
 BuildRequires:	libXi-devel
 BuildRequires:	mtdev-devel
 BuildRequires:	evemu-devel
-BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
+BuildRequires:	pkgconfig
+BuildRequires:	pkgconfig(xorg-server)
 
 Provides:	utouch-frame%{?_isa} = %{version}-%{release}
 Provides:	utouch-frame         = %{version}-%{release}
@@ -93,6 +94,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files devel
 %doc README
+%dir %{_includedir}/oif
 %{_includedir}/oif/frame.h
 %{_includedir}/oif/frame_internal.h
 %{_includedir}/oif/frame_x11.h
