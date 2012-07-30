@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-music
-Version:	5.12.0
+Version:	6.0.0
 Release:	1%{?dist}
 Summary:	Unity music lens
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/unity-lens-music
-Source0:	https://launchpad.net/unity-lens-music/5.0/%{version}/+download/unity-lens-music-%{version}.tar.gz
+Source0:	https://launchpad.net/unity-lens-music/6.0/%{version}/+download/unity-lens-music-%{version}.tar.gz
 
 BuildRequires:	dee-devel
 BuildRequires:	glib2-devel
@@ -57,6 +57,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jul 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.0.0-1
+- Version 6.0.0
+
 * Sun Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.12.0-1
 - Initial release
 - Version 5.12.0
