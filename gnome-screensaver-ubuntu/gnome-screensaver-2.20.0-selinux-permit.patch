@@ -1,0 +1,17 @@
+diff -up gnome-screensaver-2.20.0/data/gnome-screensaver.selinux_permit gnome-screensaver-2.20.0/data/gnome-screensaver
+--- gnome-screensaver-2.20.0/data/gnome-screensaver.selinux_permit	2007-11-12 13:51:03.000000000 -0500
++++ gnome-screensaver-2.20.0/data/gnome-screensaver	2007-11-12 13:57:43.000000000 -0500
+@@ -1,11 +1,12 @@
+ #%PAM-1.0
+ 
+ # Fedora Core
++auth     [success=done ignore=ignore default=bad] pam_selinux_permit.so
++session    include	system-auth
+ auth       include	system-auth
+ auth       optional     pam_gnome_keyring.so
+ account    include	system-auth
+ password   include	system-auth
+-session    include	system-auth
+ 
+ # SuSE/Novell
+ #auth       include      common-auth
