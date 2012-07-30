@@ -32,11 +32,12 @@ Source2:	compiz.reset
 # Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
 Patch0:		0001_Fix_library_directory.patch
 
-# Fix the directory for FindCompiz.cmakd and FindCompizConfig.cmake
+# Fix the directory for FindCompiz.cmake and FindCompizConfig.cmake
 Patch1:		0002_Fix_cmake_install_dir.patch
 
-# Ubuntu's CMakeFiles.txt appends --install-layout=deb to python install command
-# (for python-compizconfig and ccsm) whether or not COMPIZ_DEB_BUILD is set to 1
+# Compiz's build system appends --install-layout=deb to the python install
+# command (for python-compizconfig and ccsm) whether or not COMPIZ_DEB_BUILD is
+# set to 1
 Patch2:		0003_Fix_python_install_command.patch
 
 BuildRequires:	cmake
@@ -308,7 +309,7 @@ install -m755 ../debian/65compiz_profile-on-session \
 sed -i '1 i #!/usr/bin/bash' \
   $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/65compiz_profile-on-session
 
-# Unity Compiz plugin configuration file
+# Unity Compiz profile configuration file
 install -m644 ../debian/unity.ini $RPM_BUILD_ROOT%{_sysconfdir}/compizconfig/
 
 # Install Compiz profile configuration file
@@ -328,7 +329,7 @@ install -m644 ../debian/compiz-gnome.gconf-defaults \
               $RPM_BUILD_ROOT%{_datadir}/compiz/compiz.gconf-defaults
 install -m755 '%{SOURCE1}' $RPM_BUILD_ROOT%{_bindir}/compiz
 
-# Install script to resetting all of Compiz's settings
+# Install script for resetting all of Compiz's settings
 install -m755 '%{SOURCE2}' $RPM_BUILD_ROOT%{_bindir}/compiz.reset
 
 # Put GConf stuff in correct directory
