@@ -30,7 +30,6 @@ BuildRequires:	libtool
 BuildRequires:	dbus-devel
 BuildRequires:	dbus-glib-devel
 BuildRequires:	gnome-desktop3-devel
-BuildRequires:	gsettings-desktop-schemas
 BuildRequires:	gtk3-devel
 BuildRequires:	libgnomekbd-devel
 BuildRequires:	libX11-devel
