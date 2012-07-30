@@ -71,22 +71,6 @@ BuildRequires:	pulseaudio-libs-devel >= 2.0-1
 BuildRequires:	systemd-devel
 BuildRequires:	upower-devel
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on gtk2 (installed by dependencies)
-BuildRequires:	gtk2
-BuildRequires:	gtk2-devel
-
-# Satisfy OBS conflict on libXfixes (installed by dependencies)
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel (installed by dependencies)
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on what provides PackageKit-backend
-BuildRequires:	PackageKit-yum
-%endif
-
 # Requires Ubuntu's patched gnome-settings-daemon
 Requires:	gnome-settings-daemon-ubuntu
 

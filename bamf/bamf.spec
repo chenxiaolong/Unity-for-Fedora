@@ -30,14 +30,6 @@ BuildRequires:	libwnck3-devel
 # No %{_isa} because the libraries are multilib, but bamf-daemon isn't
 Requires:	bamf-daemon = %{version}-%{release}
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on libXfixes-devel
-BuildRequires:	libXfixes-devel
-%endif
-
 %description
 BAMF removes the headache of applications matching into a simple DBus daemon
 and c wrapper library. Currently features application matching at amazing

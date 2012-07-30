@@ -26,19 +26,6 @@ BuildRequires:	libindicator-devel
 BuildRequires:	libindicator-gtk3-devel
 BuildRequires:	telepathy-glib-devel
 
-%if 0%{?opensuse_bs}
-# OBS dependency solver fix: dependencies use gtk3-ubuntu, so don't install gtk3
-#!BuildIgnore:  gtk3
-#!BuildIgnore:  gtk3-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-%endif
-
 %description
 A place on the user's desktop that collects messages that need a response. This
 menu provides a condensed and collected view of all of those messages for quick

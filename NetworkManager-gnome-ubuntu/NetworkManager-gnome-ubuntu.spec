@@ -53,15 +53,6 @@ BuildRequires:	libgnome-keyring-devel
 BuildRequires:	libnotify-devel
 BuildRequires:	NetworkManager-glib-devel
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-%endif
-
 Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2

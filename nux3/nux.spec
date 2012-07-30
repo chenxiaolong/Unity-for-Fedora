@@ -53,26 +53,6 @@ BuildRequires:	geis-devel
 
 Requires:	%{name}-common = %{version}-%{release}
 
-%if 0%{?opensuse_bs}
-# Satisfy obs conflict on gtk2: use gtk2
-BuildRequires:  gtk2
-
-# Satisfy obs conflict on gtk3 too (installed by build dependencies)
-BuildRequires:  gtk3
-BuildRequires:  gtk3-devel
-
-# Satisfy obs conflict on desktop-notification-daemon (installed by
-# notify-python, which is required by the build dependencies)
-BuildRequires:	notification-daemon
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-%endif
-
 # Description from Ubuntu
 %description
 Nux is a graphical user interface toolkit for applications that mixes OpenGL

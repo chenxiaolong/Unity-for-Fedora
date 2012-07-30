@@ -21,11 +21,6 @@ BuildRequires:	evemu-devel
 BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-%endif
-
 Provides:	utouch-frame%{?_isa} = %{version}-%{release}
 Provides:	utouch-frame         = %{version}-%{release}
 Obsoletes:	utouch-frame%{?_isa} < %{version}-%{release}

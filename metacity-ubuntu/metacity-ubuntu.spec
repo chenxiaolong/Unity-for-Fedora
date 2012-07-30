@@ -66,31 +66,6 @@ Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on what provides PackageKit-backend
-BuildRequires:	PackageKit-yum
-
-# Satisfy OBS conflict on gtk2: use gtk2
-BuildRequires:	gtk2
-
-# Satisfy OBS conflict on gtk3 too (installed by build dependencies)
-BuildRequires:	gtk3
-BuildRequires:	gtk3-devel
-
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-
-# Satisfy OBS conflict on gsettings-desktop-schemas
-BuildRequires:	gsettings-desktop-schemas
-
-# Satisfy OBS conflict on gnome-settings-daemon
-BuildRequires:	gnome-settings-daemon
-
-# Satisfy OBS conflict on gnome-bluetooth-libs
-BuildRequires:	gnome-bluetooth-libs
-%endif
-
 # Replace official verison
 Provides:	metacity%{?_isa} = %{version}-%{release}
 Provides:	metacity         = %{version}-%{release}

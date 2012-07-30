@@ -38,18 +38,6 @@ BuildRequires:	libappindicator-gtk3-devel
 BuildRequires:	libnotify-devel
 BuildRequires:	nautilus-sendto-devel
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on gsettings-desktop-schemas
-BuildRequires:	gsettings-desktop-schemas
-%endif
-
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	bluez
 Requires:	control-center

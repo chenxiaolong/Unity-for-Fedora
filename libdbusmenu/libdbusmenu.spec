@@ -27,14 +27,6 @@ BuildRequires:	libX11-devel
 BuildRequires:	vala-tools
 BuildRequires:	valgrind-devel
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on libXfixes-devel
-BuildRequires:	libXfixes-devel
-%endif
-
 %description
 A small little library that was created by pulling out some comon code out of
 indicator-applet. It passes a menu structure across DBus so that a program can

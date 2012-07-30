@@ -23,28 +23,6 @@ BuildRequires:	upower-devel
 Requires:	control-center
 Requires:	gnome-settings-daemon
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on what provides PackageKit-backend
-BuildRequires:	PackageKit-yum
-
-# Satisfy OBS conflict on gtk2 (required by dependencies)
-BuildRequires:	gtk2
-BuildRequires:	gtk2-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-
-# Satisfy OBS conflict on gsettings-desktop-schemas
-BuildRequires:	gsettings-desktop-schemas
-
-# Satisfy OBS conflict on control-center-filesystem
-BuildRequires:	control-center-filesystem
-%endif
-
 %description
 This package contains an indicator to show the battery status. It replaces the
 gnome-power-manager icon in desktop environments where regular tray icons are

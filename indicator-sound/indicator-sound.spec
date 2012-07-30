@@ -35,19 +35,6 @@ BuildRequires:	vala-tools
 # Ubuntu's gnome-control-center is required
 Requires:	control-center-ubuntu
 
-%if 0%{?opensuse_bs}
-# OBS dependency solver fix: dependencies use gtk3-ubuntu, so don't install gtk3
-#!BuildIgnore:  gtk3
-#!BuildIgnore:  gtk3-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-%endif
-
 %description
 A system sound indicator which provides easy control of the PulseAudio sound
 daemon. The sound menu also provides integration with several multimedia

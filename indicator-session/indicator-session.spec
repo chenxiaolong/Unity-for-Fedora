@@ -37,22 +37,6 @@ Requires:	gnome-packagekit
 Requires:	gnome-settings-daemon
 Requires:	upower
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on what provides PackageKit-backend
-BuildRequires:	PackageKit-yum
-
-# OBS dependency solver fix: dependencies use gtk3-ubuntu, so don't install gtk3
-#!BuildIgnore:  gtk3
-#!BuildIgnore:  gtk3-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-%endif
-
 %description
 Quick! Change your status. Switch users. Close your session. All provided by the
 The Session Menu these tasks are conveniently placed in the upper-right corner

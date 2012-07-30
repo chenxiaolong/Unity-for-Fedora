@@ -61,15 +61,6 @@ BuildRequires:	upower-devel
 BuildRequires:	xorg-x11-drv-wacom-devel
 BuildRequires:	xorg-x11-proto-devel
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on GTK 2 (installed by dependencies)
-BuildRequires:	gtk2
-BuildRequires:	gtk2-devel
-
-# Satisfy OBS conflict on what provides PackageKit-backend
-BuildRequires:	PackageKit-yum
-%endif
-
 Requires:	control-center-filesystem
 
 Provides:	gnome-settings-daemon%{?_isa} = %{version}-%{release}

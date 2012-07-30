@@ -32,11 +32,6 @@ BuildRequires:	xcb-proto
 BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-%endif
-
 Provides:	utouch-geis%{?_isa} = %{version}-%{release}
 Provides:	utouch-geis         = %{version}-%{release}
 Obsoletes:	utouch-geis%{?_isa} < %{version}-%{release}

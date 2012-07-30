@@ -24,19 +24,6 @@ BuildRequires:	libdbusmenu-gtk3-devel
 BuildRequires:	libindicator-devel
 BuildRequires:	libindicator-gtk3-devel
 
-%if 0%{?opensuse_bs}
-# Dependencies use gtk3-ubuntu, so don't install gtk3
-#!BuildIgnore:	gtk3
-#!BuildIgnore:	gtk3-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-%endif
-
 %description
 This package contains a library and indicator that takes menus from applications
 and places them in the panel.

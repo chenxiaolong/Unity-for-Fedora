@@ -19,15 +19,6 @@ BuildRequires:	glib2-devel
 BuildRequires:	gtk2-ubuntu-devel
 BuildRequires:	gtk3-ubuntu-devel
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on libXfixes
-BuildRequires:	libXfixes
-BuildRequires:	libXfixes-devel
-
-# Satisfy OBS conflict on xorg-x11-proto-devel
-BuildRequires:	xorg-x11-proto-devel
-%endif
-
 %description
 (contains no files)
 

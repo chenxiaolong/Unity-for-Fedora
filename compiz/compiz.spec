@@ -95,24 +95,6 @@ Requires(preun):	GConf2
 # Required for wrapper script
 Requires:	GConf2
 
-%if 0%{?opensuse_bs}
-# Satisfy OBS conflict on what provides PackageKit-backend
-BuildRequires:  PackageKit-yum
-
-# Satisfy OBS conflict on gsettings-desktop-schemas
-BuildRequires:	gsettings-desktop-schemas
-
-# Satisfy OBS conflict on gnome-bluetooth-libs
-BuildRequires:	gnome-bluetooth-libs
-
-# Satisfy OBS conflict on control-center
-BuildRequires:	control-center
-BuildRequires:	control-center-filesystem
-
-# Satisfy OBS conflict on gnome-settings-daemon (required by control-center)
-BuildRequires:	gnome-settings-daemon
-%endif
-
 %description
 Compiz is an OpenGL compositing manager that uses GLX_EXT_texture_from_pixmap
 for binding redirected top-level windows to texture objects. It has a flexible
