@@ -12,6 +12,8 @@ Source0:	https://launchpad.net/unity-lens-files/5.0/%{version}/+download/unity-l
 
 Patch0:		vala-0.16_fix.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gettext
 
 BuildRequires:	dee-devel
@@ -30,6 +32,9 @@ documents and other files.
 %setup -q
 
 %patch0 -p1 -b .vala016fix
+
+sed -i '/Icon/ s/^\(.*\)[0-9]\(.*\)/\1%{_unity_major_ver}\2/g' \
+  files.lens.in.in
 
 
 %build
