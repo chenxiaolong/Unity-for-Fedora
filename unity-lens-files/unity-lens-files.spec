@@ -1,5 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _unity_major_ver 6
+
 Name:		unity-lens-files
 Version:	5.10.0
 Release:	1%{?dist}
