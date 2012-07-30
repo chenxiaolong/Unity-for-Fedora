@@ -7,7 +7,7 @@
 
 Name:		unity
 Version:	6.0.0
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
 Group:		User Interface/Desktops
@@ -35,6 +35,9 @@ Patch3:		0004_geis.patch
 # Link against dbus-glib to avoid:
 #  /usr/bin/ld: CMakeFiles/panel.dir/StandalonePanel.cpp.o: undefined reference to symbol 'dbus_g_thread_init'
 Patch4:		0005_link_dbus-glib.patch
+
+# Make desktop show "Fedora Desktop" in the panel instead of "Ubuntu Desktop"
+Patch5:		0006_Fedora_Desktop_branding.patch
 
 # GCC 4.6 is required or else Unity will segfault
 BuildRequires:	gcc46-devel
@@ -172,6 +175,7 @@ needed for writing automated tests in Python.
 %patch2 -p1 -b .gsettingsfail
 %patch3 -p1 -b .geis
 %patch4 -p1 -b .dbus-glib
+%patch5 -p1 -b .fedora-branding
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
@@ -394,6 +398,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sun Jul 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.0.0-2.0ubuntu4
+- Display "Fedora Desktop" in the panel when the desktop is focused
+
 * Sat Jul 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.0.0-1.0ubuntu4
 - Version 6.0.0
 - Ubuntu release 0ubuntu4

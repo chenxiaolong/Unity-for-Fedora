@@ -1,0 +1,24 @@
+diff -Nru unity-6.0.0.orig/panel/PanelMenuView.cpp unity-6.0.0/panel/PanelMenuView.cpp
+--- unity-6.0.0.orig/panel/PanelMenuView.cpp	2012-07-29 20:54:16.794243466 -0400
++++ unity-6.0.0/panel/PanelMenuView.cpp	2012-07-29 20:54:44.538242991 -0400
+@@ -69,7 +69,7 @@
+     _new_app_menu_shown(false),
+     _monitor(0),
+     _active_xid(0),
+-    _desktop_name(_("Ubuntu Desktop")),
++    _desktop_name(_("Fedora Desktop")),
+     _menus_fadein(DEFAULT_MENUS_FADEIN),
+     _menus_fadeout(DEFAULT_MENUS_FADEOUT),
+     _menus_discovery(DEFAULT_MENUS_DISCOVERY),
+diff -Nru unity-6.0.0.orig/tests/autopilot/unity/tests/launcher/test_keynav.py unity-6.0.0/tests/autopilot/unity/tests/launcher/test_keynav.py
+--- unity-6.0.0.orig/tests/autopilot/unity/tests/launcher/test_keynav.py	2012-07-29 20:54:16.478243452 -0400
++++ unity-6.0.0/tests/autopilot/unity/tests/launcher/test_keynav.py	2012-07-29 20:54:59.988241398 -0400
+@@ -148,7 +148,7 @@
+         self.launcher_instance.key_nav_activate()
+         self.addCleanup(self.keybinding, "expo/cancel")
+ 
+-        self.assertThat(self.panels.get_active_panel().title, Eventually(Equals("Ubuntu Desktop")))
++        self.assertThat(self.panels.get_active_panel().title, Eventually(Equals("Fedora Desktop")))
+ 
+     def test_launcher_keynav_expo_exit_on_esc(self):
+         """Esc should quit expo when entering it from KeyNav."""
