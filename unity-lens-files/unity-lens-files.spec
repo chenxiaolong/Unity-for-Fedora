@@ -23,6 +23,11 @@ BuildRequires:	libunity-devel
 BuildRequires:	libzeitgeist-devel
 BuildRequires:	vala-tools
 
+%if 0%{?opensuse_bs}
+BuildRequires:	libXfixes-ubuntu-devel
+BuildRequires:	xorg-x11-proto-ubuntu-devel
+%endif
+
 %description
 This package contains the files lens which can be used to browse recent
 documents and other files.
