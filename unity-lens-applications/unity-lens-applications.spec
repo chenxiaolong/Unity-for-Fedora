@@ -1,5 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _unity_major_ver 6
+
 Name:		unity-lens-applications
 Version:	5.12.0
 Release:	1%{?dist}
@@ -12,6 +14,8 @@ Source0:	https://launchpad.net/unity-lens-applications/5.0/%{version}/+download/
 
 Patch0:		10-no-db51.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gcc-c++
 BuildRequires:	gettext
 
@@ -45,6 +49,11 @@ applications for the Unity shell.
 %setup -q
 
 %patch0 -p1 -b .dbversion
+
+sed -i '/Icon/ s/^\(.*\)[0-9]\(.*\)/\1%{_unity_major_ver}\2/g' \
+  applications.lens.in.in
+
+autoreconf -vfi
 
 
 %build
