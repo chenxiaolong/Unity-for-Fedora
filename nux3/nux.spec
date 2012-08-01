@@ -1,4 +1,5 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+%define _major_ver 3
 
 Name:		nux
 Version:	3.0.0
@@ -9,7 +10,7 @@ Summary:	Visual rendering toolkit for real-time applications
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv2+
 URL:		https://launchpad.net/nux
-Source0:	https://launchpad.net/nux/3.0/3.0/+download/nux_%{version}.orig.tar.gz
+Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.0/+download/nux_%{version}.orig.tar.gz
 Source1:	50_check_unity_support
 
 # utouch-geis was renamed to geis upstream
@@ -60,7 +61,7 @@ hardware acceleration with high quality visual rendering.
 
 
 %package devel
-Summary:	Development files for the nux library
+Summary:	Development files for the Nux library
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
@@ -77,11 +78,11 @@ Requires:	pango-devel
 Requires:	pcre-devel
 
 %description devel
-This package contains the development files for the nux library.
+This package contains the development files for the Nux library.
 
 
 %package common
-Summary:	Common files for the nux library
+Summary:	Common files for the Nux library
 Group:		System Environment/Libraries
 
 BuildArch:	noarch
@@ -89,7 +90,7 @@ BuildArch:	noarch
 Requires:	%{name} = %{version}-%{release}
 
 %description common
-This package contains the architecture-independent files for the nux library.
+This package contains the architecture-independent files for the Nux library.
 
 
 %package tools
@@ -99,7 +100,7 @@ Group:		Development/Tools
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description tools
-This package contains various tools for the nux library.
+This package contains various tools for the Nux library.
 
 
 %prep
@@ -159,54 +160,54 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 %files
 %doc AUTHORS
-%{_libdir}/libnux-3.0.so.0
-%{_libdir}/libnux-3.0.so.0.0.0
-%{_libdir}/libnux-core-3.0.so.0
-%{_libdir}/libnux-core-3.0.so.0.0.0
-%{_libdir}/libnux-graphics-3.0.so.0
-%{_libdir}/libnux-graphics-3.0.so.0.0.0
+%{_libdir}/libnux-%{_major_ver}.0.so.0
+%{_libdir}/libnux-%{_major_ver}.0.so.0.0.0
+%{_libdir}/libnux-core-%{_major_ver}.0.so.0
+%{_libdir}/libnux-core-%{_major_ver}.0.so.0.0.0
+%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0
+%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.0.0
 
 
 %files devel
 %doc AUTHORS
-%dir %{_includedir}/Nux-3.0/
-%dir %{_includedir}/Nux-3.0/Nux
-%dir %{_includedir}/Nux-3.0/Nux/ProgramFramework/
-%dir %{_includedir}/Nux-3.0/NuxCore/
-%dir %{_includedir}/Nux-3.0/NuxCore/Character/
-%dir %{_includedir}/Nux-3.0/NuxCore/FileManager/
-%dir %{_includedir}/Nux-3.0/NuxCore/Math/
-%dir %{_includedir}/Nux-3.0/NuxCore/TinyXML/
-%dir %{_includedir}/Nux-3.0/NuxGraphics/
-%{_includedir}/Nux-3.0/Nux/Readme.txt
-%{_includedir}/Nux-3.0/Nux/*.h
-%{_includedir}/Nux-3.0/Nux/ProgramFramework/*.h
-%{_includedir}/Nux-3.0/NuxCore/*.h
-%{_includedir}/Nux-3.0/NuxCore/Character/*.h
-%{_includedir}/Nux-3.0/NuxCore/FileManager/*.h
-%{_includedir}/Nux-3.0/NuxCore/Math/*.h
-%{_includedir}/Nux-3.0/NuxCore/TinyXML/*.h
-%{_includedir}/Nux-3.0/NuxGraphics/*.h
-%{_libdir}/libnux-3.0.so
-%{_libdir}/libnux-core-3.0.so
-%{_libdir}/libnux-graphics-3.0.so
-%{_libdir}/pkgconfig/nux-3.0.pc
-%{_libdir}/pkgconfig/nux-core-3.0.pc
-%{_libdir}/pkgconfig/nux-graphics-3.0.pc
+%dir %{_includedir}/Nux-%{_major_ver}.0/
+%dir %{_includedir}/Nux-%{_major_ver}.0/Nux
+%dir %{_includedir}/Nux-%{_major_ver}.0/Nux/ProgramFramework/
+%dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/
+%dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/Character/
+%dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/FileManager/
+%dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/Math/
+%dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/TinyXML/
+%dir %{_includedir}/Nux-%{_major_ver}.0/NuxGraphics/
+%{_includedir}/Nux-%{_major_ver}.0/Nux/Readme.txt
+%{_includedir}/Nux-%{_major_ver}.0/Nux/*.h
+%{_includedir}/Nux-%{_major_ver}.0/Nux/ProgramFramework/*.h
+%{_includedir}/Nux-%{_major_ver}.0/NuxCore/*.h
+%{_includedir}/Nux-%{_major_ver}.0/NuxCore/Character/*.h
+%{_includedir}/Nux-%{_major_ver}.0/NuxCore/FileManager/*.h
+%{_includedir}/Nux-%{_major_ver}.0/NuxCore/Math/*.h
+%{_includedir}/Nux-%{_major_ver}.0/NuxCore/TinyXML/*.h
+%{_includedir}/Nux-%{_major_ver}.0/NuxGraphics/*.h
+%{_libdir}/libnux-%{_major_ver}.0.so
+%{_libdir}/libnux-core-%{_major_ver}.0.so
+%{_libdir}/libnux-graphics-%{_major_ver}.0.so
+%{_libdir}/pkgconfig/nux-%{_major_ver}.0.pc
+%{_libdir}/pkgconfig/nux-core-%{_major_ver}.0.pc
+%{_libdir}/pkgconfig/nux-graphics-%{_major_ver}.0.pc
 
 
 %files common
 %doc AUTHORS
 %dir %{_datadir}/nux/
-%dir %{_datadir}/nux/3.0/
-%dir %{_datadir}/nux/3.0/Fonts/
-%dir %{_datadir}/nux/3.0/UITextures/
-%{_datadir}/nux/3.0/Fonts/*.txt
-%{_datadir}/nux/3.0/Fonts/*.png
-%{_datadir}/nux/3.0/UITextures/*.png
-%{_datadir}/nux/3.0/UITextures/*.tga
-%{_datadir}/nux/3.0/UITextures/Painter.xml
-%{_datadir}/nux/3.0/UITextures/UIArchive.iar
+%dir %{_datadir}/nux/%{_major_ver}.0/
+%dir %{_datadir}/nux/%{_major_ver}.0/Fonts/
+%dir %{_datadir}/nux/%{_major_ver}.0/UITextures/
+%{_datadir}/nux/%{_major_ver}.0/Fonts/*.txt
+%{_datadir}/nux/%{_major_ver}.0/Fonts/*.png
+%{_datadir}/nux/%{_major_ver}.0/UITextures/*.png
+%{_datadir}/nux/%{_major_ver}.0/UITextures/*.tga
+%{_datadir}/nux/%{_major_ver}.0/UITextures/Painter.xml
+%{_datadir}/nux/%{_major_ver}.0/UITextures/UIArchive.iar
 
 
 %files tools
