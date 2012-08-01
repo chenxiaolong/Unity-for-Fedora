@@ -7,7 +7,7 @@
 
 Name:		unity
 Version:	6.0.0
-Release:	2.%{_ubuntu_rel}%{?dist}
+Release:	3.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
 Group:		User Interface/Desktops
@@ -17,6 +17,16 @@ Source0:	https://launchpad.net/unity/6.0/6.0/+download/unity-%{version}.tar.bz2
 
 # Autostart file for migrating Unity's dconf path
 Source1:	unity-migrate-dconf-path.desktop
+
+# These are the translations for Unity exported from Launchpad. Launchpad does
+# not allow hotlinking, so I have uploaded the tarball to ompldr. Source 91
+# contains the GPG signature signed by my GPG key, which can be obtained by
+# running:
+#   $ gpg --keyserver keyserver.ubuntu.com --recv-keys 90EFF32C
+
+# Exported on: Wed, 01 Aug 2012 01:24:23 -0400
+Source90:	http://ompldr.org/vZXh3bw/launchpad-export.tar.gz
+Source91:	http://ompldr.org/vZXh3cA/launchpad-export.tar.gz.asc
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/unity_%{version}-%{_ubuntu_rel}.diff.gz
 
@@ -53,37 +63,38 @@ BuildRequires:	doxygen
 BuildRequires:	gcc-c++
 BuildRequires:	gettext
 BuildRequires:	intltool
+BuildRequires:	pkgconfig
 BuildRequires:	python-setuptools
 
-BuildRequires:	atk-devel
-BuildRequires:	bamf3-devel
 BuildRequires:	boost-devel
-BuildRequires:	cairo-devel
-BuildRequires:	compiz-devel
 BuildRequires:	compiz-plugins
-BuildRequires:	dee-devel
-BuildRequires:	GConf2-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gsettings-desktop-schemas-ubuntu-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	json-glib-devel
-BuildRequires:	libcompizconfig-devel
-BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libgee06-devel
-BuildRequires:	libindicator-devel
-BuildRequires:	libindicator-gtk3-devel
-BuildRequires:	libnotify-devel
-BuildRequires:	libsigc++20-devel
-BuildRequires:	libunity-devel
-BuildRequires:	libunity-misc-devel
-BuildRequires:	libXfixes-devel
-BuildRequires:	nux-devel >= 3.0.0
-BuildRequires:	pango-devel
-BuildRequires:	startup-notification-devel
-BuildRequires:	unique-devel
-BuildRequires:	geis-devel
-BuildRequires:	grail-devel
-BuildRequires:	xcb-util-wm-devel
+
+BuildRequires:	pkgconfig(atk)
+BuildRequires:	pkgconfig(libbamf3)
+BuildRequires:	pkgconfig(cairo)
+BuildRequires:	pkgconfig(compiz)
+BuildRequires:	pkgconfig(dee-1.0)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gsettings-desktop-schemas)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(json-glib-1.0)
+BuildRequires:	pkgconfig(libcompizconfig)
+BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
+BuildRequires:	pkgconfig(gee-1.0)
+BuildRequires:	pkgconfig(indicator-0.4)
+BuildRequires:	pkgconfig(indicator3-0.4)
+BuildRequires:	pkgconfig(libnotify)
+BuildRequires:	pkgconfig(sigc++-2.0)
+BuildRequires:	pkgconfig(unity)
+BuildRequires:	pkgconfig(unity-misc)
+BuildRequires:	pkgconfig(nux-3.0) >= 3.0.0
+BuildRequires:	pkgconfig(pango)
+BuildRequires:	pkgconfig(libstartup-notification-1.0)
+BuildRequires:	pkgconfig(unique-1.0)
+BuildRequires:	pkgconfig(libgeis)
+BuildRequires:	pkgconfig(grail)
+BuildRequires:	pkgconfig(xcb-ewmh)
 
 Requires:	unity-common%{?_isa} = %{version}-%{release}
 
@@ -173,6 +184,21 @@ needed for writing automated tests in Python.
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
+
+# Use Launchpad translations
+[ -d launchpad-po ] && rm -rv launchpad-po
+mkdir launchpad-po
+tar zxvf '%{SOURCE90}' -C launchpad-po
+pushd po
+rm LINGUAS && touch LINGUAS # Recreate LINGUAS (list of languages) file
+for i in ../launchpad-po/po/*.po; do
+  _NEWFILE=${i##*/} # Strip path
+  _NEWFILE=${_NEWFILE#*-} # Strip 'unity-'
+  cp "${i}" "${_NEWFILE}" # Copy new translation
+  echo "${_NEWFILE%.*}" >> LINGUAS # Add translation
+done
+cp ../launchpad-po/po/unity.pot unity.pot
+popd
 
 
 %build
@@ -392,6 +418,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Wed Aug 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.0.0-3.0ubuntu4
+- Add Launchpad translations snapshot from 2012-08-01
+
 * Sun Jul 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.0.0-2.0ubuntu4
 - Display "Fedora Desktop" in the panel when the desktop is focused
 
