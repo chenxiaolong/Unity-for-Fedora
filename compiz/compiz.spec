@@ -13,7 +13,7 @@
 
 Name:		compiz
 Version:	0.9.8
-Release:	1.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
+Release:	2.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
@@ -321,6 +321,9 @@ mv $RPM_BUILD_ROOT%{_datadir}/gconf/ \
 # Validate desktop files
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/compiz.desktop
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/ccsm.desktop
+
+# Fix dependency on '/bin/python' in ccsm
+sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 %find_lang compiz
 %find_lang ccsm
@@ -874,6 +877,9 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/ccsm.desktop
 
 
 %changelog
+* Wed Aug 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8-2.0ubuntu2
+- Fix dependency on /bin/python2, which breaks upgrades
+
 * Thu Jul 19 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8-1.0ubuntu2
 - Version 0.9.8
 - Ubuntu release 0ubuntu2
