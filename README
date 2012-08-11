@@ -31,11 +31,10 @@ Build order:
 29: libtimezonemap                 -> GTK+3 timezone map widget
 30: indicator-datetime             -> A very, very simple clock
 31: indicator-messages             -> Collects messages that need a response
-32: indicator-multiload *************
-33: indicator-power                -> Indicator to show battery information
-34: indicator-session              -> Indicator for session management
-35: indicator-sound                -> Indicator displaying a unified sound menu
-36: notify-osd                     -> A unified sound menu
+32: indicator-power                -> Indicator to show battery information
+33: indicator-session              -> Indicator for session management
+34: indicator-sound                -> Indicator displaying a unified sound menu
+35: notify-osd                     -> A unified sound menu
 36: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
 37: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
 38: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
