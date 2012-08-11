@@ -39,7 +39,7 @@ Build order:
 37: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
 38: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
 39: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-40: xfce4-indicator-plugin **********
+40: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
 41: evemu                          -> Linux Evdev Event Emulation Library
 42: frame                          -> Open Input Framework Frame Library
 43: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
