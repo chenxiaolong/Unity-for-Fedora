@@ -35,6 +35,7 @@ Build order:
 33: indicator-power                -> Indicator to show battery information
 34: indicator-session              -> Indicator for session management
 35: indicator-sound                -> Indicator displaying a unified sound menu
+36: notify-osd                     -> A unified sound menu
 36: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
 37: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
 38: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
