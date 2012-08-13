@@ -44,7 +44,7 @@ Build order:
 42: frame                          -> Open Input Framework Frame Library
 43: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
 44: libXfixes                      -> X.Org fixes extension library
-45: xorg-x11-server-Xorg-ubuntu *****
+45: xorg-x11-server-ubuntu         -> Xorg X11 server
 46: grail                          -> Gesture recognition and instantiation lib.
 47: geis                           -> Implementation of the GEIS interface
 48: gcc46                          -> GNU Compiler Collection version 4.6
