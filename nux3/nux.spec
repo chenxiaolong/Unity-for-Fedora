@@ -1,8 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
+
 %define _major_ver 3
 
 Name:		nux
-Version:	3.0.0
+Version:	3.2.0
 Release:	1%{?dist}
 # Summary from Ubuntu
 Summary:	Visual rendering toolkit for real-time applications
@@ -10,15 +11,8 @@ Summary:	Visual rendering toolkit for real-time applications
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv2+
 URL:		https://launchpad.net/nux
-Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.0/+download/nux_%{version}.orig.tar.gz
+Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.2/+download/nux-%{version}.tar.gz
 Source1:	50_check_unity_support
-
-# utouch-geis was renamed to geis upstream
-Patch0:		0001_geis.patch
-
-# Disable documentation as it causes autoreconf to fail (Ubuntu doesn't package
-# the documentation anyway)
-Patch1:		0002_disable_documentation.patch
 
 # GCC 4.6 required or else Unity will segfault
 BuildRequires:	gcc46-devel
@@ -109,11 +103,6 @@ This package contains various tools for the Nux library.
 # Avoid rpmlint spurious-executable-perm error in debuginfo package
 find -type f \( -name '*.h' -o -name '*.cpp' \) -exec chmod 644 {} \;
 
-%patch0 -p1 -b .geis_renamed
-%patch1 -p1 -b .disable_documentation
-
-autoreconf -vfi
-
 
 %build
 # Remove '-gnu' from target triplet
@@ -161,11 +150,11 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %files
 %doc AUTHORS
 %{_libdir}/libnux-%{_major_ver}.0.so.0
-%{_libdir}/libnux-%{_major_ver}.0.so.0.0.0
+%{_libdir}/libnux-%{_major_ver}.0.so.0.200.0
 %{_libdir}/libnux-core-%{_major_ver}.0.so.0
-%{_libdir}/libnux-core-%{_major_ver}.0.so.0.0.0
+%{_libdir}/libnux-core-%{_major_ver}.0.so.0.200.0
 %{_libdir}/libnux-graphics-%{_major_ver}.0.so.0
-%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.0.0
+%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.200.0
 
 
 %files devel
@@ -177,7 +166,6 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/Character/
 %dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/FileManager/
 %dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/Math/
-%dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/TinyXML/
 %dir %{_includedir}/Nux-%{_major_ver}.0/NuxGraphics/
 %{_includedir}/Nux-%{_major_ver}.0/Nux/Readme.txt
 %{_includedir}/Nux-%{_major_ver}.0/Nux/*.h
@@ -186,7 +174,6 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_includedir}/Nux-%{_major_ver}.0/NuxCore/Character/*.h
 %{_includedir}/Nux-%{_major_ver}.0/NuxCore/FileManager/*.h
 %{_includedir}/Nux-%{_major_ver}.0/NuxCore/Math/*.h
-%{_includedir}/Nux-%{_major_ver}.0/NuxCore/TinyXML/*.h
 %{_includedir}/Nux-%{_major_ver}.0/NuxGraphics/*.h
 %{_libdir}/libnux-%{_major_ver}.0.so
 %{_libdir}/libnux-core-%{_major_ver}.0.so
@@ -217,6 +204,9 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.2.0-1
+- Version 3.2.0
+
 * Fri Jul 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.0-1
 - Version 3.0.0
 
