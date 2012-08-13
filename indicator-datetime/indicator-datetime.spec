@@ -1,19 +1,16 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-# The following line is for the scripts in my git repository
-%define _ubuntu_match_rel 0ubuntu2
-
 Name:		indicator-datetime
-Version:	0.3.94
-Release:	2%{?dist}
+Version:	12.10.0
+Release:	1%{?dist}
 Summary:	Indicator for displaying the date and time
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-datetime
-Source0:	https://launchpad.net/indicator-datetime/0.4/%{version}/+download/indicator-datetime-%{version}.tar.gz
+Source0:	https://launchpad.net/indicator-datetime/12.10/%{version}/+download/indicator-datetime-%{version}.tar.gz
 
-Patch0:		0001_non-locale_parsing.patch
+Patch0:		0001_Revert_port_to_EDS_3.6_API.patch
 Patch1:		0002_Read_etc_sysconfig_clock.patch
 
 BuildRequires:	autoconf
@@ -28,13 +25,11 @@ BuildRequires:	evolution-data-server-devel
 BuildRequires:	GConf2-devel
 BuildRequires:	geoclue-devel
 BuildRequires:	glib2-devel
-BuildRequires:	gtk2-devel
 BuildRequires:	gtk3-devel
 BuildRequires:	ido-devel
 BuildRequires:	ido3-devel
 BuildRequires:	json-glib-devel
 BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libdbusmenu-gtk2-devel
 BuildRequires:	libdbusmenu-gtk3-devel
 BuildRequires:	libical-devel
 BuildRequires:	libindicator-devel
@@ -49,16 +44,6 @@ This package contains an indicator for displaying the date and time in the
 panel.
 
 
-%package gtk2
-Summary:	Indicator for displaying the date and time - GTK 2
-Group:		User Interface/Desktops
-
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-
-%description gtk2
-This package contains the development files for the datetime indicator.
-
-
 %prep
 %setup -q
 
@@ -69,28 +54,12 @@ autoreconf -vfi
 
 
 %build
-%global _configure ../configure
-mkdir build-gtk2 build-gtk3
-
-pushd build-gtk2
-%configure --with-gtk=2 --disable-static
+%configure --disable-static
 make %{?_smp_mflags}
-popd
-
-pushd build-gtk3
-%configure --with-gtk=3 --disable-static
-make %{?_smp_mflags}
-popd
 
 
 %install
-pushd build-gtk2
 make install DESTDIR=$RPM_BUILD_ROOT
-popd
-
-pushd build-gtk3
-make install DESTDIR=$RPM_BUILD_ROOT
-popd
 
 desktop-file-validate \
  $RPM_BUILD_ROOT%{_datadir}/applications/indicator-datetime-preferences.desktop
@@ -122,12 +91,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/indicator-datetime/datetime-dialog.ui
 
 
-%files gtk2
-%doc AUTHORS ChangeLog
-%{_libdir}/indicators/7/libdatetime.so
-
-
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
+- Drop GTK 2 subpackage: deprecated
+- Add patch: Revert evolution-data-server 3.6 API
+
 * Mon Jul 16 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.94-2
 - Read timezone from /etc/sysconfig/clock
 
