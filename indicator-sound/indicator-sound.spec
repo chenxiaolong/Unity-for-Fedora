@@ -2,35 +2,37 @@
 
 # Based off of Damian's spec file
 
-%define _ubuntu_rel 0ubuntu3
+%define _ubuntu_rel 0ubuntu1
 
 Name:		indicator-sound
-Version:	0.8.5.0
+Version:	12.10.0
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Indicator for displaying a unified sound menu
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-sound
-Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-sound_%{version}.orig.tar.gz
+Source0:	https://launchpad.net/indicator-sound/12.10/%{version}/+download/indicator-sound-%{version}.tar.gz
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-sound_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
-BuildRequires:	glib2-devel
-BuildRequires:	gtk2-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	ido-devel
-BuildRequires:	ido3-devel
-BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libdbusmenu-gtk2-devel
-BuildRequires:	libdbusmenu-gtk3-devel
-BuildRequires:	libindicator-devel
-BuildRequires:	libindicator-gtk3-devel
-BuildRequires:	libgee06-devel
-BuildRequires:	libnotify-devel
-BuildRequires:	libxml2-devel
-BuildRequires:	pulseaudio-libs-devel
+BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
+
+BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
+BuildRequires:	pkgconfig(dbusmenu-gtk-0.4)
+BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
+BuildRequires:	pkgconfig(gee-1.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(indicator-0.4)
+BuildRequires:	pkgconfig(indicator3-0.4)
+BuildRequires:	pkgconfig(libido-0.1)
+BuildRequires:	pkgconfig(libido3-0.1)
+BuildRequires:	pkgconfig(libnotify)
+BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	pkgconfig(libpulse)
 
 # Ubuntu's gnome-control-center is required
 Requires:	control-center-ubuntu
@@ -94,7 +96,6 @@ if [ ${1} -eq 0 ]; then
   glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 fi
 
-
 %posttrans
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
@@ -115,6 +116,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1.0ubuntu1
+- Version 12.10.0
+- Ubuntu release 0ubuntu1
+
 * Sun Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.8.5.0-1.0ubuntu3
 - Initial release
 - Version 0.8.5.0
