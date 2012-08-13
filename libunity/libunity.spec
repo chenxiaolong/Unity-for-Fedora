@@ -12,13 +12,16 @@ License:	LGPLv3
 URL:		https://launchpad.net/libunity
 Source0:	https://launchpad.net/libunity/6.0/%{version}/+download/libunity-%{version}.tar.gz
 
-BuildRequires:	dee-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gobject-introspection-devel
-BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libgee06-devel
+BuildRequires:	pkgconfig
 BuildRequires:	python2
 BuildRequires:	vala-tools
+
+BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
+BuildRequires:	pkgconfig(dee-1.0)
+BuildRequires:	pkgconfig(gee-1.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
 
 %description
 A library for instrumenting- and integrating with all aspects of the Unity
