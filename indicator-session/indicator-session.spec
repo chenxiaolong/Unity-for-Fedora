@@ -1,17 +1,16 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-session
-Version:	0.3.96
-Release:	2%{?dist}
+Version:	12.10.0
+Release:	1%{?dist}
 Summary:	Indicator for session management and status information
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-session
-Source0:	https://launchpad.net/indicator-session/0.4/%{version}/+download/indicator-session-%{version}.tar.gz
+Source0:	https://launchpad.net/indicator-session/12.10/%{version}/+download/indicator-session-%{version}.tar.gz
 
-# Use gnome-packagekit instead of Ubuntu's update-manager
-Patch0:		0001_Use_gnome-packagekit.patch
+Patch0:		0001_Revert_new_glib_stuff.patch
 
 BuildRequires:	gettext
 BuildRequires:	gnome-doc-utils
@@ -43,45 +42,19 @@ The Session Menu these tasks are conveniently placed in the upper-right corner
 of the desktop to make them available and easy to use.
 
 
-%package gtk2
-Summary:	Indicator for session management and status information - GTK 2
-Group:		User Interface/Desktops
-
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-
-%description gtk2
-This package contains the GTK 2 version of the session indicator.
-
-
 %prep
 %setup -q
 
-%patch0 -p1 -b .packagekit
+%patch0 -p1 -b .newglibstuff
 
 
 %build
-%global _configure ../configure
-mkdir build-gtk2 build-gtk3
-
-pushd build-gtk2
-%configure --with-gtk=2 --disable-static
+%configure --disable-static
 make %{?_smp_mflags}
-popd
-
-pushd build-gtk3
-%configure --with-gtk=3 --disable-static
-make %{?_smp_mflags}
-popd
 
 
 %install
-pushd build-gtk2
 make install DESTDIR=$RPM_BUILD_ROOT
-popd
-
-pushd build-gtk3
-make install DESTDIR=$RPM_BUILD_ROOT
-popd
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
@@ -134,12 +107,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/libindicator/icons/hicolor/scalable/status/account-logged-in.svg
 
 
-%files gtk2
-%doc AUTHORS ChangeLog
-%{_libdir}/indicators/7/libsession.so
-
-
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
+- Drop GTK 2 subpackage: deprecated
+
 * Thu Jul 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.96-2
 - Use gpk-update-viewer to show updates
 
