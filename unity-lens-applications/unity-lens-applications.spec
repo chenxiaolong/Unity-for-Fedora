@@ -1,16 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _unity_major_ver 6
-
 Name:		unity-lens-applications
-Version:	5.12.0
+Version:	6.2.0
 Release:	1%{?dist}
 Summary:	Unity Applications Lens
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/unity-lens-applications
-Source0:	https://launchpad.net/unity-lens-applications/5.0/%{version}/+download/unity-lens-applications-%{version}.tar.gz
+Source0:	https://launchpad.net/unity-lens-applications/6.0/%{version}/+download/unity-lens-applications-%{version}.tar.gz
 
 Patch0:		10-no-db51.patch
 
@@ -40,9 +38,6 @@ applications for the Unity shell.
 %setup -q
 
 %patch0 -p1 -b .dbversion
-
-sed -i '/Icon/ s/^\(.*\)[0-9]\(.*\)/\1%{_unity_major_ver}\2/g' \
-  applications.lens.in.in
 
 autoreconf -vfi
 
@@ -87,6 +82,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1
+- Version 6.2.0
+
 * Sun Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.12.0-1
 - Initial release
 - Version 5.12.0
