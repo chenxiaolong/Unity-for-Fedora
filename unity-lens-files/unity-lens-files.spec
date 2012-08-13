@@ -1,18 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _unity_major_ver 6
-
 Name:		unity-lens-files
-Version:	5.10.0
+Version:	6.2.0
 Release:	1%{?dist}
 Summary:	Unity files lens
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/unity-lens-files
-Source0:	https://launchpad.net/unity-lens-files/5.0/%{version}/+download/unity-lens-files-%{version}.tar.gz
-
-Patch0:		vala-0.16_fix.patch
+Source0:	https://launchpad.net/unity-lens-files/6.0/%{version}/+download/unity-lens-files-%{version}.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -25,11 +21,6 @@ BuildRequires:	libunity-devel
 BuildRequires:	libzeitgeist-devel
 BuildRequires:	vala-tools
 
-%if 0%{?opensuse_bs}
-BuildRequires:	libXfixes-ubuntu-devel
-BuildRequires:	xorg-x11-proto-ubuntu-devel
-%endif
-
 %description
 This package contains the files lens which can be used to browse recent
 documents and other files.
@@ -37,11 +28,6 @@ documents and other files.
 
 %prep
 %setup -q
-
-%patch0 -p1 -b .vala016fix
-
-sed -i '/Icon/ s/^\(.*\)[0-9]\(.*\)/\1%{_unity_major_ver}\2/g' \
-  files.lens.in.in
 
 
 %build
@@ -75,6 +61,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1
+- Version 6.2.0
+
 * Fri Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.10.0-1
 - Initial release
 - Version 5.10.0
