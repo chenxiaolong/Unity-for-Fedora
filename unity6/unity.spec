@@ -1,19 +1,19 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu4
+%define _ubuntu_rel 0ubuntu1
 
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 %define _gconf_obsolete_schemas compiz-gtkloader
 
 Name:		unity
-Version:	6.0.0
-Release:	3.%{_ubuntu_rel}%{?dist}
+Version:	6.2.0
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
 Group:		User Interface/Desktops
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/unity
-Source0:	https://launchpad.net/unity/6.0/6.0/+download/unity-%{version}.tar.bz2
+Source0:	https://launchpad.net/unity/6.0/6.2/+download/unity-%{version}.tar.bz2
 
 # Autostart file for migrating Unity's dconf path
 Source1:	unity-migrate-dconf-path.desktop
@@ -38,9 +38,6 @@ Patch1:		0002_fix_directories.patch
 
 # Ignore error about deprecated paths in GSettings schemas
 Patch2:		0003_Ignore_deprecated_schema_path.patch
-
-# utouch-geis was renamed to geis
-Patch3:		0004_geis.patch
 
 # Link against dbus-glib to avoid:
 #  /usr/bin/ld: CMakeFiles/panel.dir/StandalonePanel.cpp.o: undefined reference to symbol 'dbus_g_thread_init'
@@ -88,7 +85,8 @@ BuildRequires:	pkgconfig(libnotify)
 BuildRequires:	pkgconfig(sigc++-2.0)
 BuildRequires:	pkgconfig(unity)
 BuildRequires:	pkgconfig(unity-misc)
-BuildRequires:	pkgconfig(nux-3.0) >= 3.0.0
+BuildRequires:	pkgconfig(unity-protocol-private) >= 5.93.1
+BuildRequires:	pkgconfig(nux-3.0) >= 3.2.0
 BuildRequires:	pkgconfig(pango)
 BuildRequires:	pkgconfig(libstartup-notification-1.0)
 BuildRequires:	pkgconfig(unique-1.0)
@@ -178,7 +176,6 @@ needed for writing automated tests in Python.
 %patch0 -p1 -b .gtestdir
 %patch1 -p1 -b .fixdirs
 %patch2 -p1 -b .gsettingsfail
-%patch3 -p1 -b .geis
 %patch4 -p1 -b .dbus-glib
 %patch5 -p1 -b .fedora-branding
 
@@ -418,6 +415,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1.0ubuntu1
+- Version 6.2.0
+- Ubuntu release 0ubuntu1
+
 * Wed Aug 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.0.0-3.0ubuntu4
 - Add Launchpad translations snapshot from 2012-08-01
 
