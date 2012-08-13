@@ -1,0 +1,12 @@
+diff -Nru indicator-power-12.10.0.orig/src/Makefile.am indicator-power-12.10.0/src/Makefile.am
+--- indicator-power-12.10.0.orig/src/Makefile.am	2012-08-13 19:01:29.140113087 -0400
++++ indicator-power-12.10.0/src/Makefile.am	2012-08-13 19:02:25.082124213 -0400
+@@ -22,7 +22,7 @@
+         $(UPOWER_CFLAGS) \
+         $(INDICATOR_CFLAGS) \
+         $(COVERAGE_CFLAGS) \
+-        -Wall -Werror \
++        -Wall \
+         -DG_LOG_DOMAIN=\"Indicator-Power\"
+ 
+ libpower_la_LIBADD = \

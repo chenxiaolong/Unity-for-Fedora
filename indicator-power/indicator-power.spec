@@ -1,15 +1,19 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-power
-Version:	2.0
+Version:	12.10.0
 Release:	1%{?dist}
 Summary:	Indicator to show the battery status
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-power
-Source0:	https://launchpad.net/indicator-power/2.0/%{version}/+download/indicator-power-%{version}.tar.gz
+Source0:	https://launchpad.net/indicator-power/12.10/%{version}/+download/indicator-power-%{version}.tar.gz
 
+Patch0:		0001_Disable_-Werror.patch
+
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	intltool
 
 BuildRequires:	dbus-devel
@@ -31,6 +35,14 @@ hidden.
 
 %prep
 %setup -q
+
+%patch0 -p1
+
+intltoolize --force
+aclocal --verbose --force
+autoconf -v -f
+automake -f
+#autoreconf -vfi
 
 
 %build
@@ -62,6 +74,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.1
+
 * Sun Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.0-1
 - Initial release
 - Version 2.0
