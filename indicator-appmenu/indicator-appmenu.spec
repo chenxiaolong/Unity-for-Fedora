@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-appmenu
-Version:	0.3.97
+Version:	12.10.0
 Release:	1%{?dist}
 Summary:	Indicator to host the menus from an application
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-appmenu
-Source0:	https://launchpad.net/indicator-appmenu/0.4/%{version}/+download/indicator-appmenu-%{version}.tar.gz
+Source0:	https://launchpad.net/indicator-appmenu/12.10/%{version}/+download/indicator-appmenu-%{version}.tar.gz
 
 Patch0:		0001_Fix_dbusmenu-dumper_path.patch
 
@@ -17,11 +17,9 @@ BuildRequires:	intltool
 
 BuildRequires:	bamf-devel
 BuildRequires:	bamf3-devel
-BuildRequires:	gtk2-devel
 BuildRequires:	gtk3-devel
 BuildRequires:	libappindicator-gtk3-devel
 BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libdbusmenu-gtk2-devel
 BuildRequires:	libdbusmenu-gtk3-devel
 BuildRequires:	libdbusmenu-jsonloader-devel
 BuildRequires:	libindicator-devel
@@ -33,16 +31,6 @@ BuildRequires:	vala-tools
 
 %description
 This package contains an indicator to host the menus from an application.
-
-
-%package gtk2
-Summary:	Indicator to host the menus from an application - GTK 2
-Group:		User Interface/Desktops
-
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-
-%description gtk2
-This packages contains the GTK 2 version of the appmenu indicator.
 
 
 %package tools
@@ -63,9 +51,6 @@ This package contains debugging tools for the appmenu indicator.
 
 
 %build
-%global _configure ../configure
-mkdir build-gtk2 build-gtk3
-
 CFLAGS="$RPM_OPT_FLAGS"
 
 # Disable -Werror
@@ -74,28 +59,18 @@ CFLAGS="${CFLAGS} -Wno-error"
 # Cannot find gio/gdesktopappinfo.h
 CFLAGS="${CFLAGS} $(pkg-config --cflags --libs gio-unix-2.0)"
 
-pushd build-gtk2
-%configure --with-gtk=2 --disable-static
+%configure --disable-static
 make %{?_smp_mflags}
-popd
-
-pushd build-gtk3
-%configure --with-gtk=3 --disable-static
-make %{?_smp_mflags}
-popd
 
 
 %install
-pushd build-gtk2
 make install DESTDIR=$RPM_BUILD_ROOT
-popd
-
-pushd build-gtk3
-make install DESTDIR=$RPM_BUILD_ROOT
-popd
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
+
+# Remove documentation (Ubuntu doesn't package it)
+rm -rv $RPM_BUILD_ROOT%{_datadir}/gtk-doc/
 
 
 %postun
@@ -117,11 +92,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/com.canonical.indicator.appmenu.hud.search.gschema.xml
 
 
-%files gtk2
-%doc AUTHORS ChangeLog
-%{_libdir}/indicators/7/libappmenu.so
-
-
 %files tools
 %doc AUTHORS ChangeLog
 %{_bindir}/hud-cli
@@ -141,6 +111,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
+- Drop GTK 2 subpackage: no longer maintained upstream
+
 * Wed Jul 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.97-1
 - Initial release
 - Version 0.3.97
