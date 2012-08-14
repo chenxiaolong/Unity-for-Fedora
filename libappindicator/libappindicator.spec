@@ -1,18 +1,18 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-# The following line is for the scripts in my git repo
-%define _ubuntu_match_rel 0ubuntu2
-
 Name:		libappindicator
-Version:	0.4.92
+Version:	12.10.0
 Release:	1%{?dist}
 Summary:	Library to export menu bar to Unity
 
 Group:		System Environment/Libraries
 License:	LGPLv2 and LGPLv3
 URL:		https://launchpad.net/libappindicator
-Source0:	https://launchpad.net/libappindicator/0.5/%{version}/+download/libappindicator-%{version}.tar.gz
+Source0:	https://launchpad.net/libappindicator/12.10/%{version}/+download/libappindicator-%{version}.tar.gz
 Patch0:		0001_Fix_mono_dir.patch
+
+BuildRequires:	autoconf
+BuildRequires:	automake
 
 BuildRequires:	dbus-glib-devel
 BuildRequires:	gobject-introspection-devel
@@ -121,6 +121,8 @@ This package contains the development files for the appindicator-sharp library.
 %prep
 %setup -q
 %patch0 -p1 -b .monodir
+
+autoreconf -vfi
 
 
 %build
@@ -244,6 +246,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
+
 * Wed Jun 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.4.92-1
 - Initial release
 - Version 0.4.92
