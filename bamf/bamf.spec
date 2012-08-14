@@ -1,10 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-# This following line is for the scripts in my git repo
-%define _ubuntu_match_rel 0ubuntu0.2
-
 Name:		bamf
-Version:	0.2.118
+Version:	0.2.122
 Release:	1%{?dist}
 Summary:	Application Matching Framework - GTK 2
 
@@ -12,10 +9,6 @@ Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/bamf
 Source0:	https://launchpad.net/bamf/0.2/%{version}/+download/bamf-%{version}.tar.gz
-
-# Patches that Ubuntu backported (taken from Ubuntu packaging version 0.2.118
-# -0ubuntu0.2).
-Patch0:		0001_Ubuntu_backports_0.2.118-0ubuntu0.2.patch
 
 BuildRequires:	dbus-glib-devel
 BuildRequires:	glib2-devel
@@ -103,8 +96,6 @@ This package contains the documentation for the bamf library.
 %prep
 %setup -q
 
-%patch0 -p1 -b .backports
-
 
 %build
 %global _configure ../configure
@@ -171,12 +162,14 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_includedir}/libbamf/libbamf/libbamf.h
 %{_libdir}/libbamf.so
 %{_libdir}/pkgconfig/libbamf.pc
+%{_datadir}/vala/vapi/libbamf.vapi
 
 
 %files -n %{name}3
 %doc TODO
 %{_libdir}/libbamf3.so.0
 %{_libdir}/libbamf3.so.0.0.0
+%{_libdir}/girepository-1.0/Bamf-0.2.typelib
 
 
 %files -n %{name}3-devel
@@ -193,6 +186,8 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_includedir}/libbamf3/libbamf/libbamf.h
 %{_libdir}/libbamf3.so
 %{_libdir}/pkgconfig/libbamf3.pc
+%{_datadir}/gir-1.0/Bamf-0.2.gir
+%{_datadir}/vala/vapi/libbamf3.vapi
 
 
 %files docs
@@ -218,6 +213,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.122-1
+- Version 0.2.122
+
 * Tue Jul 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.118-1
 - Initial release
 - Version 0.2.118
