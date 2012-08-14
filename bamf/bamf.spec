@@ -10,6 +10,8 @@ License:	LGPLv3
 URL:		https://launchpad.net/bamf
 Source0:	https://launchpad.net/bamf/0.2/%{version}/+download/bamf-%{version}.tar.gz
 
+BuildRequires:	vala-tools
+
 BuildRequires:	dbus-glib-devel
 BuildRequires:	glib2-devel
 BuildRequires:	gobject-introspection-devel
