@@ -6,7 +6,7 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		dee
-Version:	1.0.10
+Version:	1.0.12
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Library for creating Model-View-Controller programs across DBus
 
@@ -143,47 +143,18 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files docs
-%{_datadir}/gtk-doc/html/dee-1.0/DeeAnalyzer.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeClient.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeFileResourceManager.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeFilterModel.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeHashIndex.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeIndex.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeePeer.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeProxyModel.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeSequenceModel.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeSerializableModel.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeServer.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeSharedModel.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeTermList.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeTextAnalyzer.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeTransaction.html
-%{_datadir}/gtk-doc/html/dee-1.0/DeeTreeIndex.html
-%{_datadir}/gtk-doc/html/dee-1.0/annotation-glossary.html
-%{_datadir}/gtk-doc/html/dee-1.0/api-index-full.html
-%{_datadir}/gtk-doc/html/dee-1.0/ch01.html
-%{_datadir}/gtk-doc/html/dee-1.0/ch02.html
-%{_datadir}/gtk-doc/html/dee-1.0/ch03.html
-%{_datadir}/gtk-doc/html/dee-1.0/ch04.html
-%{_datadir}/gtk-doc/html/dee-1.0/dee-1.0-Dee-ICU-Extensions.html
-%{_datadir}/gtk-doc/html/dee-1.0/dee-1.0-DeeModel.html
-%{_datadir}/gtk-doc/html/dee-1.0/dee-1.0-DeeResourceManager.html
-%{_datadir}/gtk-doc/html/dee-1.0/dee-1.0-DeeResultSet.html
-%{_datadir}/gtk-doc/html/dee-1.0/dee-1.0-DeeSerializable.html
-%{_datadir}/gtk-doc/html/dee-1.0/dee-1.0-Filters.html
-%{_datadir}/gtk-doc/html/dee-1.0/dee-1.0-Model-Readers.html
+%{_datadir}/gtk-doc/html/dee-1.0/*.html
+%{_datadir}/gtk-doc/html/dee-1.0/*.png
 %{_datadir}/gtk-doc/html/dee-1.0/dee-1.0.devhelp2
-%{_datadir}/gtk-doc/html/dee-1.0/home.png
-%{_datadir}/gtk-doc/html/dee-1.0/index.html
 %{_datadir}/gtk-doc/html/dee-1.0/index.sgml
-%{_datadir}/gtk-doc/html/dee-1.0/left.png
-%{_datadir}/gtk-doc/html/dee-1.0/object-tree.html
-%{_datadir}/gtk-doc/html/dee-1.0/right.png
 %{_datadir}/gtk-doc/html/dee-1.0/style.css
-%{_datadir}/gtk-doc/html/dee-1.0/up.png
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.12-1.0ubuntu1
+- Version 1.0.12
+- Ubuntu release 0ubuntu1
+
 * Tue Jul 02 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.10-1.0ubuntu1
 - Initial release
 - Version 1.0.10
