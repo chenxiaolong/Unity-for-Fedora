@@ -2,7 +2,7 @@
 
 # Partially based off of Fedora 17's spec file
 
-%define _ubuntu_rel 0ubuntu0.3
+%define _ubuntu_rel 0ubuntu0.4
 
 %define _obsolete_ver 1:3.5.0-100
 
@@ -30,46 +30,47 @@ BuildRequires:	gettext
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	intltool
+BuildRequires:	pkgconfig
 
-BuildRequires:	cheese-libs-devel
-BuildRequires:	clutter-gst-devel
-BuildRequires:	clutter-gtk-devel
-BuildRequires:	colord-devel
+BuildRequires:	pkgconfig(cheese)
+BuildRequires:	pkgconfig(clutter-gst-1.0)
+BuildRequires:	pkgconfig(clutter-gtk-1.0)
+BuildRequires:	pkgconfig(colord)
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gnome-bluetooth-1.0)
+BuildRequires:	pkgconfig(gnome-desktop-3.0)
+BuildRequires:	pkgconfig(gnome-settings-daemon)
+BuildRequires:	pkgconfig(goa-1.0)
+BuildRequires:	pkgconfig(gsettings-desktop-schemas)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(iso-codes)
+BuildRequires:	pkgconfig(libcanberra)
+BuildRequires:	pkgconfig(libglade-2.0)
+BuildRequires:	pkgconfig(libgnomekbd)
+BuildRequires:	pkgconfig(libgnome-menu-3.0)
+BuildRequires:	pkgconfig(libgtop-2.0)
+BuildRequires:	pkgconfig(libnm-glib)
+BuildRequires:	pkgconfig(libnm-gtk)
+BuildRequires:	pkgconfig(libnotify)
+BuildRequires:	pkgconfig(libpulse) >= 2.0-1
+BuildRequires:	pkgconfig(librsvg-2.0)
+BuildRequires:	pkgconfig(libsystemd-daemon)
+BuildRequires:	pkgconfig(libwacom)
+BuildRequires:	pkgconfig(libxklavier)
+BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	pkgconfig(polkit-agent-1)
+BuildRequires:	pkgconfig(upower-glib)
+BuildRequires:	pkgconfig(xcursor)
+BuildRequires:	pkgconfig(xkbfile)
+BuildRequires:	pkgconfig(xrandr)
+BuildRequires:	pkgconfig(xscrnsaver)
+BuildRequires:	pkgconfig(xxf86misc)
+
 BuildRequires:	cups-devel
-BuildRequires:	dbus-devel
-BuildRequires:	dbus-glib-devel
-BuildRequires:	GConf2-devel
-BuildRequires:	gdk-pixbuf2-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gnome-bluetooth-devel
-BuildRequires:	gnome-desktop3-devel
-BuildRequires:	gnome-menus-devel
-BuildRequires:	gnome-online-accounts-devel
-BuildRequires:	gnome-settings-daemon-ubuntu-devel
-BuildRequires:	gsettings-desktop-schemas-ubuntu-devel
-BuildRequires:	gtk3-ubuntu-devel
-BuildRequires:	iso-codes-devel
-BuildRequires:	libcanberra-devel
-BuildRequires:	libglade2-devel
-BuildRequires:	libgnomekbd-devel
-BuildRequires:	libgtop2-devel
-BuildRequires:	libnotify-devel
-BuildRequires:	librsvg2-devel
-BuildRequires:	libwacom-devel
-BuildRequires:	libXcursor-devel
-BuildRequires:	libxkbfile-devel
-BuildRequires:	libxklavier-devel
-BuildRequires:	libxml2-devel
-BuildRequires:	libXrandr-devel
-BuildRequires:	libXScrnSaver-devel
-BuildRequires:	libXxf86misc-devel
-BuildRequires:	NetworkManager-glib-devel
-BuildRequires:	NetworkManager-gtk-devel
-BuildRequires:	polkit-devel
-BuildRequires:	pulseaudio-libs-devel >= 2.0-1
-#BuildRequires:	scrollkeeper
-BuildRequires:	systemd-devel
-BuildRequires:	upower-devel
 
 # Requires Ubuntu's patched gnome-settings-daemon
 Requires:	gnome-settings-daemon-ubuntu
@@ -437,6 +438,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.4
+- Version 3.4.2
+- Ubuntu release 0ubuntu0.4
+
 * Mon Jul 16 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.3
 - Do not revert the port to systemd's timedated
 - Fedora does not have ubuntu-system-service
