@@ -2,18 +2,15 @@
 
 %global __provides_exclude_from %{python_sitearch}/indicate/_indicate.so
 
-# This following line is for the scripts in my git repo
-%define _ubuntu_match_rel 0ubuntu1
-
 Name:		libindicate
-Version:	0.6.92
+Version:	12.10.0
 Release:	1%{?dist}
 Summary:	Small library for applications to raise "flags" on DBus
 
 Group:		System Environment/Libraries
 License:	LGPLv2 and LGPLv3
 URL:		https://launchpad.net/libindicate
-Source0:	https://launchpad.net/libindicate/0.7/%{version}/+download/libindicate-%{version}.tar.gz
+Source0:	https://launchpad.net/libindicate/12.10/%{version}/+download/libindicate-%{version}.tar.gz
 
 Patch1:		0002_missing_documentation.patch
 Patch2:		0003_libpyglib-linking.patch
@@ -339,6 +336,9 @@ mv $RPM_BUILD_ROOT%{_docdir}/libindicate/examples/* \
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
+
 * Tue Jun 05 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6.92-1
 - Initial release
 - Version 0.6.92
