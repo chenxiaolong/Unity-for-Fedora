@@ -4,7 +4,7 @@ SPEC_VER="$(rpmspec -q --qf '%{version}\n' libindicate-qt.spec | head -1)"
 UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_match_rel[ ]*\(.*\)$/\1/p' libindicate-qt.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/precise/source/libindicate-qt' -O - | sed -n 's/.*>libindicate-qt_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/libindicate-qt' -O - | sed -n 's/.*>libindicate-qt_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q 'https://launchpad.net/libindicate-qt/+download' -O - | sed -n 's/.*libindicate-qt-\(.*\)\.tar\.bz2.*/\1/p' | head -n 1)
