@@ -2,7 +2,7 @@
 
 Name:		indicator-session
 Version:	12.10.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Indicator for session management and status information
 
 Group:		User Interface/Desktops
@@ -11,6 +11,7 @@ URL:		https://launchpad.net/indicator-session
 Source0:	https://launchpad.net/indicator-session/12.10/%{version}/+download/indicator-session-%{version}.tar.gz
 
 Patch0:		0001_Revert_new_glib_stuff.patch
+Patch1:		0002_There_is_no_help.patch
 
 BuildRequires:	gettext
 BuildRequires:	gnome-doc-utils
@@ -46,6 +47,7 @@ of the desktop to make them available and easy to use.
 %setup -q
 
 %patch0 -p1 -b .newglibstuff
+%patch1 -p1 -b .nohelp
 
 
 %build
@@ -108,6 +110,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Tue Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2
+- Disable "Ubuntu Help" item in menu: there are no help files for Unity
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
 - Version 12.10.0
 - Drop GTK 2 subpackage: deprecated
