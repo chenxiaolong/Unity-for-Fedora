@@ -3,18 +3,15 @@
 # This spec is partially based off of the official Fedora 17 spec. If a Fedora
 # developer is reading this, feel free to merge this spec file :)
 
-# The following line is for the scripts in my git repo
-%define _ubuntu_match_rel 0ubuntu1
-
 Name:		libindicator
-Version:	0.5.0
+Version:	12.10.0
 Release:	1%{?dist}
 Summary:	Shared functions for Ayatana indicators
 
 Group:		System Environment/Libraries
 License:	GPLv3
 URL:		https://launchpad.net/libindicator
-Source0:	https://launchpad.net/libindicator/0.5/%{version}/+download/libindicator-%{version}.tar.gz
+Source0:	https://launchpad.net/libindicator/12.10/%{version}/+download/libindicator-%{version}.tar.gz
 
 BuildRequires:	gtk-doc
 BuildRequires:	libtool
@@ -189,6 +186,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libdummy-indicator-*.so
 
 
 %changelog
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
+
 * Tue Jul 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.5.0-1
 - Initial release
 - Version 0.5.0
