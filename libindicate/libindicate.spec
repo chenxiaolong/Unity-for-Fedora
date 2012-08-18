@@ -4,7 +4,7 @@
 
 Name:		libindicate
 Version:	12.10.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Small library for applications to raise "flags" on DBus
 
 Group:		System Environment/Libraries
@@ -15,23 +15,24 @@ Source0:	https://launchpad.net/libindicate/12.10/%{version}/+download/libindicat
 Patch1:		0002_missing_documentation.patch
 Patch2:		0003_libpyglib-linking.patch
 
-BuildRequires:	dbus-glib-devel
-BuildRequires:	gtk-sharp2-devel
-BuildRequires:	gtk-sharp2-gapi
 BuildRequires:	gnome-doc-utils
-BuildRequires:	gobject-introspection-devel
 BuildRequires:	gtk-doc
-BuildRequires:	gtk2-devel
-BuildRequires:	gtk3-devel
 BuildRequires:	intltool
-BuildRequires:	libdbusmenu-glib-devel
 BuildRequires:	libtool
-BuildRequires:	mono-core
-BuildRequires:	mono-devel
-BuildRequires:	pygobject2-devel
-BuildRequires:	pygtk2-devel
-BuildRequires:	python-devel
+BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
+
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
+BuildRequires:	pkgconfig(gapi-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(gtk-sharp-2.0)
+BuildRequires:	pkgconfig(mono)
+BuildRequires:	pkgconfig(pygobject-2.0)
+BuildRequires:	pkgconfig(pygtk-2.0)
+BuildRequires:	pkgconfig(python2)
 
 %description
 A small library for applications to raise "flags" on DBus for other components
@@ -54,8 +55,8 @@ Summary:	Development files for libindicate
 Group:		Development/Libraries
 
 Requires:	%{name} = %{version}-%{release}
-Requires:	dbus-glib-devel
-Requires:	libdbusmenu-glib-devel
+Requires:	pkgconfig(dbus-glib-1)
+Requires:	pkgconfig(dbusmenu-glib-0.4)
 
 %description devel
 This package contains the development files for the indicate library.
@@ -79,8 +80,8 @@ Group:		Development/Libraries
 
 Requires:	%{name}-gtk3 = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
-Requires:	dbus-glib-devel
-Requires:	gtk3-devel
+Requires:	pkgconfig(dbus-glib-1)
+Requires:	pkgconfig(gtk+-3.0)
 
 %description gtk3-devel
 This package contains the development files for the indicate-gtk3 library.
@@ -105,8 +106,8 @@ Group:		Development/Libraries
 Requires:	%{name}-gtk2 = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
 Requires:	%{name}-gtk3-devel = %{version}-%{release}
-Requires:	dbus-glib-devel
-Requires:	gtk2-devel
+Requires:	pkgconfig(dbus-glib-1)
+Requires:	pkgconfig(gtk+-2.0)
 
 %description gtk2-devel
 This packages contains the development files for the indicate-gtk2 library.
@@ -186,13 +187,13 @@ mkdir build-gtk2 build-gtk3
 
 pushd build-gtk2
 %configure --with-gtk=2 --disable-scrollkeeper --enable-gtk-doc \
-           --enable-introspection=yes
+           --enable-introspection=yes --disable-static
 make -j1
 popd
 
 pushd build-gtk3
 %configure --with-gtk=3 --disable-scrollkeeper --enable-gtk-doc \
-           --enable-introspection=yes
+           --enable-introspection=yes --disable-static
 make -j1
 popd
 
@@ -231,80 +232,64 @@ mv $RPM_BUILD_ROOT%{_docdir}/libindicate/examples/* \
 
 %files
 %doc AUTHORS
-%{_libdir}/libindicate.so.5
-%{_libdir}/libindicate.so.5.0.7
+%{_libdir}/libindicate.so.*
 %{_libdir}/girepository-1.0/Indicate-0.7.typelib
 
 
 %files -n python-indicate
+%dir %{python_sitearch}/indicate/
 %{python_sitearch}/indicate/__init__.py*
-%{python_sitearch}/indicate/_indicate.a
 %{python_sitearch}/indicate/_indicate.so
+%dir %{_datadir}/pygtk/
+%dir %{_datadir}/pygtk/2.0/
+%dir %{_datadir}/pygtk/2.0/defs/
 %{_datadir}/pygtk/2.0/defs/indicate.defs
 
 
 %files devel
-%{_includedir}/libindicate-0.7/libindicate/indicate-enum-types.h
-%{_includedir}/libindicate-0.7/libindicate/indicator-messages.h
-%{_includedir}/libindicate-0.7/libindicate/indicator.h
-%{_includedir}/libindicate-0.7/libindicate/interests.h
-%{_includedir}/libindicate-0.7/libindicate/listener.h
-%{_includedir}/libindicate-0.7/libindicate/server.h
+%dir %{_includedir}/libindicate-0.7/
+%dir %{_includedir}/libindicate-0.7/libindicate/
+%{_includedir}/libindicate-0.7/libindicate/*.h
 %{_libdir}/pkgconfig/indicate-0.7.pc
-%{_libdir}/libindicate.a
 %{_libdir}/libindicate.so
 %{_datadir}/gir-1.0/Indicate-0.7.gir
 %{_datadir}/vala/vapi/Indicate-0.7.vapi
 
 
 %files gtk3
-%{_libdir}/libindicate-gtk3.so.3
-%{_libdir}/libindicate-gtk3.so.3.0.3
+%{_libdir}/libindicate-gtk3.so.*
 %{_libdir}/girepository-1.0/IndicateGtk3-0.7.typelib
 
 
 %files gtk3-devel
-%{_includedir}/libindicate-gtk3-0.7/libindicate-gtk/indicator.h
-%{_includedir}/libindicate-gtk3-0.7/libindicate-gtk/listener.h
+%dir %{_includedir}/libindicate-gtk3-0.7/
+%dir %{_includedir}/libindicate-gtk3-0.7/libindicate-gtk/
+%{_includedir}/libindicate-gtk3-0.7/libindicate-gtk/*.h
 %{_libdir}/pkgconfig/indicate-gtk3-0.7.pc
-%{_libdir}/libindicate-gtk3.a
 %{_libdir}/libindicate-gtk3.so
 %{_datadir}/gir-1.0/IndicateGtk3-0.7.gir
 %{_datadir}/vala/vapi/IndicateGtk3-0.7.vapi
 
 
 %files gtk2
-%{_libdir}/libindicate-gtk.so.3
-%{_libdir}/libindicate-gtk.so.3.0.3
+%{_libdir}/libindicate-gtk.so.*
 %{_libdir}/girepository-1.0/IndicateGtk-0.7.typelib
 
 
 %files gtk2-devel
-%{_includedir}/libindicate-gtk-0.7/libindicate-gtk/indicator.h
-%{_includedir}/libindicate-gtk-0.7/libindicate-gtk/listener.h
+%dir %{_includedir}/libindicate-gtk-0.7/
+%dir %{_includedir}/libindicate-gtk-0.7/libindicate-gtk/
+%{_includedir}/libindicate-gtk-0.7/libindicate-gtk/*.h
 %{_libdir}/pkgconfig/indicate-gtk-0.7.pc
-%{_libdir}/libindicate-gtk.a
 %{_libdir}/libindicate-gtk.so
 %{_datadir}/gir-1.0/IndicateGtk-0.7.gir
 %{_datadir}/vala/vapi/IndicateGtk-0.7.vapi
 
 
 %files docs
-%{_datadir}/gtk-doc/html/libindicate/IndicateIndicator.html
-%{_datadir}/gtk-doc/html/libindicate/IndicateListener.html
-%{_datadir}/gtk-doc/html/libindicate/IndicateServer.html
-%{_datadir}/gtk-doc/html/libindicate/base.html
-%{_datadir}/gtk-doc/html/libindicate/home.png
-%{_datadir}/gtk-doc/html/libindicate/index.html
-%{_datadir}/gtk-doc/html/libindicate/index.sgml
-%{_datadir}/gtk-doc/html/libindicate/ix01.html
-%{_datadir}/gtk-doc/html/libindicate/left.png
-%{_datadir}/gtk-doc/html/libindicate/libindicate.devhelp2
-%{_datadir}/gtk-doc/html/libindicate/listeners.html
-%{_datadir}/gtk-doc/html/libindicate/right.png
-%{_datadir}/gtk-doc/html/libindicate/style.css
-%{_datadir}/gtk-doc/html/libindicate/subclass.html
-%{_datadir}/gtk-doc/html/libindicate/up.png
+%doc %{_datadir}/gtk-doc/html/libindicate/
+%dir %{_docdir}/%{name}-docs-%{version}/
+%dir %{_docdir}/%{name}-docs-%{version}/examples/
 %{_docdir}/%{name}-docs-%{version}/examples/im-client.c
 %{_docdir}/%{name}-docs-%{version}/examples/im-client.py*
 %{_docdir}/%{name}-docs-%{version}/examples/indicate-alot.c
@@ -314,9 +299,13 @@ mv $RPM_BUILD_ROOT%{_docdir}/libindicate/examples/* \
 
 
 %files sharp
+%dir %{_libdir}/indicate-sharp-0.1/
 %{_libdir}/indicate-sharp-0.1/indicate-sharp.dll
 %{_libdir}/indicate-sharp-0.1/indicate-sharp.dll.config
+%dir %{_prefix}/lib/mono/gac/indicate-sharp/
+%dir %{_prefix}/lib/mono/gac/indicate-sharp/*/
 %{_prefix}/lib/mono/gac/indicate-sharp/*/*.dll*
+%dir %{_prefix}/lib/mono/indicate/
 %{_prefix}/lib/mono/indicate/indicate-sharp.dll
 
 
@@ -325,9 +314,13 @@ mv $RPM_BUILD_ROOT%{_docdir}/libindicate/examples/* \
 
 
 %files gtk2-sharp
+%dir %{_libdir}/indicate-gtk-sharp-0.1/
 %{_libdir}/indicate-gtk-sharp-0.1/indicate-gtk-sharp.dll
 %{_libdir}/indicate-gtk-sharp-0.1/indicate-gtk-sharp.dll.config
+%dir %{_prefix}/lib/mono/gac/indicate-gtk-sharp/
+%dir %{_prefix}/lib/mono/gac/indicate-gtk-sharp/*/
 %{_prefix}/lib/mono/gac/indicate-gtk-sharp/*/*.dll*
+%dir %{_prefix}/lib/mono/indicate-gtk/
 %{_prefix}/lib/mono/indicate-gtk/indicate-gtk-sharp.dll
 
 
@@ -336,6 +329,11 @@ mv $RPM_BUILD_ROOT%{_docdir}/libindicate/examples/* \
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2
+- Clean up spec file
+- Use pkgconfig for dependencies
+- Fix directory ownership
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
 - Version 12.10.0
 
