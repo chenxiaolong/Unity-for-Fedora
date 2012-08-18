@@ -15,10 +15,11 @@ Source0:	https://launchpad.net/libindicator/12.10/%{version}/+download/libindica
 
 BuildRequires:	gtk-doc
 BuildRequires:	libtool
+BuildRequires:	pkgconfig
 
-BuildRequires:	dbus-glib-devel
-BuildRequires:	gtk2-devel
-BuildRequires:	gtk3-devel
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
 
 %description
 A set of symbols and convenience functions that all Ayatana indicators are
@@ -32,7 +33,7 @@ Summary:	Development files for libindicator
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	gtk2-devel
+Requires:	pkgconfig(gtk+-2.0)
 
 %description devel
 This package contains the development files for the indicator library.
@@ -64,7 +65,7 @@ Summary:	Development files for libindicator-gtk3
 Group:		Development/Libraries
 
 Requires:	%{name}-gtk3%{?_isa} = %{version}-%{release}
-Requires:	gtk3-devel
+Requires:	pkgconfig(gtk+-3.0)
 # Ubuntu's packaging says that this package should also depend on the GTK2
 # versions of this library.
 Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
