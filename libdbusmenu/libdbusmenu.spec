@@ -2,7 +2,7 @@
 
 Name:		libdbusmenu
 Version:	0.6.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Small library that passes a menu structure across DBus
 
 Group:		System Environment/Libraries
@@ -14,18 +14,22 @@ Source0:	https://launchpad.net/dbusmenu/0.6/%{version}/+download/libdbusmenu-%{v
 BuildRequires:	gtk2-ubuntu-devel
 BuildRequires:	gtk3-ubuntu-devel
 
-BuildRequires:	atk-devel
-BuildRequires:	dbus-glib-devel
-BuildRequires:	gdk-pixbuf2-devel
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gnome-doc-utils
-BuildRequires:	gobject-introspection-devel
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
-BuildRequires:	json-glib-devel
 BuildRequires:	libtool
-BuildRequires:	libX11-devel
+BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
-BuildRequires:	valgrind-devel
+
+BuildRequires:	pkgconfig(atk)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(json-glib-1.0)
+BuildRequires:	pkgconfig(valgrind)
+BuildRequires:	pkgconfig(x11)
 
 %description
 A small little library that was created by pulling out some comon code out of
@@ -41,7 +45,7 @@ Group:		Development/Tools
 Requires:	%{name}-glib = %{version}-%{release}
 
 %description tools
-This packages contains development tools for the dbusmenu libraries
+This packages contains the development tools for the dbusmenu libraries.
 
 
 %package glib
@@ -49,7 +53,7 @@ Summary:	Small library that passes a menu structure across DBus
 Group:		System Environment/Libraries
 
 %description glib
-This package contains the shared libraries for dbusmenu-glib
+This package contains the shared libraries for the dbusmenu-glib library.
 
 
 %package glib-devel
@@ -57,12 +61,12 @@ Summary:	Development files for libdbusmenu-glib
 Group:		Development/Libraries
 
 Requires:	%{name}-glib = %{version}-%{release}
-Requires:	dbus-glib-devel
-# gtk2 with Ubuntu patches
+Requires:	pkgconfig(dbus-glib-1)
+# GTK 2 with Ubuntu's patches
 Requires:	gtk2-ubuntu-devel
 
 %description glib-devel
-This package contains the development files for the dbusmenu-glib library
+This package contains the development files for the dbusmenu-glib library.
 
 
 %package glib-docs
@@ -72,7 +76,7 @@ Group:		Documentation
 BuildArch:	noarch
 
 %description glib-docs
-This package includes the documentation for the dbusmenu-glib library
+This package includes the documentation for the dbusmenu-glib library.
 
 
 %package gtk2
@@ -82,7 +86,7 @@ Group:		System Environment/Libraries
 Requires:	gtk2-ubuntu
 
 %description gtk2
-This package contains the shared libraries for dbusmenu-gtk2
+This package contains the shared libraries for the dbusmenu-gtk2 library.
 
 
 %package gtk2-devel
@@ -91,12 +95,12 @@ Group:		Development/Libraries
 
 Requires:	%{name}-gtk2 = %{version}-%{release}
 Requires:	%{name}-glib-devel = %{version}-%{release}
-# gtk2 with Ubuntu patches
+# GTK 2 with Ubuntu's patches
 Requires:	gtk2-ubuntu-devel
-Requires:	dbus-glib-devel
+Requires:	pkgconfig(dbus-glib-1)
 
 %description gtk2-devel
-This package contains the development files for the dbusmenu-gtk2 library
+This package contains the development files for the dbusmenu-gtk2 library.
 
 
 %package gtk3
@@ -106,7 +110,7 @@ Group:		System Environment/Libraries
 Requires:	gtk3-ubuntu
 
 %description gtk3
-This package contains the shared libraries for dbusmenu-gtk3
+This package contains the shared libraries for the dbusmenu-gtk3 library.
 
 
 %package gtk3-devel
@@ -115,12 +119,12 @@ Group:		Development/Libraries
 
 Requires:	%{name}-gtk3 = %{version}-%{release}
 Requires:	%{name}-glib-devel = %{version}-%{release}
-# gtk3 with Ubuntu patches
+# GTK 3 with Ubuntu patches
 Requires:	gtk3-ubuntu-devel
-Requires:	dbus-glib-devel
+Requires:	pkgconfig(dbus-glib-1)
 
 %description gtk3-devel
-This package contains the development files for the dbusmenu-gtk3 library
+This package contains the development files for the dbusmenu-gtk3 library.
 
 
 %package gtk-docs
@@ -131,7 +135,7 @@ BuildArch:	noarch
 
 %description gtk-docs
 This package contains the documentation for the dbusmenu-gtk2 and dbusmenu-gtk3
-libraries
+libraries.
 
 
 %package jsonloader
@@ -140,7 +144,7 @@ Group:		System Environment/Libraries
 
 %description jsonloader
 This package contains the shared libraries for dbusmenu-jsonloader, a library
-meant for test suites
+meant for test suites.
 
 
 %package jsonloader-devel
@@ -149,41 +153,33 @@ Group:		Development/Libraries
 
 Requires:	%{name}-jsonloader = %{version}-%{release}
 Requires:	%{name}-glib-devel = %{version}-%{release}
-Requires:	dbus-glib-devel
-Requires:	json-glib-devel
+Requires:	pkgconfig(dbus-glib-1)
+Requires:	pkgconfig(json-glib-1.0)
 
 %description jsonloader-devel
-This package contains the development files for the dbusmenu-jsonloader library
+This package contains the development files for the dbusmenu-jsonloader library.
 
 
 %prep
-%setup -q -c -T
-tar zxvf "%{SOURCE0}"
-mv %{name}-%{version} gtk2
-tar zxvf "%{SOURCE0}"
-mv %{name}-%{version} gtk3
+%setup -q
 
-# Apply Ubuntu patches
-for i in gtk2 gtk3; do
-  pushd ${i}
+autoreconf -vfi
 
-  autoreconf -vfi
-
-  # Disable rpath (from Debian wiki)
-  sed -i -r 's/(hardcode_into_libs)=.*$/\1=no/' configure
-
-  popd
-done
+# Disable rpath (from Debian wiki)
+sed -i -r 's/(hardcode_into_libs)=.*$/\1=no/' configure
 
 
 %build
-pushd gtk2
+%global _configure ../configure
+mkdir build-gtk2 build-gtk3
+
+pushd build-gtk2
 %configure --disable-scrollkeeper --enable-gtk-doc --enable-introspection \
            --with-gtk=2 --disable-static
 make %{?_smp_mflags}
 popd
 
-pushd gtk3
+pushd build-gtk3
 %configure --disable-scrollkeeper --enable-gtk-doc --enable-introspection \
            --with-gtk=3 --disable-static
 make %{?_smp_mflags}
@@ -191,14 +187,15 @@ popd
 
 
 %install
-pushd gtk2
+pushd build-gtk2
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
 
-pushd gtk3
+pushd build-gtk3
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
 
+# Remove libtool files
 find $RPM_BUILD_ROOT -name '*.la' -delete
 
 # Put documentation in correct directory
@@ -206,7 +203,7 @@ install -dm755 $RPM_BUILD_ROOT%{_docdir}/%{name}-tools-%{version}/
 mv $RPM_BUILD_ROOT%{_docdir}/%{name}/README.dbusmenu-bench \
                $RPM_BUILD_ROOT%{_docdir}/%{name}-tools-%{version}/
 
-# Put example in correct documentation directory
+# Put examples in correct documentation directory
 install -dm755 $RPM_BUILD_ROOT%{_docdir}/%{name}-glib-devel-%{version}/examples/
 mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
                $RPM_BUILD_ROOT%{_docdir}/%{name}-glib-devel-%{version}/examples/
@@ -236,21 +233,28 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 
 %files tools
-%doc gtk3/AUTHORS gtk3/README
+%doc AUTHORS README
 %{_libexecdir}/dbusmenu-bench
 %{_libexecdir}/dbusmenu-dumper
 %{_libexecdir}/dbusmenu-testapp
+%dir %{_datadir}/%{name}/
+%dir %{_datadir}/%{name}/json/
 %{_datadir}/%{name}/json/test-gtk-label.json
-%{_docdir}/%{name}-tools-%{version}/README.dbusmenu-bench
+%doc %dir %{_docdir}/%{name}-tools-%{version}/
+%doc %{_docdir}/%{name}-tools-%{version}/README.dbusmenu-bench
 
 
 %files glib
+%doc AUTHORS README
 %{_libdir}/libdbusmenu-glib.so.4
 %{_libdir}/libdbusmenu-glib.so.4.0.13
 %{_libdir}/girepository-1.0/Dbusmenu-0.4.typelib
 
 
 %files glib-devel
+%doc AUTHORS README
+%dir %{_includedir}/libdbusmenu-glib-0.4/
+%dir %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-glib/
 %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-glib/client.h
 %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-glib/dbusmenu-glib.h
 %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-glib/enum-types.h
@@ -262,37 +266,25 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 %{_libdir}/libdbusmenu-glib.so
 %{_datadir}/gir-1.0/Dbusmenu-0.4.gir
 %{_datadir}/vala/vapi/Dbusmenu-0.4.vapi
-%{_docdir}/%{name}-glib-devel-%{version}/examples/glib-server-nomenu.c
+%doc %dir %{_docdir}/%{name}-glib-devel-%{version}/
+%doc %dir %{_docdir}/%{name}-glib-devel-%{version}/examples/
+%doc %{_docdir}/%{name}-glib-devel-%{version}/examples/glib-server-nomenu.c
 
 
 %files glib-docs
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/annotation-glossary.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/api-index-deprecated.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/api-index-full.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/ch01.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/home.png
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/index.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/index.sgml
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/left.png
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/libdbusmenu-glib-DbusmenuClient.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/libdbusmenu-glib-DbusmenuMenuitem.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/libdbusmenu-glib-DbusmenuMenuitemProxy.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/libdbusmenu-glib-DbusmenuServer.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/libdbusmenu-glib-Types.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/libdbusmenu-glib.devhelp2
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/object-tree.html
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/right.png
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/style.css
-%{_datadir}/gtk-doc/html/libdbusmenu-glib/up.png
+%doc %{_datadir}/gtk-doc/html/libdbusmenu-glib/
 
 
 %files gtk2
-%{_libdir}/libdbusmenu-gtk.so.4
-%{_libdir}/libdbusmenu-gtk.so.4.0.13
+%doc AUTHORS README
+%{_libdir}/libdbusmenu-gtk.so.*
 %{_libdir}/girepository-1.0/DbusmenuGtk-0.4.typelib
 
 
 %files gtk2-devel
+%doc AUTHORS README
+%dir %{_includedir}/libdbusmenu-gtk-0.4/
+%dir %{_includedir}/libdbusmenu-gtk-0.4/libdbusmenu-gtk/
 %{_includedir}/libdbusmenu-gtk-0.4/libdbusmenu-gtk/client.h
 %{_includedir}/libdbusmenu-gtk-0.4/libdbusmenu-gtk/dbusmenu-gtk.h
 %{_includedir}/libdbusmenu-gtk-0.4/libdbusmenu-gtk/menu.h
@@ -305,12 +297,15 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 
 %files gtk3
-%{_libdir}/libdbusmenu-gtk3.so.4
-%{_libdir}/libdbusmenu-gtk3.so.4.0.13
+%doc AUTHORS README
+%{_libdir}/libdbusmenu-gtk3.so.*
 %{_libdir}/girepository-1.0/DbusmenuGtk3-0.4.typelib
 
 
 %files gtk3-devel
+%doc AUTHORS README
+%dir %{_includedir}/libdbusmenu-gtk3-0.4/
+%dir %{_includedir}/libdbusmenu-gtk3-0.4/libdbusmenu-gtk/
 %{_includedir}/libdbusmenu-gtk3-0.4/libdbusmenu-gtk/client.h
 %{_includedir}/libdbusmenu-gtk3-0.4/libdbusmenu-gtk/dbusmenu-gtk.h
 %{_includedir}/libdbusmenu-gtk3-0.4/libdbusmenu-gtk/menu.h
@@ -323,37 +318,28 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 
 %files gtk-docs
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/annotation-glossary.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/api-index-deprecated.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/api-index-full.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/ch01.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/home.png
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/index.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/index.sgml
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/left.png
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/libdbusmenu-gtk-DbusmenuGtkClient.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/libdbusmenu-gtk-DbusmenuGtkMenu.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/libdbusmenu-gtk-menuitem.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/libdbusmenu-gtk-parser.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/libdbusmenu-gtk.devhelp2
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/object-tree.html
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/right.png
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/style.css
-%{_datadir}/gtk-doc/html/libdbusmenu-gtk/up.png
+%doc %{_datadir}/gtk-doc/html/libdbusmenu-gtk/
 
 
 %files jsonloader
-%{_libdir}/libdbusmenu-jsonloader.so.4
-%{_libdir}/libdbusmenu-jsonloader.so.4.0.13
+%doc AUTHORS README
+%{_libdir}/libdbusmenu-jsonloader.so.*
 
 
 %files jsonloader-devel
+%doc AUTHORS README
+%dir %{_includedir}/libdbusmenu-glib-0.4/
+%dir %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-jsonloader/
 %{_includedir}/libdbusmenu-glib-0.4/libdbusmenu-jsonloader/json-loader.h
 %{_libdir}/pkgconfig/dbusmenu-jsonloader-0.4.pc
 %{_libdir}/libdbusmenu-jsonloader.so
 
 
 %changelog
+* Fri Aug 17 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6.2-2
+- Clean up spec file
+- Fix directory ownership
+
 * Fri Jun 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6.2-1
 - Update to version 0.6.2
 - Disable static libraries
