@@ -2,7 +2,7 @@
 
 Name:		libqtdee
 Version:	0.2.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Qt bindings and QML plugin for dee
 
 Group:		System Environment/Libraries
@@ -14,10 +14,10 @@ Patch0:		0001_Fix_imports_libdir.patch
 Patch1:		0002_Fix_pkgconfig_libdir.patch
 
 BuildRequires:	cmake
-BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
 
-BuildRequires:	dee-devel
-BuildRequires:	qt-devel
+BuildRequires:	pkgconfig(dee-1.0)
+BuildRequires:	pkgconfig(QtCore)
 
 %description
 This package provides the Qt 4 bindings for the dee library.
@@ -40,6 +40,8 @@ This package contains the development files for the qtdee library.
 %patch0 -p1 -b .imports
 %patch1 -p1 -b .pkgconfig
 
+sed -i 's|/lib|/%{_lib}|g' libqtdee.pc
+
 
 %build
 mkdir build
@@ -59,8 +61,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %files
-%{_libdir}/libQtDee.so.2
-%{_libdir}/libQtDee.so.2.0.0
+%doc COPYING
+%{_libdir}/libQtDee.so.*
 %dir %{_libdir}/qt4/imports/dee/
 %{_libdir}/qt4/imports/dee/libQtDeeQml.so
 %{_libdir}/qt4/imports/dee/qmldir
@@ -74,6 +76,11 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.4-2
+- Fix pkgconfig libdir
+- Use pkgconfig for dependencies
+- Remove gcc-c++ dependency
+
 * Tue Jul 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.4-1
 - Initial release
 - Version 0.2.4
