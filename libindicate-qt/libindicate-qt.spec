@@ -17,14 +17,13 @@ Patch0:		0001_fix_pkgconfig_libindicate_version.patch
 Patch1:		0002_build_with_fvisibility_hidden.patch
 
 BuildRequires:	cmake
-BuildRequires:	gcc-c++
 
-BuildRequires:	qt-devel
-BuildRequires:	libindicate-devel >= 0.6.90
+BuildRequires:	pkgconfig(indicate-0.7) >= 0.6.90
+BuildRequires:	pkgconfig(QtCore)
 
 %description
-This project provides a set of Qt bindings for libindicate, the indicator
-system developed by Canonical Desktop Experience team.
+This project provides a set of Qt bindings for libindicate, the indicator system
+developed by Canonical Desktop Experience team.
 
 
 %package devel
@@ -32,7 +31,6 @@ Summary:	Development files for libindicate-qt
 Group:		Development/Libraries
 
 Requires:	%{name} = %{version}-%{release}
-
 
 %description devel
 This package contains the development files for the indicate-qt library.
@@ -68,17 +66,19 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %files devel
-%{_includedir}/libindicate-qt/qindicatedecode.h
-%{_includedir}/libindicate-qt/qindicateindicator.h
-%{_includedir}/libindicate-qt/qindicateinterest.h
-%{_includedir}/libindicate-qt/qindicatelistener.h
-%{_includedir}/libindicate-qt/qindicateserver.h
-%{_includedir}/libindicate-qt/qindicate_export.h
+%dir %{_includedir}/libindicate-qt/
+%{_includedir}/libindicate-qt/*.h
 %{_libdir}/libindicate-qt.so
 %{_libdir}/pkgconfig/indicate-qt.pc
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.5.91-2
+- Clean up spec file
+- Fix directory ownership
+- Use pkgconfig for dependencies
+- Remove gcc-c++ dependency
+
 * Wed Jun 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.5.91-1
 - Initial release
 - Version 0.2.5.91
