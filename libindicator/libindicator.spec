@@ -5,7 +5,7 @@
 
 Name:		libindicator
 Version:	12.10.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Shared functions for Ayatana indicators
 
 Group:		System Environment/Libraries
@@ -124,7 +124,7 @@ popd
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
-# Ubuntu doesn't package dummy indicator
+# Ubuntu doesn't package the dummy indicator
 rm $RPM_BUILD_ROOT%{_libdir}/libdummy-indicator-*.so
 
 
@@ -146,6 +146,8 @@ rm $RPM_BUILD_ROOT%{_libdir}/libdummy-indicator-*.so
 
 %files devel
 %doc AUTHORS ChangeLog
+%dir %{_includedir}/libindicator-0.4/
+%dir %{_includedir}/libindicator-0.4/libindicator/
 %{_includedir}/libindicator-0.4/libindicator/indicator-desktop-shortcuts.h
 %{_includedir}/libindicator-0.4/libindicator/indicator-image-helper.h
 %{_includedir}/libindicator-0.4/libindicator/indicator-object.h
@@ -159,6 +161,7 @@ rm $RPM_BUILD_ROOT%{_libdir}/libdummy-indicator-*.so
 %files tools
 %doc AUTHORS ChangeLog
 %{_libexecdir}/indicator-loader
+%dir %{_datadir}/libindicator/
 %{_datadir}/libindicator/80indicator-debugging
 
 
@@ -170,6 +173,8 @@ rm $RPM_BUILD_ROOT%{_libdir}/libdummy-indicator-*.so
 
 %files gtk3-devel
 %doc AUTHORS ChangeLog
+%dir %{_includedir}/libindicator3-0.4/
+%dir %{_includedir}/libindicator3-0.4/libindicator/
 %{_includedir}/libindicator3-0.4/libindicator/indicator-desktop-shortcuts.h
 %{_includedir}/libindicator3-0.4/libindicator/indicator-image-helper.h
 %{_includedir}/libindicator3-0.4/libindicator/indicator-object.h
@@ -186,6 +191,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libdummy-indicator-*.so
 
 
 %changelog
+* Fri Aug 17 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2
+- Fix directory ownership
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
 - Version 12.10.0
 
