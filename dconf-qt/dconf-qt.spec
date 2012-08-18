@@ -15,13 +15,14 @@ Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/dconf-qt_%{version
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/dconf-qt_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 Patch0:		0001_Fix_libdir.patch
+Patch1:		0002_Fix_pkgconfig.patch
 
 BuildRequires:	cmake
-BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
 
-BuildRequires:	dconf-devel
-BuildRequires:	glib2-devel
-BuildRequires:	qt-devel
+BuildRequires:	pkgconfig(dconf-dbus-1)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(QtCore)
 
 %description
 This package contains the Qt 4 bindings for the DConf configuration system.
@@ -32,9 +33,9 @@ Summary:	Development files for dconf-qt
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	dconf-devel
-Requires:	glib2-devel
-Requires:	qt-devel
+Requires:	pkgconfig(dconf-dbus-1)
+Requires:	pkgconfig(glib-2.0)
+Requires:	pkgconfig(QtCore)
 
 %description devel
 This package contains the development files for the dconf-qt library.
@@ -50,6 +51,7 @@ for i in $(grep -v '#' debian/patches/series); do
 done
 
 %patch0 -p1 -b .libdir
+%patch1 -p1 -b .pkgconfig
 
 
 %build
@@ -70,8 +72,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %files
-%{_libdir}/libdconf-qt.so.0
-%{_libdir}/libdconf-qt.so.0.0.0
+%doc COPYING-GPL3 COPYING-LGPL3
+%{_libdir}/libdconf-qt.so.*
 %dir %{_libdir}/qt4/imports/QConf/
 %{_libdir}/qt4/imports/QConf/libdconf-qml.so
 %{_libdir}/qt4/imports/QConf/qmldir
@@ -85,6 +87,10 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.0.0.110722-2.0ubuntu4
+- Fix pkgconfig libdir
+- Use pkgconfig for dependencies
+
 * Tue Jul 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.0.0.110722-1.0ubuntu4
 - Initial release
 - Version 0.0.0.110722
