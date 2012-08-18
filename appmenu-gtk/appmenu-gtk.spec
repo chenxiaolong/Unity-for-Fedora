@@ -10,38 +10,38 @@ License:	GPLv3
 URL:		https://launchpad.net/appmenu-gtk
 Source0:	https://launchpad.net/appmenu-gtk/0.4/%{version}/+download/appmenu-gtk-%{version}.tar.gz
 
-# Require Ubuntu version of GTK2 and GTK3
+# Require Ubuntu's version of GTK 2 and GTK 3
 BuildRequires:	gtk2-ubuntu-devel
 BuildRequires:	gtk3-ubuntu-devel
 
-BuildRequires:	libtool
-BuildRequires:	libX11-devel
-BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libdbusmenu-gtk2-devel
-BuildRequires:	libdbusmenu-gtk3-devel
+BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
+BuildRequires:	pkgconfig(dbusmenu-gtk-0.4)
+BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
+BuildRequires:	pkgconfig(x11)
 
 %description
 (This package contains no files)
 
 
 %package -n appmenu-gtk2
-Summary:	Application menu module for GTK+ - GTK2
+Summary:	Application menu module for GTK+ - GTK 2 version
 
 %description -n appmenu-gtk2
-This package provides a GTK2 module to export GTK menus over DBus.
+This package provides a GTK 2 module to export GTK menus over DBus.
 
 
 %package -n appmenu-gtk3
-Summary:	Application menu module for GTK+ - GTK3
+Summary:	Application menu module for GTK+ - GTK 3 version
 
 %description -n appmenu-gtk3
-This package provides a GTK3 module to export GTK menus over DBus.
+This package provides a GTK 3 module to export GTK menus over DBus.
 
 
 %prep
 %setup -q
 
-autoreconf -vfi
+# Fix script-without-shebang rpmlint error
+sed -i '1 i #!/bin/bash' 80appmenu.in
 
 
 %build
@@ -85,16 +85,22 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %files -n appmenu-gtk2
 %doc AUTHORS README
 %{_libdir}/gtk-2.0/2.10.0/menuproxies/libappmenu.so
-%config(noreplace) %{_sysconfdir}/X11/xinit/xinitrc.d/80appmenu.%{_lib}
+%{_sysconfdir}/X11/xinit/xinitrc.d/80appmenu.%{_lib}
 
 
 %files -n appmenu-gtk3
 %doc AUTHORS README
 %{_libdir}/gtk-3.0/3.0.0/menuproxies/libappmenu.so
-%config(noreplace) %{_sysconfdir}/X11/xinit/xinitrc.d/80appmenu-gtk3.%{_lib}
+%{_sysconfdir}/X11/xinit/xinitrc.d/80appmenu-gtk3.%{_lib}
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.92-2
+- Remove config macro on X11 startup scripts
+- Use pkgconfig for dependencies
+- Fix rpmlint script-without-shebang error
+- Remove useless autoreconf line
+
 * Thu Jun 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.92-1
 - Initial release
 - Version 0.3.92
