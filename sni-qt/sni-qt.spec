@@ -14,10 +14,10 @@ Source0:	https://launchpad.net/sni-qt/trunk/%{version}/+download/sni-qt-%{versio
 Source1:	sni-qt.conf
 
 BuildRequires:	cmake
-BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
 
-BuildRequires:	dbusmenu-qt-devel
-BuildRequires:	qt-devel
+BuildRequires:	pkgconfig(dbusmenu-qt)
+BuildRequires:	pkgconfig(QtCore)
 
 %description
 This package contains a Qt plugin which turns all QSystemTrayIcon into
