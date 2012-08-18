@@ -13,10 +13,10 @@ Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libqtgconf_%{versi
 Patch0:		0001_Fix_libdir.patch
 
 BuildRequires:	cmake
-BuildRequires:	gcc-c++
+BuildRequires:	pkgconfig
 
-BuildRequires:	GConf2-devel
-BuildRequires:	qt-devel
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(QtCore)
 
 %description
 This package contains the Qt 4 bindings for the GConf configuration system.
@@ -38,6 +38,8 @@ This package contains the development files for the qtgconf library.
 
 %patch0 -p1 -b .libdir
 
+sed -i 's|/lib|/%{_lib}|g' libqtgconf.pc
+
 
 %build
 mkdir build
@@ -57,8 +59,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %files
-%{_libdir}/libQtGConf.so.1
-%{_libdir}/libQtGConf.so.1.0.0
+%doc COPYING
+%{_libdir}/libQtGConf.so.*
 %dir %{_libdir}/qt4/imports/gconf/
 %{_libdir}/qt4/imports/gconf/libQtGConfQml.so
 %{_libdir}/qt4/imports/gconf/qmldir
@@ -72,6 +74,11 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.1-2
+- Remove gcc-c++ dependency
+- Use pkgconfig for dependencies
+- Fix pkgconfig libdir
+
 * Tue Jul 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.1-1
 - Initial release
 - Version 0.1
