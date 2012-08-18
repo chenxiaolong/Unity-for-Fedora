@@ -13,8 +13,8 @@ Source0:	https://launchpad.net/appmenu-qt/trunk/%{version}/+download/appmenu-qt-
 BuildRequires:	cmake
 BuildRequires:	gcc-c++
 
-BuildRequires:	dbusmenu-qt-devel
-BuildRequires:	qt-devel
+BuildRequires:	pkgconfig(dbusmenu-qt)
+BuildRequires:	pkgconfig(QtCore)
 
 %description
 This package allows Qt to export its menus over DBus.
@@ -43,6 +43,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.6-3
+- Use pkgconfig for dependencies for portability
+
 * Mon Jul 23 2012 Damian Ivanov <damianatorrpm@gmail.com> - 0.2.6-2
 - Spec file fixes for https://bugzilla.redhat.com/show_bug.cgi?id=842124
 
