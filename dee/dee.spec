@@ -17,17 +17,16 @@ Source0:	https://launchpad.net/dee/1.0/%{version}/+download/dee-%{version}.tar.g
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/dee_%{version}-%{_ubuntu_rel}.diff.gz
 
-BuildRequires:	autoconf
-BuildRequires:	automake
-
-BuildRequires:	dbus-devel
-BuildRequires:	dbus-glib-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gobject-introspection-devel
 BuildRequires:	gtk-doc
-BuildRequires:	libicu-devel
+BuildRequires:	pkgconfig
 BuildRequires:	python
 BuildRequires:	vala-tools
+
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(icu-i18n)
 
 %description
 Libdee is a library that uses DBus to provide objects allowing you to create
@@ -74,8 +73,6 @@ This package contains the documentation for the dee library.
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
 
-autoreconf -vfi
-
 
 %build
 %configure --enable-gtk-doc
@@ -96,8 +93,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc AUTHORS
-%{_libdir}/libdee-1.0.so.4
-%{_libdir}/libdee-1.0.so.4.1.1
+%{_libdir}/libdee-1.0.so.*
 %{_libdir}/girepository-1.0/Dee-1.0.typelib
 %{python_sitearch}/gi/overrides/Dee.py*
 
@@ -105,30 +101,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %files devel
 %doc AUTHORS
 %dir %{_includedir}/dee-1.0/
-%{_includedir}/dee-1.0/dee-analyzer.h
-%{_includedir}/dee-1.0/dee-client.h
-%{_includedir}/dee-1.0/dee-file-resource-manager.h
-%{_includedir}/dee-1.0/dee-filter-model.h
-%{_includedir}/dee-1.0/dee-filter.h
-%{_includedir}/dee-1.0/dee-hash-index.h
-%{_includedir}/dee-1.0/dee-icu.h
-%{_includedir}/dee-1.0/dee-index.h
-%{_includedir}/dee-1.0/dee-model-reader.h
-%{_includedir}/dee-1.0/dee-model.h
-%{_includedir}/dee-1.0/dee-peer.h
-%{_includedir}/dee-1.0/dee-proxy-model.h
-%{_includedir}/dee-1.0/dee-resource-manager.h
-%{_includedir}/dee-1.0/dee-result-set.h
-%{_includedir}/dee-1.0/dee-sequence-model.h
-%{_includedir}/dee-1.0/dee-serializable-model.h
-%{_includedir}/dee-1.0/dee-serializable.h
-%{_includedir}/dee-1.0/dee-server.h
-%{_includedir}/dee-1.0/dee-shared-model.h
-%{_includedir}/dee-1.0/dee-term-list.h
-%{_includedir}/dee-1.0/dee-text-analyzer.h
-%{_includedir}/dee-1.0/dee-transaction.h
-%{_includedir}/dee-1.0/dee-tree-index.h
-%{_includedir}/dee-1.0/dee.h
+%{_includedir}/dee-1.0/*.h
 %{_libdir}/libdee-1.0.so
 %{_libdir}/pkgconfig/dee-1.0.pc
 %{_libdir}/pkgconfig/dee-icu-1.0.pc
@@ -151,6 +124,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.12-2.0ubuntu1
+- Remove unneeded dependencies
+- Use pkgconfig for dependencies
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.12-1.0ubuntu1
 - Version 1.0.12
 - Ubuntu release 0ubuntu1
