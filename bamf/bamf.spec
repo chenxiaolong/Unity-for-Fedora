@@ -2,7 +2,7 @@
 
 Name:		bamf
 Version:	0.2.122
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Application Matching Framework - GTK 2
 
 Group:		System Environment/Libraries
@@ -10,17 +10,17 @@ License:	LGPLv3
 URL:		https://launchpad.net/bamf
 Source0:	https://launchpad.net/bamf/0.2/%{version}/+download/bamf-%{version}.tar.gz
 
+BuildRequires:	gtk-doc
 BuildRequires:	vala-tools
 
-BuildRequires:	dbus-glib-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gobject-introspection-devel
-BuildRequires:	gtk-doc
-BuildRequires:	gtk2-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libgtop2-devel
-BuildRequires:	libwnck-devel
-BuildRequires:	libwnck3-devel
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(libgtop-2.0)
+BuildRequires:	pkgconfig(libwnck-1.0)
+BuildRequires:	pkgconfig(libwnck-3.0)
 
 # No %{_isa} because the libraries are multilib, but bamf-daemon isn't
 Requires:	bamf-daemon = %{version}-%{release}
@@ -126,6 +126,9 @@ popd
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
+install -dm755 $RPM_BUILD_ROOT%{_datadir}/applications/
+touch $RPM_BUILD_ROOT%{_datadir}/applications/bamf.index
+
 
 %post -p /sbin/ldconfig
 
@@ -139,8 +142,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc TODO
-%{_libdir}/libbamf.so.0
-%{_libdir}/libbamf.so.0.0.0
+%{_libdir}/libbamf.so.*
 
 
 %files daemon
@@ -153,15 +155,8 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %files devel
 %doc TODO
 %dir %{_includedir}/libbamf/
-%{_includedir}/libbamf/libbamf/bamf-application.h
-%{_includedir}/libbamf/libbamf/bamf-control.h
-%{_includedir}/libbamf/libbamf/bamf-indicator.h
-%{_includedir}/libbamf/libbamf/bamf-matcher.h
-%{_includedir}/libbamf/libbamf/bamf-tab-source.h
-%{_includedir}/libbamf/libbamf/bamf-tab.h
-%{_includedir}/libbamf/libbamf/bamf-view.h
-%{_includedir}/libbamf/libbamf/bamf-window.h
-%{_includedir}/libbamf/libbamf/libbamf.h
+%dir %{_includedir}/libbamf/libbamf/
+%{_includedir}/libbamf/libbamf/*.h
 %{_libdir}/libbamf.so
 %{_libdir}/pkgconfig/libbamf.pc
 %{_datadir}/vala/vapi/libbamf.vapi
@@ -169,23 +164,15 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files -n %{name}3
 %doc TODO
-%{_libdir}/libbamf3.so.0
-%{_libdir}/libbamf3.so.0.0.0
+%{_libdir}/libbamf3.so.*
 %{_libdir}/girepository-1.0/Bamf-0.2.typelib
 
 
 %files -n %{name}3-devel
 %doc TODO
 %dir %{_includedir}/libbamf3/
-%{_includedir}/libbamf3/libbamf/bamf-application.h
-%{_includedir}/libbamf3/libbamf/bamf-control.h
-%{_includedir}/libbamf3/libbamf/bamf-indicator.h
-%{_includedir}/libbamf3/libbamf/bamf-matcher.h
-%{_includedir}/libbamf3/libbamf/bamf-tab-source.h
-%{_includedir}/libbamf3/libbamf/bamf-tab.h
-%{_includedir}/libbamf3/libbamf/bamf-view.h
-%{_includedir}/libbamf3/libbamf/bamf-window.h
-%{_includedir}/libbamf3/libbamf/libbamf.h
+%dir %{_includedir}/libbamf3/libbamf/
+%{_includedir}/libbamf3/libbamf/*.h
 %{_libdir}/libbamf3.so
 %{_libdir}/pkgconfig/libbamf3.pc
 %{_datadir}/gir-1.0/Bamf-0.2.gir
@@ -193,28 +180,14 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files docs
-%dir %{_datadir}/gtk-doc/html/libbamf/
-%{_datadir}/gtk-doc/html/libbamf/BamfApplication.html
-%{_datadir}/gtk-doc/html/libbamf/BamfControl.html
-%{_datadir}/gtk-doc/html/libbamf/BamfFactory.html
-%{_datadir}/gtk-doc/html/libbamf/BamfMatcher.html
-%{_datadir}/gtk-doc/html/libbamf/BamfTabSource.html
-%{_datadir}/gtk-doc/html/libbamf/BamfView.html
-%{_datadir}/gtk-doc/html/libbamf/BamfWindow.html
-%{_datadir}/gtk-doc/html/libbamf/api-index-full.html
-%{_datadir}/gtk-doc/html/libbamf/ch01.html
-%{_datadir}/gtk-doc/html/libbamf/home.png
-%{_datadir}/gtk-doc/html/libbamf/index.html
-%{_datadir}/gtk-doc/html/libbamf/index.sgml
-%{_datadir}/gtk-doc/html/libbamf/left.png
-%{_datadir}/gtk-doc/html/libbamf/libbamf.devhelp2
-%{_datadir}/gtk-doc/html/libbamf/object-tree.html
-%{_datadir}/gtk-doc/html/libbamf/right.png
-%{_datadir}/gtk-doc/html/libbamf/style.css
-%{_datadir}/gtk-doc/html/libbamf/up.png
+%doc %{_datadir}/gtk-doc/html/libbamf/
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.122-2
+- Clean up spec file
+- Use pkgconfig for dependencies
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.122-1
 - Version 0.2.122
 
