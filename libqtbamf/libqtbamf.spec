@@ -4,7 +4,7 @@
 # bamf-qt.
 Name:		bamf-qt
 Version:	0.2.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Qt bindings for the bamf library
 
 Group:		System Environment/Libraries
@@ -15,9 +15,8 @@ Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libqtbamf_%{versio
 Patch0:		0001_Fix_pkgconfig_libdir.patch
 
 BuildRequires:	cmake
-BuildRequires:	gcc-c++
 
-BuildRequires:	qt-devel
+BuildRequires:	pkgconfig(QtCore)
 
 # No %{_isa} because the library is multilib, but bamf-daemon is not
 Requires:	bamf-daemon
@@ -45,6 +44,8 @@ This package contains the development files for the bamf-qt library.
 
 %patch0 -p1 -b .libdir
 
+sed -i 's|/lib|/%{_lib}|g' libqtbamf.pc
+
 
 %build
 mkdir build
@@ -64,26 +65,26 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %files
-%{_libdir}/libQtBamf.so.1
-%{_libdir}/libQtBamf.so.1.0.0
+%doc COPYING-GPL3 COPYING-LGPL3
+%{_libdir}/libQtBamf.so.*
+%dir %{_libdir}/qt4/imports/bamf/
 %{_libdir}/qt4/imports/bamf/libQtBamfQml.so
 %{_libdir}/qt4/imports/bamf/qmldir
 
 
 %files devel
-%{_includedir}/QtBamf/bamf-application.h
-%{_includedir}/QtBamf/bamf-control.h
-%{_includedir}/QtBamf/bamf-factory.h
-%{_includedir}/QtBamf/bamf-indicator.h
-%{_includedir}/QtBamf/bamf-list.h
-%{_includedir}/QtBamf/bamf-matcher.h
-%{_includedir}/QtBamf/bamf-view.h
-%{_includedir}/QtBamf/bamf-window.h
+%dir %{_includedir}/QtBamf/
+%{_includedir}/QtBamf/*.h
 %{_libdir}/libQtBamf.so
 %{_libdir}/pkgconfig/libqtbamf.pc
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.4-2
+- Remove gcc-c++ dependency
+- Use pkgconfig for dependencies
+- Fix libdir in pkgconfig file
+
 * Tue Jul 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.4-1
 - Initial release
 - Version 0.2.4
