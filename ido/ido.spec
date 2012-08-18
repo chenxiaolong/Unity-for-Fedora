@@ -11,11 +11,13 @@ URL:		https://launchpad.net/ido
 Source0:	https://launchpad.net/ido/0.3/%{version}/+download/ido-%{version}.tar.gz
 
 BuildRequires:	gtk-doc
+BuildRequires:	pkgconfig
 
-BuildRequires:	glib2-devel
 # Ubuntu's gtk2 and gtk3 packages are required
 BuildRequires:	gtk2-ubuntu-devel
 BuildRequires:	gtk3-ubuntu-devel
+
+BuildRequires:	pkgconfig(glib-2.0)
 
 Requires:	gtk2-ubuntu
 
@@ -105,40 +107,28 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc AUTHORS
-%{_libdir}/libido-0.1.so.0
-%{_libdir}/libido-0.1.so.0.0.0
+%{_libdir}/libido-0.1.so.*
 
 
 %files devel
 %doc AUTHORS
 %dir %{_includedir}/libido-0.1/
-%{_includedir}/libido-0.1/libido/idocalendarmenuitem.h
-%{_includedir}/libido-0.1/libido/idoentrymenuitem.h
-%{_includedir}/libido-0.1/libido/idomessagedialog.h
-%{_includedir}/libido-0.1/libido/idorange.h
-%{_includedir}/libido-0.1/libido/idoscalemenuitem.h
-%{_includedir}/libido-0.1/libido/idotimeline.h
-%{_includedir}/libido-0.1/libido/libido.h
+%dir %{_includedir}/libido-0.1/libido/
+%{_includedir}/libido-0.1/libido/*.h
 %{_libdir}/libido-0.1.so
 %{_libdir}/pkgconfig/libido-0.1.pc
 
 
 %files -n %{name}3
 %doc AUTHORS
-%{_libdir}/libido3-0.1.so.0
-%{_libdir}/libido3-0.1.so.0.0.0
+%{_libdir}/libido3-0.1.so.*
 
 
 %files -n %{name}3-devel
 %doc AUTHORS
 %dir %{_includedir}/libido3-0.1/
-%{_includedir}/libido3-0.1/libido/idocalendarmenuitem.h
-%{_includedir}/libido3-0.1/libido/idoentrymenuitem.h
-%{_includedir}/libido3-0.1/libido/idomessagedialog.h
-%{_includedir}/libido3-0.1/libido/idorange.h
-%{_includedir}/libido3-0.1/libido/idoscalemenuitem.h
-%{_includedir}/libido3-0.1/libido/idotimeline.h
-%{_includedir}/libido3-0.1/libido/libido.h
+%dir %{_includedir}/libido3-0.1/libido/
+%{_includedir}/libido3-0.1/libido/*.h
 %{_libdir}/libido3-0.1.so
 %{_libdir}/pkgconfig/libido3-0.1.pc
 
