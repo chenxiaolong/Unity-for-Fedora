@@ -14,20 +14,20 @@ Patch0:		0001_Fix_dbusmenu-dumper_path.patch
 
 BuildRequires:	gnome-doc-utils
 BuildRequires:	intltool
-
-BuildRequires:	bamf-devel
-BuildRequires:	bamf3-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libappindicator-gtk3-devel
-BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libdbusmenu-gtk3-devel
-BuildRequires:	libdbusmenu-jsonloader-devel
-BuildRequires:	libindicator-devel
-BuildRequires:	libindicator-gtk3-devel
-BuildRequires:	ncurses-devel
-BuildRequires:	readline-devel
-BuildRequires:	sqlite-devel
+BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
+
+BuildRequires:	pkgconfig(appindicator3-0.1)
+BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
+BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
+BuildRequires:	pkgconfig(dbusmenu-jsonloader-0.4)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(indicator3-0.4)
+BuildRequires:	pkgconfig(libbamf3)
+BuildRequires:	pkgconfig(ncurses)
+BuildRequires:	pkgconfig(sqlite3)
+
+BuildRequires:	readline-devel
 
 %description
 This package contains an indicator to host the menus from an application.
@@ -84,6 +84,8 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files
 %doc AUTHORS ChangeLog
+%dir %{_libdir}/indicators3/
+%dir %{_libdir}/indicators3/7/
 %{_libdir}/indicators3/7/libappmenu.so
 %{_libexecdir}/hud-service
 %{_datadir}/dbus-1/services/com.canonical.hud.service
@@ -107,10 +109,15 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_mandir}/man1/hud-dump-application.1.gz
 %{_mandir}/man1/hud-list-applications.1.gz
 %{_mandir}/man1/hud-verify-app-info.1.gz
+%dir %{_datadir}/hud-gtk/
 %{_datadir}/hud-gtk/hud-gtk.ui
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2
+- Fix directory ownership
+- Use pkgconfig for dependencies
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
 - Version 12.10.0
 - Drop GTK 2 subpackage: no longer maintained upstream
