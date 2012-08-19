@@ -11,15 +11,8 @@ URL:		https://launchpad.net/evemu
 Source0:	https://launchpad.net/evemu/trunk/evemu-%{version}/+download/evemu-%{version}.tar.xz
 
 BuildRequires:	asciidoc
-BuildRequires:	automake
-BuildRequires:	libtool
 BuildRequires:	python2-devel
 BuildRequires:	xmlto
-
-Provides:	utouch-evemu%{?_isa} = %{version}-%{release}
-Provides:	utouch-evemu         = %{version}-%{release}
-Obsoletes:	utouch-evemu%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-evemu         < %{version}-%{release}
 
 %description
 Evemu provides a programmatic API to access the kernel input event devices. The
@@ -33,11 +26,6 @@ Group:		Development/Libraries
 
 Requires:	%{name} = %{version}-%{release}
 
-Provides:	utouch-evemu-devel%{?_isa} = %{version}-%{release}
-Provides:	utouch-evemu-devel         = %{version}-%{release}
-Obsoletes:	utouch-evemu-devel%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-evemu-devel         < %{version}-%{release}
-
 %description devel
 This package contains the development files for the evemu library.
 
@@ -47,11 +35,6 @@ Summary:	Linux Evdev Event Emulation Library - Tools
 Group:		Development/Tools
 
 Requires:	%{name} = %{version}-%{release}
-
-Provides:	utouch-evemu-tools%{?_isa} = %{version}-%{release}
-Provides:	utouch-evemu-tools         = %{version}-%{release}
-Obsoletes:	utouch-evemu-tools%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-evemu-tools         < %{version}-%{release}
 
 %description tools
 This package testing tools for the evemu library.
@@ -64,9 +47,6 @@ Group:		Development/Libraries
 BuildArch:	noarch
 
 Requires:	%{name} = %{version}-%{release}
-
-Provides:	python-utouch-evemu = %{version}-%{release}
-Obsoletes:	python-utouch-evemu < %{version}-%{release}
 
 %description -n python-evemu
 This package includes the Python 2 bindings for the evemu library.
@@ -97,8 +77,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc ChangeLog README
-%{_libdir}/libevemu.so.1
-%{_libdir}/libevemu.so.1.0.0
+%{_libdir}/libevemu.so.*
 
 
 %files devel
