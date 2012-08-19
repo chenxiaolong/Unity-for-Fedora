@@ -11,21 +11,14 @@ URL:		https://launchpad.net/frame
 Source0:	https://launchpad.net/frame/trunk/utouch-frame-%{version}/+download/frame-%{version}.tar.xz
 
 BuildRequires:	asciidoc
-BuildRequires:	automake
-BuildRequires:	gcc-c++
-BuildRequires:	libtool
-BuildRequires:	libX11-devel
-BuildRequires:	libXi-devel
-BuildRequires:	mtdev-devel
-BuildRequires:	evemu-devel
 BuildRequires:	xmlto
 BuildRequires:	pkgconfig
-BuildRequires:	pkgconfig(xorg-server)
 
-Provides:	utouch-frame%{?_isa} = %{version}-%{release}
-Provides:	utouch-frame         = %{version}-%{release}
-Obsoletes:	utouch-frame%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-frame         < %{version}-%{release}
+BuildRequires:	pkgconfig(evemu)
+BuildRequires:	pkgconfig(mtdev)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xi)
+BuildRequires:	pkgconfig(xorg-server)
 
 %description
 # Description from Ubuntu's package
@@ -39,11 +32,6 @@ Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
-Provides:	utouch-frame-devel%{?_isa} = %{version}-%{release}
-Provides:	utouch-frame-devel         = %{version}-%{release}
-Obsoletes:	utouch-frame-devel%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-frame-devel         < %{version}-%{release}
-
 %description devel
 This package contains the development files for the frame library.
 
@@ -54,19 +42,12 @@ Group:		Development/Tools
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
-Provides:	utouch-frame-tools%{?_isa} = %{version}-%{release}
-Provides:	utouch-frame-tools         = %{version}-%{release}
-Obsoletes:	utouch-frame-tools%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-frame-tools         < %{version}-%{release}
-
 %description tools
 This package contains testing tools for the frame library.
 
 
 %prep
 %setup -q
-
-autoreconf -vfi
 
 
 %build
@@ -88,8 +69,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc README
-%{_libdir}/libframe.so.6
-%{_libdir}/libframe.so.6.0.0
+%{_libdir}/libframe.so.*
 
 
 %files devel
