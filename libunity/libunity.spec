@@ -4,13 +4,15 @@
 
 Name:		libunity
 Version:	5.94.0
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	Library for integrating with Unity
 
 Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/libunity
 Source0:	https://launchpad.net/libunity/6.0/%{version}/+download/libunity-%{version}.tar.gz
+
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity_%{version}-%{_ubuntu_rel}.diff.gz
 
 BuildRequires:	pkgconfig
 BuildRequires:	python2
@@ -24,7 +26,7 @@ BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
 
 %description
-A library for instrumenting- and integrating with all aspects of the Unity
+A library for instrumenting and integrating with all aspects of the Unity
 shell.
 
 
@@ -33,11 +35,10 @@ Summary:	Development files for libunity
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	dee-devel
-Requires:	glib2-devel
-Requires:	libdbusmenu-glib-devel
-Requires:	libgee06-devel
-
+Requires:	pkgconfig(dbusmenu-glib-0.4)
+Requires:	pkgconfig(dee-1.0)
+Requires:	pkgconfig(gee-1.0)
+Requires:	pkgconfig(glib-2.0)
 
 %description devel
 This package contains the development files for the unity library.
@@ -82,27 +83,24 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc AUTHORS README
-%{_libdir}/libunity.so.9
-%{_libdir}/libunity.so.9.0.2
+%{_libdir}/libunity.so.*
 %dir %{_libdir}/libunity/
-%{_libdir}/libunity/libunity-protocol-private.so.0
-%{_libdir}/libunity/libunity-protocol-private.so.0.0.0
+%{_libdir}/libunity/libunity-protocol-private.so.*
 %{_libdir}/girepository-1.0/Unity-5.0.typelib
-%{_datadir}/gir-1.0/Unity-5.0.gir
 %{python_sitearch}/gi/overrides/Unity.py*
 
 
 %files devel
 %doc AUTHORS README
 %dir %{_includedir}/unity/
-%{_includedir}/unity/unity/unity-protocol.h
-%{_includedir}/unity/unity/unity-trace.h
-%{_includedir}/unity/unity/unity.h
+%dir %{_includedir}/unity/unity/
+%{_includedir}/unity/unity/*.h
 %{_libdir}/libunity.so
 %dir %{_libdir}/libunity/
 %{_libdir}/libunity/libunity-protocol-private.so
 %{_libdir}/pkgconfig/unity.pc
 %{_libdir}/pkgconfig/unity-protocol-private.pc
+%{_datadir}/gir-1.0/Unity-5.0.gir
 %{_datadir}/vala/vapi/unity-protocol.vapi
 %{_datadir}/vala/vapi/unity-trace.deps
 %{_datadir}/vala/vapi/unity-trace.vapi
@@ -116,6 +114,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Tue Aug 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.94.0-2.0ubuntu1
+- Forgot to add Ubuntu's packaging files to the source list
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.94.0-1.0ubuntu1
 - Version 5.94.0
 - Ubuntu release 0ubuntu1
