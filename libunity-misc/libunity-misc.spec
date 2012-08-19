@@ -99,7 +99,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files docs
-%dir %{_datadir}/gtk-doc/html/libunity-misc/
+%doc %{_datadir}/gtk-doc/html/libunity-misc/
 
 
 %changelog
