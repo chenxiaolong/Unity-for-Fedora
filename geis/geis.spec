@@ -15,27 +15,18 @@ URL:		https://launchpad.net/geis
 Source0:	https://launchpad.net/geis/trunk/2.1.11/+download/geis-%{version}.tar.xz
 
 BuildRequires:	asciidoc
-BuildRequires:	autoconf
-BuildRequires:	automake
-BuildRequires:	dbus-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	doxygen
-BuildRequires:	gcc-c++
-BuildRequires:	libtool
-BuildRequires:	libX11-devel
-BuildRequires:	libxcb-devel
-BuildRequires:	libXi-devel
-BuildRequires:	python2-devel
-BuildRequires:	evemu-devel
-BuildRequires:	grail-devel
-BuildRequires:	xcb-proto
-BuildRequires:	xorg-x11-server-devel
 BuildRequires:	xmlto
 
-Provides:	utouch-geis%{?_isa} = %{version}-%{release}
-Provides:	utouch-geis         = %{version}-%{release}
-Obsoletes:	utouch-geis%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-geis         < %{version}-%{release}
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(evemu)
+BuildRequires:	pkgconfig(grail)
+BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xcb)
+BuildRequires:	pkgconfig(xi)
+BuildRequires:	pkgconfig(xorg-server)
 
 %description
 GEIS is a library for applications and toolkit programmers which provides a
@@ -49,11 +40,6 @@ Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
-Provides:	utouch-geis-devel%{?_isa} = %{version}-%{release}
-Provides:	utouch-geis-devel         = %{version}-%{release}
-Obsoletes:	utouch-geis-devel%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-geis-devel         < %{version}-%{release}
-
 %description devel
 This package contains the development files for the geis library.
 
@@ -64,11 +50,6 @@ Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
-Provides:	python-utouch-geis%{?_isa} = %{version}-%{release}
-Provides:	python-utouch-geis         = %{version}-%{release}
-Obsoletes:	python-utouch-geis%{?_isa} < %{version}-%{release}
-Obsoletes:	python-utouch-geis         < %{version}-%{release}
-
 %description -n python-geis
 This package contains the Python 2 bindings for the geis library.
 
@@ -78,11 +59,6 @@ Summary:	Documentation for the geis library
 Group:		Documentation
 
 BuildArch:	noarch
-
-Requires:	%{name} = %{version}-%{release}
-
-Provides:	utouch-geis-docs = %{version}-%{release}
-Obsoletes:	utouch-geis-docs < %{version}-%{release}
 
 %description docs
 This package contains the documentation for the geis library.
@@ -95,19 +71,12 @@ Group:		Development/Tools
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	python-geis%{?_isa} = %{version}-%{release}
 
-Provides:	utouch-geis-tools%{?_isa} = %{version}-%{release}
-Provides:	utouch-geis-tools         = %{version}-%{release}
-Obsoletes:	utouch-geis-tools%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-geis-tools         < %{version}-%{release}
-
 %description tools
 This package contains the testing tools for the geis library.
 
 
 %prep
 %setup -q
-
-autoreconf -vfi
 
 # Fix Python architecture-dependant site-packages directory
 #sed -i '/am_cv_python_pythondir=/ s/lib/%{_lib}/g' aclocal.m4
@@ -148,8 +117,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc ChangeLog NEWS README
-%{_libdir}/libgeis.so.1
-%{_libdir}/libgeis.so.1.3.0
+%{_libdir}/libgeis.so.*
 
 
 %files devel
@@ -177,20 +145,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files docs
-%dir %{_docdir}/geis-docs-%{version}/
-%{_docdir}/geis-docs-%{version}/Doxyfile
-%{_docdir}/geis-docs-%{version}/geisspec-1.0.asc
-%{_docdir}/geis-docs-%{version}/geisspec-docbook.xml
-%dir %{_docdir}/geis-docs-%{version}/html/
-%{_docdir}/geis-docs-%{version}/html/*.css
-%{_docdir}/geis-docs-%{version}/html/*.html
-%{_docdir}/geis-docs-%{version}/html/*.js
-%{_docdir}/geis-docs-%{version}/html/*.png
-%dir %{_docdir}/geis-docs-%{version}/html/search/
-%{_docdir}/geis-docs-%{version}/html/search/*.css
-%{_docdir}/geis-docs-%{version}/html/search/*.html
-%{_docdir}/geis-docs-%{version}/html/search/*.js
-%{_docdir}/geis-docs-%{version}/html/search/*.png
+%doc %{_docdir}/geis-docs-%{version}/
 
 
 %files tools
