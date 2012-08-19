@@ -11,12 +11,13 @@ URL:		https://launchpad.net/ubuntu/+source/libtimezonemap
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libtimezonemap_%{version}.tar.gz
 
 BuildRequires:	intltool
+BuildRequires:	pkgconfig
 
-BuildRequires:	cairo-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gobject-introspection-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	json-glib-devel
+BuildRequires:	pkgconfig(cairo)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(json-glib-1.0)
 
 Requires:	%{name}-data = %{version}-%{release}
 
@@ -69,17 +70,15 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc README
-%{_libdir}/libtimezonemap.so.1
-%{_libdir}/libtimezonemap.so.1.0.0
+%{_libdir}/libtimezonemap.so.*
 %{_libdir}/girepository-1.0/TimezoneMap-1.0.typelib
 
 
 %files devel
 %doc README
 %dir %{_includedir}/timezonemap/
-%{_includedir}/timezonemap/timezonemap/cc-timezone-map.h
-%{_includedir}/timezonemap/timezonemap/timezone-completion.h
-%{_includedir}/timezonemap/timezonemap/tz.h
+%dir %{_includedir}/timezonemap/timezonemap/
+%{_includedir}/timezonemap/timezonemap/*.h
 %{_libdir}/libtimezonemap.so
 %{_libdir}/pkgconfig/timezonemap.pc
 %{_datadir}/gir-1.0/TimezoneMap-1.0.gir
@@ -87,52 +86,17 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files data
 %doc README
+%dir %{_datadir}/libtimezonemap/
+%dir %{_datadir}/libtimezonemap/ui/
 %{_datadir}/libtimezonemap/backward
-%{_datadir}/libtimezonemap/ui/bg.png
-%{_datadir}/libtimezonemap/ui/cc.png
-%{_datadir}/libtimezonemap/ui/olsen_map.png
-%{_datadir}/libtimezonemap/ui/pin.png
-%{_datadir}/libtimezonemap/ui/timezone_-1.png
-%{_datadir}/libtimezonemap/ui/timezone_-10.png
-%{_datadir}/libtimezonemap/ui/timezone_-11.png
-%{_datadir}/libtimezonemap/ui/timezone_-2.png
-%{_datadir}/libtimezonemap/ui/timezone_-3.5.png
-%{_datadir}/libtimezonemap/ui/timezone_-3.png
-%{_datadir}/libtimezonemap/ui/timezone_-4.5.png
-%{_datadir}/libtimezonemap/ui/timezone_-4.png
-%{_datadir}/libtimezonemap/ui/timezone_-5.5.png
-%{_datadir}/libtimezonemap/ui/timezone_-5.png
-%{_datadir}/libtimezonemap/ui/timezone_-6.png
-%{_datadir}/libtimezonemap/ui/timezone_-7.png
-%{_datadir}/libtimezonemap/ui/timezone_-8.png
-%{_datadir}/libtimezonemap/ui/timezone_-9.5.png
-%{_datadir}/libtimezonemap/ui/timezone_-9.png
-%{_datadir}/libtimezonemap/ui/timezone_0.png
-%{_datadir}/libtimezonemap/ui/timezone_1.png
-%{_datadir}/libtimezonemap/ui/timezone_10.5.png
-%{_datadir}/libtimezonemap/ui/timezone_10.png
-%{_datadir}/libtimezonemap/ui/timezone_11.5.png
-%{_datadir}/libtimezonemap/ui/timezone_11.png
-%{_datadir}/libtimezonemap/ui/timezone_12.75.png
-%{_datadir}/libtimezonemap/ui/timezone_12.png
-%{_datadir}/libtimezonemap/ui/timezone_13.png
-%{_datadir}/libtimezonemap/ui/timezone_2.png
-%{_datadir}/libtimezonemap/ui/timezone_3.5.png
-%{_datadir}/libtimezonemap/ui/timezone_3.png
-%{_datadir}/libtimezonemap/ui/timezone_4.5.png
-%{_datadir}/libtimezonemap/ui/timezone_4.png
-%{_datadir}/libtimezonemap/ui/timezone_5.5.png
-%{_datadir}/libtimezonemap/ui/timezone_5.75.png
-%{_datadir}/libtimezonemap/ui/timezone_5.png
-%{_datadir}/libtimezonemap/ui/timezone_6.5.png
-%{_datadir}/libtimezonemap/ui/timezone_6.png
-%{_datadir}/libtimezonemap/ui/timezone_7.png
-%{_datadir}/libtimezonemap/ui/timezone_8.png
-%{_datadir}/libtimezonemap/ui/timezone_9.5.png
-%{_datadir}/libtimezonemap/ui/timezone_9.png
+%{_datadir}/libtimezonemap/ui/*.png
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.2-2
+- Fix directory ownership
+- Use pkgconfig for dependencies
+
 * Wed Jul 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.2-1
 - Initial release
 - Version 0.3.2
