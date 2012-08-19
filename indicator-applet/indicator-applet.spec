@@ -15,13 +15,13 @@ BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk-doc
 BuildRequires:	hicolor-icon-theme
 BuildRequires:	intltool
-BuildRequires:	libtool
+BuildRequires:	pkgconfig
 
-BuildRequires:	gnome-panel-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libindicator-gtk3-devel
-BuildRequires:	libX11-devel
-BuildRequires:	libxml2-devel
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(indicator3-0.4)
+BuildRequires:	pkgconfig(libpanelapplet-4.0)
+BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	pkgconfig(x11)
 
 %description
 This package contains an applet for the GNOME panel to display Ayatana
