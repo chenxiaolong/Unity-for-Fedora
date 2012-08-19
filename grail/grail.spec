@@ -11,23 +11,16 @@ URL:		https://launchpad.net/grail
 Source0:	https://launchpad.net/grail/trunk/%{version}/+download/grail-%{version}.tar.gz
 
 BuildRequires:	asciidoc
-BuildRequires:	autoconf
-BuildRequires:	automake
-BuildRequires:	gcc-c++
-BuildRequires:	libtool
-BuildRequires:	libX11-devel
-BuildRequires:	libXext-devel
-BuildRequires:	libXi-devel
-BuildRequires:	mtdev-devel
-BuildRequires:	evemu-devel
-BuildRequires:	frame-devel
-BuildRequires:	xorg-x11-proto-devel
 BuildRequires:	xmlto
 
-Provides:	utouch-grail%{?_isa} = %{version}-%{release}
-Provides:	utouch-grail         = %{version}-%{release}
-Obsoletes:	utouch-grail%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-grail         < %{version}-%{release}
+BuildRequires:	pkgconfig(evemu)
+BuildRequires:	pkgconfig(frame)
+BuildRequires:	pkgconfig(mtdev)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xi)
+
+BuildRequires:	xorg-x11-proto-devel
 
 %description
 When a multitouch gesture is performed on a device, the recognizer emits one or
@@ -44,12 +37,7 @@ Summary:	Development files for the grail library
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	frame-devel
-
-Provides:	utouch-grail-devel%{?_isa} = %{version}-%{release}
-Provides:	utouch-grail-devel         = %{version}-%{release}
-Obsoletes:	utouch-grail-devel%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-grail-devel         < %{version}-%{release}
+Requires:	pkgconfig(frame)
 
 %description devel
 This package contains the development files for the grail library.
@@ -61,19 +49,12 @@ Group:		Development/Tools
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
-Provides:	utouch-grail-tools%{?_isa} = %{version}-%{release}
-Provides:	utouch-grail-tools         = %{version}-%{release}
-Obsoletes:	utouch-grail-tools%{?_isa} < %{version}-%{release}
-Obsoletes:	utouch-grail-tools         < %{version}-%{release}
-
 %description tools
 This package contains testing tools for the grail library.
 
 
 %prep
 %setup -q
-
-autoreconf -vfi
 
 
 %build
@@ -95,8 +76,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc README
-%{_libdir}/libgrail.so.5
-%{_libdir}/libgrail.so.5.0.0
+%{_libdir}/libgrail.so.*
 
 
 %files devel
