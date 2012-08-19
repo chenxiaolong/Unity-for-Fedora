@@ -26,9 +26,11 @@ Source0:	https://launchpad.net/libunity-misc/trunk/%{version}/+download/libunity
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity-misc_%{version}-%{_ubuntu_rel}.diff.gz
 
-BuildRequires:	glib2-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libX11-devel
+BuildRequires:	pkgconfig
+
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(x11)
 
 %description
 libunity-misc is a shared library that provides miscellaneous functions for
@@ -40,7 +42,7 @@ Summary:	Development files for libunity-misc
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	glib2-devel
+Requires:	pkgconfig(glib-2.0)
 
 %description devel
 This package contains the development files for the unity-misc library.
@@ -84,38 +86,28 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc AUTHORS
-%{_libdir}/libunity-misc.so.4
-%{_libdir}/libunity-misc.so.4.1.0
+%{_libdir}/libunity-misc.so.*
 
 
 %files devel
 %doc AUTHORS
 %dir %{_includedir}/unity-misc/
-%{_includedir}/unity-misc/unity-misc/gnome-bg-slideshow.h
-%{_includedir}/unity-misc/unity-misc/na-marshal.h
-%{_includedir}/unity-misc/unity-misc/na-tray-child.h
-%{_includedir}/unity-misc/unity-misc/na-tray-manager.h
-%{_includedir}/unity-misc/unity-misc/na-tray.h
+%dir %{_includedir}/unity-misc/unity-misc/
+%{_includedir}/unity-misc/unity-misc/*.h
 %{_libdir}/libunity-misc.so
 %{_libdir}/pkgconfig/unity-misc.pc
 
 
 %files docs
-%{_datadir}/gtk-doc/html/libunity-misc/api-index-full.html
-%{_datadir}/gtk-doc/html/libunity-misc/ch01.html
-%{_datadir}/gtk-doc/html/libunity-misc/home.png
-%{_datadir}/gtk-doc/html/libunity-misc/index.html
-%{_datadir}/gtk-doc/html/libunity-misc/index.sgml
-%{_datadir}/gtk-doc/html/libunity-misc/left.png
-%{_datadir}/gtk-doc/html/libunity-misc/libunity-misc.devhelp
-%{_datadir}/gtk-doc/html/libunity-misc/libunity-misc.devhelp2
-%{_datadir}/gtk-doc/html/libunity-misc/object-tree.html
-%{_datadir}/gtk-doc/html/libunity-misc/right.png
-%{_datadir}/gtk-doc/html/libunity-misc/style.css
-%{_datadir}/gtk-doc/html/libunity-misc/up.png
+%dir %{_datadir}/gtk-doc/html/libunity-misc/
 
 
 %changelog
+* Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.0.4-2.0ubuntu2
+- Clean up spec file
+- Use pkgconfig for dependencies
+- Fix directory ownership
+
 * Sun Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.0.4-1.0ubuntu2
 - Initial release
 - Version 4.0.4
