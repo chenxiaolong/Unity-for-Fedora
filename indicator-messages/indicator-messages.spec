@@ -103,8 +103,8 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc AUTHORS ChangeLog
-%dir %{_libdir}/indicator3/
-%dir %{_libdir}/indicator3/7/
+%dir %{_libdir}/indicators3/
+%dir %{_libdir}/indicators3/7/
 %{_libdir}/indicators3/7/libmessaging.so
 %{_libdir}/libindicator-messages-service.so.*
 %{_libdir}/libindicator-messages-status-provider.so.*
