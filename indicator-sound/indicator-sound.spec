@@ -6,7 +6,7 @@
 
 Name:		indicator-sound
 Version:	12.10.0
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	Indicator for displaying a unified sound menu
 
 Group:		User Interface/Desktops
@@ -102,20 +102,27 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %files
 %doc AUTHORS
+%dir %{_libdir}/indicators3/
+%dir %{_libdir}/indicators3/7/
 %{_libdir}/indicators3/7/libsoundmenu.so
 %{_libexecdir}/indicator-sound-service
 %{_datadir}/dbus-1/services/indicator-sound.service
 %{_datadir}/glib-2.0/schemas/com.canonical.indicator.sound.gschema.xml
-%{_datadir}/libindicator/icons/hicolor/16x16/status/sound-icon.png
-%{_datadir}/libindicator/icons/hicolor/scalable/status/sound-icon.svg
+%dir %{_datadir}/libindicator/
+%{_datadir}/libindicator/icons/
 
 
 %files gtk2
 %doc AUTHORS
+%dir %{_libdir}/indicators/
+%dir %{_libdir}/indicators/7/
 %{_libdir}/indicators/7/libsoundmenu.so
 
 
 %changelog
+* Mon Aug 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0.2.0ubuntu1
+- Fix directory ownership
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1.0ubuntu1
 - Version 12.10.0
 - Ubuntu release 0ubuntu1
