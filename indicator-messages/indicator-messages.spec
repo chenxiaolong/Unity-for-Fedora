@@ -2,7 +2,7 @@
 
 Name:		indicator-messages
 Version:	0.6.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Indicator for collecting messages that need a response
 
 Group:		User Interface/Desktops
@@ -12,19 +12,20 @@ Source0:	https://launchpad.net/indicator-messages/0.6/%{version}/+download/indic
 
 BuildRequires:	intltool
 BuildRequires:	hicolor-icon-theme
+BuildRequires:	pkgconfig
 
-BuildRequires:	dbus-glib-devel
-BuildRequires:	gtk2-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libdbusmenu-gtk2-devel
-BuildRequires:	libdbusmenu-gtk3-devel
-BuildRequires:	libindicate-devel
-BuildRequires:	libindicate-gtk2-devel
-BuildRequires:	libindicate-gtk3-devel
-BuildRequires:	libindicator-devel
-BuildRequires:	libindicator-gtk3-devel
-BuildRequires:	telepathy-glib-devel
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
+BuildRequires:	pkgconfig(dbusmenu-gtk-0.4)
+BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
+BuildRequires:	pkgconfig(indicate-0.7)
+BuildRequires:	pkgconfig(indicate-gtk-0.7)
+BuildRequires:	pkgconfig(indicate-gtk3-0.7)
+BuildRequires:	pkgconfig(indicator-0.4)
+BuildRequires:	pkgconfig(indicator3-0.4)
+BuildRequires:	pkgconfig(telepathy-glib)
 
 %description
 A place on the user's desktop that collects messages that need a response. This
@@ -102,56 +103,28 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files
 %doc AUTHORS ChangeLog
+%dir %{_libdir}/indicator3/
+%dir %{_libdir}/indicator3/7/
 %{_libdir}/indicators3/7/libmessaging.so
-%{_libdir}/libindicator-messages-service.so.0
-%{_libdir}/libindicator-messages-service.so.0.0.0
-%{_libdir}/libindicator-messages-status-provider.so.1
-%{_libdir}/libindicator-messages-status-provider.so.1.0.0
+%{_libdir}/libindicator-messages-service.so.*
+%{_libdir}/libindicator-messages-status-provider.so.*
 %{_libexecdir}/indicator-messages-service
+%dir %{_libexecdir}/status-providers/
+%dir %{_libexecdir}/status-providers/1/
 %{_libexecdir}/status-providers/1/libemesene.so
 %{_libexecdir}/status-providers/1/libmc5.so
 %{_libexecdir}/status-providers/1/libpidgin.so
 %{_libexecdir}/status-providers/1/libtelepathy.so
 %{_datadir}/dbus-1/services/indicator-messages.service
-%{_datadir}/libindicator/icons/hicolor/16x16/categories/applications-chat-panel.png
-%{_datadir}/libindicator/icons/hicolor/16x16/categories/applications-email-panel.png
-%{_datadir}/libindicator/icons/hicolor/16x16/categories/applications-microblogging-panel.png
-%{_datadir}/libindicator/icons/hicolor/16x16/status/application-running.png
-%{_datadir}/libindicator/icons/hicolor/16x16/status/indicator-messages-new.png
-%{_datadir}/libindicator/icons/hicolor/16x16/status/indicator-messages.png
-%{_datadir}/libindicator/icons/hicolor/22x22/categories/applications-email-panel.png
-%{_datadir}/libindicator/icons/hicolor/22x22/status/indicator-messages-new.png
-%{_datadir}/libindicator/icons/hicolor/22x22/status/indicator-messages.png
-%{_datadir}/libindicator/icons/hicolor/24x24/status/application-running.png
-%{_datadir}/libindicator/icons/hicolor/24x24/status/indicator-messages-new.png
-%{_datadir}/libindicator/icons/hicolor/24x24/status/indicator-messages.png
-%{_datadir}/libindicator/icons/hicolor/32x32/categories/applications-chat-panel.png
-%{_datadir}/libindicator/icons/hicolor/32x32/categories/applications-email-panel.png
-%{_datadir}/libindicator/icons/hicolor/32x32/status/application-running.png
-%{_datadir}/libindicator/icons/hicolor/32x32/status/indicator-messages-new.png
-%{_datadir}/libindicator/icons/hicolor/32x32/status/indicator-messages.png
-%{_datadir}/libindicator/icons/hicolor/48x48/status/application-running.png
-%{_datadir}/libindicator/icons/hicolor/48x48/status/indicator-messages-new.png
-%{_datadir}/libindicator/icons/hicolor/48x48/status/indicator-messages.png
-%{_datadir}/libindicator/icons/hicolor/scalable/categories/applications-chat-panel.svg
-%{_datadir}/libindicator/icons/hicolor/scalable/categories/applications-email-panel.svg
-%{_datadir}/libindicator/icons/hicolor/scalable/status/application-running.svg
-%{_datadir}/libindicator/icons/hicolor/scalable/status/indicator-messages-new.svg
-%{_datadir}/libindicator/icons/hicolor/scalable/status/indicator-messages.svg
+%dir %{_datadir}/libindicator/
+%{_datadir}/libindicator/icons/
 
 
 %files devel
 %doc AUTHORS ChangeLog
-%{_includedir}/libindicator-messages-service/app-menu-item.h
-%{_includedir}/libindicator-messages-service/dbus-data.h
-%{_includedir}/libindicator-messages-service/default-applications.h
-%{_includedir}/libindicator-messages-service/dirs.h
-%{_includedir}/libindicator-messages-service/gen-messages-service.xml.h
-%{_includedir}/libindicator-messages-service/im-menu-item.h
-%{_includedir}/libindicator-messages-service/launcher-menu-item.h
-%{_includedir}/libindicator-messages-service/messages-service-dbus.h
-%{_includedir}/libindicator-messages-service/seen-db.h
-%{_includedir}/libindicator-messages-service/status-items.h
+%dir %{_includedir}/libindicator-messages-service/
+%dir %{_includedir}/libindicator-messages-status-provider-1/
+%{_includedir}/libindicator-messages-service/*.h
 %{_includedir}/libindicator-messages-status-provider-1/status-provider.h
 %{_libdir}/libindicator-messages-service.so
 %{_libdir}/libindicator-messages-status-provider.so
@@ -160,10 +133,16 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files gtk2
 %doc AUTHORS ChangeLog
+%dir %{_libdir}/indicators/
+%dir %{_libdir}/indicators/7/
 %{_libdir}/indicators/7/libmessaging.so
 
 
 %changelog
+* Mon Aug 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6.0-2
+- Fix directory ownership
+- Use pkgconfig for dependencies
+
 * Sat Jul 07 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6.0-1
 - Initial release
 - Version 0.6.0
