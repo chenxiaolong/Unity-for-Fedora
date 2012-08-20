@@ -19,23 +19,21 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 BuildRequires:	intltool
 
-BuildRequires:	cairo-devel
-BuildRequires:	control-center-devel
-BuildRequires:	evolution-data-server-devel
-BuildRequires:	GConf2-devel
-BuildRequires:	geoclue-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	ido-devel
-BuildRequires:	ido3-devel
-BuildRequires:	json-glib-devel
-BuildRequires:	libdbusmenu-glib-devel
-BuildRequires:	libdbusmenu-gtk3-devel
-BuildRequires:	libical-devel
-BuildRequires:	libindicator-devel
-BuildRequires:	libindicator-gtk3-devel
-BuildRequires:	libtimezonemap-devel
-BuildRequires:	polkit-devel
+BuildRequires:	pkgconfig(cairo)
+BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
+BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
+BuildRequires:	pkgconfig(evolution-data-server-1.2)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(geoclue)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(indicator3-0.4)
+BuildRequires:	pkgconfig(json-glib-1.0)
+BuildRequires:	pkgconfig(libgnome-control-center)
+BuildRequires:	pkgconfig(libical)
+BuildRequires:	pkgconfig(libido3-0.1)
+BuildRequires:	pkgconfig(polkit-gobject-1)
+BuildRequires:	pkgconfig(timezonemap)
 
 Requires:	control-center-ubuntu
 
