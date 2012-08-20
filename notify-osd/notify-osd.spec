@@ -13,12 +13,12 @@ Source0:	https://launchpad.net/notify-osd/precise/%{version}/+download/notify-os
 BuildRequires:	gnome-common
 BuildRequires:	intltool
 
-BuildRequires:	dbus-devel
-BuildRequires:	dbus-glib-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libnotify-devel
-BuildRequires:	libwnck3-devel
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(libnotify)
+BuildRequires:	pkgconfig(libwnck-3.0)
 
 Provides:	desktop-notification-daemon
 
