@@ -19,11 +19,11 @@ Build order:
 17: ido                            -> Widgets and objects used for indicators
 18: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
 19: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
-20: gnome-control-center           -> Utilities to configure the GNOME desktop
-21: gnome-session                  -> GNOME Session Manager
+20: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
+21: gnome-session-ubuntu           -> GNOME Session Manager
 22: activity-log-manager ************
 23: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
-24: metacity                       -> Lightweight GTK+ window manager
+24: metacity-ubuntu                -> Lightweight GTK+ window manager
 25: indicator-applet               -> GNOME panel indicator applet
 26: indicator-application          -> Takes menus and puts them in the panel
 27: indicator-appmenu              -> An indicator to host the menus from apps
