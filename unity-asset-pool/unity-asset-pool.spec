@@ -2,7 +2,7 @@
 
 Name:		unity-asset-pool
 Version:	0.8.23
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Design assets for Unity
 
 Group:		User Interface/Desktops
@@ -41,6 +41,9 @@ install -dm755 $RPM_BUILD_ROOT%{_datadir}/icons/
 find unity-icon-theme/ -type f -exec install -Dm644 {} \
   $RPM_BUILD_ROOT%{_datadir}/icons/{} \;
 
+# Remove Ubuntu branding icons
+find $RPM_BUILD_ROOT -type f -name distributor-logo.png -delete
+
 # From debian/rules
 for i in $(find $RPM_BUILD_ROOT%{_datadir}/icons/ -mindepth 2 -maxdepth 2 -type d); do
   pushd ${i}
@@ -66,20 +69,17 @@ gtk-update-icon-cache -f %{_datadir}/icons/unity-icon-theme/ &>/dev/null || :
 
 %files
 %doc COPYRIGHT
-%dir %{_datadir}/icons/unity-icon-theme/
-%{_datadir}/icons/unity-icon-theme/apps/128/*.svg
-%{_datadir}/icons/unity-icon-theme/apps/48/*.png
-%{_datadir}/icons/unity-icon-theme/index.theme
-%{_datadir}/icons/unity-icon-theme/places/22/*.png
-%{_datadir}/icons/unity-icon-theme/places/24/*.png
-%{_datadir}/icons/unity-icon-theme/places/svg/*.svg
-%{_datadir}/icons/unity-icon-theme/search/16/*.png
-%{_datadir}/icons/unity-icon-theme/web/48/*.png
+%{_datadir}/icons/unity-icon-theme/
+%dir %{_datadir}/unity/
 %dir %{_datadir}/unity/themes/
 %{_datadir}/unity/themes/*.png
 
 
 %changelog
+* Tue Aug 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.8.23-2
+- Remove Ubuntu branding icons
+- Fix directory ownership
+
 * Sun Jul 08 2012 Xiao-long Chen <chenxiaolong@cxl.epac.to> - 0.8.23-1
 - Initial release
 - Version 0.8.23
