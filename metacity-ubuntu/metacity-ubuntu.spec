@@ -24,35 +24,36 @@ Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/metacity_%{versio
 
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	control-center
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
-BuildRequires:	libtool
-BuildRequires:	intltool
-
-BuildRequires:	control-center
-BuildRequires:	dbus-devel
-BuildRequires:	fontconfig-devel
-BuildRequires:	gsettings-desktop-schemas-devel
-BuildRequires:	GConf2-devel
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
-BuildRequires:	gtk2-devel
-BuildRequires:	libcanberra-devel
-BuildRequires:	libglade2-devel
-BuildRequires:	libICE-devel
-BuildRequires:	libSM-devel
-BuildRequires:	libX11-devel
-BuildRequires:	libXcomposite-devel
-BuildRequires:	libXcursor-devel
-BuildRequires:	libXdamage-devel
-BuildRequires:	libXext-devel
-BuildRequires:	libXinerama-devel
-BuildRequires:	libXrandr-devel
-Buildrequires:	libXrender-devel
-BuildRequires:	pango-devel
-BuildRequires:	startup-notification-devel
-BuildRequires:	xorg-x11-proto-devel
+BuildRequires:	libtool
+BuildRequires:	intltool
 BuildRequires:	zenity
+
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(fontconfig)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(gsettings-desktop-schemas)
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(ice)
+BuildRequires:	pkgconfig(libcanberra)
+BuildRequires:	pkgconfig(libglade-2.0)
+BuildRequires:	pkgconfig(libstartup-notification-1.0)
+BuildRequires:	pkgconfig(pango)
+BuildRequires:	pkgconfig(sm)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xcomposite)
+BuildRequires:	pkgconfig(xcursor)
+BuildRequires:	pkgconfig(xdamage)
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xinerama)
+BuildRequires:	pkgconfig(xrandr)
+Buildrequires:	pkgconfig(xrender)
+
+BuildRequires:	xorg-x11-proto-devel
 
 Requires:	control-center-filesystem
 Requires:	GConf2
@@ -163,33 +164,33 @@ fi
 %{_libdir}/libmetacity-private.so.0
 %{_libdir}/libmetacity-private.so.0.0.0
 %{_datadir}/applications/metacity.desktop
-%{_datadir}/gnome-control-center/keybindings/50-metacity-launchers.xml
-%{_datadir}/gnome-control-center/keybindings/50-metacity-navigation.xml
-%{_datadir}/gnome-control-center/keybindings/50-metacity-screenshot.xml
-%{_datadir}/gnome-control-center/keybindings/50-metacity-system.xml
-%{_datadir}/gnome-control-center/keybindings/50-metacity-windows.xml
+%{_datadir}/gnome-control-center/keybindings/50-metacity-*.xml
 %{_datadir}/gnome/help/creating-metacity-themes/
 %{_datadir}/gnome/wm-properties/metacity-wm.desktop
 %{_mandir}/man1/metacity.1.gz
 %{_mandir}/man1/metacity-message.1.gz
+%dir %{_datadir}/metacity/
+%dir %{_datadir}/metacity/icons/
 %{_datadir}/metacity/icons/metacity-window-demo.png
 %{_datadir}/metacity/metacity.gconf-defaults
+%dir %{_datadir}/sgml/metacity-common/
 %{_datadir}/sgml/metacity-common/metacity-common.catalog
 %{_datadir}/sgml/metacity-common/metacity-theme.dtd
-%{_datadir}/themes/*/metacity-1/*.png
-%{_datadir}/themes/*/metacity-1/*.xml
+%{_datadir}/themes/AgingGorilla/
+%{_datadir}/themes/Atlanta/
+%{_datadir}/themes/Bright/
+%{_datadir}/themes/Crux/
+%{_datadir}/themes/Esco/
+%{_datadir}/themes/Metabox/
+%{_datadir}/themes/Simple/
 
 
 %files devel
 %{_bindir}/metacity-theme-viewer
 %{_bindir}/metacity-window-demo
-%{_includedir}/metacity-1/metacity-private/boxes.h
-%{_includedir}/metacity-1/metacity-private/common.h
-%{_includedir}/metacity-1/metacity-private/gradient.h
-%{_includedir}/metacity-1/metacity-private/preview-widget.h
-%{_includedir}/metacity-1/metacity-private/theme.h
-%{_includedir}/metacity-1/metacity-private/theme-parser.h
-%{_includedir}/metacity-1/metacity-private/util.h
+%dir %{_includedir}/metacity-1/
+%dir %{_includedir}/metacity-1/metacity-private/
+%{_includedir}/metacity-1/metacity-private/*.h
 %{_libdir}/libmetacity-private.so
 %{_libdir}/pkgconfig/libmetacity-private.pc
 %{_mandir}/man1/metacity-theme-viewer.1.gz
@@ -197,7 +198,11 @@ fi
 
 
 %changelog
-* Sun Jul 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1:2.34.1-1.1ubuntu11
+* Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.34.1-2.1ubuntu11
+- Fix directory ownership
+- Use pkgconfig for dependencies
+
+* Sun Jul 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.34.1-1.1ubuntu11
 - Initial release
 - Based on Fedora 17's spec file
 - Version 2.34.1
