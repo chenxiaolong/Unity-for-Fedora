@@ -2,7 +2,7 @@
 
 Name:		unity-lens-files
 Version:	6.2.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Unity files lens
 
 Group:		User Interface/Desktops
@@ -10,16 +10,15 @@ License:	GPLv3
 URL:		https://launchpad.net/unity-lens-files
 Source0:	https://launchpad.net/unity-lens-files/6.0/%{version}/+download/unity-lens-files-%{version}.tar.gz
 
-BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRequires:	gettext
-
-BuildRequires:	dee-devel
-BuildRequires:	glib2-devel
-BuildRequires:	libgee06-devel
-BuildRequires:	libunity-devel
-BuildRequires:	libzeitgeist-devel
+BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
+
+BuildRequires:	pkgconfig(dee-1.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gee-1.0)
+BuildRequires:	pkgconfig(unity)
+BuildRequires:	pkgconfig(zeitgeist-1.0)
 
 %description
 This package contains the files lens which can be used to browse recent
@@ -55,12 +54,19 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/unity-files-daemon
 %{_datadir}/dbus-1/services/unity-lens-files.service
 %{_datadir}/glib-2.0/schemas/com.canonical.Unity.FilesLens.gschema.xml
+%dir %{_datadir}/unity/
+%dir %{_datadir}/unity/lenses/
 %dir %{_datadir}/unity/lenses/files/
+%dir %{_datadir}/unity/themes/
 %{_datadir}/unity/lenses/files/files.lens
 %{_datadir}/unity/themes/files.png
 
 
 %changelog
+* Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-2
+- Fix directory ownership
+- Use pkgconfig for dependencies
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1
 - Version 6.2.0
 
