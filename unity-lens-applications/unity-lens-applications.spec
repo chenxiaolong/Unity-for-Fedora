@@ -12,21 +12,19 @@ Source0:	https://launchpad.net/unity-lens-applications/6.0/%{version}/+download/
 
 Patch0:		10-no-db51.patch
 
-BuildRequires:	autoconf
-BuildRequires:	automake
-BuildRequires:	gcc-c++
 BuildRequires:	gettext
-
-BuildRequires:	dee-devel
-BuildRequires:	GConf2-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gnome-menus301-devel
-BuildRequires:	libdb-devel
-BuildRequires:	libgee06-devel
-BuildRequires:	libunity-devel
-BuildRequires:	libuuid-devel
-BuildRequires:	libzeitgeist-devel
+BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
+
+BuildRequires:	pkgconfig(dee-1.0)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(gee-1.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(libgnome-menu)
+BuildRequires:	pkgconfig(unity)
+BuildRequires:	pkgconfig(zeitgeist-1.0)
+
+BuildRequires:	libdb-devel
 BuildRequires:	xapian-core-devel
 
 %description
@@ -38,8 +36,6 @@ applications for the Unity shell.
 %setup -q
 
 %patch0 -p1 -b .dbversion
-
-autoreconf -vfi
 
 
 %build
@@ -74,14 +70,22 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/dbus-1/services/unity-lens-applications.service
 %{_datadir}/desktop-directories/X-Unity-All-Applications.directory
 %{_datadir}/glib-2.0/schemas/com.canonical.Unity.AppsLens.gschema.xml
+%dir %{_datadir}/unity/
+%dir %{_datadir}/unity/lenses/
 %dir %{_datadir}/unity/lenses/applications/
-%{_datadir}/unity/lenses/applications/applications.lens
 %dir %{_datadir}/unity/lenses/commands/
+%dir %{_datadir}/unity/themes/
+%{_datadir}/unity/lenses/applications/applications.lens
 %{_datadir}/unity/lenses/commands/commands.lens
 %{_datadir}/unity/themes/applications.png
 
 
 %changelog
+* Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-2
+- Fix directory ownership
+- Use pkgconfig for dependencies
+- Remove unneeded build dependencies
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1
 - Version 6.2.0
 
