@@ -10,14 +10,16 @@ License:	GPLv3
 URL:		https://launchpad.net/unity-lens-music
 Source0:	https://launchpad.net/unity-lens-music/6.0/%{version}/+download/unity-lens-music-%{version}.tar.gz
 
-BuildRequires:	dee-devel
-BuildRequires:	glib2-devel
-BuildRequires:	json-glib-devel
-BuildRequires:	libgee06-devel
-BuildRequires:	libtdb-devel
-BuildRequires:	libunity-devel
-BuildRequires:	sqlite-devel
+BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
+
+BuildRequires:	pkgconfig(dee-1.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(json-glib-1.0)
+BuildRequires:	pkgconfig(gee-1.0)
+BuildRequires:	pkgconfig(sqlite3)
+BuildRequires:	pkgconfig(tdb)
+BuildRequires:	pkgconfig(unity)
 
 %description
 This package contains the music lens which can be used to browse media files.
@@ -42,12 +44,18 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_libexecdir}/unity-musicstore-daemon
 %{_datadir}/dbus-1/services/musicstore-scope.service
 %{_datadir}/dbus-1/services/unity-lens-music.service
+%dir %{_datadir}/unity/
+%dir %{_datadir}/unity/lenses/
 %dir %{_datadir}/unity/lenses/music/
 %{_datadir}/unity/lenses/music/music.lens
 %{_datadir}/unity/lenses/music/musicstore.scope
 
 
 %changelog
+* Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-2
+- Fix directory ownership
+- Use pkgconfig for dependencies
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1
 - Version 6.2.0
 
