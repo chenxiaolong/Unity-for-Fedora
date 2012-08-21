@@ -4,7 +4,7 @@
 
 Name:		unity-lens-video
 Version:	0.3.6
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Unity video lens
 
 Group:		User Interface/Desktops
@@ -54,10 +54,16 @@ install -m644 build/share/unity/lenses/video/video.lens \
 %{python_sitelib}/unity_lens_video-0.3.6-py2.7.egg-info
 %{_libexecdir}/unity-lens-video
 %{_datadir}/dbus-1/services/unity-lens-video.service
+%dir %{_datadir}/unity/
+%dir %{_datadir}/unity/lenses/
+%dir %{_datadir}/unity/lenses/video/
 %{_datadir}/unity/lenses/video/video.lens
 
 
 %changelog
+* Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.6-3
+- Fix directory ownership
+
 * Sun Jul 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.6-2
 - Video lens didn't get installed
 - Install daemon to libexec
