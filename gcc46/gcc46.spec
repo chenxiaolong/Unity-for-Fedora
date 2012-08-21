@@ -9,12 +9,20 @@
 
 Name:		gcc46
 Version:	4.6.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	GNU Compiler Collection (version 4.6.3)
 
+%if %{defined suse_version}
+Group:		Development/Languages/C and C++
+%else
 Group:		Development/Languages
+%endif
 # License found from f16 spec file
-License:	GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions and LGPLv2+ and BSD
+%if %{defined suse_version}
+License:	GPL-3.0+ and GPL-3.0-with-GCC-exception and GPL-2.0-with-GCC-exception
+%else
+License:	GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions
+%endif
 URL:		http://gcc.gnu.org
 #Source0:	ftp://ftp.gnu.org/gnu/gcc/gcc-4.6.3/gcc-4.6.3.tar.bz2
 # Just use the parts we need (saves download time)
@@ -41,6 +49,7 @@ Source99:	filter_requires_opensuse.sh
 BuildRequires:	binutils
 
 %if %{defined suse_version}
+BuildRequires:	fdupes
 BuildRequires:	gettext-tools
 
 BuildRequires:	cloog-devel
@@ -66,7 +75,11 @@ version 4.6. This package is required for compiling nux and Unity.
 
 %package devel
 Summary:	Development files from the GNU Compiler Collection version 4.6
+%if %{defined suse_version}
+Group:		Development/Libraries/C and C++
+%else
 Group:		Development/Libraries
+%endif
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
@@ -76,7 +89,11 @@ This package contains the development files needed to create C and C++ programs.
 
 %package static
 Summary:	Static libraries from the GNU Compiler Collection version 4.6
+%if %{defined suse_version}
+Group:		Development/Libraries/C and C++
+%else
 Group:		Development/Libraries
+%endif
 
 Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
 
@@ -86,6 +103,12 @@ statically.
 
 
 %prep
+# Make filter scripts executable for openSUSE (needed when building on OBS)
+%if %{defined suse_version}
+chmod +x %{SOURCE98}
+chmod +x %{SOURCE99}
+%endif
+
 %setup -q -c
 %setup -q -D -T -a 1
 
@@ -177,9 +200,14 @@ rmdir $RPM_BUILD_ROOT%{_libdir}/gcc/%{_target_platform}/%{_lib}/
 %endif
 
 # Remove 'install-tools' directories, which usually isn't packaged
+# On 32 bit openSUSE, both libdir and libexecdir are /usr/lib
 rm -rv \
+%if "%{_libexecdir}" == "%{_libdir}"
+  $RPM_BUILD_ROOT%{_libdir}/gcc/%{_target_platform}/%{version}/install-tools/ \
+%else
   $RPM_BUILD_ROOT%{_libdir}/gcc/%{_target_platform}/%{version}/install-tools/ \
   $RPM_BUILD_ROOT%{_libexecdir}/gcc/%{_target_platform}/%{version}/install-tools
+%endif
 
 # Remove info pages, manual pages, and locales. They are mostly identical to the
 # GCC 4.7.0 ones and this GCC package isn't meant for users anyway :D
@@ -187,8 +215,16 @@ rm -rv $RPM_BUILD_ROOT%{_infodir}/
 rm -rv $RPM_BUILD_ROOT%{_mandir}/
 rm -rv $RPM_BUILD_ROOT%{_datadir}/locale/
 
+# symlink duplicate files in openSUSE
+%if %{defined suse_version}
+%fdupes -s $RPM_BUILD_ROOT
+%endif
+
 
 %files
+%if %{defined suse_version}
+%defattr(-,root,root)
+%endif
 %doc gcc-%{version}/ChangeLog gcc-%{version}/NEWS
 %{_bindir}/c++-4.6
 %{_bindir}/cpp-4.6
@@ -238,6 +274,9 @@ rm -rv $RPM_BUILD_ROOT%{_datadir}/locale/
 
 
 %files devel
+%if %{defined suse_version}
+%defattr(-,root,root)
+%endif
 %doc gcc-%{version}/ChangeLog gcc-%{version}/NEWS
 %dir %{_libdir}/gcc/
 %dir %{_libdir}/gcc/%{_target_platform}/
@@ -260,6 +299,9 @@ rm -rv $RPM_BUILD_ROOT%{_datadir}/locale/
 
 
 %files static
+%if %{defined suse_version}
+%defattr(-,root,root)
+%endif
 %doc gcc-%{version}/ChangeLog gcc-%{version}/NEWS
 %dir %{_libdir}/gcc/
 %dir %{_libdir}/gcc/%{_target_platform}/
@@ -278,6 +320,9 @@ rm -rv $RPM_BUILD_ROOT%{_datadir}/locale/
 
 
 %changelog
+* Mon Aug 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.6.3-3
+- Now builds in openSUSE
+
 * Tue Jul 10 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.6.3-2
 - Install in /usr prefix
 

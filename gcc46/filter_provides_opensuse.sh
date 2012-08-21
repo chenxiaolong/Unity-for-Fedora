@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/usr/lib/rpm/find-provides $* | grep -v '\.so'
+/usr/lib/rpm/find-provides $* | grep -v '\.so' || true
