@@ -4,10 +4,6 @@
 
 # Partially based off of Fedora 15's spec file
 
-# Do not provide the Python 2 binding library
-%filter_provides_in %{python_sitearch}/gmenu\.so$
-%filter_setup
-
 Name:		gnome-menus301
 Version:	3.0.1
 Release:	1%{?dist}
@@ -20,10 +16,11 @@ Source0:	http://download.gnome.org/sources/gnome-menus/3.0/gnome-menus-%{version
 
 BuildRequires:	gettext
 BuildRequires:	intltool
+BuildRequires:	pkgconfig
 
-BuildRequires:	gamin-devel
-BuildRequires:	glib2-devel
-BuildRequires:	python2-devel
+BuildRequires:	pkgconfig(gamin)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(python2)
 
 Requires:	redhat-menus
 
@@ -65,6 +62,9 @@ make -C python install DESTDIR=$RPM_BUILD_ROOT
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
+# Remove Python binding
+rm $RPM_BUILD_ROOT%{python_sitearch}/gmenu.so
+
 
 %post -p /sbin/ldconfig
 
@@ -75,7 +75,6 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %doc AUTHORS NEWS COPYING.LIB
 %{_libdir}/libgnome-menu.so.2
 %{_libdir}/libgnome-menu.so.2.4.13
-%{python_sitearch}/gmenu.so
 
 
 %files devel
@@ -87,6 +86,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.1-2
+- Remove useless Python binding
+- Use pkgconfig for dependencies
+
 * Sun Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.1-1
 - Initial release
 - Version 3.0.1
