@@ -42,7 +42,7 @@ Build order:
 40: evemu                          -> Linux Evdev Event Emulation Library
 41: frame                          -> Open Input Framework Frame Library
 42: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-43: libXfixes                      -> X.Org fixes extension library
+43: libXfixes-ubuntu               -> X.Org fixes extension library
 44: xorg-x11-server-ubuntu         -> Xorg X11 server
 45: grail                          -> Gesture recognition and instantiation lib.
 46: geis                           -> Implementation of the GEIS interface
