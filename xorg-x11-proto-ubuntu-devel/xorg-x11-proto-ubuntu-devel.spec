@@ -2,7 +2,7 @@
 
 # Based off of the Fedora 17 spec file
 
-%define _fedora_rel			21
+%define _fedora_rel			22
 %define _ubuntu_rel			2ubuntu1
 %define _obsolete_ver			7.6-100
 
@@ -10,14 +10,14 @@
 %define _ver_compositeproto		0.4.1
 %define _ver_damageproto		1.2.0
 %define _ver_dmxproto			2.3.1
-%define _ver_dri2proto			2.6
+%define _ver_dri2proto			2.8
 %define _ver_evieext			1.1.1
 %define _ver_fixesproto			5.0
 %define _ver_fontsproto			2.1.0
-%define _ver_glproto			1.4.15
+%define _ver_glproto			1.4.16
 %define _ver_inputproto			2.1.99.6
 %define _ver_kbproto			1.0.5
-%define _ver_randrproto			20120711-gitef99bda
+%define _ver_randrproto			1.4.0
 %define _ver_recordproto		1.14.1
 %define _ver_renderproto		0.11.1
 %define _ver_resourceproto		1.2.0
@@ -318,6 +318,11 @@ rm -vf $RPM_BUILD_ROOT%{_docdir}/*/*.html
 
 
 %changelog
+* Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 7.6-1.2ubuntu1.fcrel22
+- glproto 1.4.16
+- dri2proto 2.8
+- randrproto 1.4.0
+
 * Wed Jul 11 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 7.6-1.2ubuntu1.fcrel21
 - Initial release
 - Ubuntu release 2ubuntu1 (patches fixesproto 5.0)
