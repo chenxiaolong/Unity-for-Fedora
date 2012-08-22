@@ -18,41 +18,42 @@ Source1:	50_check_unity_support
 BuildRequires:	gcc46-devel
 BuildRequires:	gcc46-static
 
+BuildRequires:	xorg-x11-xinit
+
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 
 BuildRequires:	boost-devel
-BuildRequires:	cairo-devel
-BuildRequires:	gdk-pixbuf2-devel
-BuildRequires:	glew-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gmock-devel
-BuildRequires:	gtest-devel
-BuildRequires:	ibus-devel
-BuildRequires:	libpng-devel
-BuildRequires:	libsigc++20-devel
-BuildRequires:	libX11-devel
-BuildRequires:	libXcomposite-devel
-BuildRequires:	libXdamage-devel
-BuildRequires:	libXinerama-devel
-BuildRequires:	libXtst-devel
-BuildRequires:	libXxf86vm-devel
-BuildRequires:	mesa-libGL-devel
-BuildRequires:	mesa-libGLU-devel
-BuildRequires:	pango-devel
-BuildRequires:	pciutils-devel
-BuildRequires:	pcre-devel
-BuildRequires:	geis-devel
+BuildRequires:	pkgconfig(cairo)
+BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
+BuildRequires:	pkgconfig(sigc++-2.0)
+BuildRequires:	pkgconfig(glew)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(ibus-1.0)
+BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(compositeproto) 
+BuildRequires:	pkgconfig(damageproto)
+BuildRequires:	pkgconfig(xcomposite)
+BuildRequires:	pkgconfig(xinerama)
+BuildRequires:	pkgconfig(xtst)
+BuildRequires:	pkgconfig(xxf86vm)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(pango)
+BuildRequires:	pkgconfig(libpci)
+BuildRequires:	pkgconfig(libpcre)
+BuildRequires:	pkgconfig(libgeis)
 
 Requires:	%{name}-common = %{version}-%{release}
+Requires:	xorg-x11-xinit
 
 # Description from Ubuntu
 %description
 Nux is a graphical user interface toolkit for applications that mixes OpenGL
 hardware acceleration with high quality visual rendering.
-
 
 %package devel
 Summary:	Development files for the Nux library
@@ -60,20 +61,19 @@ Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	boost-devel
-Requires:	cairo-devel
-Requires:	gdk-pixbuf2-devel
-Requires:	glew-devel
-Requires:	glib2-devel
-Requires:	libpng-devel
-Requires:	libsigc++20-devel
-Requires:	libXxf86vm-devel
-Requires:	mesa-libGL-devel
-Requires:	pango-devel
-Requires:	pcre-devel
+Requires:	pkgconfig(cairo)
+Requires:	pkgconfig(gdk-pixbuf-2.0)
+Requires:	pkgconfig(glew)
+Requires:	pkgconfig(glib-2.0)
+Requires:	pkgconfig(libpng)
+Requires:	pkgconfig(sigc++-2.0)
+Requires:	pkgconfig(xxf86vm)
+Requires:	pkgconfig(gl)
+Requires:	pkgconfig(pango)
+Requires:	pkgconfig(libpcre)
 
 %description devel
 This package contains the development files for the Nux library.
-
 
 %package common
 Summary:	Common files for the Nux library
@@ -86,7 +86,6 @@ Requires:	%{name} = %{version}-%{release}
 %description common
 This package contains the architecture-independent files for the Nux library.
 
-
 %package tools
 Summary:	Visual rendering toolkit for real-time applications - Tools
 Group:		Development/Tools
@@ -96,13 +95,11 @@ Requires:	%{name}%{?_isa} = %{version}-%{release}
 %description tools
 This package contains various tools for the Nux library.
 
-
 %prep
 %setup -q
 
 # Avoid rpmlint spurious-executable-perm error in debuginfo package
 find -type f \( -name '*.h' -o -name '*.cpp' \) -exec chmod 644 {} \;
-
 
 %build
 # Remove '-gnu' from target triplet
@@ -124,7 +121,6 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make %{?_smp_mflags}
 
-
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
@@ -141,11 +137,9 @@ find $RPM_BUILD_ROOT -type f -empty -delete
 install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
-
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
-
 
 %files
 %doc AUTHORS
@@ -155,7 +149,6 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_libdir}/libnux-core-%{_major_ver}.0.so.0.200.0
 %{_libdir}/libnux-graphics-%{_major_ver}.0.so.0
 %{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.200.0
-
 
 %files devel
 %doc AUTHORS
@@ -182,7 +175,6 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_libdir}/pkgconfig/nux-core-%{_major_ver}.0.pc
 %{_libdir}/pkgconfig/nux-graphics-%{_major_ver}.0.pc
 
-
 %files common
 %doc AUTHORS
 %dir %{_datadir}/nux/
@@ -196,14 +188,18 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_datadir}/nux/%{_major_ver}.0/UITextures/Painter.xml
 %{_datadir}/nux/%{_major_ver}.0/UITextures/UIArchive.iar
 
-
 %files tools
 %doc AUTHORS
+#dir #{_sysconfdir}/X11/xinit/
+#dir #{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_libexecdir}/unity_support_test
 %{_sysconfdir}/X11/xinit/xinitrc.d/50_check_unity_support
 
-
 %changelog
+* Wed Aug 22 2012 Damian Ivanov <damianatorrpm@gmail.com> - 3.2.0-1
+- Uses pkgconfig for dependencies 
+- Add xorg-x11-xinit to dependencies (owns /etc/X11/xinit/xinitrc.d/ etc.)
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.2.0-1
 - Version 3.2.0
 
