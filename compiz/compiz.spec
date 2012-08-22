@@ -42,49 +42,48 @@ Patch2:		0003_Fix_python_install_command.patch
 
 BuildRequires:	cmake
 BuildRequires:	desktop-file-utils
-BuildRequires:	gcc-c++
 BuildRequires:	gettext
 BuildRequires:	intltool
 BuildRequires:	libtool
+BuildRequires:	pkgconfig
 
 BuildRequires:	boost-devel
-BuildRequires:	cairo-devel
-BuildRequires:	control-center-devel
-BuildRequires:	dbus-glib-devel
-BuildRequires:	GConf2-devel
-BuildRequires:	glib2-devel
-BuildRequires:	glibmm24-devel
-BuildRequires:	gtk2-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libICE-devel
 BuildRequires:	libjpeg-turbo-devel
-BuildRequires:	libnotify-devel
-BuildRequires:	libpng-devel
-BuildRequires:	librsvg2-devel
-BuildRequires:	libSM-devel
-BuildRequires:	libwnck-devel
-BuildRequires:	libX11-devel
-BuildRequires:	libXcomposite-devel
-BuildRequires:	libXcursor-devel
-BuildRequires:	libXdamage-devel
-BuildRequires:	libXext-devel
-# Ubuntu's libXfixes required
-BuildRequires:	libXfixes-ubuntu-devel
-BuildRequires:	libXinerama-devel
-BuildRequires:	libxml2-devel
-BuildRequires:	libXrandr-devel
-BuildRequires:	libXrender-devel
-BuildRequires:	libxslt-devel
-BuildRequires:	mesa-libGL-devel
-BuildRequires:	mesa-libGLU-devel
 # Ubuntu's metacity required for the keybinding files
 BuildRequires:	metacity-ubuntu-devel
-BuildRequires:	pango-devel
-#BuildRequires:	perl-XML-Parser
-BuildRequires:	protobuf-devel
-BuildRequires:	python-devel
-BuildRequires:	startup-notification-devel
-BuildRequires:	xorg-x11-proto-devel
+
+BuildRequires:	pkgconfig(cairo)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(glibmm-2.4)
+BuildRequires:	pkgconfig(glproto)
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(gnome-keybindings)
+BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(ice)
+BuildRequires:	pkgconfig(libnotify)
+BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(librsvg-2.0)
+BuildRequires:	pkgconfig(libstartup-notification-1.0)
+BuildRequires:	pkgconfig(libwnck-1.0)
+BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	pkgconfig(libxslt)
+BuildRequires:	pkgconfig(pango)
+BuildRequires:	pkgconfig(protobuf)
+BuildRequires:	pkgconfig(python2)
+BuildRequires:	pkgconfig(sm)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xcomposite)
+BuildRequires:	pkgconfig(xcursor)
+BuildRequires:	pkgconfig(xdamage)
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xfixes)
+BuildRequires:	pkgconfig(xinerama)
+BuildRequires:	pkgconfig(xrandr)
+BuildRequires:	pkgconfig(xrender)
 
 BuildRequires:	Pyrex
 
@@ -107,25 +106,23 @@ Group:		Development/Libraries
 License:	MIT and X
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	glib2-devel
-Requires:	glibmm24-devel
-Requires:	gtk3-devel
-Requires:	libICE-devel
-Requires:	libpng-devel
-Requires:	libSM-devel
-Requires:	libX11-devel
-Requires:	libXcomposite-devel
-Requires:	libXcursor-devel
-Requires:	libXdamage-devel
-Requires:	libXfixes-ubuntu-devel
-Requires:	libXinerama-devel
-Requires:	libxml2-devel
-Requires:	libXrandr-devel
-Requires:	libxslt-devel
-Requires:	mesa-libGL-devel
-Requires:	startup-notification-devel
-
-Obsoletes:	compiz-plugins-main-devel < 0.9.8
+Requires:	pkgconfig(gl)
+Requires:	pkgconfig(glib-2.0)
+Requires:	pkgconfig(glibmm-2.4)
+Requires:	pkgconfig(gtk+-3.0)
+Requires:	pkgconfig(ice)
+Requires:	pkgconfig(libpng)
+Requires:	pkgconfig(libstartup-notification-1.0)
+Requires:	pkgconfig(libxml-2.0)
+Requires:	pkgconfig(libxslt)
+Requires:	pkgconfig(sm)
+Requires:	pkgconfig(x11)
+Requires:	pkgconfig(xcomposite)
+Requires:	pkgconfig(xcursor)
+Requires:	pkgconfig(xdamage)
+Requires:	pkgconfig(xfixes)
+Requires:	pkgconfig(xinerama)
+Requires:	pkgconfig(xrandr)
 
 %description devel
 This packages contains the development files for creating Compiz plugins.
@@ -140,8 +137,6 @@ License:	LGPLv2+
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	control-center-filesystem
 
-Obsoletes:	compizconfig-backend-gconf < 0.9.8
-
 %description gnome
 This package contains the GNOME window decorator and GNOME support files for
 Compiz.
@@ -153,9 +148,6 @@ Group:		User Interface/X
 License:	GPLv2+ and LGPLv2+ and MIT and X
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-
-Obsoletes:	compiz-plugins-main < 0.9.8
-Obsoletes:	compiz-plugins-extra < 0.9.8
 
 %description plugins
 This package contains the set of plugins from the Compiz project.
@@ -372,76 +364,25 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 # Header files
 %dir %{_includedir}/compiz/
 %dir %{_includedir}/compiz/animation/
-%{_includedir}/compiz/animation/animation.h
-%{_includedir}/compiz/animation/animeffect.h
-%{_includedir}/compiz/animation/extensionplugin.h
-%{_includedir}/compiz/animation/fade.h
-%{_includedir}/compiz/animation/grid.h
-%{_includedir}/compiz/animation/gridtransform.h
-%{_includedir}/compiz/animation/multi.h
-%{_includedir}/compiz/animation/partialwindow.h
-%{_includedir}/compiz/animation/persistent.h
-%{_includedir}/compiz/animation/point3d.h
-%{_includedir}/compiz/animation/screen.h
-%{_includedir}/compiz/animation/transform.h
-%{_includedir}/compiz/animation/window.h
-%{_includedir}/compiz/animation/zoom.h
 %dir %{_includedir}/compiz/animationaddon/
-%{_includedir}/compiz/animationaddon/animationaddon.h
 %dir %{_includedir}/compiz/compiztoolbox/
-%{_includedir}/compiz/compiztoolbox/compiztoolbox.h
 %dir %{_includedir}/compiz/composite/
-%{_includedir}/compiz/composite/composite.h
 %dir %{_includedir}/compiz/core/
-%{_includedir}/compiz/core/abiversion.h
-%{_includedir}/compiz/core/action.h
-%{_includedir}/compiz/core/atoms.h
-%{_includedir}/compiz/core/core.h
-%{_includedir}/compiz/core/countedlist.h
-%{_includedir}/compiz/core/global.h
-%{_includedir}/compiz/core/icon.h
-%{_includedir}/compiz/core/logmessage.h
-%{_includedir}/compiz/core/match.h
-%{_includedir}/compiz/core/modifierhandler.h
-%{_includedir}/compiz/core/option.h
-%{_includedir}/compiz/core/output.h
-%{_includedir}/compiz/core/plugin.h
-%{_includedir}/compiz/core/pluginclasses.h
-%{_includedir}/compiz/core/pluginclasshandler.h
-%{_includedir}/compiz/core/point.h
-%{_includedir}/compiz/core/privateunion.h
-%{_includedir}/compiz/core/propertywriter.h
-%{_includedir}/compiz/core/rect.h
-%{_includedir}/compiz/core/region.h
-%{_includedir}/compiz/core/screen.h
-%{_includedir}/compiz/core/serialization.h
-%{_includedir}/compiz/core/servergrab.h
-%{_includedir}/compiz/core/session.h
-%{_includedir}/compiz/core/size.h
-%{_includedir}/compiz/core/string.h
-%{_includedir}/compiz/core/timeouthandler.h
-%{_includedir}/compiz/core/timer.h
-%{_includedir}/compiz/core/valueholder.h
-%{_includedir}/compiz/core/window.h
-%{_includedir}/compiz/core/windowconstrainment.h
-%{_includedir}/compiz/core/windowextents.h
-%{_includedir}/compiz/core/windowgeometry.h
-%{_includedir}/compiz/core/windowgeometrysaver.h
-%{_includedir}/compiz/core/wrapsystem.h
 %dir %{_includedir}/compiz/cube/
+%dir %{_includedir}/compiz/mousepoll/
+%dir %{_includedir}/compiz/opengl/
+%dir %{_includedir}/compiz/scale/
+%dir %{_includedir}/compiz/text/
+%{_includedir}/compiz/animation/*.h
+%{_includedir}/compiz/animationaddon/animationaddon.h
+%{_includedir}/compiz/compiztoolbox/compiztoolbox.h
+%{_includedir}/compiz/composite/composite.h
+%{_includedir}/compiz/core/*.h
 %{_includedir}/compiz/cube/cube.h
 %{_includedir}/compiz/decoration.h
-%dir %{_includedir}/compiz/mousepoll/
 %{_includedir}/compiz/mousepoll/mousepoll.h
-%dir %{_includedir}/compiz/opengl/
-%{_includedir}/compiz/opengl/fragment.h
-%{_includedir}/compiz/opengl/matrix.h
-%{_includedir}/compiz/opengl/opengl.h
-%{_includedir}/compiz/opengl/texture.h
-%{_includedir}/compiz/opengl/vector.h
-%dir %{_includedir}/compiz/scale/
+%{_includedir}/compiz/opengl/*.h
 %{_includedir}/compiz/scale/scale.h
-%dir %{_includedir}/compiz/text/
 %{_includedir}/compiz/text/text.h
 # pkgconfig files
 %{_libdir}/pkgconfig/compiz-animation.pc
@@ -877,6 +818,11 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 
 %changelog
+* Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8-3.0ubuntu2
+- Remove obsoletes
+- Use pkgconfig for dependencies
+- Clean up spec file
+
 * Wed Aug 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8-2.0ubuntu2
 - Fix dependency on /bin/python2, which breaks upgrades
 
