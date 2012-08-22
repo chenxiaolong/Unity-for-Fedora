@@ -9,7 +9,7 @@ Release:	1%{?dist}
 Summary:	Visual rendering toolkit for real-time applications
 
 Group:		System Environment/Libraries
-License:	GPLv3 and LGPLv2+
+License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/nux
 Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.2/+download/nux-%{version}.tar.gz
 Source1:	50_check_unity_support
@@ -27,25 +27,25 @@ BuildRequires:	graphviz
 
 BuildRequires:	boost-devel
 BuildRequires:	pkgconfig(cairo)
-BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
-BuildRequires:	pkgconfig(sigc++-2.0)
-BuildRequires:	pkgconfig(glew)
-BuildRequires:	pkgconfig(glib-2.0)
-BuildRequires:	pkgconfig(ibus-1.0)
-BuildRequires:	pkgconfig(libpng)
-BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(compositeproto) 
 BuildRequires:	pkgconfig(damageproto)
+BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glew)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(ibus-1.0)
+BuildRequires:	pkgconfig(libgeis)
+BuildRequires:	pkgconfig(libpci)
+BuildRequires:	pkgconfig(libpcre)
+BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(pango)
+BuildRequires:	pkgconfig(sigc++-2.0)
+BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xcomposite)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xtst)
 BuildRequires:	pkgconfig(xxf86vm)
-BuildRequires:	pkgconfig(gl)
-BuildRequires:	pkgconfig(glu)
-BuildRequires:	pkgconfig(pango)
-BuildRequires:	pkgconfig(libpci)
-BuildRequires:	pkgconfig(libpcre)
-BuildRequires:	pkgconfig(libgeis)
 
 Requires:	%{name}-common = %{version}-%{release}
 Requires:	xorg-x11-xinit
@@ -196,6 +196,9 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_sysconfdir}/X11/xinit/xinitrc.d/50_check_unity_support
 
 %changelog
+* Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.2.0-1
+- Fix license
+
 * Wed Aug 22 2012 Damian Ivanov <damianatorrpm@gmail.com> - 3.2.0-1
 - Uses pkgconfig for dependencies 
 - Add xorg-x11-xinit to dependencies (owns /etc/X11/xinit/xinitrc.d/ etc.)
