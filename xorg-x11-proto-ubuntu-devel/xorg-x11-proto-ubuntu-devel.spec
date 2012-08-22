@@ -56,7 +56,7 @@ Source7:        %{website}/fontsproto-%{_ver_fontsproto}.tar.bz2
 Source8:        %{website}/glproto-%{_ver_glproto}.tar.bz2
 Source9:        %{website}/inputproto-%{_ver_inputproto}.tar.bz2
 Source10:       %{website}/kbproto-%{_ver_kbproto}.tar.bz2
-Source11:       randrproto-%{_ver_randrproto}.tar.bz2
+Source11:       %{website}/randrproto-%{_ver_randrproto}.tar.bz2
 Source12:       %{website}/recordproto-%{_ver_recordproto}.tar.bz2
 Source13:       %{website}/renderproto-%{_ver_renderproto}.tar.bz2
 Source14:       %{website}/resourceproto-%{_ver_resourceproto}.tar.bz2
