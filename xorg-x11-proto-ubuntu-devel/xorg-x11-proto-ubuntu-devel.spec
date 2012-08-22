@@ -6,25 +6,25 @@
 %define _ubuntu_rel			2ubuntu1
 %define _obsolete_ver			7.6-100
 
-%define _ver_bigreqsproto		1.1.0
+%define _ver_bigreqsproto		1.1.2
 %define _ver_compositeproto		0.4.1
-%define _ver_damageproto		1.2.0
+%define _ver_damageproto		1.2.1
 %define _ver_dmxproto			2.3.1
 %define _ver_dri2proto			2.8
 %define _ver_evieext			1.1.1
 %define _ver_fixesproto			5.0
-%define _ver_fontsproto			2.1.0
+%define _ver_fontsproto			2.1.2
 %define _ver_glproto			1.4.16
-%define _ver_inputproto			2.1.99.6
-%define _ver_kbproto			1.0.5
+%define _ver_inputproto			2.2
+%define _ver_kbproto			1.0.6
 %define _ver_randrproto			1.4.0
-%define _ver_recordproto		1.14.1
+%define _ver_recordproto		1.14.2
 %define _ver_renderproto		0.11.1
 %define _ver_resourceproto		1.2.0
-%define _ver_scrnsaverproto		1.2.1
+%define _ver_scrnsaverproto		1.2.2
 %define _ver_videoproto			2.3.1
-%define _ver_xcmiscproto		1.2.1
-%define _ver_xextproto			7.2.0
+%define _ver_xcmiscproto		1.2.2
+%define _ver_xextproto			7.2.1
 %define _ver_xf86bigfontproto		1.2.0
 %define _ver_xf86dgaproto		2.1
 %define _ver_xf86driproto		2.1.1
@@ -74,7 +74,7 @@ Source25:       %{website}/xproto-%{_ver_xproto}.tar.bz2
 Source26:       %{website}/xproxymanagementprotocol-%{_ver_xproxymanagementprotocol}.tar.bz2
 
 Source98:	make-git-snapshot.sh
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/x11proto-fixes_5.0-2ubuntu1.diff.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/x11proto-fixes_%{_ver_fixesproto}-%{_ubuntu_rel}.diff.gz
 
 BuildArch:	noarch
 
@@ -95,7 +95,7 @@ X.Org X11 Protocol headers
 
 
 %prep
-%setup -q -c -a1 -a2 -a3 -a4 -a5 -a6 -a7 -a8 -a9 -a10 -a11 -a12 -a13 -a14 -a15 -a16 -a17 -a18 -a19 -a20 -a21 -a22 -a23 -a24 -a25 -a26
+%setup -q -c -a0 -a1 -a2 -a3 -a4 -a5 -a6 -a7 -a8 -a9 -a10 -a11 -a12 -a13 -a14 -a15 -a16 -a17 -a18 -a19 -a20 -a21 -a22 -a23 -a24 -a25 -a26
 
 pushd fixesproto-%{_ver_fixesproto}
 
@@ -318,7 +318,20 @@ rm -vf $RPM_BUILD_ROOT%{_docdir}/*/*.html
 
 
 %changelog
+* Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 7.6-2.2ubuntu1.fcrel22
+- Fix missing bigreqsproto
+- bigreqsproto-1.1.2
+- compositeproto-0.4.2
+- damageproto-1.2.1
+- fontsproto-2.1.2
+- inputproto-2.2
+- kbproto-1.0.6
+- recordproto-1.14.2
+- xcmiscproto-1.2.2
+- xextproto-7.2.1
+
 * Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 7.6-1.2ubuntu1.fcrel22
+- Fedora release 22
 - glproto 1.4.16
 - dri2proto 2.8
 - randrproto 1.4.0
