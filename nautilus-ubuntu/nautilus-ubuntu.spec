@@ -7,7 +7,7 @@
 
 Name:		nautilus-ubuntu
 Version:	3.4.2
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	File manager for GNOME
 
 Group:		User Interface/Desktops
@@ -207,6 +207,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 %{_bindir}/nautilus-autorun-software
 %{_bindir}/nautilus-connect-server
 %{_sysconfdir}/xdg/autostart/nautilus-autostart.desktop
+%dir %{_libdir}/nautilus/
 %dir %{_libdir}/nautilus/extensions-3.0/
 %{_libdir}/nautilus/extensions-3.0/libnautilus-sendto.so
 %{_libexecdir}/nautilus-convert-metadata
@@ -254,6 +255,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu4
+- Fix directory ownership
+
 * Sat Aug 11 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu4
 - Initial release
 - Based off of Fedora 17's spec file
