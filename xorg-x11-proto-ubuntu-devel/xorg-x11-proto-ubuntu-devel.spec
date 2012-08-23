@@ -7,7 +7,7 @@
 %define _obsolete_ver			7.6-100
 
 %define _ver_bigreqsproto		1.1.2
-%define _ver_compositeproto		0.4.1
+%define _ver_compositeproto		0.4.2
 %define _ver_damageproto		1.2.1
 %define _ver_dmxproto			2.3.1
 %define _ver_dri2proto			2.8
@@ -142,6 +142,7 @@ rm -vf $RPM_BUILD_ROOT%{_docdir}/*/*.html
 %doc *.txt
 %doc *.xml
 %doc PM_spec
+%doc %{_docdir}/kbproto/
 
 %dir %{_includedir}/GL/
 %{_includedir}/GL/glxint.h
