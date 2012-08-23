@@ -1,0 +1,14 @@
+diff -Nru unity-6.2.0.orig/services/CMakeLists.txt unity-6.2.0/services/CMakeLists.txt
+--- unity-6.2.0.orig/services/CMakeLists.txt	2012-08-23 17:02:23.821229575 -0400
++++ unity-6.2.0/services/CMakeLists.txt	2012-08-23 17:12:41.631615259 -0400
+@@ -43,7 +43,9 @@
+     )
+ add_definitions(${CFLAGS})
+ 
+-set(LIBS ${SERVICE_DEPS_LIBRARIES})
++pkg_check_modules(CACHED_GMODULE REQUIRED gmodule-2.0)
++
++set(LIBS ${SERVICE_DEPS_LIBRARIES} ${CACHED_GMODULE_LIBRARIES})
+ link_libraries(${LIBS})
+ 
+ set(LIB_PATHS ${SERVICE_DEPS_LIBRARY_DIRS})
