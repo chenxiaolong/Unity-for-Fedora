@@ -16,12 +16,12 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	intltool
 
-BuildRequires:	dbus-devel
-BuildRequires:	glib2-devel
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	gnome-settings-daemon-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libindicator-gtk3-devel
-BuildRequires:	upower-devel
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(indicator3-0.4)
+BuildRequires:	pkgconfig(upower-glib)
 
 # From Ubuntu packaging
 Requires:	control-center
