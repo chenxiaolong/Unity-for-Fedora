@@ -136,11 +136,11 @@ Summary:	Development files for the core Unity library
 Group:		Development/Libraries
 
 Requires:	%{name}-core%{?_isa} = %{version}-%{release}
-Requires:	dee-devel
-Requires:	glib2-devel
-Requires:	libsigc++20-devel
-Requires:	libunity-devel
-Requires:	nux-devel
+Requires:	pkgconfig(dee-1.0)
+Requires:	pkgconfig(glib-2.0)
+Requires:	pkgconfig(sigc++-2.0)
+Requires:	pkgconfig(unity)
+Requires:	pkgconfig(nux-3.0) >= 3.2.0
 
 %description core-devel
 This package contains the development files the core Unity library.
