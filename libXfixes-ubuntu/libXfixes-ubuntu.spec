@@ -15,9 +15,11 @@ Source0:	http://xorg.freedesktop.org/releases/individual/lib/libXfixes-%{version
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libxfixes_%{version}-%{_ubuntu_rel}.diff.gz
 
+BuildRequires:	pkgconfig
+
 # Ubuntu's patched fixesproto required
 BuildRequires:	xorg-x11-proto-ubuntu-devel
-BuildRequires:	libXext-devel
+BuildRequires:	pkgconfig(xext)
 
 # Replace official version
 Provides:	libXfixes%{?_isa} = %{version}-%{release}
