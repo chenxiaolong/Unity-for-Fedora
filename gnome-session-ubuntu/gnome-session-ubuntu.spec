@@ -8,8 +8,8 @@
 %define _obsolete_ver 3.5.0-100
 
 Name:		gnome-session-ubuntu
-Version:	3.4.2
-Release:	3.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Version:	3.4.2.1
+Release:	1.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME session manager
 
 Group:		User Interface/Desktops
@@ -263,6 +263,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2.1-1.ubuntu3.2.1.0ubuntu8
+- Version 3.4.2.1
+
 * Thu Jul 19 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-3.ubuntu3.2.1.0ubuntu8
 - Disable obsolete patches
 - Do not install gnome-wm
