@@ -46,6 +46,9 @@ Patch4:		0005_link_dbus-glib.patch
 # Make desktop show "Fedora Desktop" in the panel instead of "Ubuntu Desktop"
 Patch5:		0006_Fedora_Desktop_branding.patch
 
+# Link against gmodule-2.0
+Patch6:		0007_link_gmodule.patch
+
 # GCC 4.6 is required or else Unity will segfault
 BuildRequires:	gcc46-devel
 BuildRequires:	gcc46-static
@@ -178,6 +181,7 @@ needed for writing automated tests in Python.
 %patch2 -p1 -b .gsettingsfail
 %patch4 -p1 -b .dbus-glib
 %patch5 -p1 -b .fedora-branding
+%patch6 -p1 -b .gmodule-2.0
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
@@ -204,12 +208,6 @@ cd build
 
 # Remove '-gnu' from target triplet
 %global _gnu %{nil}
-
-# Cannot find gmodule
-OPT_FLAGS="%{optflags}"
-OPT_FLAGS="${OPT_FLAGS} $(pkg-config --cflags --libs gmodule-2.0)"
-
-%global optflags "${OPT_FLAGS}"
 
 C_COMPILER=%{_bindir}/%{_target_platform}-gcc-4.6
 CXX_COMPILER=%{_bindir}/%{_target_platform}-g++-4.6
