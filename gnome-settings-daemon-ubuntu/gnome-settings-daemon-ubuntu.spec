@@ -30,36 +30,36 @@ BuildRequires:	automake
 BuildRequires:	gettext
 BuildRequires:	intltool
 BuildRequires:	libtool
+BuildRequires:	pkgconfig
 
-BuildRequires:	colord-devel
+BuildRequires:	pkgconfig(colord)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(fontconfig)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(gnome-desktop-3.0)
+BuildRequires:	pkgconfig(gsettings-desktop-schemas)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(gudev-1.0)
+BuildRequires:	pkgconfig(kbproto)
+BuildRequires:	pkgconfig(lcms2)
+BuildRequires:	pkgconfig(libcanberra-gtk3)
+BuildRequires:	pkgconfig(libgnomekbd)
+BuildRequires:	pkgconfig(libgnomekbdui)
+BuildRequires:	pkgconfig(libnotify)
+BuildRequires:	pkgconfig(libpulse)
+BuildRequires:	pkgconfig(libsystemd-login)
+BuildRequires:	pkgconfig(libwacom)
+BuildRequires:	pkgconfig(libxklavier)
+BuildRequires:	pkgconfig(nss)
+BuildRequires:	pkgconfig(packagekit-glib2)
+BuildRequires:	pkgconfig(polkit-gobject-1)
+BuildRequires:	pkgconfig(upower-glib)
+BuildRequires:	pkgconfig(xfixes)
+BuildRequires:	pkgconfig(xi)
+BuildRequires:	pkgconfig(xorg-wacom)
+BuildRequires:	pkgconfig(xtst)
+
 BuildRequires:	cups-devel
-BuildRequires:	dbus-glib-devel
-BuildRequires:	fontconfig-devel
-BuildRequires:	GConf2-devel
-BuildRequires:	gnome-desktop3-devel
-BuildRequires:	gsettings-desktop-schemas-devel
-BuildRequires:	gstreamer-devel
-BuildRequires:	gstreamer-plugins-base-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	lcms2-devel
-BuildRequires:	libcanberra-devel
-BuildRequires:	libgnomekbd-devel
-BuildRequires:	libgudev1-devel
-BuildRequires:	libnotify-devel
-BuildRequires:	libwacom-devel
-BuildRequires:	libXfixes-devel
-BuildRequires:	libXi-devel
-BuildRequires:	libxklavier-devel
-BuildRequires:	libXtst-devel
-BuildRequires:	libXxf86misc-devel
-BuildRequires:	nss-devel
-BuildRequires:	PackageKit-glib-devel
-BuildRequires:	polkit-devel
-BuildRequires:	pulseaudio-libs-devel
-BuildRequires:	systemd-devel
-BuildRequires:	upower-devel
-BuildRequires:	xorg-x11-drv-wacom-devel
-BuildRequires:	xorg-x11-proto-devel
 
 Requires:	control-center-filesystem
 
@@ -118,7 +118,8 @@ autoreconf -vfi
   --enable-profiling \
   --enable-packagekit \
   --enable-systemd \
-  --enable-gconf-bridge
+  --enable-gconf-bridge \
+  --enable-polkit
 
 make %{?_smp_mflags}
 
@@ -130,21 +131,6 @@ gcc -o gnome-settings-daemon/gnome-update-wallpaper-cache \
          gdk-x11-3.0 \
          gio-2.0 \
          gnome-desktop-3.0)
-
-
-%post
-touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
-
-%postun
-if [ ${1} -eq 0 ]; then
-  touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
-  gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
-  glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
-fi
-
-%posttrans
-gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
-glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %install
@@ -168,6 +154,21 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %find_lang gnome-settings-daemon
 
 
+%post
+touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
+
+%postun
+if [ ${1} -eq 0 ]; then
+  touch --no-create %{_datadir}/icons/hicolor/ &>/dev/null || :
+  gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
+fi
+
+%posttrans
+gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
+
+
 %files -f gnome-settings-daemon.lang
 %doc AUTHORS NEWS
 
@@ -184,6 +185,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_libexecdir}/gsd-wacom-led-helper
 
 # Plugins
+%dir %{_libdir}/gnome-settings-daemon-3.0/
 %{_libdir}/gnome-settings-daemon-3.0/a11y-keyboard.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/a11y-settings.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/background.gnome-settings-plugin
@@ -291,6 +293,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri Aug 24 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.4
+- Fix directory ownership
+- Use pkgconfig for dependencies
+
 * Sat Jul 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu0.4
 - Initial release
 - Based on Fedora 17's spec file
