@@ -1,26 +1,38 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _bzr_rev 353
+%define _ubuntu_rel 0ubuntu2
+
 Name:		overlay-scrollbar
 Version:	0.2.16
-Release:	1%{?dist}
+Release:	1.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
 Summary:	Overlayed scrollbar widget for GTK
 
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		https://launchpad.net/ayatana-scrollbar
-Source0:	https://launchpad.net/ayatana-scrollbar/0.2/%{version}/+download/overlay-scrollbar-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/overlay-scrollbar_%{version}+r%{_bzr_rev}-%{_ubuntu_rel}.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	pkgconfig
 
-BuildRequires:	cairo-devel
-BuildRequires:	glib2-devel
+BuildRequires:	pkgconfig(cairo)
+BuildRequires:	pkgconfig(glib-2.0)
 # Ubuntu's patched gtk required
 BuildRequires:	gtk2-ubuntu-devel
 BuildRequires:	gtk3-ubuntu-devel
 
+Requires:	%{name}-gtk2 = %{version}-%{release}
+Requires:	%{name}-gtk3 = %{version}-%{release}
+Requires:	xorg-x11-xinit
+
+BuildArch:	noarch
+
 %description
-(contains no files)
+Ayatana Scrollbars use an overlay to ensure that scrollbars take up no active
+screen real-estate. A thumb appears magically when the pointer is in proximity
+to the scrollbar, for easy desktop-style paging and dragging.
 
 
 %package gtk2
@@ -29,21 +41,10 @@ Group:		System Environment/Libraries
 
 Requires:	gtk2-ubuntu
 
+Obsoletes:	%{name}-gtk2-devel
+
 %description gtk2
 This package contains a GTK 2 widget allowing for a overlayed scrollbar.
-
-
-%package gtk2-devel
-Summary:	Development files for overlay-scrollbar-gtk2
-Group:		Development/Libraries
-
-Requires:	%{name}-gtk2%{?_isa} = %{version}-%{release}
-Requires:	cairo-devel
-Requires:	glib2-devel
-
-%description gtk2-devel
-This package contains the development files for the GTK 2 overlayed scollbar
-widget.
 
 
 %package gtk3
@@ -52,25 +53,16 @@ Group:		System Environment/Libraries
 
 Requires:	gtk3-ubuntu
 
+Obsoletes:	%{name}-gtk3-devel
+
 %description gtk3
 This package contains a GTK 3 widget allowing for a overlayed scrollbar.
 
 
-%package gtk3-devel
-Summary:	Development files for overlay-scrollbar-gtk3
-Group:		Development/Libraries
-
-Requires:	%{name}-gtk3%{?_isa} = %{version}-%{release}
-Requires:	cairo-devel
-Requires:	glib2-devel
-
-%description gtk3-devel
-This package contains the development files for the GTK 3 overlayed scrollbar
-widget.
-
-
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}+r%{_bzr_rev}
+
+autoreconf -vfi
 
 
 %build
@@ -100,57 +92,44 @@ popd
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
-# Remove X11 startup script (not needed)
-rm $RPM_BUILD_ROOT%{_sysconfdir}/X11/Xsession.d/81overlay-scrollbar
+# Put X11 startup script in correct directory
+install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
+mv $RPM_BUILD_ROOT%{_sysconfdir}/X11/Xsession.d/81overlay-scrollbar \
+  $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 
-%post gtk2 -p /sbin/ldconfig
+%postun
+if [ $1 -eq 0 ] ; then
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+fi
 
-%postun gtk2 -p /sbin/ldconfig
+%posttrans
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%post gtk3 -p /sbin/ldconfig
-
-%postun gtk3 -p /sbin/ldconfig
+%files
+%doc AUTHORS NEWS
+%{_sysconfdir}/X11/xinit/xinitrc.d/81overlay-scrollbar
+%{_datadir}/glib-2.0/schemas/com.canonical.desktop.interface.enums.xml
+%{_datadir}/glib-2.0/schemas/com.canonical.desktop.interface.gschema.xml
 
 
 %files gtk2
 %doc AUTHORS NEWS
-%{_libdir}/liboverlay-scrollbar-0.2.so.0
-%{_libdir}/liboverlay-scrollbar-0.2.so.0.0.16
-
-
-%files gtk2-devel
-%doc AUTHORS NEWS
-%dir %{_includedir}/overlay-scrollbar-0.2/
-%dir %{_includedir}/overlay-scrollbar-0.2/os/
-%{_includedir}/overlay-scrollbar-0.2/os/os-scrollbar.h
-%{_includedir}/overlay-scrollbar-0.2/os/os-utils.h
-%{_includedir}/overlay-scrollbar-0.2/os/os-version.h
-%{_includedir}/overlay-scrollbar-0.2/os/os.h
-%{_libdir}/liboverlay-scrollbar-0.2.so
-%{_libdir}/pkgconfig/overlay-scrollbar-0.2.pc
+%{_libdir}/gtk-2.0/modules/liboverlay-scrollbar.so
 
 
 %files gtk3
 %doc AUTHORS NEWS
-%{_libdir}/liboverlay-scrollbar3-0.2.so.0
-%{_libdir}/liboverlay-scrollbar3-0.2.so.0.0.16
-
-
-%files gtk3-devel
-%doc AUTHORS NEWS
-%dir %{_includedir}/overlay-scrollbar3-0.2/
-%dir %{_includedir}/overlay-scrollbar3-0.2/os/
-%{_includedir}/overlay-scrollbar3-0.2/os/os-scrollbar.h
-%{_includedir}/overlay-scrollbar3-0.2/os/os-utils.h
-%{_includedir}/overlay-scrollbar3-0.2/os/os-version.h
-%{_includedir}/overlay-scrollbar3-0.2/os/os.h
-%{_libdir}/liboverlay-scrollbar3-0.2.so
-%{_libdir}/pkgconfig/overlay-scrollbar3-0.2.pc
+%{_libdir}/gtk-3.0/modules/liboverlay-scrollbar.so
 
 
 %changelog
+* Fri Aug 24 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.16-1.bzr353.0ubuntu2
+- Version 0.2.16
+- BZR revision 353
+- Ubuntu release 0ubuntu2
+
 * Sat Jul 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.16-1
 - Initial release
 - Version 0.2.16
