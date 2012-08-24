@@ -22,9 +22,10 @@ Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gsettings-desktop
 
 BuildRequires:	gettext
 BuildRequires:	intltool
+BuildRequires:	pkgconfig
 
-BuildRequires:	glib2-devel
-BuildRequires:	gobject-introspection-devel
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
 
 Provides:	gsettings-desktop-schemas%{?_isa} = %{version}-%{release}
 Provides:	gsettings-desktop-schemas         = %{version}-%{release}
