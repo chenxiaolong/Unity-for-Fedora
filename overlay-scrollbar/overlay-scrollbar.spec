@@ -3,7 +3,9 @@
 %define _bzr_rev 353
 %define _ubuntu_rel 0ubuntu2
 
-Name:		overlay-scrollbar
+# Workaround: the overlay-scrollbar needs to be noarch, but the subpackages
+# need to be arch-dependent. RPM doesn't support this.
+Name:		abcdefghijklmnopqrstuvwxyz
 Version:	0.2.16
 Release:	1.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
 Summary:	Overlayed scrollbar widget for GTK
@@ -23,44 +25,53 @@ BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	gtk2-ubuntu-devel
 BuildRequires:	gtk3-ubuntu-devel
 
-Requires:	%{name}-gtk2 = %{version}-%{release}
-Requires:	%{name}-gtk3 = %{version}-%{release}
-Requires:	xorg-x11-xinit
-
-BuildArch:	noarch
-
 %description
 Ayatana Scrollbars use an overlay to ensure that scrollbars take up no active
 screen real-estate. A thumb appears magically when the pointer is in proximity
 to the scrollbar, for easy desktop-style paging and dragging.
 
 
-%package gtk2
+%package -n overlay-scrollbar
+Summary:	Overlayed scrollbar widget for GTK
+
+Requires:	overlay-scrollbar-gtk2 = %{version}-%{release}
+Requires:	overlay-scrollbar-gtk3 = %{version}-%{release}
+Requires:	xorg-x11-xinit
+
+BuildArch:	noarch
+
+%description -n overlay-scrollbar
+Ayatana Scrollbars use an overlay to ensure that scrollbars take up no active
+screen real-estate. A thumb appears magically when the pointer is in proximity
+to the scrollbar, for easy desktop-style paging and dragging.
+
+
+%package -n overlay-scrollbar-gtk2
 Summary:	GTK 2 overlayed scrollbar widget
 Group:		System Environment/Libraries
 
 Requires:	gtk2-ubuntu
 
-Obsoletes:	%{name}-gtk2-devel
+Obsoletes:	overlay-scrollbar-gtk2-devel
 
-%description gtk2
+%description -n overlay-scrollbar-gtk2
 This package contains a GTK 2 widget allowing for a overlayed scrollbar.
 
 
-%package gtk3
+%package -n overlay-scrollbar-gtk3
 Summary:	GTK 3 overlayed scrollbar widget
 Group:		System Environment/Libraries
 
 Requires:	gtk3-ubuntu
 
-Obsoletes:	%{name}-gtk3-devel
+Obsoletes:	overlay-scrollbar-gtk3-devel
 
-%description gtk3
+%description -n overlay-scrollbar-gtk3
 This package contains a GTK 3 widget allowing for a overlayed scrollbar.
 
 
 %prep
-%setup -q -n %{name}-%{version}+r%{_bzr_rev}
+%setup -q -n overlay-scrollbar-%{version}+r%{_bzr_rev}
 
 autoreconf -vfi
 
@@ -98,28 +109,28 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/X11/Xsession.d/81overlay-scrollbar \
   $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 
-%postun
+%postun -n overlay-scrollbar
 if [ $1 -eq 0 ] ; then
   glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 
-%posttrans
+%posttrans -n overlay-scrollbar
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%files
+%files -n overlay-scrollbar
 %doc AUTHORS NEWS
 %{_sysconfdir}/X11/xinit/xinitrc.d/81overlay-scrollbar
 %{_datadir}/glib-2.0/schemas/com.canonical.desktop.interface.enums.xml
 %{_datadir}/glib-2.0/schemas/com.canonical.desktop.interface.gschema.xml
 
 
-%files gtk2
+%files -n overlay-scrollbar-gtk2
 %doc AUTHORS NEWS
 %{_libdir}/gtk-2.0/modules/liboverlay-scrollbar.so
 
 
-%files gtk3
+%files -n overlay-scrollbar-gtk3
 %doc AUTHORS NEWS
 %{_libdir}/gtk-3.0/modules/liboverlay-scrollbar.so
 
