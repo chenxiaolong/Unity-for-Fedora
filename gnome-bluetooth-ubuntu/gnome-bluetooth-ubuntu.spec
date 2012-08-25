@@ -28,15 +28,15 @@ BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	rarian-compat
+BuildRequires:	pkgconfig
 
-BuildRequires:	dbus-glib-devel
-BuildRequires:	GConf2-devel
-BuildRequires:	gobject-introspection-devel
-# Dependencies use gtk3-ubuntu
-BuildRequires:	gtk3-ubuntu-devel
-BuildRequires:	libappindicator-gtk3-devel
-BuildRequires:	libnotify-devel
-BuildRequires:	nautilus-sendto-devel
+BuildRequires:	pkgconfig(appindicator3-0.1)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(libnotify)
+BuildRequires:	pkgconfig(nautilus-sendto)
 
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	bluez
@@ -81,7 +81,7 @@ Group:		Development/Libraries
 License:	LGPLv2+
 
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	gobject-introspection-devel
+Requires:	pkgconfig(gobject-introspection-1.0)
 
 Provides:       gnome-bluetooth-libs-devel%{?_isa} = 1:%{version}-%{release}
 Provides:       gnome-bluetooth-libs-devel         = 1:%{version}-%{release}
