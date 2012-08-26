@@ -2,7 +2,7 @@
 
 # Partially based off of the Fedora 17 spec
 
-%define _ubuntu_rel 0ubuntu0.4
+%define _ubuntu_rel 0ubuntu10
 
 %define _obsolete_ver 3.5.0-100
 
@@ -35,7 +35,6 @@ BuildRequires:	pkgconfig
 BuildRequires:	pkgconfig(colord)
 BuildRequires:	pkgconfig(dbus-glib-1)
 BuildRequires:	pkgconfig(fontconfig)
-BuildRequires:	pkgconfig(gconf-2.0)
 BuildRequires:	pkgconfig(gnome-desktop-3.0)
 BuildRequires:	pkgconfig(gsettings-desktop-schemas)
 BuildRequires:	pkgconfig(gtk+-3.0)
@@ -118,7 +117,6 @@ autoreconf -vfi
   --enable-profiling \
   --enable-packagekit \
   --enable-systemd \
-  --enable-gconf-bridge \
   --enable-polkit
 
 make %{?_smp_mflags}
@@ -192,7 +190,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/clipboard.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/color.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/cursor.gnome-settings-plugin
-%{_libdir}/gnome-settings-daemon-3.0/gconf.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/housekeeping.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/keyboard.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/media-keys.gnome-settings-plugin
@@ -212,7 +209,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/libclipboard.so
 %{_libdir}/gnome-settings-daemon-3.0/libcolor.so
 %{_libdir}/gnome-settings-daemon-3.0/libcursor.so
-%{_libdir}/gnome-settings-daemon-3.0/libgconf.so
 %{_libdir}/gnome-settings-daemon-3.0/libgsd.so
 %{_libdir}/gnome-settings-daemon-3.0/libgsdwacom.so
 %{_libdir}/gnome-settings-daemon-3.0/libhousekeeping.so
@@ -293,6 +289,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sun Aug 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu10
+- Version 3.4.2
+- Ubuntu release 0ubuntu10
+
 * Fri Aug 24 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.4
 - Fix directory ownership
 - Use pkgconfig for dependencies
