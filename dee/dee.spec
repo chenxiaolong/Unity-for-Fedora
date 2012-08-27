@@ -6,7 +6,7 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		dee
-Version:	1.0.12
+Version:	1.0.14
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Library for creating Model-View-Controller programs across DBus
 
@@ -124,6 +124,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.14-1.0ubuntu1
+- Version 1.0.14
+- Ubuntu release 0ubuntu1
+
 * Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.12-2.0ubuntu1
 - Remove unneeded dependencies
 - Use pkgconfig for dependencies
