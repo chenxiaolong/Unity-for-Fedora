@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		appmenu-gtk
-Version:	0.3.92
+Version:	12.10.0
 Release:	1%{?dist}
 Summary:	Application menu module for GTK+
 
 Group:		System Environment/Libraries
 License:	GPLv3
 URL:		https://launchpad.net/appmenu-gtk
-Source0:	https://launchpad.net/appmenu-gtk/0.4/%{version}/+download/appmenu-gtk-%{version}.tar.gz
+Source0:	https://launchpad.net/appmenu-gtk/12.10/%{version}/+download/appmenu-gtk-%{version}.tar.gz
 
 # Require Ubuntu's version of GTK 2 and GTK 3
 BuildRequires:	gtk2-ubuntu-devel
@@ -95,6 +95,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
+
 * Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.92-2
 - Remove config macro on X11 startup scripts
 - Use pkgconfig for dependencies
