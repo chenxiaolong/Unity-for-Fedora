@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-applet
-Version:	0.5.0
+Version:	12.10.0
 Release:	1%{?dist}
 Summary:	Small applet for GNOME panel to display appindicators
 
@@ -30,9 +30,6 @@ appindicators.
 
 %prep
 %setup -q
-
-# Build fix with newer GLib versions
-sed -i '/#include <glib\/gtypes\.h>/d' src/tomboykeybinder.h
 
 
 %build
@@ -77,6 +74,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
+
 * Wed Jul 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.5.0-1
 - Initial release
 - Version 0.5.0
