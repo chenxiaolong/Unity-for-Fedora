@@ -2,7 +2,7 @@
 
 # Based off of Damian's spec file
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
 
 Name:		indicator-sound
 Version:	12.10.0
@@ -120,7 +120,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
-* Mon Aug 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0.2.0ubuntu1
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2.0ubuntu2
+- Version 12.10.0
+- Ubuntu release 0ubuntu2
+
+* Mon Aug 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2.0ubuntu1
 - Fix directory ownership
 
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1.0ubuntu1
