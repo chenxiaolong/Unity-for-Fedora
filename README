@@ -59,7 +59,6 @@ Build order:
 57: unity-lens-video               -> Unity-video lens
 58: unity-scope-video-remote       -> Remote video search for Unity video lens
 59: compiz                         -> Compiz core components
-60: libgdu                         -> GNOME Disk Utility library (for unity5)
-61: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
-62: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
-63: unity-2d                       -> 2D implementation of Unity
+60: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
+61: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+62: unity-2d                       -> 2D implementation of Unity
