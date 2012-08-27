@@ -3,8 +3,8 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		libunity
-Version:	5.94.0
-Release:	2.%{_ubuntu_rel}%{?dist}
+Version:	5.96.0
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Library for integrating with Unity
 
 Group:		System Environment/Libraries
@@ -114,6 +114,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.96.0-1.0ubuntu1
+- Version 5.96.0
+- Ubuntu release 0ubuntu1
+
 * Tue Aug 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.94.0-2.0ubuntu1
 - Forgot to add Ubuntu's packaging files to the source list
 
