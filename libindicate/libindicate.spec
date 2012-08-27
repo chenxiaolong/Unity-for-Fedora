@@ -3,8 +3,8 @@
 %global __provides_exclude_from %{python_sitearch}/indicate/_indicate.so
 
 Name:		libindicate
-Version:	12.10.0
-Release:	2%{?dist}
+Version:	12.10.1
+Release:	1%{?dist}
 Summary:	Small library for applications to raise "flags" on DBus
 
 Group:		System Environment/Libraries
@@ -329,6 +329,9 @@ mv $RPM_BUILD_ROOT%{_docdir}/libindicate/examples/* \
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
+- Version 12.10.1
+
 * Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2
 - Clean up spec file
 - Use pkgconfig for dependencies
