@@ -47,20 +47,19 @@ Build order:
 45: geis                           -> Implementation of the GEIS interface
 46: gcc46                          -> GNU Compiler Collection version 4.6
 47: ibus-ubuntu                    -> Next generation input bus for Linux
-48: nux2                           -> An OpenGL toolkit (Ubuntu 12.04 version)
-49: nux3                           -> An OpenGL toolkit (Ubuntu 12.10 version)
-50: unity-asset-pool               -> Design assets for Unity
-51: gnome-menus301                 -> GNOME menu specifications
-52: libunity                       -> Library for integrating Unity
-53: libunity-misc                  -> Differently licensed stuff for Unity
-54: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-55: unity-lens-applications        -> Unity applications lens
-56: unity-lens-files               -> Unity files lens
-57: unity-lens-music               -> Unity music lens
-58: unity-lens-video               -> Unity-video lens
-59: unity-scope-video-remote       -> Remote video search for Unity video lens
-60: compiz                         -> Compiz core components
-61: libgdu                         -> GNOME Disk Utility library (for unity5)
-62: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
-63: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
-64: unity-2d                       -> 2D implementation of Unity
+48: nux3                           -> An OpenGL toolkit (Ubuntu 12.10 version)
+49: unity-asset-pool               -> Design assets for Unity
+50: gnome-menus301                 -> GNOME menu specifications
+51: libunity                       -> Library for integrating Unity
+52: libunity-misc                  -> Differently licensed stuff for Unity
+53: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+54: unity-lens-applications        -> Unity applications lens
+55: unity-lens-files               -> Unity files lens
+56: unity-lens-music               -> Unity music lens
+57: unity-lens-video               -> Unity-video lens
+58: unity-scope-video-remote       -> Remote video search for Unity video lens
+59: compiz                         -> Compiz core components
+60: libgdu                         -> GNOME Disk Utility library (for unity5)
+61: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
+62: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+63: unity-2d                       -> 2D implementation of Unity
