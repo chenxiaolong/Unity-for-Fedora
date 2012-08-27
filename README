@@ -23,45 +23,44 @@ Build order:
 21: gnome-session-ubuntu           -> GNOME Session Manager
 22: activity-log-manager ************
 23: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
-24: metacity-ubuntu                -> Lightweight GTK+ window manager
-25: indicator-applet               -> GNOME panel indicator applet
-26: indicator-application          -> Takes menus and puts them in the panel
-27: indicator-appmenu              -> An indicator to host the menus from apps
-28: libtimezonemap                 -> GTK+3 timezone map widget
-29: indicator-datetime             -> A very, very simple clock
-30: indicator-messages             -> Collects messages that need a response
-31: indicator-power                -> Indicator to show battery information
-32: indicator-session              -> Indicator for session management
-33: indicator-sound                -> Indicator displaying a unified sound menu
-34: notify-osd                     -> A unified sound menu
-35: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
-36: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-37: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
-38: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-39: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
-40: evemu                          -> Linux Evdev Event Emulation Library
-41: frame                          -> Open Input Framework Frame Library
-42: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-43: libXfixes-ubuntu               -> X.Org fixes extension library
-44: xorg-x11-server-ubuntu         -> Xorg X11 server
-45: grail                          -> Gesture recognition and instantiation lib.
-46: geis                           -> Implementation of the GEIS interface
-47: gcc46                          -> GNU Compiler Collection version 4.6
-48: ibus-ubuntu                    -> Next generation input bus for Linux
-49: nux2                           -> An OpenGL toolkit (Ubuntu 12.04 version)
-50: nux3                           -> An OpenGL toolkit (Ubuntu 12.10 version)
-51: unity-asset-pool               -> Design assets for Unity
-52: gnome-menus301                 -> GNOME menu specifications
-53: libunity                       -> Library for integrating Unity
-54: libunity-misc                  -> Differently licensed stuff for Unity
-55: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-56: unity-lens-applications        -> Unity applications lens
-57: unity-lens-files               -> Unity files lens
-58: unity-lens-music               -> Unity music lens
-59: unity-lens-video               -> Unity-video lens
-60: unity-scope-video-remote       -> Remote video search for Unity video lens
-62: compiz                         -> Compiz core components
-63: libgdu                         -> GNOME Disk Utility library (for unity5)
-64: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
-65: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
-66: unity-2d                       -> 2D implementation of Unity
+24: indicator-applet               -> GNOME panel indicator applet
+25: indicator-application          -> Takes menus and puts them in the panel
+26: indicator-appmenu              -> An indicator to host the menus from apps
+27: libtimezonemap                 -> GTK+3 timezone map widget
+28: indicator-datetime             -> A very, very simple clock
+29: indicator-messages             -> Collects messages that need a response
+30: indicator-power                -> Indicator to show battery information
+31: indicator-session              -> Indicator for session management
+32: indicator-sound                -> Indicator displaying a unified sound menu
+33: notify-osd                     -> A unified sound menu
+34: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
+35: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
+36: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
+37: plasma-widget-menubar          -> KDE Plasma widget to display global menus
+38: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
+39: evemu                          -> Linux Evdev Event Emulation Library
+40: frame                          -> Open Input Framework Frame Library
+41: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
+42: libXfixes-ubuntu               -> X.Org fixes extension library
+43: xorg-x11-server-ubuntu         -> Xorg X11 server
+44: grail                          -> Gesture recognition and instantiation lib.
+45: geis                           -> Implementation of the GEIS interface
+46: gcc46                          -> GNU Compiler Collection version 4.6
+47: ibus-ubuntu                    -> Next generation input bus for Linux
+48: nux2                           -> An OpenGL toolkit (Ubuntu 12.04 version)
+49: nux3                           -> An OpenGL toolkit (Ubuntu 12.10 version)
+50: unity-asset-pool               -> Design assets for Unity
+51: gnome-menus301                 -> GNOME menu specifications
+52: libunity                       -> Library for integrating Unity
+53: libunity-misc                  -> Differently licensed stuff for Unity
+54: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+55: unity-lens-applications        -> Unity applications lens
+56: unity-lens-files               -> Unity files lens
+57: unity-lens-music               -> Unity music lens
+58: unity-lens-video               -> Unity-video lens
+59: unity-scope-video-remote       -> Remote video search for Unity video lens
+60: compiz                         -> Compiz core components
+61: libgdu                         -> GNOME Disk Utility library (for unity5)
+62: unity5                         -> Ubuntu's desktop shell (Ubuntu 12.04 ver)
+63: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+64: unity-2d                       -> 2D implementation of Unity
