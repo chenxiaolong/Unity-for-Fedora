@@ -60,4 +60,3 @@ Build order:
 58: unity-scope-video-remote       -> Remote video search for Unity video lens
 59: compiz                         -> Compiz core components
 60: unity6                         -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
-61: unity-2d                       -> 2D implementation of Unity
