@@ -47,7 +47,7 @@ Build order:
 45: geis                           -> Implementation of the GEIS interface
 46: gcc46                          -> GNU Compiler Collection version 4.6
 47: ibus-ubuntu                    -> Next generation input bus for Linux
-48: nux3                           -> An OpenGL toolkit (Ubuntu 12.10 version)
+48: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
 49: unity-asset-pool               -> Design assets for Unity
 50: gnome-menus301                 -> GNOME menu specifications
 51: libunity                       -> Library for integrating Unity
