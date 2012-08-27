@@ -1,8 +1,8 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-session
-Version:	12.10.0
-Release:	3%{?dist}
+Version:	12.10.1
+Release:	1%{?dist}
 Summary:	Indicator for session management and status information
 
 Group:		User Interface/Desktops
@@ -13,6 +13,8 @@ Source0:	https://launchpad.net/indicator-session/12.10/%{version}/+download/indi
 Patch0:		0001_Revert_new_glib_stuff.patch
 Patch1:		0002_There_is_no_help.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 BuildRequires:	gnome-doc-utils
@@ -45,6 +47,9 @@ of the desktop to make them available and easy to use.
 
 %patch0 -p1 -b .newglibstuff
 %patch1 -p1 -b .nohelp
+
+sed -i 's/2\.33/2.22/g' configure.ac
+autoreconf -vfi
 
 
 %build
@@ -93,6 +98,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
+- Version 12.10.1
+
 * Mon Aug 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-3
 - Fix directory ownership
 - Use pkgconfig for dependencies
