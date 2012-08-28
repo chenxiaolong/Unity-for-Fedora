@@ -56,7 +56,8 @@ Build order:
 54: unity-lens-applications        -> Unity applications lens
 55: unity-lens-files               -> Unity files lens
 56: unity-lens-music               -> Unity music lens
-57: unity-lens-video               -> Unity-video lens
-58: unity-scope-video-remote       -> Remote video search for Unity video lens
-59: compiz                         -> Compiz core components
-60: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+57: unity-lens-photos              -> Unity photos lens
+58: unity-lens-video               -> Unity video lens
+59: unity-scope-video-remote       -> Remote video search for Unity video lens
+60: compiz                         -> Compiz core components
+61: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)

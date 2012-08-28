@@ -1,0 +1,22 @@
+diff -Nru unity-lens-photos-0.2.1.orig/setup.py unity-lens-photos-0.2.1/setup.py
+--- unity-lens-photos-0.2.1.orig/setup.py	2012-08-28 15:05:42.301010774 -0400
++++ unity-lens-photos-0.2.1/setup.py	2012-08-28 15:06:43.191019000 -0400
+@@ -10,12 +10,12 @@
+       url="http://launchpad.net/unity-lens-photos",
+       license="GNU General Public License (GPL)",
+       data_files=[
+-    ('lib/unity-lens-photos', ['src/unity-lens-photos']),
+-    ('lib/unity-lens-photos', ['src/shotwell_scope.py']),
+-    ('lib/unity-lens-photos', ['src/flickr_scope.py']),
+-    ('lib/unity-lens-photos', ['src/facebook_scope.py']),
+-    ('lib/unity-lens-photos', ['src/oauth2.py']),
+-    ('lib/unity-lens-photos', ['src/oauth2_version.py']),
++    ('libexec/unity-lens-photos', ['src/unity-lens-photos']),
++    ('libexec/unity-lens-photos', ['src/shotwell_scope.py']),
++    ('libexec/unity-lens-photos', ['src/flickr_scope.py']),
++    ('libexec/unity-lens-photos', ['src/facebook_scope.py']),
++    ('libexec/unity-lens-photos', ['src/oauth2.py']),
++    ('libexec/unity-lens-photos', ['src/oauth2_version.py']),
+     ('share/unity-lens-photos/media', ['media/Flickr.svg']),
+     ('share/unity-lens-photos/media', ['media/Facebook.svg']),
+     ('share/dbus-1/services', ['unity-lens-photos.service']),
