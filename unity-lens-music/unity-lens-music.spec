@@ -14,9 +14,11 @@ BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
 
 BuildRequires:	pkgconfig(dee-1.0)
-BuildRequires:	pkgconfig(glib-2.0)
-BuildRequires:	pkgconfig(json-glib-1.0)
 BuildRequires:	pkgconfig(gee-1.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gstreamer-0.10)
+BuildRequires:	pkgconfig(gstreamer-pbutils-0.10)
+BuildRequires:	pkgconfig(json-glib-1.0)
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	pkgconfig(tdb)
 BuildRequires:	pkgconfig(unity)
