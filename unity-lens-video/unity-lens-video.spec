@@ -3,8 +3,8 @@
 %define _unity_major_ver 6
 
 Name:		unity-lens-video
-Version:	0.3.6
-Release:	3%{?dist}
+Version:	0.3.9
+Release:	1%{?dist}
 Summary:	Unity video lens
 
 Group:		User Interface/Desktops
@@ -51,7 +51,7 @@ install -m644 build/share/unity/lenses/video/video.lens \
 
 %files
 %doc COPYING
-%{python_sitelib}/unity_lens_video-0.3.6-py2.7.egg-info
+%{python_sitelib}/unity_lens_video-%{version}-py2.7.egg-info
 %{_libexecdir}/unity-lens-video
 %{_datadir}/dbus-1/services/unity-lens-video.service
 %dir %{_datadir}/unity/
@@ -61,6 +61,9 @@ install -m644 build/share/unity/lenses/video/video.lens \
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.9-1
+- Version 0.3.9
+
 * Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.6-3
 - Fix directory ownership
 
