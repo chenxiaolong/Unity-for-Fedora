@@ -1,8 +1,8 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-scope-video-remote
-Version:	0.3.6
-Release:	2%{?dist}
+Version:	0.3.7
+Release:	1%{?dist}
 Summary:	Scope that adds remote video search engine support to the Unity video lens
 
 Group:		User Interface/Desktops
@@ -39,7 +39,7 @@ search engine support.
 
 %files
 %doc COPYING
-%{python_sitelib}/unity_scope_video_remote-0.3.6-py2.7.egg-info
+%{python_sitelib}/unity_scope_video_remote-%{version}-py2.7.egg-info
 %{_libexecdir}/unity-scope-video-remote
 %{_datadir}/dbus-1/services/unity-scope-video-remote.service
 %dir %{_datadir}/unity/
@@ -49,6 +49,9 @@ search engine support.
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.7-1
+- Version 0.3.7
+
 * Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.6-2
 - Fix directory ownership
 - Move daemon to libexecdir
