@@ -1,8 +1,8 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-files
-Version:	6.2.0
-Release:	2%{?dist}
+Version:	6.4.0
+Release:	1%{?dist}
 Summary:	Unity files lens
 
 Group:		User Interface/Desktops
@@ -63,6 +63,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-1
+- Version 6.4.0
+
 * Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-2
 - Fix directory ownership
 - Use pkgconfig for dependencies
