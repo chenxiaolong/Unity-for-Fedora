@@ -42,8 +42,10 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %files
 %doc AUTHORS ChangeLog
+%{_libexecdir}/music-preview-player
 %{_libexecdir}/unity-music-daemon
 %{_libexecdir}/unity-musicstore-daemon
+%{_datadir}/dbus-1/services/music-preview-player.service
 %{_datadir}/dbus-1/services/musicstore-scope.service
 %{_datadir}/dbus-1/services/unity-lens-music.service
 %dir %{_datadir}/unity/
