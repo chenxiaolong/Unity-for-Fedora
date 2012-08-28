@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-music
-Version:	6.2.0
+Version:	6.6.0
 Release:	1%{?dist}
 Summary:	Unity music lens
 
@@ -52,6 +52,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0-1
+- Version 6.6.0
+
 * Tue Aug 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-2
 - Fix directory ownership
 - Use pkgconfig for dependencies
