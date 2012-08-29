@@ -469,7 +469,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_sysconfdir}/xdg/autostart/compiz-migrate-to-dconf.desktop
 # GConf to GSettings migration script
 %dir %{_libexecdir}/compiz/
-%{_libexecdir}/compiz/02_migrate_to_gsettings.py
+%{_libexecdir}/compiz/02_migrate_to_gsettings.py*
 # Compiz configuration backends
 %dir %{_libdir}/compizconfig/
 %dir %{_libdir}/compizconfig/backends/
@@ -560,6 +560,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_sysconfdir}/gconf/schemas/compiz-showrepaint.schemas
 %{_sysconfdir}/gconf/schemas/compiz-snap.schemas
 %{_sysconfdir}/gconf/schemas/compiz-splash.schemas
+%{_sysconfdir}/gconf/schemas/compiz-stackswitch.schemas
 %{_sysconfdir}/gconf/schemas/compiz-staticswitcher.schemas
 %{_sysconfdir}/gconf/schemas/compiz-switcher.schemas
 %{_sysconfdir}/gconf/schemas/compiz-td.schemas
@@ -567,6 +568,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_sysconfdir}/gconf/schemas/compiz-thumbnail.schemas
 %{_sysconfdir}/gconf/schemas/compiz-titleinfo.schemas
 %{_sysconfdir}/gconf/schemas/compiz-trailfocus.schemas
+%{_sysconfdir}/gconf/schemas/compiz-trip.schemas
 %{_sysconfdir}/gconf/schemas/compiz-vpswitch.schemas
 %{_sysconfdir}/gconf/schemas/compiz-wall.schemas
 %{_sysconfdir}/gconf/schemas/compiz-wallpaper.schemas
