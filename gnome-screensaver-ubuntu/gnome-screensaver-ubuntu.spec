@@ -26,27 +26,30 @@ BuildRequires:	gettext
 BuildRequires:	gnome-common
 BuildRequires:	intltool
 BuildRequires:	libtool
+BuildRequires:	pkgconfig
 
-BuildRequires:	dbus-devel
-BuildRequires:	dbus-glib-devel
-BuildRequires:	gnome-desktop3-devel
-BuildRequires:	gtk3-devel
-BuildRequires:	libgnomekbd-devel
-BuildRequires:	libX11-devel
-BuildRequires:	libXext-devel
-BuildRequires:	libXinerama-devel
-BuildRequires:	libXmu-devel
-BuildRequires:	libXScrnSaver-devel
-BuildRequires:	libXtst-devel
-BuildRequires:	libXxf86misc-devel
-BuildRequires:	libXxf86vm-devel
-BuildRequires:	nss-devel
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(gnome-desktop-3.0)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(libgnomekbdui)
+BuildRequires:	pkgconfig(libsystemd-daemon)
+BuildRequires:	pkgconfig(libsystemd-login)
+BuildRequires:	pkgconfig(nss)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xinerama)
+BuildRequires:	pkgconfig(xmu)
+BuildRequires:	pkgconfig(xscrnsaver)
+BuildRequires:	pkgconfig(xtst)
+BuildRequires:	pkgconfig(xxf86misc)
+BuildRequires:	pkgconfig(xxf86vm)
+
 BuildRequires:	pam-devel
-BuildRequires:	systemd-devel
 BuildRequires:	xorg-x11-proto-devel
 
 # Not used, but required to build
-BuildRequires:	libxklavier-devel
+BuildRequires:	pkgconfig(libxklavier)
 
 Requires:	gnome-keyring-pam
 Requires:	redhat-menus
