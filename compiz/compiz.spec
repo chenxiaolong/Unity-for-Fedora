@@ -8,12 +8,12 @@
 
 %define _gconf_schemas compiz-addhelper compiz-animationaddon compiz-animation compiz-annotate compiz-bench compiz-bicubic compiz-blur compiz-ccp compiz-clone compiz-colorfilter compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cubeaddon compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gears compiz-gnomecompat compiz-grid compiz-group compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-loginout compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-reflex compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-thumbnail compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wallpaper compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
 
-%define _ubuntu_rel 0ubuntu2
-%define _bzr_rev 3249
+%define _ubuntu_rel 0ubuntu3
+%define _bzr_rev 3319
 
 Name:		compiz
 Version:	0.9.8
-Release:	2.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
+Release:	1.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
@@ -21,13 +21,18 @@ License:	GPLv2+
 URL:		https://launchpad.net/compiz
 
 # Ubuntu's packaging is now combined with the source tarball
-Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}-%{_ubuntu_rel}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}.orig.tar.gz
 
 # Wrapper for compiz to simulate Ubuntu's gconf-defaults mechanism
 Source1:	compiz.wrapper
 
 # Script to reset all of Compiz's settings
 Source2:	compiz.reset
+
+# Autostart desktop file for migrating GConf settings to GSettings
+Source3:	compiz-migrate-to-dconf.desktop
+
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}-%{_ubuntu_rel}.diff.gz
 
 # Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
 Patch0:		0001_Fix_library_directory.patch
@@ -40,6 +45,12 @@ Patch1:		0002_Fix_cmake_install_dir.patch
 # set to 1
 Patch2:		0003_Fix_python_install_command.patch
 
+# Install GSettings backend to libdir
+Patch3:		0004_Fix_gsettings_backend_libdir.patch
+
+# Put profile conversion files in /usr/share instead of /usr/lib
+Patch4:		0005_Convert_files_libdir_to_datadir.patch
+
 BuildRequires:	cmake
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
@@ -49,8 +60,6 @@ BuildRequires:	pkgconfig
 
 BuildRequires:	boost-devel
 BuildRequires:	libjpeg-turbo-devel
-# Ubuntu's metacity required for the keybinding files
-BuildRequires:	metacity-ubuntu-devel
 
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(dbus-glib-1)
@@ -93,6 +102,12 @@ Requires(preun):	GConf2
 
 # Required for wrapper script
 Requires:	GConf2
+
+# Required for GSettings schemas
+Requires:	gsettings-desktop-schemas
+
+# Requited for GConf to GSettings migration script
+Requires:	gnome-python2-gconf
 
 %description
 Compiz is an OpenGL compositing manager that uses GLX_EXT_texture_from_pixmap
@@ -205,13 +220,16 @@ its plugins' settings.
 
 
 %prep
-%setup -q -n %{name}-%{version}+bzr%{_bzr_rev}
+%setup -q
 
 %patch0 -p1 -b .pkg_config_path
 %patch1 -p1 -b .cmake_install_dir
 %patch2 -p1 -b .py_install_command
+%patch3 -p1 -b .backend_libdir
+%patch4 -p1 -b .convert_files_datadir
 
 # Apply Ubuntu's patches
+zcat '%{SOURCE99}' | patch -Np1
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
 done
@@ -229,8 +247,8 @@ export COMPIZ_DISABLE_RPATH=1
   -DCOMPIZ_DEFAULT_PLUGINS="ccp" \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCOMPIZ_PACKAGING_ENABLED=TRUE \
-  -DUSE_GSETTINGS=OFF \
-  -DCOMPIZ_DISABLE_GS_SCHEMAS_INSTALL=ON \
+  -DUSE_GSETTINGS=ON \
+  -DCOMPIZ_DISABLE_GS_SCHEMAS_INSTALL=OFF \
   -DCOMPIZ_BUILD_TESTING=OFF \
   -DCOMPIZ_DISABLE_PLUGIN_KDE=ON \
   -DUSE_KDE4=OFF
@@ -246,19 +264,6 @@ GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 make install DESTDIR=$RPM_BUILD_ROOT
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/cmake/Modules/
 install -m644 ../cmake/FindCompiz.cmake \
   $RPM_BUILD_ROOT%{_datadir}/cmake/Modules/
-
-# Create Compiz keybindings
-KEYBIND_DIR=%{_datadir}/gnome-control-center/keybindings
-install -dm755 $RPM_BUILD_ROOT${KEYBIND_DIR}
-for i in launchers navigation screenshot system windows; do
-  sed 's/wm_name=\"Metacity\"/wm_name=\"Compiz\"/' \
-    ${KEYBIND_DIR}/50-metacity-${i}.xml \
-    > $RPM_BUILD_ROOT${KEYBIND_DIR}/50-compiz-${i}.xml
-done
-
-# Add selected keys
-sed -i 's#key=\"/apps/metacity/general/num_workspaces\" comparison=\"gt\"##g' \
-  $RPM_BUILD_ROOT${KEYBIND_DIR}/50-compiz-navigation.xml
 
 # Install Ubuntu's files
 install -dm755 $RPM_BUILD_ROOT%{_mandir}/man1/
@@ -296,6 +301,17 @@ find . -type f -name '*.upgrade' -exec \
   install -m644 {} $RPM_BUILD_ROOT%{_sysconfdir}/compizconfig/upgrades/{} \;
 popd
 
+install -dm755 $RPM_BUILD_ROOT%{_datadir}/compiz/migration/
+pushd ../postinst/convert-files/
+find . -type f -name '*.convert' -exec \
+  install -m644 {} $RPM_BUILD_ROOT%{_datadir}/compiz/migration/{} \;
+popd
+
+# Install keybinding files
+install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome-control-center/keybindings/
+install -m644 gtk/gnome/50-*.xml \
+  $RPM_BUILD_ROOT%{_datadir}/gnome-control-center/keybindings/
+
 # Simulate Ubuntu's gconf-defaults functionality with wrapper script
 # Defaults are from debian/compiz-gnome.gconf-defaults
 mv $RPM_BUILD_ROOT%{_bindir}/compiz{,.bin}
@@ -309,6 +325,18 @@ install -m755 '%{SOURCE2}' $RPM_BUILD_ROOT%{_bindir}/compiz.reset
 # Put GConf stuff in correct directory
 mv $RPM_BUILD_ROOT%{_datadir}/gconf/ \
    $RPM_BUILD_ROOT%{_sysconfdir}/gconf/
+
+# Default GSettings settings
+install -m644 ../debian/compiz-gnome.gsettings-override \
+  $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/10_compiz-ubuntu.gschema.override
+
+# Install script for migrating GConf settings to GSettings
+install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/
+install -dm755 $RPM_BUILD_ROOT%{_libexecdir}/compiz/
+install -m644 ../postinst/migration-scripts/02_migrate_to_gsettings.py \
+  $RPM_BUILD_ROOT%{_libexecdir}/compiz/
+install -m644 %{SOURCE3} \
+  $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/
 
 # Validate desktop files
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/compiz.desktop
@@ -340,17 +368,26 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 %preun gnome
 %gconf_schema_remove %{_gconf_schemas}
 
+%postun gnome
+if [ ${1} -eq 0 ] ; then
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+fi
+
+%posttrans gnome
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+
 
 %files -f build/compiz.lang
-%doc AUTHORS NEWS README TODO
+%doc AUTHORS NEWS README
 %{_bindir}/compiz
 %{_bindir}/compiz.bin
 %{_bindir}/compiz.reset
+%{_bindir}/compiz-decorator
 # Manual pages
 %{_mandir}/man1/compiz.1.gz
 # Compiz libraries
 %{_libdir}/libcompiz_core.so.0.9.8
-%{_libdir}/libcompiz_core.so.ABI-20120526
+%{_libdir}/libcompiz_core.so.ABI-20120603
 %{_libdir}/libdecoration.so.0
 %{_libdir}/libdecoration.so.0.0.0
 # Desktop file
@@ -358,7 +395,7 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 
 %files devel
-%doc AUTHORS NEWS README TODO
+%doc AUTHORS NEWS README
 %{_libdir}/libcompiz_core.so
 %{_libdir}/libdecoration.so
 # Header files
@@ -414,6 +451,8 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 %{_datadir}/compiz/cmake/CompizGconf.cmake
 %{_datadir}/compiz/cmake/CompizPackage.cmake
 %{_datadir}/compiz/cmake/CompizPlugin.cmake
+%{_datadir}/compiz/cmake/copy_file_install_user_env.cmake
+%{_datadir}/compiz/cmake/recompile_gsettings_schemas_in_dir_user_env.cmake
 %dir %{_datadir}/compiz/cmake/plugin_extensions/
 %{_datadir}/compiz/cmake/plugin_extensions/CompizGenGSettings.cmake
 %{_datadir}/compiz/cmake/plugin_extensions/CompizGenGconf.cmake
@@ -422,15 +461,21 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 
 %files gnome
-%doc AUTHORS NEWS README TODO
+%doc AUTHORS NEWS README
 %{_bindir}/gtk-window-decorator
 # Manual page
 %{_mandir}/man1/gtk-window-decorator.1.gz
+# GConf to GSettings migration autostart file
+%{_sysconfdir}/xdg/autostart/compiz-migrate-to-dconf.desktop
+# GConf to GSettings migration script
+%dir %{_libexecdir}/compiz/
+%{_libexecdir}/compiz/02_migrate_to_gsettings.py
 # Compiz configuration backends
 %dir %{_libdir}/compizconfig/
 %dir %{_libdir}/compizconfig/backends/
 %{_libdir}/compizconfig/backends/libgconf.so
 %{_libdir}/compizconfig/backends/libgsettings.so
+%{_libdir}/libcompizconfig_gsettings_backend.so
 # X11 session script
 %{_sysconfdir}/X11/xinit/xinitrc.d/65compiz_profile-on-session
 # Compiz Unity profile configuration file
@@ -442,6 +487,9 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 %dir %{_sysconfdir}/compizconfig/upgrades/
 %{_sysconfdir}/compizconfig/upgrades/com.canonical.unity.unity.01.upgrade
 %{_sysconfdir}/compizconfig/upgrades/com.canonical.unity.unity.02.upgrade
+%dir %{_datadir}/compiz/migration/
+%{_datadir}/compiz/migration/compiz-profile-Default.convert
+%{_datadir}/compiz/migration/compiz-profile-active-Default.convert
 # GConf defaults
 %{_datadir}/compiz/compiz.gconf-defaults
 # GConf schemas
@@ -535,10 +583,99 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 %{_datadir}/gnome-control-center/keybindings/50-compiz-screenshot.xml
 %{_datadir}/gnome-control-center/keybindings/50-compiz-system.xml
 %{_datadir}/gnome-control-center/keybindings/50-compiz-windows.xml
+# GSettings schemas
+%{_datadir}/glib-2.0/schemas/org.compiz.addhelper.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.animation.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.animationaddon.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.annotate.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.bench.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.bicubic.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.blur.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.ccp.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.clone.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.colorfilter.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.commands.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.compiztoolbox.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.composite.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.copytex.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.core.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.crashhandler.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.cube.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.cubeaddon.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.dbus.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.decor.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.expo.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.extrawm.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.ezoom.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.fade.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.fadedesktop.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.firepaint.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.gears.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.gnomecompat.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.grid.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.group.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.imgjpeg.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.imgpng.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.imgsvg.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.inotify.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.integrated.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.kdecompat.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.loginout.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.mag.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.maximumize.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.mblur.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.mousepoll.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.move.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.neg.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.notification.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.obs.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.opacify.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.opengl.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.place.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.put.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.reflex.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.regex.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.resize.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.resizeinfo.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.ring.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.rotate.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.scale.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.scaleaddon.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.scalefilter.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.screenshot.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.session.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.shelf.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.shift.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.showdesktop.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.showmouse.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.showrepaint.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.snap.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.splash.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.stackswitch.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.staticswitcher.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.switcher.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.td.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.text.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.thumbnail.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.titleinfo.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.trailfocus.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.trip.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.vpswitch.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.wall.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.wallpaper.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.water.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.widget.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.winrules.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.wobbly.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.workarounds.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.workspacenames.gschema.xml
+# GSettings defaults
+%{_datadir}/glib-2.0/schemas/10_compiz-ubuntu.gschema.override
 
 
 %files plugins
-%doc AUTHORS NEWS README TODO
+%doc AUTHORS NEWS README
 %dir %{_libdir}/compiz/
 %{_libdir}/compiz/libaddhelper.so
 %{_libdir}/compiz/libanimation.so
@@ -604,6 +741,7 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 %{_libdir}/compiz/libshowrepaint.so
 %{_libdir}/compiz/libsnap.so
 %{_libdir}/compiz/libsplash.so
+%{_libdir}/compiz/libstackswitch.so
 %{_libdir}/compiz/libstaticswitcher.so
 %{_libdir}/compiz/libswitcher.so
 %{_libdir}/compiz/libtd.so
@@ -611,6 +749,7 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 %{_libdir}/compiz/libthumbnail.so
 %{_libdir}/compiz/libtitleinfo.so
 %{_libdir}/compiz/libtrailfocus.so
+%{_libdir}/compiz/libtrip.so
 %{_libdir}/compiz/libvpswitch.so
 %{_libdir}/compiz/libwall.so
 %{_libdir}/compiz/libwallpaper.so
@@ -733,6 +872,7 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 %dir %{_datadir}/compiz/splash/images/
 %{_datadir}/compiz/splash/images/splash_background.png
 %{_datadir}/compiz/splash/images/splash_logo.png
+%{_datadir}/compiz/stackswitch.xml
 %{_datadir}/compiz/staticswitcher.xml
 %{_datadir}/compiz/switcher.xml
 %{_datadir}/compiz/td.xml
@@ -740,6 +880,7 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 %{_datadir}/compiz/thumbnail.xml
 %{_datadir}/compiz/titleinfo.xml
 %{_datadir}/compiz/trailfocus.xml
+%{_datadir}/compiz/trip.xml
 %{_datadir}/compiz/vpswitch.xml
 %{_datadir}/compiz/wall.xml
 %{_datadir}/compiz/wallpaper.xml
@@ -752,7 +893,7 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 
 %files -n libcompizconfig
-%doc AUTHORS NEWS README TODO
+%doc AUTHORS NEWS README
 %{_libdir}/libcompizconfig.so.0
 %{_libdir}/libcompizconfig.so.0.0.0
 # Compiz configuration ini backend
@@ -770,10 +911,14 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 
 %files -n libcompizconfig-devel
-%doc AUTHORS NEWS README TODO
+%doc AUTHORS NEWS README
 %dir %{_includedir}/compizconfig/
 %{_includedir}/compizconfig/ccs-backend.h
 %{_includedir}/compizconfig/ccs.h
+%{_includedir}/compizconfig/ccs-defs.h
+%{_includedir}/compizconfig/ccs-list.h
+%{_includedir}/compizconfig/ccs-object.h
+%{_includedir}/compizconfig/ccs-string.h
 %{_libdir}/libcompizconfig.so
 %{_libdir}/pkgconfig/libcompizconfig.pc
 %dir %{_datadir}/cmake/
@@ -785,13 +930,13 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 
 %files -n python-compizconfig
-%doc AUTHORS NEWS README TODO
+%doc AUTHORS NEWS README
 %{python_sitearch}/compizconfig.so
 %{python_sitearch}/compizconfig_python-0.9.5.94-py2.7.egg-info
 
 
 %files -n ccsm -f build/ccsm.lang
-%doc AUTHORS NEWS README TODO
+%doc AUTHORS NEWS README
 %{_bindir}/ccsm
 # Desktop file
 %{_datadir}/applications/ccsm.desktop
@@ -818,6 +963,11 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 
 %changelog
+* Tue Aug 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8-1.bzr3319.0ubuntu3
+- Version 0.9.8
+- BZR revision 3319
+- Ubuntu release 0ubuntu3
+
 * Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8-3.0ubuntu2
 - Remove obsoletes
 - Use pkgconfig for dependencies

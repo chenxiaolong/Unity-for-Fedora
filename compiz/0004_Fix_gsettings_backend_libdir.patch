@@ -1,0 +1,12 @@
+diff -Nru compiz-0.9.8.orig/compizconfig/gsettings/gsettings_backend_shared/CMakeLists.txt compiz-0.9.8/compizconfig/gsettings/gsettings_backend_shared/CMakeLists.txt
+--- compiz-0.9.8.orig/compizconfig/gsettings/gsettings_backend_shared/CMakeLists.txt	2012-08-28 19:02:19.195571520 -0400
++++ compiz-0.9.8/compizconfig/gsettings/gsettings_backend_shared/CMakeLists.txt	2012-08-28 19:02:27.358559846 -0400
+@@ -67,7 +67,7 @@
+                            ${GSETTINGS_UTIL_LIBRARIES})
+ 
+     install (TARGETS compizconfig_gsettings_backend
+-	     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++	     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+ 
+     #
+     # Tell CMake that targets using compizconfig_gsettings_backend should NOT re-import the

@@ -1,0 +1,12 @@
+diff -Nru compiz-0.9.8.orig/postinst/migration-scripts/02_migrate_to_gsettings.py compiz-0.9.8/postinst/migration-scripts/02_migrate_to_gsettings.py
+--- compiz-0.9.8.orig/postinst/migration-scripts/02_migrate_to_gsettings.py	2012-08-28 19:02:19.215571499 -0400
++++ compiz-0.9.8/postinst/migration-scripts/02_migrate_to_gsettings.py	2012-08-28 21:28:05.241936366 -0400
+@@ -25,7 +25,7 @@
+ import os.path
+ 
+ # this should point to the directory where all the .convert files are stored
+-CONVERT_PATH = "/usr/lib/compiz/migration/"
++CONVERT_PATH = "/usr/share/compiz/migration/"
+ 
+ def migrate_file(convert_file):
+     subprocess.Popen(["gsettings-data-convert", "--file={}{}".format(CONVERT_PATH, convert_file)]).communicate()
