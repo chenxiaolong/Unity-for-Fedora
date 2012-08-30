@@ -1,6 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu4
 
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 %define _gconf_obsolete_schemas compiz-gtkloader
@@ -111,6 +111,8 @@ Requires(pre):	GConf2
 Requires(post):	GConf2
 Requires(preun):	GConf2
 
+Requires:	control-center-filesystem
+
 %description
 Unity is a desktop experience that sings. Designed by Canonical and the Ayatana
 community, Unity is all about the combination of familiarity and the future. We
@@ -216,6 +218,7 @@ CXX_COMPILER=%{_bindir}/%{_target_platform}-g++-4.6
   -DCOMPIZ_BUILD_WITH_RPATH=FALSE \
   -DCOMPIZ_PACKAGING_ENABLED=TRUE \
   -DCOMPIZ_PLUGIN_INSTALL_TYPE=package \
+  -DUSE_GSETTINGS=TRUE \
   -DCMAKE_C_COMPILER="${C_COMPILER}" \
   -DCMAKE_CXX_COMPILER="${CXX_COMPILER}"
 
@@ -250,11 +253,10 @@ rm $RPM_BUILD_ROOT%{_datadir}/unity/6/launcher_bfb.png
 ln -s %{_datadir}/pixmaps/fedora-logo-sprite.png \
   $RPM_BUILD_ROOT%{_datadir}/unity/6/launcher_bfb.png
 
-# Install Compiz profile upgrade helpers
-install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/compizconfig/upgrades/
-pushd ../debian/profile_upgrade/
-find . -type f -exec install -m644 {} $RPM_BUILD_ROOT%{_sysconfdir}/compizconfig/upgrades/{} \;
-popd
+# Install profile convert files
+install -dm755 $RPM_BUILD_ROOT%{_datadir}/compiz/migration/
+install -m644 ../tools/convert-files/* \
+  $RPM_BUILD_ROOT%{_datadir}/compiz/migration/
 
 # Put GConf schemas in correct directory
 mv $RPM_BUILD_ROOT{%{_datadir},%{_sysconfdir}}/gconf/
@@ -266,8 +268,6 @@ rm $RPM_BUILD_ROOT%{_datadir}/compiz/networkarearegion.xml
 rm $RPM_BUILD_ROOT%{_datadir}/compiz/unitydialog.xml
 rm $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas/compiz-networkarearegion.schemas
 rm $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas/compiz-unitydialog.schemas
-rm $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/org.freedesktop.compiz.networkarearegion.gschema.xml
-rm $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/org.freedesktop.compiz.unitydialog.gschema.xml
 
 %find_lang unity
 
@@ -306,10 +306,13 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/compiz/libunityshell.so
 %{_mandir}/man1/unity.1.gz
 %dir %{_datadir}/compiz/
+%dir %{_datadir}/compiz/migration/
 %dir %{_datadir}/compiz/unitymtgrabhandles/
 %dir %{_datadir}/compiz/unitymtgrabhandles/images/
 %{_datadir}/compiz/unitymtgrabhandles.xml
 %{_datadir}/compiz/unityshell.xml
+%{_datadir}/compiz/migration/compiz-profile-active-unity.convert
+%{_datadir}/compiz/migration/compiz-profile-unity.convert
 %{_datadir}/compiz/unitymtgrabhandles/images/handle-0.png
 %{_datadir}/compiz/unitymtgrabhandles/images/handle-1.png
 %{_datadir}/compiz/unitymtgrabhandles/images/handle-2.png
@@ -319,6 +322,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/compiz/unitymtgrabhandles/images/handle-6.png
 %{_datadir}/compiz/unitymtgrabhandles/images/handle-7.png
 %{_datadir}/compiz/unitymtgrabhandles/images/handle-8.png
+%{_datadir}/gnome-control-center/keybindings/50-unity-launchers.xml
 
 
 %files core
@@ -344,14 +348,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/ccsm/icons/hicolor/64x64/apps/plugin-unityshell.png
 %{_datadir}/dbus-1/services/com.canonical.Unity.Panel.Service.service
 %{_datadir}/glib-2.0/schemas/com.canonical.Unity.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.freedesktop.compiz.unitymtgrabhandles.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.freedesktop.compiz.unityshell.gschema.xml
-%dir %{_sysconfdir}/compizconfig/
-%dir %{_sysconfdir}/compizconfig/upgrades/
-# No 'config' macro because the profile upgrade helpers aren't really
-# configuration files. They should probably be in /usr/share, but compiz doesn't
-# search there.
-%{_sysconfdir}/compizconfig/upgrades/com.canonical.unity.unity.03.upgrade
+%{_datadir}/glib-2.0/schemas/org.compiz.networkarearegion.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.unitydialog.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.unitymtgrabhandles.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.unityshell.gschema.xml
 %{_sysconfdir}/gconf/schemas/compiz-unitymtgrabhandles.schemas
 %{_sysconfdir}/gconf/schemas/compiz-unityshell.schemas
 %dir %{_datadir}/unity/
@@ -411,8 +411,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{python_sitelib}/unity/tests/test_unity_logging.py*
 
 
-
 %changelog
+* Tue Aug 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1.0ubuntu4
+- Version 6.2.0
+- Ubuntu release 0ubuntu4
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1.0ubuntu1
 - Version 6.2.0
 - Ubuntu release 0ubuntu1
