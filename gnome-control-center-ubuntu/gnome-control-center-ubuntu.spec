@@ -2,7 +2,7 @@
 
 # Partially based off of Fedora 17's spec file
 
-%define _ubuntu_rel 0ubuntu0.4
+%define _ubuntu_rel 0ubuntu13
 
 %define _obsolete_ver 1:3.5.0-100
 
@@ -38,7 +38,6 @@ BuildRequires:	pkgconfig(clutter-gtk-1.0)
 BuildRequires:	pkgconfig(colord)
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(dbus-glib-1)
-BuildRequires:	pkgconfig(gconf-2.0)
 BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gnome-bluetooth-1.0)
@@ -169,10 +168,17 @@ tar zxvf '%{SOURCE99}'
     sed -i '/revert_git_datetime_port.patch/d' debian/patches/series
   # Fedora does not have ubuntu-system-service
     sed -i '/50_ubuntu_systemwide_prefs.patch/d' debian/patches/series
+  # No GNOME 3.6 yet
+    sed -i '/git_gnome_desktop_update.patch/d' debian/patches/series
+    sed -i '/git_new_bluetooth_api.patch/d' debian/patches/series
+    sed -i '/00git_online_accounts_gtkgrid.patch/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
 done
+
+# Builds just fine with the stable version of clutter-gtk
+sed -i 's/1\.11\.10/1.10.4/g' configure.ac
 
 autoreconf -vfi
 
@@ -180,10 +186,10 @@ autoreconf -vfi
 %build
 %configure \
   --disable-static \
-  --disable-scrollkeeper \
   --disable-update-mimedb \
   --with-libsocialweb=no \
-  --enable-systemd
+  --enable-systemd \
+  --with-clutter
 
 # Disable rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
@@ -438,6 +444,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Thu Aug 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu13
+- Version 3.4.2
+- Ubuntu release 0ubuntu13
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.4
 - Version 3.4.2
 - Ubuntu release 0ubuntu0.4
