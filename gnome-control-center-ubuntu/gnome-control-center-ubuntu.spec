@@ -204,9 +204,9 @@ make %{?_smp_mflags}
 %install
 GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 make install DESTDIR=$RPM_BUILD_ROOT
 
-for i in $RPM_BUILD_ROOT%{_datadir}/applications/*.desktop; do
-  desktop-file-validate ${i}
-done
+desktop-file-install --delete-original \
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications/ \
+  $RPM_BUILD_ROOT%{_datadir}/applications/*.desktop
 
 # Create directory from GNOME window manager desktop files
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome/wm-properties/
