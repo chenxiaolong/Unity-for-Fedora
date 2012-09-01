@@ -4,7 +4,7 @@
 
 Name:		nux
 Version:	3.4.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 # Summary from Ubuntu
 Summary:	Visual rendering toolkit for real-time applications
 
@@ -13,6 +13,10 @@ License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/nux
 Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.4/+download/nux-%{version}.tar.gz
 Source1:	50_check_unity_support
+
+# GCC 4.6 required or else Unity will segfault
+BuildRequires:	gcc46-devel
+BuildRequires:	gcc46-static
 
 BuildRequires:	xorg-x11-xinit
 
@@ -99,6 +103,17 @@ find -type f \( -name '*.h' -o -name '*.cpp' \) -exec chmod 644 {} \;
 
 
 %build
+# Remove '-gnu' from target triplet
+%global _gnu %{nil}
+
+CC=%{_bindir}/%{_target_platform}-gcc-4.6
+CXX=%{_bindir}/%{_target_platform}-g++-4.6
+
+CPP="%{_bindir}/cpp-4.6 -x c"
+CXXCPP="%{_bindir}/cpp-4.6 -x c++"
+
+export CC CXX CPP CXXCPP
+
 %configure
 
 # Disable rpath
@@ -187,6 +202,9 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.0-2
+- GCC 4.6 is still needed (until we have GCC 4.7.1)
+
 * Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.0-1
 - Version 3.4.0
 
