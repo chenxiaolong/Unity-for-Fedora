@@ -7,7 +7,7 @@
 
 Name:		unity
 Version:	6.4.0
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
 Group:		User Interface/Desktops
@@ -46,6 +46,10 @@ Patch5:		0006_Fedora_Desktop_branding.patch
 
 # Link against gmodule-2.0
 Patch6:		0007_link_gmodule.patch
+
+# GCC 4.6 is required or else Unity will segfault
+BuildRequires:	gcc46-devel
+BuildRequires:	gcc46-static
 
 # Ubuntu's patched fixesproto and libXfixes is needed
 BuildRequires:	libXfixes-ubuntu-devel
@@ -200,11 +204,19 @@ popd
 mkdir build
 cd build
 
+# Remove '-gnu' from target triplet
+%global _gnu %{nil}
+
+C_COMPILER=%{_bindir}/%{_target_platform}-gcc-4.6
+CXX_COMPILER=%{_bindir}/%{_target_platform}-g++-4.6
+
 %cmake .. \
   -DCOMPIZ_BUILD_WITH_RPATH=FALSE \
   -DCOMPIZ_PACKAGING_ENABLED=TRUE \
   -DCOMPIZ_PLUGIN_INSTALL_TYPE=package \
-  -DUSE_GSETTINGS=TRUE
+  -DUSE_GSETTINGS=TRUE \
+  -DCMAKE_C_COMPILER="${C_COMPILER}" \
+  -DCMAKE_CXX_COMPILER="${CXX_COMPILER}"
 
 #make %{?_smp_mflags}
 make -j1
@@ -396,6 +408,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-2.0ubuntu1
+- Build with GCC 4.6 again (until Fedora has GCC 4.7.1)
+
 * Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-1.0ubuntu1
 - Version 6.4.0
 - Ubuntu release 0ubuntu1
