@@ -52,12 +52,13 @@ Build order:
 50: gnome-menus301                 -> GNOME menu specifications
 51: libunity                       -> Library for integrating Unity
 52: libunity-misc                  -> Differently licensed stuff for Unity
-53: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-54: unity-lens-applications        -> Unity applications lens
-55: unity-lens-files               -> Unity files lens
-56: unity-lens-music               -> Unity music lens
-57: unity-lens-photos              -> Unity photos lens
-58: unity-lens-video               -> Unity video lens
-59: unity-scope-video-remote       -> Remote video search for Unity video lens
-60: compiz                         -> Compiz core components
-61: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+53: libunity-webapps               -> Library for integrating WebApps into Unity
+54: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+55: unity-lens-applications        -> Unity applications lens
+56: unity-lens-files               -> Unity files lens
+57: unity-lens-music               -> Unity music lens
+58: unity-lens-photos              -> Unity photos lens
+59: unity-lens-video               -> Unity video lens
+60: unity-scope-video-remote       -> Remote video search for Unity video lens
+61: compiz                         -> Compiz core components
+62: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
