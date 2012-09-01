@@ -2,7 +2,7 @@
 
 Name:		libunity-webapps
 Version:	2.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	WebApps: Library for the integration with the Unity desktop
 
 Group:		System Environment/Libraries
@@ -11,6 +11,7 @@ URL:		https://launchpad.net/libunity-webapps
 Source0:	https://launchpad.net/libunity-webapps/trunk/%{version}/+download/unity_webapps-%{version}.tar.gz
 
 Patch0:		0001_Fix_g_malloc.patch
+Patch1:		0002_Fix_pkgconfig_files.patch
 
 BuildRequires:	gettext
 BuildRequires:	gnome-common
@@ -69,6 +70,7 @@ This package contains the documentation for the unity-webapps library.
 %setup -q -n unity_webapps-%{version}
 
 %patch0 -p1 -b .fix_g_malloc
+%patch1 -p1 -b .fix_pkgconfig_files
 
 
 %build
@@ -139,6 +141,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.1-2
+- Fix pkgconfig files ('-lunity_webapps' -> '-lunity-webapps')
+
 * Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.1-1
 - Initial release
 - Version 2.1
