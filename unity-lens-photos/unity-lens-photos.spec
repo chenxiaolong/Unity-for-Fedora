@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-photos
-Version:	0.2.1
+Version:	0.3
 Release:	1%{?dist}
 Summary:	Unity lens for browsing photos
 
@@ -39,6 +39,11 @@ in the Unity dash.
 %install
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
+# Install photos lens
+install -dm755 $RPM_BUILD_ROOT%{_datadir}/unity/lenses/photos/
+install -m644 build/share/unity/lenses/photos/photos.lens \
+  $RPM_BUILD_ROOT%{_datadir}/unity/lenses/photos/
+
 
 %files
 %doc AUTHORS COPYING
@@ -53,9 +58,16 @@ in the Unity dash.
 %dir %{_datadir}/unity-lens-photos/
 %dir %{_datadir}/unity-lens-photos/media/
 %{_datadir}/unity-lens-photos/media/*.svg
+%dir %{_datadir}/unity/
+%dir %{_datadir}/unity/lenses/
+%dir %{_datadir}/unity/lenses/photos/
+%{_datadir}/unity/lenses/photos/photos.lens
 
 
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3-1
+- Version 0.3
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.1-1
 - Initial release
 - Version 0.2.1
