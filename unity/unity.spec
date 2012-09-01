@@ -1,19 +1,19 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu4
+%define _ubuntu_rel 0ubuntu1
 
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 %define _gconf_obsolete_schemas compiz-gtkloader
 
 Name:		unity
-Version:	6.2.0
+Version:	6.4.0
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
 Group:		User Interface/Desktops
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/unity
-Source0:	https://launchpad.net/unity/6.0/6.2/+download/unity-%{version}.tar.bz2
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/unity_%{version}-%{_ubuntu_rel}.tar.gz
 
 # Autostart file for migrating Unity's dconf path
 Source1:	unity-migrate-dconf-path.desktop
@@ -27,8 +27,6 @@ Source1:	unity-migrate-dconf-path.desktop
 # Exported on: Wed, 01 Aug 2012 01:24:23 -0400
 Source90:	http://ompldr.org/vZXh3bw/launchpad-export.tar.gz
 Source91:	http://ompldr.org/vZXh3cA/launchpad-export.tar.gz.asc
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/unity_%{version}-%{_ubuntu_rel}.diff.gz
 
 # Fix the gtest search in CMake
 Patch0:		0001_fix_gtest_directory.patch
@@ -49,10 +47,6 @@ Patch5:		0006_Fedora_Desktop_branding.patch
 # Link against gmodule-2.0
 Patch6:		0007_link_gmodule.patch
 
-# GCC 4.6 is required or else Unity will segfault
-BuildRequires:	gcc46-devel
-BuildRequires:	gcc46-static
-
 # Ubuntu's patched fixesproto and libXfixes is needed
 BuildRequires:	libXfixes-ubuntu-devel
 BuildRequires:	xorg-x11-proto-ubuntu-devel
@@ -60,7 +54,6 @@ BuildRequires:	xorg-x11-proto-ubuntu-devel
 BuildRequires:	cmake
 BuildRequires:	desktop-file-utils
 BuildRequires:	doxygen
-BuildRequires:	gcc-c++
 BuildRequires:	gettext
 BuildRequires:	intltool
 BuildRequires:	pkgconfig
@@ -186,7 +179,6 @@ needed for writing automated tests in Python.
 %patch6 -p1 -b .gmodule-2.0
 
 # Apply Ubuntu's patches
-zcat '%{SOURCE99}' | patch -Np1
 
 # Use Launchpad translations
 [ -d launchpad-po ] && rm -rv launchpad-po
@@ -208,19 +200,11 @@ popd
 mkdir build
 cd build
 
-# Remove '-gnu' from target triplet
-%global _gnu %{nil}
-
-C_COMPILER=%{_bindir}/%{_target_platform}-gcc-4.6
-CXX_COMPILER=%{_bindir}/%{_target_platform}-g++-4.6
-
 %cmake .. \
   -DCOMPIZ_BUILD_WITH_RPATH=FALSE \
   -DCOMPIZ_PACKAGING_ENABLED=TRUE \
   -DCOMPIZ_PLUGIN_INSTALL_TYPE=package \
-  -DUSE_GSETTINGS=TRUE \
-  -DCMAKE_C_COMPILER="${C_COMPILER}" \
-  -DCMAKE_CXX_COMPILER="${CXX_COMPILER}"
+  -DUSE_GSETTINGS=TRUE
 
 #make %{?_smp_mflags}
 make -j1
@@ -412,6 +396,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-1.0ubuntu1
+- Version 6.4.0
+- Ubuntu release 0ubuntu1
+
 * Tue Aug 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.2.0-1.0ubuntu4
 - Version 6.2.0
 - Ubuntu release 0ubuntu4
