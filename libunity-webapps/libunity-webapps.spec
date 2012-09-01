@@ -16,6 +16,7 @@ Patch1:		0002_Fix_pkgconfig_files.patch
 BuildRequires:	gettext
 BuildRequires:	gnome-common
 BuildRequires:	gtk-doc
+BuildRequires:	intltool
 BuildRequires:	pkgconfig
 
 BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
