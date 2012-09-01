@@ -9,50 +9,50 @@ Build order:
 07: libappindicator                -> Library to export menu bar to Unity
 08: appmenu-gtk                    -> Application menu module for GTK+
 09: appmenu-qt                     -> Application menu module for Qt
-10: bamf                           -> Application matching framework
-11: libqtbamf                      -> Qt bindings for bamf
-12: dee                            -> Synchronize multiple instances over DBus
-13: libqtdee                       -> Qt bindings and QML plugin for Dee
-14: libqtgconf                     -> Qt bindings for GConf
-15: dconf-qt                       -> Qt bindings for DConf
-16: sni-qt                         -> Turns Qt tray icons into appindicators
-17: ido                            -> Widgets and objects used for indicators
-18: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
-19: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
-20: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
-21: gnome-session-ubuntu           -> GNOME Session Manager
-22: activity-log-manager ************
-23: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
-24: indicator-applet               -> GNOME panel indicator applet
-25: indicator-application          -> Takes menus and puts them in the panel
-26: indicator-appmenu              -> An indicator to host the menus from apps
-27: libtimezonemap                 -> GTK+3 timezone map widget
-28: indicator-datetime             -> A very, very simple clock
-29: indicator-messages             -> Collects messages that need a response
-30: indicator-power                -> Indicator to show battery information
-31: indicator-session              -> Indicator for session management
-32: indicator-sound                -> Indicator displaying a unified sound menu
-33: notify-osd                     -> A unified sound menu
-34: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
-35: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-36: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
-37: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-38: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
-39: evemu                          -> Linux Evdev Event Emulation Library
-40: frame                          -> Open Input Framework Frame Library
-41: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-42: libXfixes-ubuntu               -> X.Org fixes extension library
-43: xorg-x11-server-ubuntu         -> Xorg X11 server
-44: grail                          -> Gesture recognition and instantiation lib.
-45: geis                           -> Implementation of the GEIS interface
-46: gcc46                          -> GNU Compiler Collection version 4.6
-47: ibus-ubuntu                    -> Next generation input bus for Linux
-48: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
-49: unity-asset-pool               -> Design assets for Unity
-50: gnome-menus301                 -> GNOME menu specifications
-51: libunity                       -> Library for integrating Unity
-52: libunity-misc                  -> Differently licensed stuff for Unity
-53: libunity-webapps               -> Library for integrating WebApps into Unity
+10: dee                            -> Synchronize multiple instances over DBus
+11: libunity                       -> Library for integrating Unity
+12: libunity-misc                  -> Differently licensed stuff for Unity
+13: libunity-webapps               -> Library for integrating WebApps into Unity
+14: bamf                           -> Application matching framework
+15: libqtbamf                      -> Qt bindings for bamf
+16: libqtdee                       -> Qt bindings and QML plugin for Dee
+17: libqtgconf                     -> Qt bindings for GConf
+18: dconf-qt                       -> Qt bindings for DConf
+19: sni-qt                         -> Turns Qt tray icons into appindicators
+20: ido                            -> Widgets and objects used for indicators
+21: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
+22: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
+23: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
+24: gnome-session-ubuntu           -> GNOME Session Manager
+25: activity-log-manager ************
+26: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
+27: indicator-applet               -> GNOME panel indicator applet
+28: indicator-application          -> Takes menus and puts them in the panel
+29: indicator-appmenu              -> An indicator to host the menus from apps
+30: libtimezonemap                 -> GTK+3 timezone map widget
+31: indicator-datetime             -> A very, very simple clock
+32: indicator-messages             -> Collects messages that need a response
+33: indicator-power                -> Indicator to show battery information
+34: indicator-session              -> Indicator for session management
+35: indicator-sound                -> Indicator displaying a unified sound menu
+36: notify-osd                     -> A unified sound menu
+37: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
+38: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
+39: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
+40: plasma-widget-menubar          -> KDE Plasma widget to display global menus
+41: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
+42: evemu                          -> Linux Evdev Event Emulation Library
+43: frame                          -> Open Input Framework Frame Library
+44: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
+45: libXfixes-ubuntu               -> X.Org fixes extension library
+46: xorg-x11-server-ubuntu         -> Xorg X11 server
+47: grail                          -> Gesture recognition and instantiation lib.
+48: geis                           -> Implementation of the GEIS interface
+49: gcc46                          -> GNU Compiler Collection version 4.6
+50: ibus-ubuntu                    -> Next generation input bus for Linux
+51: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
+52: unity-asset-pool               -> Design assets for Unity
+53: gnome-menus301                 -> GNOME menu specifications
 54: nautilus-ubuntu                -> File manager and graphics shell for GNOME
 55: unity-lens-applications        -> Unity applications lens
 56: unity-lens-files               -> Unity files lens

@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		bamf
-Version:	0.2.122
-Release:	2%{?dist}
+Version:	0.3.0
+Release:	1%{?dist}
 Summary:	Application Matching Framework - GTK 2
 
 Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/bamf
-Source0:	https://launchpad.net/bamf/0.2/%{version}/+download/bamf-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/bamf_%{version}.orig.tar.gz
 
 BuildRequires:	gtk-doc
 BuildRequires:	vala-tools
@@ -19,6 +19,7 @@ BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	pkgconfig(libgtop-2.0)
+BuildRequires:	pkgconfig(libunity_webapps-0.2)
 BuildRequires:	pkgconfig(libwnck-1.0)
 BuildRequires:	pkgconfig(libwnck-3.0)
 
@@ -50,8 +51,8 @@ Summary:	Development files for libbamf
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	glib2-devel
-Requires:	libwnck-devel
+Requires:	pkgconfig(glib-2.0)
+Requires:	pkgconfig(libwnck-1.0)
 
 %description devel
 This package contains the development files for the GTK 2 version of the bamf
@@ -77,8 +78,8 @@ Summary:	Development files for libbamf3
 Group:		Development/Libraries
 
 Requires:	%{name}3%{?_isa} = %{version}-%{release}
-Requires:	glib2-devel
-Requires:	libwnck3-devel
+Requires:	pkgconfig(glib-2.0)
+Requires:	pkgconfig(libwnck-3.0)
 
 %description -n %{name}3-devel
 This package contains the development files for the GTK 3 version of the bamf
@@ -184,6 +185,9 @@ touch $RPM_BUILD_ROOT%{_datadir}/applications/bamf.index
 
 
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.0-1
+- Version 0.3.0
+
 * Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.122-2
 - Clean up spec file
 - Use pkgconfig for dependencies
