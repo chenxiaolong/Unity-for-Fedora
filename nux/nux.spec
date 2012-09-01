@@ -3,7 +3,7 @@
 %define _major_ver 3
 
 Name:		nux
-Version:	3.2.0
+Version:	3.4.0
 Release:	1%{?dist}
 # Summary from Ubuntu
 Summary:	Visual rendering toolkit for real-time applications
@@ -11,12 +11,8 @@ Summary:	Visual rendering toolkit for real-time applications
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/nux
-Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.2/+download/nux-%{version}.tar.gz
+Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.4/+download/nux-%{version}.tar.gz
 Source1:	50_check_unity_support
-
-# GCC 4.6 required or else Unity will segfault
-BuildRequires:	gcc46-devel
-BuildRequires:	gcc46-static
 
 BuildRequires:	xorg-x11-xinit
 
@@ -101,18 +97,8 @@ This package contains various tools for the Nux library.
 # Avoid rpmlint spurious-executable-perm error in debuginfo package
 find -type f \( -name '*.h' -o -name '*.cpp' \) -exec chmod 644 {} \;
 
+
 %build
-# Remove '-gnu' from target triplet
-%global _gnu %{nil}
-
-CC=%{_bindir}/%{_target_platform}-gcc-4.6
-CXX=%{_bindir}/%{_target_platform}-g++-4.6
-
-CPP="%{_bindir}/cpp-4.6 -x c"
-CXXCPP="%{_bindir}/cpp-4.6 -x c++"
-
-export CC CXX CPP CXXCPP
-
 %configure
 
 # Disable rpath
@@ -120,6 +106,7 @@ sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make %{?_smp_mflags}
+
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -137,18 +124,21 @@ find $RPM_BUILD_ROOT -type f -empty -delete
 install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
+
 %files
 %doc AUTHORS
 %{_libdir}/libnux-%{_major_ver}.0.so.0
-%{_libdir}/libnux-%{_major_ver}.0.so.0.200.0
+%{_libdir}/libnux-%{_major_ver}.0.so.0.400.0
 %{_libdir}/libnux-core-%{_major_ver}.0.so.0
-%{_libdir}/libnux-core-%{_major_ver}.0.so.0.200.0
+%{_libdir}/libnux-core-%{_major_ver}.0.so.0.400.0
 %{_libdir}/libnux-graphics-%{_major_ver}.0.so.0
-%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.200.0
+%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.400.0
+
 
 %files devel
 %doc AUTHORS
@@ -175,6 +165,7 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_libdir}/pkgconfig/nux-core-%{_major_ver}.0.pc
 %{_libdir}/pkgconfig/nux-graphics-%{_major_ver}.0.pc
 
+
 %files common
 %doc AUTHORS
 %dir %{_datadir}/nux/
@@ -188,14 +179,17 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_datadir}/nux/%{_major_ver}.0/UITextures/Painter.xml
 %{_datadir}/nux/%{_major_ver}.0/UITextures/UIArchive.iar
 
+
 %files tools
 %doc AUTHORS
-#dir #{_sysconfdir}/X11/xinit/
-#dir #{_sysconfdir}/X11/xinit/xinitrc.d/
 %{_libexecdir}/unity_support_test
 %{_sysconfdir}/X11/xinit/xinitrc.d/50_check_unity_support
 
+
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.0-1
+- Version 3.4.0
+
 * Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.2.0-1
 - Fix license
 
