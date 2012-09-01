@@ -6,14 +6,15 @@
 %filter_provides_in %{python_sitearch}/compizconfig\.so$
 %filter_setup
 
-%define _gconf_schemas compiz-addhelper compiz-animationaddon compiz-animation compiz-annotate compiz-bench compiz-bicubic compiz-blur compiz-ccp compiz-clone compiz-colorfilter compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cubeaddon compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gears compiz-gnomecompat compiz-grid compiz-group compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-loginout compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-reflex compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-thumbnail compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wallpaper compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
+%define _gconf_schemas_obsolete compiz-animationaddon compiz-bicubic compiz-blur compiz-colorfilter compiz-cubeaddon compiz-gears compiz-group compiz-loginout compiz-reflex compiz-stackswitch compiz-thumbnail compiz-trip compiz-wallpaper
+%define _gconf_schemas compiz-addhelper compiz-animation compiz-annotate compiz-bench compiz-ccp compiz-clone compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gnomecompat compiz-grid compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
 
-%define _ubuntu_rel 0ubuntu3
-%define _bzr_rev 3319
+%define _ubuntu_rel 0ubuntu1
 
 Name:		compiz
-Version:	0.9.8
-Release:	1.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
+Version:	0.9.8.0
+# Add 'z' to allow upgrade from "1.bzr..." to "1.0ubuntu..."
+Release:	1.z%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
@@ -21,7 +22,7 @@ License:	GPLv2+
 URL:		https://launchpad.net/compiz
 
 # Ubuntu's packaging is now combined with the source tarball
-Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}.orig.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}.orig.tar.gz
 
 # Wrapper for compiz to simulate Ubuntu's gconf-defaults mechanism
 Source1:	compiz.wrapper
@@ -32,7 +33,7 @@ Source2:	compiz.reset
 # Autostart desktop file for migrating GConf settings to GSettings
 Source3:	compiz-migrate-to-dconf.desktop
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}-%{_ubuntu_rel}.diff.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}-%{_ubuntu_rel}.diff.gz
 
 # Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
 Patch0:		0001_Fix_library_directory.patch
@@ -361,6 +362,7 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 %pre gnome
 %gconf_schema_prepare %{_gconf_schemas}
+%gconf_schema_obsolete %{_gconf_schemas_obsolete}
 
 %post gnome
 %gconf_schema_upgrade %{_gconf_schemas}
@@ -386,7 +388,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 # Manual pages
 %{_mandir}/man1/compiz.1.gz
 # Compiz libraries
-%{_libdir}/libcompiz_core.so.0.9.8
+%{_libdir}/libcompiz_core.so.%{version}
 %{_libdir}/libcompiz_core.so.ABI-20120603
 %{_libdir}/libdecoration.so.0
 %{_libdir}/libdecoration.so.0.0.0
@@ -395,13 +397,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %files devel
-%doc AUTHORS NEWS README
 %{_libdir}/libcompiz_core.so
 %{_libdir}/libdecoration.so
 # Header files
 %dir %{_includedir}/compiz/
 %dir %{_includedir}/compiz/animation/
-%dir %{_includedir}/compiz/animationaddon/
 %dir %{_includedir}/compiz/compiztoolbox/
 %dir %{_includedir}/compiz/composite/
 %dir %{_includedir}/compiz/core/
@@ -411,7 +411,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_includedir}/compiz/scale/
 %dir %{_includedir}/compiz/text/
 %{_includedir}/compiz/animation/*.h
-%{_includedir}/compiz/animationaddon/animationaddon.h
 %{_includedir}/compiz/compiztoolbox/compiztoolbox.h
 %{_includedir}/compiz/composite/composite.h
 %{_includedir}/compiz/core/*.h
@@ -423,7 +422,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_includedir}/compiz/text/text.h
 # pkgconfig files
 %{_libdir}/pkgconfig/compiz-animation.pc
-%{_libdir}/pkgconfig/compiz-animationaddon.pc
 %{_libdir}/pkgconfig/compiz-compiztoolbox.pc
 %{_libdir}/pkgconfig/compiz-composite.pc
 %{_libdir}/pkgconfig/compiz-cube.pc
@@ -443,6 +441,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_datadir}/cmake/
 %dir %{_datadir}/cmake/Modules/
 %{_datadir}/cmake/Modules/FindCompiz.cmake
+%{_datadir}/cmake/Modules/FindOpenGLES2.cmake
 %dir %{_datadir}/compiz/cmake/
 %{_datadir}/compiz/cmake/CompizBcop.cmake
 %{_datadir}/compiz/cmake/CompizCommon.cmake
@@ -458,10 +457,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/compiz/cmake/plugin_extensions/CompizGenGconf.cmake
 %{_datadir}/compiz/cmake/plugin_extensions/CompizGenInstallData.cmake
 %{_datadir}/compiz/cmake/plugin_extensions/CompizGenInstallImages.cmake
+%{_datadir}/compiz/cmake/plugin_extensions/CompizOpenGLFixups.cmake
 
 
 %files gnome
-%doc AUTHORS NEWS README
 %{_bindir}/gtk-window-decorator
 # Manual page
 %{_mandir}/man1/gtk-window-decorator.1.gz
@@ -495,14 +494,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 # GConf schemas
 %{_sysconfdir}/gconf/schemas/compiz-addhelper.schemas
 %{_sysconfdir}/gconf/schemas/compiz-animation.schemas
-%{_sysconfdir}/gconf/schemas/compiz-animationaddon.schemas
 %{_sysconfdir}/gconf/schemas/compiz-annotate.schemas
 %{_sysconfdir}/gconf/schemas/compiz-bench.schemas
-%{_sysconfdir}/gconf/schemas/compiz-bicubic.schemas
-%{_sysconfdir}/gconf/schemas/compiz-blur.schemas
 %{_sysconfdir}/gconf/schemas/compiz-ccp.schemas
 %{_sysconfdir}/gconf/schemas/compiz-clone.schemas
-%{_sysconfdir}/gconf/schemas/compiz-colorfilter.schemas
 %{_sysconfdir}/gconf/schemas/compiz-commands.schemas
 %{_sysconfdir}/gconf/schemas/compiz-compiztoolbox.schemas
 %{_sysconfdir}/gconf/schemas/compiz-composite.schemas
@@ -510,7 +505,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_sysconfdir}/gconf/schemas/compiz-core.schemas
 %{_sysconfdir}/gconf/schemas/compiz-crashhandler.schemas
 %{_sysconfdir}/gconf/schemas/compiz-cube.schemas
-%{_sysconfdir}/gconf/schemas/compiz-cubeaddon.schemas
 %{_sysconfdir}/gconf/schemas/compiz-dbus.schemas
 %{_sysconfdir}/gconf/schemas/compiz-decor.schemas
 %{_sysconfdir}/gconf/schemas/compiz-expo.schemas
@@ -519,17 +513,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_sysconfdir}/gconf/schemas/compiz-fade.schemas
 %{_sysconfdir}/gconf/schemas/compiz-fadedesktop.schemas
 %{_sysconfdir}/gconf/schemas/compiz-firepaint.schemas
-%{_sysconfdir}/gconf/schemas/compiz-gears.schemas
 %{_sysconfdir}/gconf/schemas/compiz-gnomecompat.schemas
 %{_sysconfdir}/gconf/schemas/compiz-grid.schemas
-%{_sysconfdir}/gconf/schemas/compiz-group.schemas
 %{_sysconfdir}/gconf/schemas/compiz-imgjpeg.schemas
 %{_sysconfdir}/gconf/schemas/compiz-imgpng.schemas
 %{_sysconfdir}/gconf/schemas/compiz-imgsvg.schemas
 %{_sysconfdir}/gconf/schemas/compiz-inotify.schemas
 # Ubuntu packages the KDE schema too
 %{_sysconfdir}/gconf/schemas/compiz-kdecompat.schemas
-%{_sysconfdir}/gconf/schemas/compiz-loginout.schemas
 %{_sysconfdir}/gconf/schemas/compiz-mag.schemas
 %{_sysconfdir}/gconf/schemas/compiz-maximumize.schemas
 %{_sysconfdir}/gconf/schemas/compiz-mblur.schemas
@@ -542,7 +533,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_sysconfdir}/gconf/schemas/compiz-opengl.schemas
 %{_sysconfdir}/gconf/schemas/compiz-place.schemas
 %{_sysconfdir}/gconf/schemas/compiz-put.schemas
-%{_sysconfdir}/gconf/schemas/compiz-reflex.schemas
 %{_sysconfdir}/gconf/schemas/compiz-regex.schemas
 %{_sysconfdir}/gconf/schemas/compiz-resize.schemas
 %{_sysconfdir}/gconf/schemas/compiz-resizeinfo.schemas
@@ -560,18 +550,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_sysconfdir}/gconf/schemas/compiz-showrepaint.schemas
 %{_sysconfdir}/gconf/schemas/compiz-snap.schemas
 %{_sysconfdir}/gconf/schemas/compiz-splash.schemas
-%{_sysconfdir}/gconf/schemas/compiz-stackswitch.schemas
 %{_sysconfdir}/gconf/schemas/compiz-staticswitcher.schemas
 %{_sysconfdir}/gconf/schemas/compiz-switcher.schemas
 %{_sysconfdir}/gconf/schemas/compiz-td.schemas
 %{_sysconfdir}/gconf/schemas/compiz-text.schemas
-%{_sysconfdir}/gconf/schemas/compiz-thumbnail.schemas
 %{_sysconfdir}/gconf/schemas/compiz-titleinfo.schemas
 %{_sysconfdir}/gconf/schemas/compiz-trailfocus.schemas
-%{_sysconfdir}/gconf/schemas/compiz-trip.schemas
 %{_sysconfdir}/gconf/schemas/compiz-vpswitch.schemas
 %{_sysconfdir}/gconf/schemas/compiz-wall.schemas
-%{_sysconfdir}/gconf/schemas/compiz-wallpaper.schemas
 %{_sysconfdir}/gconf/schemas/compiz-water.schemas
 %{_sysconfdir}/gconf/schemas/compiz-widget.schemas
 %{_sysconfdir}/gconf/schemas/compiz-winrules.schemas
@@ -588,14 +574,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 # GSettings schemas
 %{_datadir}/glib-2.0/schemas/org.compiz.addhelper.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.animation.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.animationaddon.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.annotate.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.bench.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.bicubic.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.blur.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.ccp.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.clone.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.colorfilter.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.commands.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.compiztoolbox.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.composite.gschema.xml
@@ -603,7 +585,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.core.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.crashhandler.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.cube.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.cubeaddon.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.dbus.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.decor.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.expo.gschema.xml
@@ -612,10 +593,8 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.fade.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.fadedesktop.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.firepaint.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.gears.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.gnomecompat.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.grid.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.group.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.imgjpeg.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.imgpng.gschema.xml
@@ -623,7 +602,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.inotify.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.integrated.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.kdecompat.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.loginout.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.mag.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.maximumize.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.mblur.gschema.xml
@@ -636,7 +614,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.opengl.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.place.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.put.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.reflex.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.regex.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.resize.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.resizeinfo.gschema.xml
@@ -654,18 +631,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.showrepaint.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.snap.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.splash.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.stackswitch.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.staticswitcher.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.switcher.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.td.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.text.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.thumbnail.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.titleinfo.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.trailfocus.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.trip.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.vpswitch.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.wall.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.compiz.wallpaper.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.water.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.widget.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.winrules.gschema.xml
@@ -677,24 +650,18 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %files plugins
-%doc AUTHORS NEWS README
 %dir %{_libdir}/compiz/
 %{_libdir}/compiz/libaddhelper.so
 %{_libdir}/compiz/libanimation.so
-%{_libdir}/compiz/libanimationaddon.so
 %{_libdir}/compiz/libannotate.so
 %{_libdir}/compiz/libbench.so
-%{_libdir}/compiz/libbicubic.so
-%{_libdir}/compiz/libblur.so
 %{_libdir}/compiz/libclone.so
-%{_libdir}/compiz/libcolorfilter.so
 %{_libdir}/compiz/libcommands.so
 %{_libdir}/compiz/libcompiztoolbox.so
 %{_libdir}/compiz/libcomposite.so
 %{_libdir}/compiz/libcopytex.so
 %{_libdir}/compiz/libcrashhandler.so
 %{_libdir}/compiz/libcube.so
-%{_libdir}/compiz/libcubeaddon.so
 %{_libdir}/compiz/libdbus.so
 %{_libdir}/compiz/libdecor.so
 %{_libdir}/compiz/libexpo.so
@@ -703,16 +670,13 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/compiz/libfade.so
 %{_libdir}/compiz/libfadedesktop.so
 %{_libdir}/compiz/libfirepaint.so
-%{_libdir}/compiz/libgears.so
 %{_libdir}/compiz/libgnomecompat.so
 %{_libdir}/compiz/libgrid.so
-%{_libdir}/compiz/libgroup.so
 %{_libdir}/compiz/libimgjpeg.so
 %{_libdir}/compiz/libimgpng.so
 %{_libdir}/compiz/libimgsvg.so
 %{_libdir}/compiz/libinotify.so
 %{_libdir}/compiz/libkdecompat.so
-%{_libdir}/compiz/libloginout.so
 %{_libdir}/compiz/libmag.so
 %{_libdir}/compiz/libmaximumize.so
 %{_libdir}/compiz/libmblur.so
@@ -725,7 +689,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/compiz/libopengl.so
 %{_libdir}/compiz/libplace.so
 %{_libdir}/compiz/libput.so
-%{_libdir}/compiz/libreflex.so
 %{_libdir}/compiz/libregex.so
 %{_libdir}/compiz/libresize.so
 %{_libdir}/compiz/libresizeinfo.so
@@ -743,18 +706,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/compiz/libshowrepaint.so
 %{_libdir}/compiz/libsnap.so
 %{_libdir}/compiz/libsplash.so
-%{_libdir}/compiz/libstackswitch.so
 %{_libdir}/compiz/libstaticswitcher.so
 %{_libdir}/compiz/libswitcher.so
 %{_libdir}/compiz/libtd.so
 %{_libdir}/compiz/libtext.so
-%{_libdir}/compiz/libthumbnail.so
 %{_libdir}/compiz/libtitleinfo.so
 %{_libdir}/compiz/libtrailfocus.so
-%{_libdir}/compiz/libtrip.so
 %{_libdir}/compiz/libvpswitch.so
 %{_libdir}/compiz/libwall.so
-%{_libdir}/compiz/libwallpaper.so
 %{_libdir}/compiz/libwater.so
 %{_libdir}/compiz/libwidget.so
 %{_libdir}/compiz/libwinrules.so
@@ -764,28 +723,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_datadir}/compiz/
 %{_datadir}/compiz/addhelper.xml
 %{_datadir}/compiz/animation.xml
-%{_datadir}/compiz/animationaddon.xml
 %{_datadir}/compiz/annotate.xml
 %{_datadir}/compiz/bench.xml
-%{_datadir}/compiz/bicubic.xml
-%{_datadir}/compiz/blur.xml
 %{_datadir}/compiz/clone.xml
-%{_datadir}/compiz/colorfilter.xml
-%dir %{_datadir}/compiz/colorfilter/
-%dir %{_datadir}/compiz/colorfilter/data/
-%dir %{_datadir}/compiz/colorfilter/data/filters/
-%{_datadir}/compiz/colorfilter/data/filters/blackandwhite
-%{_datadir}/compiz/colorfilter/data/filters/blueish-filter
-%{_datadir}/compiz/colorfilter/data/filters/contrast
-%{_datadir}/compiz/colorfilter/data/filters/deuteranopia
-%{_datadir}/compiz/colorfilter/data/filters/grayscale
-%{_datadir}/compiz/colorfilter/data/filters/negative
-%{_datadir}/compiz/colorfilter/data/filters/negative-green
-%{_datadir}/compiz/colorfilter/data/filters/protanopia
-%{_datadir}/compiz/colorfilter/data/filters/sepia
-%{_datadir}/compiz/colorfilter/data/filters/swap-green-blue
-%{_datadir}/compiz/colorfilter/data/filters/swap-red-blue
-%{_datadir}/compiz/colorfilter/data/filters/swap-red-green
 %{_datadir}/compiz/commands.xml
 %{_datadir}/compiz/compiztoolbox.xml
 %{_datadir}/compiz/composite.xml
@@ -796,12 +736,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_datadir}/compiz/cube/
 %dir %{_datadir}/compiz/cube/images/
 %{_datadir}/compiz/cube/images/freedesktop.png
-%{_datadir}/compiz/cubeaddon.xml
-%dir %{_datadir}/compiz/cubeaddon/
-%dir %{_datadir}/compiz/cubeaddon/images/
-%{_datadir}/compiz/cubeaddon/images/compizcap.png
-%{_datadir}/compiz/cubeaddon/images/cubecap_release.png
-%{_datadir}/compiz/cubeaddon/images/fusioncap.png
 %{_datadir}/compiz/dbus.xml
 %{_datadir}/compiz/decor.xml
 %{_datadir}/compiz/expo.xml
@@ -810,17 +744,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/compiz/fade.xml
 %{_datadir}/compiz/fadedesktop.xml
 %{_datadir}/compiz/firepaint.xml
-%{_datadir}/compiz/gears.xml
 %{_datadir}/compiz/gnomecompat.xml
 %{_datadir}/compiz/grid.xml
-%{_datadir}/compiz/group.xml
 %{_datadir}/compiz/icon.png
 %{_datadir}/compiz/imgjpeg.xml
 %{_datadir}/compiz/imgpng.xml
 %{_datadir}/compiz/imgsvg.xml
 %{_datadir}/compiz/inotify.xml
 %{_datadir}/compiz/kdecompat.xml
-%{_datadir}/compiz/loginout.xml
 %{_datadir}/compiz/mag.xml
 %dir %{_datadir}/compiz/mag/
 %dir %{_datadir}/compiz/mag/images/
@@ -846,10 +777,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/compiz/opengl.xml
 %{_datadir}/compiz/place.xml
 %{_datadir}/compiz/put.xml
-%{_datadir}/compiz/reflex.xml
-%dir %{_datadir}/compiz/reflex/
-%dir %{_datadir}/compiz/reflex/images/
-%{_datadir}/compiz/reflex/images/reflection.png
 %{_datadir}/compiz/regex.xml
 %{_datadir}/compiz/resize.xml
 %{_datadir}/compiz/resizeinfo.xml
@@ -874,18 +801,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_datadir}/compiz/splash/images/
 %{_datadir}/compiz/splash/images/splash_background.png
 %{_datadir}/compiz/splash/images/splash_logo.png
-%{_datadir}/compiz/stackswitch.xml
 %{_datadir}/compiz/staticswitcher.xml
 %{_datadir}/compiz/switcher.xml
 %{_datadir}/compiz/td.xml
 %{_datadir}/compiz/text.xml
-%{_datadir}/compiz/thumbnail.xml
 %{_datadir}/compiz/titleinfo.xml
 %{_datadir}/compiz/trailfocus.xml
-%{_datadir}/compiz/trip.xml
 %{_datadir}/compiz/vpswitch.xml
 %{_datadir}/compiz/wall.xml
-%{_datadir}/compiz/wallpaper.xml
 %{_datadir}/compiz/water.xml
 %{_datadir}/compiz/widget.xml
 %{_datadir}/compiz/winrules.xml
@@ -895,7 +818,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %files -n libcompizconfig
-%doc AUTHORS NEWS README
 %{_libdir}/libcompizconfig.so.0
 %{_libdir}/libcompizconfig.so.0.0.0
 # Compiz configuration ini backend
@@ -913,7 +835,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %files -n libcompizconfig-devel
-%doc AUTHORS NEWS README
 %dir %{_includedir}/compizconfig/
 %{_includedir}/compizconfig/ccs-backend.h
 %{_includedir}/compizconfig/ccs.h
@@ -932,13 +853,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %files -n python-compizconfig
-%doc AUTHORS NEWS README
 %{python_sitearch}/compizconfig.so
 %{python_sitearch}/compizconfig_python-0.9.5.94-py2.7.egg-info
 
 
 %files -n ccsm -f build/ccsm.lang
-%doc AUTHORS NEWS README
 %{_bindir}/ccsm
 # Desktop file
 %{_datadir}/applications/ccsm.desktop
@@ -965,6 +884,23 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.0-1.z0ubuntu1
+- Version 0.9.8.0
+- Ubuntu release 0ubuntu1
+- Drop plugins (no longer supported)
++   animationaddon
++   blur
++   colorfilter
++   cubeaddon
++   gears
++   group
++   loginout
++   reflex
++   stackswitch
++   thumbnail
++   trip
++   wallpaper
+
 * Tue Aug 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8-1.bzr3319.0ubuntu3
 - Version 0.9.8
 - BZR revision 3319

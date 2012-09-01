@@ -4,7 +4,7 @@ SPEC_VER="$(rpmspec -q --qf '%{version}\n' compiz.spec | head -1)"
 UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' compiz.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/compiz' -O - | sed -n 's/.*>compiz_\(.*\)-\(.*\)\.tar\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/compiz' -O - | sed -n 's/.*>compiz_\(.*\)-\(.*\)\.diff\.gz<.*/\1 \2/p'))
 
 echo ""
 
