@@ -1,65 +1,87 @@
-indicator-session defaults to using the system-devices-panel and
-system-shutdown-panel icons, which are only present in Ubuntu's monochrome icon
-theme. This patch will make indicator-session use those two icons if the Ubuntu
-icon theme is used or inherited and fallback to the system-shutdown icon if
-another icon theme is used.
-
-Logging out and logging back in is necessary when switching to and from the
-Ubuntu icon theme.
+Check for system-devices-panel and system-shutdown-panel icons before using
+them. If the current icon theme does not contain those icons, then fallback to
+the system-shutdown icon.
 diff -Nru indicator-session-12.10.1.orig/src/indicator-session.c indicator-session-12.10.1/src/indicator-session.c
---- indicator-session-12.10.1.orig/src/indicator-session.c	2012-08-30 13:01:43.034617390 -0400
-+++ indicator-session-12.10.1/src/indicator-session.c	2012-08-30 14:58:54.600661822 -0400
-@@ -132,7 +132,52 @@
-   self->entry.name_hint = PACKAGE;
-   self->entry.accessible_desc = _("Session Menu");
-   self->entry.label = GTK_LABEL (gtk_label_new ("User Name"));
--  icon_name = greeter_mode ? GREETER_ICON_DEFAULT : ICON_DEFAULT;
+--- indicator-session-12.10.1.orig/src/indicator-session.c	2012-09-02 01:44:54.372180752 -0400
++++ indicator-session-12.10.1/src/indicator-session.c	2012-09-02 13:32:35.485854681 -0400
+@@ -63,6 +63,7 @@
+   GCancellable * service_proxy_cancel;
+   GDBusProxy * service_proxy;
+   GSettings * settings;
++  GtkIconTheme * icon_theme;
+ };
+ 
+ static gboolean greeter_mode;
+@@ -90,6 +91,8 @@
+ static void user_real_name_get_cb (GObject * obj, GAsyncResult * res, gpointer user_data);
+ 
+ static void indicator_session_class_init (IndicatorSessionClass *klass);
++static void indicator_session_update_icon_callback (GtkWidget *widget, gpointer callback_data);
++static void indicator_session_update_icon (IndicatorSession *self);
+ static void indicator_session_init       (IndicatorSession *self);
+ static void indicator_session_dispose    (GObject *object);
+ static void indicator_session_finalize   (GObject *object);
+@@ -114,10 +117,43 @@
+ }
+ 
+ static void
+-indicator_session_init (IndicatorSession *self)
++indicator_session_update_icon_callback (GtkWidget * widget, gpointer callback_data)
++{
++  indicator_session_update_icon ((IndicatorSession *)callback_data);
++}
 +
-+  gboolean okay = FALSE;
++static void
++indicator_session_update_icon (IndicatorSession *self)
+ {
+   const gchar * icon_name;
++  
++  gboolean has_icon_default = gtk_icon_theme_has_icon(self->icon_theme,
++                                                      ICON_DEFAULT);
++  gboolean has_greeter_icon_default = gtk_icon_theme_has_icon(
++                                                      self->icon_theme,
++                                                      GREETER_ICON_DEFAULT);
 +
-+  /* The system-devices-panel and system-shutdown-panel icons are only available
-+   * in Ubuntu's monochrome icon themes. We'll fall back to the system-shutdown
-+   * icon for other icon themes */
-+  GSettings * get_stuff = g_settings_new("org.gnome.desktop.interface");
-+  gchar * icon_theme = g_settings_get_string(get_stuff, "icon-theme");
-+  printf("Icon Theme: %s\n", icon_theme);
-+  if (g_strcmp0(icon_theme, "ubuntu-mono-dark") == 0 ||
-+      g_strcmp0(icon_theme, "ubuntu-mono-light") == 0) {
-+    okay = TRUE;
++  if (greeter_mode && has_greeter_icon_default) {
++    icon_name = GREETER_ICON_DEFAULT;
 +  }
-+
-+  /* If the theme inherits the Ubuntu monochrome icon themes, that's okay too */
-+  GKeyFile * icon_theme_index = g_key_file_new();
-+  gchar * icon_theme_path = g_strconcat("/usr/share/icons/",
-+                                        icon_theme,
-+                                        "/index.theme",
-+                                        NULL);
-+  if (g_key_file_load_from_file(icon_theme_index,
-+                                icon_theme_path,
-+                                G_KEY_FILE_NONE, NULL)) {
-+    gchar * icon_theme_inherits = g_key_file_get_string(icon_theme_index,
-+                                                        "Icon Theme",
-+                                                        "Inherits",
-+                                                        NULL);
-+    if (icon_theme_inherits != NULL) {
-+      if (g_strstr_len(icon_theme_inherits, -1, "ubuntu-mono-dark") != NULL ||
-+          g_strstr_len(icon_theme_inherits, -1, "ubuntu-mono-light") != NULL) {
-+        okay = TRUE;
-+      }
-+    }
-+    g_free(icon_theme_inherits);
-+  }
-+  g_free(icon_theme_path);
-+  g_key_file_free(icon_theme_index);
-+  g_free(icon_theme);
-+
-+  if (okay == TRUE) {
-+    icon_name = greeter_mode ? GREETER_ICON_DEFAULT : ICON_DEFAULT;
++  else if (has_icon_default) {
++    icon_name = ICON_DEFAULT;
 +  }
 +  else {
 +    icon_name = "system-shutdown";
 +  }
 +
-   self->entry.image = GTK_IMAGE (gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_BUTTON));
++  if (self->entry.image == NULL) {
++    self->entry.image = GTK_IMAGE (gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_BUTTON));
++  }
++  else {
++    gtk_image_set_from_icon_name (GTK_IMAGE(self->entry.image), icon_name, GTK_ICON_SIZE_MENU);
++  }
++}
+ 
++static void
++indicator_session_init (IndicatorSession *self)
++{
+   self->settings = g_settings_new ("com.canonical.indicator.session");
+ 
+   /* Now let's fire these guys up. */
+@@ -132,8 +168,16 @@
+   self->entry.name_hint = PACKAGE;
+   self->entry.accessible_desc = _("Session Menu");
+   self->entry.label = GTK_LABEL (gtk_label_new ("User Name"));
+-  icon_name = greeter_mode ? GREETER_ICON_DEFAULT : ICON_DEFAULT;
+-  self->entry.image = GTK_IMAGE (gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_BUTTON));
++
++  /* We need to check if the current icon theme has the system-devices-panel
++   * and system-shutdown-panel icons. If not, we'll fall back to the
++   * system-shutdown icon */
++  self->icon_theme = gtk_icon_theme_get_default();
++  indicator_session_update_icon(self);
++  g_signal_connect(G_OBJECT(self->icon_theme),
++                   "changed",
++                   G_CALLBACK(indicator_session_update_icon_callback), self);
++
    self->entry.menu = GTK_MENU (dbusmenu_gtkmenu_new(INDICATOR_SESSION_DBUS_NAME,
                                                      INDICATOR_SESSION_DBUS_OBJECT));
+   g_settings_bind (self->settings, "show-real-name-on-panel",
