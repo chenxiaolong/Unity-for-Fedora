@@ -1,6 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu4
 
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 %define _gconf_obsolete_schemas compiz-gtkloader
@@ -408,6 +408,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Sep 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-2.0ubuntu4
+- Ubuntu release 0ubuntu4
+
 * Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-2.0ubuntu1
 - Build with GCC 4.6 again (until Fedora has GCC 4.7.1)
 
