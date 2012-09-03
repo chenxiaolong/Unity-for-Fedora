@@ -5,14 +5,14 @@
 %filter_setup
 
 Name:		geis
-Version:	2.2.11
+Version:	2.2.12
 Release:	1%{?dist}
 Summary:	An implementation of the GEIS interface
 
 Group:		System Environment/Libraries
 License:	GPLv2 and LGPLv3
 URL:		https://launchpad.net/geis
-Source0:	https://launchpad.net/geis/trunk/2.1.11/+download/geis-%{version}.tar.xz
+Source0:	https://launchpad.net/geis/trunk/%{version}/+download/geis-%{version}.tar.xz
 
 BuildRequires:	asciidoc
 BuildRequires:	desktop-file-utils
@@ -163,6 +163,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Mon Sep 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.12-1
+- Version 2.2.12
+
 * Fri Jul 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.11-1
 - Version 2.2.11
 - Upstream renamed from utouch-geis to geis
