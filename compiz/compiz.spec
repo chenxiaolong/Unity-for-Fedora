@@ -13,8 +13,7 @@
 
 Name:		compiz
 Version:	0.9.8.0
-# Add 'z' to allow upgrade from "1.bzr..." to "1.0ubuntu..."
-Release:	1.z%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
@@ -52,6 +51,9 @@ Patch3:		0004_Fix_gsettings_backend_libdir.patch
 # Put profile conversion files in /usr/share instead of /usr/lib
 Patch4:		0005_Convert_files_libdir_to_datadir.patch
 
+# Port gtk-window-decorator from GConf to GSettings (LP: 1042323)
+Patch5:		0006_GWD_use_GSettings.patch
+
 BuildRequires:	cmake
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
@@ -61,6 +63,7 @@ BuildRequires:	pkgconfig
 
 BuildRequires:	boost-devel
 BuildRequires:	libjpeg-turbo-devel
+BuildRequires:	metacity-devel
 
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(dbus-glib-1)
@@ -109,6 +112,10 @@ Requires:	gsettings-desktop-schemas
 
 # Requited for GConf to GSettings migration script
 Requires:	gnome-python2-gconf
+
+# gtk-window-decorator reads its settings from metacity and mutter
+Requires:	metacity >= 2.34.1
+Requires:	mutter
 
 %description
 Compiz is an OpenGL compositing manager that uses GLX_EXT_texture_from_pixmap
@@ -228,6 +235,7 @@ its plugins' settings.
 %patch2 -p1 -b .py_install_command
 %patch3 -p1 -b .backend_libdir
 %patch4 -p1 -b .convert_files_datadir
+%patch5 -p0 -b .gwd_use_gsettings
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
@@ -260,6 +268,11 @@ make %{?_smp_mflags}
 %install
 cd build
 GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 make install DESTDIR=$RPM_BUILD_ROOT
+
+# Install gtk-window-decorator library
+install -m755 \
+  gtk/window-decorator/libgtk_window_decorator_settings_notified_interface.so \
+  $RPM_BUILD_ROOT%{_libdir}/
 
 # make findcompiz_install does not work, so we'll install it manually
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/cmake/Modules/
@@ -475,6 +488,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/compizconfig/backends/libgconf.so
 %{_libdir}/compizconfig/backends/libgsettings.so
 %{_libdir}/libcompizconfig_gsettings_backend.so
+%{_libdir}/libgtk_window_decorator_settings_notified_interface.so
 # X11 session script
 %{_sysconfdir}/X11/xinit/xinitrc.d/65compiz_profile-on-session
 # Compiz Unity profile configuration file
@@ -595,6 +609,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.firepaint.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.gnomecompat.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.grid.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.gwd.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.imgjpeg.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.imgpng.gschema.xml
@@ -884,6 +899,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.0-2.0ubuntu1
+- Add patch from Launchpad bug 1042323
++   Ports gtk-window-decorator to GSettings
+
 * Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.0-1.z0ubuntu1
 - Version 0.9.8.0
 - Ubuntu release 0ubuntu1
