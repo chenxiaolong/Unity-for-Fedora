@@ -731,7 +731,7 @@ build() {
     echo "  clean-build   - Remove build directories (SOURCES/BUILD{,ROOT})"
     echo "  clean-rpm     - Remove built RPM's (PACKAGES/RPMS)"
     echo "  clean-srpm    - Remove generated SRPM's (PACKAGES/SRPMS)"
-    echo "  clean-all     - Run clean-src, clean-rpm, and clean-rpm"
+    echo "  clean-all     - Run clean-src, clean-rpm, and clean-srpm"
     echo ""
     echo "Mock Options:"
     echo "  mock-init     - Intialize the mock build environment"
