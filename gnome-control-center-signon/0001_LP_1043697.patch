@@ -1,0 +1,941 @@
+=== modified file 'Makefile.am'
+--- Makefile.am	2012-08-22 11:53:56 +0000
++++ Makefile.am	2012-08-31 12:39:57 +0000
+@@ -48,7 +48,6 @@
+ 
+ common_cppflags = \
+ 	$(CREDENTIALS_PANEL_CFLAGS) \
+-	-I$(srcdir)/src \
+ 	-include $(top_builddir)/config.h \
+ 	-DG_LOG_DOMAIN=\"\$(cappletname)-cc-panel\" \
+ 	-DGNOMELOCALEDIR="\"$(datadir)/locale\"" \
+@@ -65,7 +64,6 @@
+ 	--pkg AccountPlugin \
+ 	--pkg accounts \
+ 	--pkg assertions \
+-	--pkg cc-notebook \
+ 	--pkg posix \
+ 	--pkg signon \
+ 	--pkg gtk+-3.0 \
+@@ -82,12 +80,8 @@
+ 	src/cc-credentials-preferences.vala \
+ 	src/cc-credentials-providers-model.vala \
+ 	src/cc-credentials-providers-page.vala \
+-	src/cc-notebook.c \
+ 	src/cc-webcredentials-indicator.vala
+ 
+-common_headers = \
+-	src/cc-notebook.h
+-
+ libcredentials_la_SOURCES = \
+ 	$(common_vala_sources) \
+ 	src/cc-credentials-panel.c
+@@ -420,7 +414,6 @@
+ 	  dist-hook
+ 
+ dist_noinst_DATA = \
+-	$(common_headers) \
+ 	$(gtkdoc_srcdir)/account-plugin-docs.xml \
+ 	$(gtkdoc_srcdir)/account-plugin-sections.txt \
+ 	$(gtkdoc_srcdir)/version.xml.in \
+@@ -433,8 +426,6 @@
+ 	src/accounts.deps \
+ 	src/accounts.vapi \
+ 	src/assertions.vapi \
+-	src/cc-notebook.vapi \
+-	src/cc-notebook.deps \
+ 	src/signon.vapi \
+ 	src/gtk+-3.0.vapi \
+ 	src/gtk+-3.0.deps
+
+=== modified file 'configure.ac'
+--- configure.ac	2012-08-23 13:30:43 +0000
++++ configure.ac	2012-08-31 12:39:57 +0000
+@@ -46,7 +46,6 @@
+ GLIB_REQUIRED="glib-2.0 gio-2.0 gio-unix-2.0 >= 2.29.5"
+ GTK_REQUIRED="gtk+-3.0 >= 3.0.0"
+ GNOME_CONTROL_CENTER_REQUIRED="libgnome-control-center"
+-CLUTTER_REQUIRED="clutter-1.0 >= 1.11.10 clutter-gtk-1.0 >= 1.3.2"
+ # Unfortunately we need this in order to store the cookies (D-Bus signature
+ # a{ss}) into a GValue
+ DBUS_GLIB_REQUIRED="dbus-glib-1"
+@@ -56,8 +55,7 @@
+    $LIBSIGNON_GLIB_REQUIRED
+    $GLIB_REQUIRED
+    $GTK_REQUIRED
+-   $GNOME_CONTROL_CENTER_REQUIRED
+-   $CLUTTER_REQUIRED])
++   $GNOME_CONTROL_CENTER_REQUIRED])
+ 
+ # libaccount-plugin variables.
+ AC_SUBST([LIBACCOUNT_PLUGIN_SO_VERSION], [0:0:0])
+
+=== modified file 'src/cc-credentials-application.vala'
+--- src/cc-credentials-application.vala	2012-08-22 10:01:12 +0000
++++ src/cc-credentials-application.vala	2012-08-31 12:39:57 +0000
+@@ -87,11 +87,6 @@
+         unowned string[] arguments = args;
+         if (arguments.length <= 1)
+         {
+-            var result = GtkClutter.init (ref arguments);
+-            if (result != Clutter.InitError.SUCCESS)
+-            {
+-                error ("Clutter failed to initalize");
+-            }
+             activate ();
+             exit_status = 0;
+         }
+
+=== modified file 'src/cc-credentials-preferences.vala'
+--- src/cc-credentials-preferences.vala	2012-08-22 13:12:49 +0000
++++ src/cc-credentials-preferences.vala	2012-08-31 12:39:57 +0000
+@@ -23,14 +23,9 @@
+  */
+ public class Cc.Credentials.Preferences : Gtk.Notebook
+ {
+-    private AccountsPage accounts_page;
+     private AuthorizationPage authorization_page;
+     private Ag.Manager accounts_manager;
+-    private Cc.Notebook scroller;
+-    private Gtk.Spinner placeholder;
+-    private Gtk.Widget account_options_widget;
+     private LoginCapture login_capture;
+-    private int next_page_num;
+ 
+     /* This must be a construct property so that is is called before the
+      * construct block.
+@@ -95,6 +90,8 @@
+             warning ("Error launching update-accounts tool: %s", e.message);
+         }
+ 
++        AccountsPage accounts_page;
++
+         if (account_details_id != 0)
+         {
+             accounts_page = new AccountsPage.with_account_details (account_details_id);
+@@ -113,30 +110,14 @@
+         accounts_page.account_options_request.connect (on_accounts_page_account_options_request);
+         accounts_page.account_edit_options_request.connect (on_accounts_page_account_edit_options_request);
+ 
+-        /* The embedded scrolling clutter stage contains the accounts page and
+-         * a placeholder page. This scroller is in turn contained within a
+-         * notebook, with the real page to transition to as the second item in
+-         * said notebook. This is a little convoluted as it is not possible to
+-         * embed a non-native X11 window inside a GtkClutter.Embed, and the
+-         * GtkSocket used for the signon-ui output breaks this rule.
+-         */
+-        scroller = new Cc.Notebook ();
+-        scroller.show ();
+-        this.append_page (scroller);
+-
+-        scroller.add_page (accounts_page);
+-
+-        placeholder = new Gtk.Spinner ();
+-        placeholder.start ();
+-        placeholder.show ();
+-        scroller.add_page (placeholder);
++        this.append_page (accounts_page);
+ 
+         authorization_page = new AuthorizationPage ();
+         authorization_page.cancelled.connect (on_authorization_page_cancelled);
+ 
+         this.append_page (authorization_page);
+ 
+-        scroller.select_page (accounts_page, false);
++        set_current_page (PreferencesPage.ACCOUNTS);
+ 
+         set_size_request (-1, 400);
+ 
+@@ -148,37 +129,6 @@
+     }
+ 
+     /**
+-     * Switch the notebook to the scroller, and scroll the stage to the
+-     * accounts page.
+-     */
+-    private void switch_to_accounts_page ()
+-    {
+-        this.set_current_page (PreferencesPage.ACCOUNTS);
+-        scroller.select_page (accounts_page, true);
+-    }
+-
+-    /**
+-     * Scroll the stage to the placeholder, and switch the notebook to the
+-     * requested widget after a delay.
+-     */
+-    private void switch_to_other_page (PreferencesPage page_num)
+-    {
+-        scroller.select_page (placeholder, true);
+-        next_page_num = page_num;
+-        // Scrolling transition should have finished.
+-        Timeout.add (400, switch_notebook_timeout);
+-    }
+-
+-    /**
+-     * Timeout to switch the notebook page, see switch_to_other_page().
+-     */
+-    private bool switch_notebook_timeout ()
+-    {
+-        this.set_current_page (next_page_num);
+-        return false;
+-    }
+-
+-    /**
+      * Handle the new-account-request signal from LoginCapture, switching
+      * notebook page to the new account view.
+      *
+@@ -196,7 +146,7 @@
+         var account = accounts_manager.create_account (provider_name);
+         authorization_page.account = account;
+         authorization_page.set_login_data (username, password, cookies);
+-        switch_to_other_page (PreferencesPage.AUTHORIZATION);
++        set_current_page (PreferencesPage.AUTHORIZATION);
+     }
+ 
+     /**
+@@ -210,7 +160,7 @@
+     {
+         var account = accounts_manager.create_account (provider_name);
+         authorization_page.account = account;
+-        switch_to_other_page (PreferencesPage.AUTHORIZATION);
++        set_current_page (PreferencesPage.AUTHORIZATION);
+     }
+ 
+     /**
+@@ -223,7 +173,7 @@
+     private void on_accounts_page_reauthenticate_account_request (Ag.Account account)
+     {
+         authorization_page.reauthenticate_account (account);
+-        switch_to_other_page (PreferencesPage.AUTHORIZATION);
++        set_current_page (PreferencesPage.AUTHORIZATION);
+     }
+ 
+     /**
+@@ -232,7 +182,7 @@
+      */
+     private void on_authorization_page_cancelled ()
+     {
+-        switch_to_accounts_page ();
++        set_current_page (PreferencesPage.ACCOUNTS);
+     }
+ 
+     /**
+@@ -246,12 +196,10 @@
+     {
+         assert (application_row.plugin_widget != null);
+ 
+-        var widget = application_row.plugin_widget;
+-        account_options_widget = widget;
+-        this.append_page (account_options_widget);
++        this.append_page (application_row.plugin_widget);
+         application_row.plugin.finished.connect (on_account_application_options_finished);
+ 
+-        switch_to_other_page (PreferencesPage.ACCOUNT_OPTIONS);
++        set_current_page (PreferencesPage.ACCOUNT_OPTIONS);
+     }
+ 
+     /**
+@@ -269,8 +217,8 @@
+                      plugin_err.message);
+         }
+ 
+-        switch_to_accounts_page ();
+         this.remove_page (PreferencesPage.ACCOUNT_OPTIONS);
++        set_current_page (PreferencesPage.ACCOUNTS);
+     }
+ 
+     /**
+@@ -291,11 +239,10 @@
+         }
+ 
+         widget.show ();
+-        account_options_widget = widget;
+-        this.append_page (account_options_widget);
++        this.append_page (widget);
+         plugin.finished.connect (on_account_edit_options_finished);
+ 
+-        switch_to_other_page (PreferencesPage.ACCOUNT_OPTIONS);
++        set_current_page (PreferencesPage.ACCOUNT_OPTIONS);
+     }
+ 
+     /**
+@@ -313,7 +260,7 @@
+                      plugin_err.message);
+         }
+ 
+-        switch_to_accounts_page ();
+         this.remove_page (PreferencesPage.ACCOUNT_OPTIONS);
++        set_current_page (PreferencesPage.ACCOUNTS);
+     }
+ }
+
+=== removed file 'src/cc-notebook.c'
+--- src/cc-notebook.c	2012-08-22 10:01:12 +0000
++++ src/cc-notebook.c	1970-01-01 00:00:00 +0000
+@@ -1,566 +0,0 @@
+-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
+- *
+- * Copyright © 2012 Red Hat, Inc.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Lesser General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Lesser General Public License for more details.
+- *
+- * You should have received a copy of the GNU Lesser General Public
+- * License along with this library. If not, see <http://www.gnu.org/licenses/>.
+- *
+- * Written by:
+- *      Bastien Nocera <hadess@hadess.net>
+- *      Emmanuele Bassi <ebassi@linux.intel.com>
+- */
+-
+-#include "config.h"
+-
+-#include <glib.h>
+-#include <glib/gi18n.h>
+-#include <gtk/gtk.h>
+-
+-#include "cc-notebook.h"
+-
+-#define GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), CC_TYPE_NOTEBOOK, CcNotebookPrivate))
+-
+-/*
+- * Structure:
+- *
+- *   Notebook
+- *   +---- GtkClutterEmbed
+- *         +---- ClutterStage
+- *               +---- ClutterScrollActor:scroll
+- *                     +---- ClutterActor:bin
+- *                           +---- ClutterActor:frame<ClutterBinLayout>
+- *                                 +---- GtkClutterActor:embed<GtkWidget>
+- *
+- * the frame element is needed to make the GtkClutterActor contents fill the allocation
+- */
+-
+-struct _CcNotebookPrivate
+-{
+-        GtkWidget *embed;
+-
+-        ClutterActor *stage;
+-        ClutterActor *scroll;
+-        ClutterActor *bin;
+-
+-        int last_width;
+-
+-        GtkWidget *selected_page;
+-        GList *pages; /* GList of GtkWidgets */
+-        GList *removed_pages; /* GList of RemoveData, see setup_delayed_remove() */
+-};
+-
+-enum
+-{
+-        PROP_0,
+-        PROP_CURRENT_PAGE,
+-        LAST_PROP
+-};
+-
+-static GParamSpec *obj_props[LAST_PROP] = { NULL, };
+-
+-static void
+-cc_notebook_buildable_add_child (GtkBuildable  *buildable,
+-                                 GtkBuilder    *builder,
+-                                 GObject       *child,
+-                                 const gchar   *type);
+-
+-static void
+-cc_notebook_buildable_init (GtkBuildableIface *iface);
+-
+-G_DEFINE_TYPE_WITH_CODE (CcNotebook, cc_notebook, GTK_TYPE_BOX,
+-                         G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
+-                                                cc_notebook_buildable_init))
+-
+-static void
+-cc_notebook_get_property (GObject    *gobject,
+-                          guint       prop_id,
+-                          GValue     *value,
+-                          GParamSpec *pspec)
+-{
+-        CcNotebookPrivate *priv = CC_NOTEBOOK (gobject)->priv;
+-
+-        switch (prop_id) {
+-        case PROP_CURRENT_PAGE:
+-                g_value_set_pointer (value, priv->selected_page);
+-                break;
+-
+-        default:
+-                G_OBJECT_WARN_INVALID_PROPERTY_ID (gobject, prop_id, pspec);
+-        }
+-}
+-
+-static void
+-cc_notebook_set_property (GObject      *gobject,
+-			  guint         prop_id,
+-			  const GValue *value,
+-			  GParamSpec   *pspec)
+-{
+-        CcNotebook *self = CC_NOTEBOOK (gobject);
+-
+-        switch (prop_id) {
+-        case PROP_CURRENT_PAGE:
+-                cc_notebook_select_page (self, g_value_get_pointer (value), TRUE);
+-                break;
+-
+-        default:
+-                G_OBJECT_WARN_INVALID_PROPERTY_ID (gobject, prop_id, pspec);
+-        }
+-}
+-
+-static void
+-cc_notebook_finalize (GObject *gobject)
+-{
+-        CcNotebook *self = CC_NOTEBOOK (gobject);
+-
+-	g_list_free_full (self->priv->removed_pages, (GDestroyNotify) g_free);
+-	self->priv->removed_pages = NULL;
+-
+-	g_list_free (self->priv->pages);
+-	self->priv->pages = NULL;
+-
+-	G_OBJECT_CLASS (cc_notebook_parent_class)->finalize (gobject);
+-}
+-
+-static GtkSizeRequestMode
+-cc_notebook_get_request_mode (GtkWidget *widget)
+-{
+-	CcNotebook *notebook;
+-	GtkWidget *target;
+-
+-	notebook = CC_NOTEBOOK (widget);
+-
+-	target = notebook->priv->selected_page ? notebook->priv->selected_page : notebook->priv->embed;
+-
+-	return gtk_widget_get_request_mode (target);
+-}
+-
+-static void
+-cc_notebook_get_preferred_height (GtkWidget       *widget,
+-				  gint            *minimum_height,
+-				  gint            *natural_height)
+-{
+-	CcNotebook *notebook;
+-	GList *l;
+-
+-	notebook = CC_NOTEBOOK (widget);
+-
+-	if (notebook->priv->selected_page == NULL) {
+-		gtk_widget_get_preferred_height (notebook->priv->embed, minimum_height, natural_height);
+-		return;
+-	}
+-
+-	*minimum_height = 0;
+-	*natural_height = 0;
+-	for (l = notebook->priv->pages; l != NULL; l = l->next) {
+-		GtkWidget *page = l->data;
+-		int page_min, page_nat;
+-
+-		gtk_widget_get_preferred_height (page, &page_min, &page_nat);
+-		*minimum_height = MAX(page_min, *minimum_height);
+-		*natural_height = MAX(page_nat, *natural_height);
+-	}
+-}
+-
+-static void
+-cc_notebook_get_preferred_width_for_height (GtkWidget       *widget,
+-					    gint             height,
+-					    gint            *minimum_width,
+-					    gint            *natural_width)
+-{
+-	CcNotebook *notebook;
+-	GList *l;
+-
+-	notebook = CC_NOTEBOOK (widget);
+-
+-	if (notebook->priv->selected_page == NULL) {
+-		gtk_widget_get_preferred_width_for_height (notebook->priv->embed, height, minimum_width, natural_width);
+-		return;
+-	}
+-
+-	*minimum_width = 0;
+-	*natural_width = 0;
+-	for (l = notebook->priv->pages; l != NULL; l = l->next) {
+-		GtkWidget *page = l->data;
+-		int page_min, page_nat;
+-
+-		gtk_widget_get_preferred_width_for_height (page, height, &page_min, &page_nat);
+-		*minimum_width = MAX(page_min, *minimum_width);
+-		*natural_width = MAX(page_nat, *natural_width);
+-	}
+-}
+-
+-static void
+-cc_notebook_get_preferred_width (GtkWidget       *widget,
+-				 gint            *minimum_width,
+-				 gint            *natural_width)
+-{
+-	CcNotebook *notebook;
+-	GList *l;
+-
+-	notebook = CC_NOTEBOOK (widget);
+-
+-	if (notebook->priv->selected_page == NULL) {
+-		gtk_widget_get_preferred_width (notebook->priv->embed, minimum_width, natural_width);
+-		return;
+-	}
+-
+-	*minimum_width = 0;
+-	*natural_width = 0;
+-	for (l = notebook->priv->pages; l != NULL; l = l->next) {
+-		GtkWidget *page = l->data;
+-		int page_min, page_nat;
+-
+-		gtk_widget_get_preferred_width (page, &page_min, &page_nat);
+-		*minimum_width = MAX(page_min, *minimum_width);
+-		*natural_width = MAX(page_nat, *natural_width);
+-	}
+-}
+-
+-static void
+-cc_notebook_get_preferred_height_for_width (GtkWidget       *widget,
+-					    gint             width,
+-					    gint            *minimum_height,
+-					    gint            *natural_height)
+-{
+-	CcNotebook *notebook;
+-	GList *l;
+-
+-	notebook = CC_NOTEBOOK (widget);
+-
+-	if (notebook->priv->selected_page == NULL) {
+-		gtk_widget_get_preferred_height_for_width (notebook->priv->embed, width, minimum_height, natural_height);
+-		return;
+-	}
+-
+-	*minimum_height = 0;
+-	*natural_height = 0;
+-	for (l = notebook->priv->pages; l != NULL; l = l->next) {
+-		GtkWidget *page = l->data;
+-		int page_min, page_nat;
+-
+-		gtk_widget_get_preferred_height_for_width (page, width, &page_min, &page_nat);
+-		*minimum_height = MAX(page_min, *minimum_height);
+-		*natural_height = MAX(page_nat, *natural_height);
+-	}
+-}
+-
+-static gboolean
+-cc_notebook_focus (GtkWidget        *widget,
+-		   GtkDirectionType  direction)
+-{
+-	CcNotebook *notebook;
+-	GtkWidget *child;
+-
+-	notebook = CC_NOTEBOOK (widget);
+-	child = notebook->priv->selected_page;
+-
+-	if (child == NULL)
+-		return FALSE;
+-
+-	/* HACK: the default GtkContainer implementation is fine by us
+-	 * and there's no way to get to it without excessive copy/paste */
+-	return GTK_WIDGET_GET_CLASS (child)->focus (child, direction);
+-}
+-
+-static void
+-cc_notebook_class_init (CcNotebookClass *klass)
+-{
+-        GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+-        GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+-
+-        g_type_class_add_private (klass, sizeof (CcNotebookPrivate));
+-
+-        obj_props[PROP_CURRENT_PAGE] =
+-                g_param_spec_pointer (g_intern_static_string ("current-page"),
+-				      "Current Page",
+-				      "The currently selected page widget",
+-				      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+-
+-        gobject_class->get_property = cc_notebook_get_property;
+-        gobject_class->set_property = cc_notebook_set_property;
+-        gobject_class->finalize = cc_notebook_finalize;
+-        g_object_class_install_properties (gobject_class, LAST_PROP, obj_props);
+-
+-	widget_class->get_request_mode = cc_notebook_get_request_mode;
+-	widget_class->get_preferred_height = cc_notebook_get_preferred_height;
+-	widget_class->get_preferred_width_for_height = cc_notebook_get_preferred_width_for_height;
+-	widget_class->get_preferred_width = cc_notebook_get_preferred_width;
+-	widget_class->get_preferred_height_for_width = cc_notebook_get_preferred_height_for_width;
+-	widget_class->focus = cc_notebook_focus;
+-}
+-
+-static void
+-on_embed_size_allocate (GtkWidget     *embed,
+-                        GtkAllocation *allocation,
+-                        CcNotebook  *self)
+-{
+-        ClutterActorIter iter;
+-        ClutterActor *child;
+-        ClutterActor *frame;
+-        float page_w, page_h;
+-        float offset = 0.f;
+-        ClutterPoint pos;
+-
+-        if (self->priv->selected_page == NULL)
+-		return;
+-
+-        self->priv->last_width = allocation->width;
+-
+-        page_w = allocation->width;
+-        page_h = allocation->height;
+-
+-        clutter_actor_iter_init (&iter, self->priv->bin);
+-        while (clutter_actor_iter_next (&iter, &child)) {
+-                clutter_actor_set_x (child, offset);
+-                clutter_actor_set_size (child, page_w, page_h);
+-
+-                offset += page_w;
+-        }
+-
+-	/* This stops the non-animated scrolling from happening
+-	 * if we're still scrolling there */
+-	if (clutter_actor_get_transition (self->priv->scroll, "scroll-to") != NULL)
+-		return;
+-
+-	frame = g_object_get_data (G_OBJECT (self->priv->selected_page),
+-				   "cc-notebook-frame");
+-
+-        pos.y = 0;
+-        pos.x = clutter_actor_get_x (frame);
+-        g_debug ("Scrolling to (%lf,%lf) in allocation", pos.x, pos.y);
+-        clutter_scroll_actor_scroll_to_point (CLUTTER_SCROLL_ACTOR (self->priv->scroll), &pos);
+-}
+-
+-static void
+-cc_notebook_init (CcNotebook *self)
+-{
+-        self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, CC_TYPE_NOTEBOOK, CcNotebookPrivate);
+-
+-        gtk_widget_set_can_focus (GTK_WIDGET (self), TRUE);
+-
+-        self->priv->embed = gtk_clutter_embed_new ();
+-        gtk_widget_push_composite_child ();
+-        gtk_container_add (GTK_CONTAINER (self), self->priv->embed);
+-        gtk_widget_pop_composite_child ();
+-        g_signal_connect (self->priv->embed, "size-allocate", G_CALLBACK (on_embed_size_allocate), self);
+-        gtk_widget_show (self->priv->embed);
+-
+-        self->priv->stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (self->priv->embed));
+-
+-        self->priv->scroll = clutter_scroll_actor_new ();
+-        clutter_scroll_actor_set_scroll_mode (CLUTTER_SCROLL_ACTOR (self->priv->scroll),
+-                                                CLUTTER_SCROLL_HORIZONTALLY);
+-        clutter_actor_add_constraint (self->priv->scroll, clutter_bind_constraint_new (self->priv->stage, CLUTTER_BIND_SIZE, 0.f));
+-        clutter_actor_add_child (self->priv->stage, self->priv->scroll);
+-
+-        self->priv->bin = clutter_actor_new ();
+-        clutter_actor_add_child (self->priv->scroll, self->priv->bin);
+-
+-        self->priv->selected_page = NULL;
+-        gtk_widget_set_name (GTK_WIDGET (self), "GtkBox");
+-}
+-
+-GtkWidget *
+-cc_notebook_new (void)
+-{
+-        return g_object_new (CC_TYPE_NOTEBOOK, NULL);
+-}
+-
+-static void
+-_cc_notebook_select_page (CcNotebook *self,
+-			  GtkWidget  *widget,
+-			  int         index,
+-			  gboolean    animate)
+-{
+-        ClutterPoint pos;
+-
+-        g_return_if_fail (CC_IS_NOTEBOOK (self));
+-        g_return_if_fail (GTK_IS_WIDGET (widget));
+-
+-        pos.y = 0;
+-        pos.x = self->priv->last_width * index;
+-
+-        if (clutter_actor_get_transition (self->priv->scroll, "scroll-to") != NULL) {
+-                g_debug ("Cancelling previous scroll animation");
+-                clutter_actor_remove_transition (self->priv->scroll, "scroll-to");
+-        }
+-
+-        clutter_actor_save_easing_state (self->priv->scroll);
+-        if (animate)
+-		clutter_actor_set_easing_duration (self->priv->scroll, 350);
+-	else
+-		clutter_actor_set_easing_duration (self->priv->scroll, 0);
+-
+-        g_debug ("Scrolling to (%lf,%lf) %s animation in page selection", pos.x, pos.y,
+-		 animate ? "with" : "without");
+-        clutter_scroll_actor_scroll_to_point (CLUTTER_SCROLL_ACTOR (self->priv->scroll), &pos);
+-
+-	clutter_actor_restore_easing_state (self->priv->scroll);
+-
+-        /* Remember the last selected page */
+-        self->priv->selected_page = widget;
+-
+-        g_object_notify_by_pspec (G_OBJECT (self), obj_props[PROP_CURRENT_PAGE]);
+-}
+-
+-void
+-cc_notebook_select_page (CcNotebook *self,
+-                         GtkWidget  *widget,
+-                         gboolean    animate)
+-{
+-	int i, n_children;
+-	GList *children, *l;
+-	ClutterActor *frame;
+-	gboolean found;
+-
+-        if (widget == self->priv->selected_page)
+-		return;
+-
+-	found = FALSE;
+-	frame = g_object_get_data (G_OBJECT (widget), "cc-notebook-frame");
+-
+-        n_children = clutter_actor_get_n_children (self->priv->bin);
+-        children = clutter_actor_get_children (self->priv->bin);
+-        for (i = 0, l = children; i < n_children; i++, l = l->next) {
+-		if (frame == l->data) {
+-			_cc_notebook_select_page (self, widget, i, animate);
+-			found = TRUE;
+-			break;
+-		}
+-	}
+-	g_list_free (children);
+-	if (found == FALSE)
+-		g_warning ("Could not find widget '%p' in CcNotebook '%p'", widget, self);
+-}
+-
+-void
+-cc_notebook_add_page (CcNotebook *self,
+-                      GtkWidget  *widget)
+-{
+-        ClutterActor *frame;
+-        ClutterActor *embed;
+-        int res;
+-
+-        g_return_if_fail (CC_IS_NOTEBOOK (self));
+-        g_return_if_fail (GTK_IS_WIDGET (widget));
+-
+-        frame = clutter_actor_new ();
+-        clutter_actor_set_layout_manager (frame, clutter_bin_layout_new (CLUTTER_BIN_ALIGNMENT_FILL,
+-                                                                         CLUTTER_BIN_ALIGNMENT_FILL));
+-
+-        embed = gtk_clutter_actor_new_with_contents (widget);
+-        g_object_set_data (G_OBJECT (widget), "cc-notebook-frame", frame);
+-        clutter_actor_add_child (frame, embed);
+-        gtk_widget_show (widget);
+-
+-        res = clutter_actor_get_n_children (self->priv->bin);
+-        clutter_actor_insert_child_at_index (self->priv->bin, frame, res);
+-
+-        self->priv->pages = g_list_prepend (self->priv->pages, widget);
+-
+-        if (self->priv->selected_page == NULL)
+-		_cc_notebook_select_page (self, widget, res, FALSE);
+-
+-        gtk_widget_queue_resize (GTK_WIDGET (self));
+-}
+-
+-typedef struct {
+-	CcNotebook   *notebook;
+-	ClutterActor *frame;
+-} RemoveData;
+-
+-static void
+-remove_on_complete (ClutterTimeline *timeline,
+-		    RemoveData      *data)
+-{
+-        g_signal_handlers_disconnect_by_func (timeline, remove_on_complete, data);
+-	data->notebook->priv->removed_pages = g_list_remove (data->notebook->priv->removed_pages, data);
+-	clutter_actor_destroy (data->frame);
+-	g_free (data);
+-}
+-
+-static gboolean
+-setup_delayed_remove (CcNotebook   *self,
+-		      ClutterActor *frame)
+-{
+-        ClutterTransition *transition;
+-        RemoveData *data;
+-
+-	transition = clutter_actor_get_transition (self->priv->scroll, "scroll-to");
+-	if (transition == NULL)
+-		return FALSE;
+-
+-	data = g_new0 (RemoveData, 1);
+-	data->notebook = self;
+-	data->frame = frame;
+-
+-	self->priv->removed_pages = g_list_prepend (self->priv->removed_pages, data);
+-	g_signal_connect (transition, "completed",
+-			  G_CALLBACK (remove_on_complete), data);
+-
+-	return TRUE;
+-}
+-
+-void
+-cc_notebook_remove_page (CcNotebook *self,
+-                         GtkWidget  *widget)
+-{
+-        ClutterActorIter iter;
+-        ClutterActor *child, *frame;
+-        int index;
+-
+-        g_return_if_fail (CC_IS_NOTEBOOK (self));
+-        g_return_if_fail (GTK_IS_WIDGET (widget));
+-        g_return_if_fail (widget != self->priv->selected_page);
+-
+-        frame = g_object_get_data (G_OBJECT (widget), "cc-notebook-frame");
+-
+-	index = 0;
+-        clutter_actor_iter_init (&iter, self->priv->bin);
+-        while (clutter_actor_iter_next (&iter, &child)) {
+-                if (frame == child) {
+-			if (setup_delayed_remove (self, frame) == FALSE)
+-				clutter_actor_iter_remove (&iter);
+-                        break;
+-		}
+-
+-		index++;
+-        }
+-
+-        self->priv->pages = g_list_remove (self->priv->pages, widget);
+-        gtk_widget_queue_resize (GTK_WIDGET (self));
+-}
+-
+-GtkWidget *
+-cc_notebook_get_selected_page (CcNotebook *self)
+-{
+-        g_return_val_if_fail (CC_IS_NOTEBOOK (self), NULL);
+-
+-        return self->priv->selected_page;
+-}
+-
+-static void
+-cc_notebook_buildable_add_child (GtkBuildable  *buildable,
+-                                 GtkBuilder    *builder,
+-                                 GObject       *child,
+-                                 const gchar   *type)
+-{
+-        CcNotebook *notebook = CC_NOTEBOOK (buildable);
+-        cc_notebook_add_page (notebook, GTK_WIDGET (child));
+-}
+-
+-static void
+-cc_notebook_buildable_init (GtkBuildableIface *iface)
+-{
+-        iface->add_child = cc_notebook_buildable_add_child;
+-}
+
+=== removed file 'src/cc-notebook.deps'
+--- src/cc-notebook.deps	2012-08-22 10:01:12 +0000
++++ src/cc-notebook.deps	1970-01-01 00:00:00 +0000
+@@ -1,1 +0,0 @@
+-clutter-gtk-1.0
+
+=== removed file 'src/cc-notebook.h'
+--- src/cc-notebook.h	2012-08-22 10:01:12 +0000
++++ src/cc-notebook.h	1970-01-01 00:00:00 +0000
+@@ -1,70 +0,0 @@
+-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
+- *
+- * Copyright © 2012 Red Hat, Inc.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Lesser General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Lesser General Public License for more details.
+- *
+- * You should have received a copy of the GNU Lesser General Public
+- * License along with this library. If not, see <http://www.gnu.org/licenses/>.
+- *
+- * Written by:
+- *      Bastien Nocera <hadess@hadess.net>
+- */
+-
+-#ifndef _CC_NOTEBOOK_H_
+-#define _CC_NOTEBOOK_H_
+-
+-#include <gtk/gtk.h>
+-#include <clutter-gtk/clutter-gtk.h>
+-
+-G_BEGIN_DECLS
+-
+-#define CC_TYPE_NOTEBOOK                (cc_notebook_get_type ())
+-#define CC_NOTEBOOK(obj)                (G_TYPE_CHECK_INSTANCE_CAST ((obj), CC_TYPE_NOTEBOOK, CcNotebook))
+-#define CC_IS_NOTEBOOK(obj)             (G_TYPE_CHECK_INSTANCE_TYPE ((obj), CC_TYPE_NOTEBOOK))
+-#define CC_NOTEBOOK_CLASS(klass)        (G_TYPE_CHECK_CLASS_CAST ((klass), CC_TYPE_NOTEBOOK, CcNotebookClass))
+-#define CC_IS_NOTEBOOK_CLASS(klass)     (G_TYPE_CHECK_CLASS_TYPE ((klass), CC_TYPE_NOTEBOOK))
+-#define CC_NOTEBOOK_GET_CLASS(obj)      (G_TYPE_INSTANCE_GET_CLASS ((obj), CC_TYPE_NOTEBOOK, CcNotebookClass))
+-
+-typedef struct _CcNotebook            CcNotebook;
+-typedef struct _CcNotebookPrivate     CcNotebookPrivate;
+-typedef struct _CcNotebookClass       CcNotebookClass;
+-
+-struct _CcNotebook
+-{
+-        GtkBox parent_class;
+-
+-        CcNotebookPrivate *priv;
+-};
+-
+-struct _CcNotebookClass
+-{
+-        GtkBoxClass parent_class;
+-};
+-
+-GType           cc_notebook_get_type                    (void) G_GNUC_CONST;
+-
+-GtkWidget *     cc_notebook_new                         (void);
+-
+-void            cc_notebook_add_page                    (CcNotebook *self,
+-                                                         GtkWidget  *widget);
+-void            cc_notebook_remove_page                 (CcNotebook *self,
+-                                                         GtkWidget  *widget);
+-
+-void            cc_notebook_select_page                 (CcNotebook *self,
+-                                                         GtkWidget  *widget,
+-                                                         gboolean    animate);
+-
+-GtkWidget *     cc_notebook_get_selected_page           (CcNotebook *self);
+-
+-G_END_DECLS
+-
+-#endif /* _CC_NOTEBOOK_H_ */
+
+=== removed file 'src/cc-notebook.vapi'
+--- src/cc-notebook.vapi	2012-08-22 11:53:56 +0000
++++ src/cc-notebook.vapi	1970-01-01 00:00:00 +0000
+@@ -1,13 +0,0 @@
+-[CCode (cprefix = "Cc", lower_case_cprefix = "cc_")]
+-namespace Cc {
+-	[CCode (cheader_filename = "cc-notebook.h", type_id = "cc_notebook_get_type ()")]
+-	public class Notebook : Gtk.Box {
+-		public Notebook ();
+-		public void add_page (Gtk.Widget widget);
+-		public void remove_page (Gtk.Widget widget);
+-		public void select_page (Gtk.Widget widget, bool animate);
+-		public Gtk.Widget get_selected_page ();
+-		[NoAccessorMethod]
+-		public Gtk.Widget current_page { get; set; }
+-	}
+-}
+

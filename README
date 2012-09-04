@@ -26,42 +26,43 @@ Build order:
 24: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
 25: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
 26: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
-27: gnome-session-ubuntu           -> GNOME Session Manager
-28: activity-log-manager ************
-29: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
-30: indicator-applet               -> GNOME panel indicator applet
-31: indicator-application          -> Takes menus and puts them in the panel
-32: indicator-appmenu              -> An indicator to host the menus from apps
-33: libtimezonemap                 -> GTK+3 timezone map widget
-34: indicator-datetime             -> A very, very simple clock
-35: indicator-messages             -> Collects messages that need a response
-36: indicator-power                -> Indicator to show battery information
-37: indicator-session              -> Indicator for session management
-38: indicator-sound                -> Indicator displaying a unified sound menu
-39: notify-osd                     -> A unified sound menu
-40: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
-41: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-42: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
-43: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-44: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
-45: evemu                          -> Linux Evdev Event Emulation Library
-46: frame                          -> Open Input Framework Frame Library
-47: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-48: libXfixes-ubuntu               -> X.Org fixes extension library
-49: xorg-x11-server-ubuntu         -> Xorg X11 server
-50: grail                          -> Gesture recognition and instantiation lib.
-51: geis                           -> Implementation of the GEIS interface
-52: gcc46                          -> GNU Compiler Collection version 4.6
-53: ibus-ubuntu                    -> Next generation input bus for Linux
-54: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
-55: unity-asset-pool               -> Design assets for Unity
-56: gnome-menus301                 -> GNOME menu specifications
-57: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-58: unity-lens-applications        -> Unity applications lens
-59: unity-lens-files               -> Unity files lens
-60: unity-lens-music               -> Unity music lens
-61: unity-lens-photos              -> Unity photos lens
-62: unity-lens-video               -> Unity video lens
-63: unity-scope-video-remote       -> Remote video search for Unity video lens
-64: compiz                         -> Compiz core components
-65: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+27: gnome-control-center-signon    -> GNOME Control Center extension for SSO
+28: gnome-session-ubuntu           -> GNOME Session Manager
+29: activity-log-manager ************
+30: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
+31: indicator-applet               -> GNOME panel indicator applet
+32: indicator-application          -> Takes menus and puts them in the panel
+33: indicator-appmenu              -> An indicator to host the menus from apps
+34: libtimezonemap                 -> GTK+3 timezone map widget
+35: indicator-datetime             -> A very, very simple clock
+36: indicator-messages             -> Collects messages that need a response
+37: indicator-power                -> Indicator to show battery information
+38: indicator-session              -> Indicator for session management
+39: indicator-sound                -> Indicator displaying a unified sound menu
+40: notify-osd                     -> A unified sound menu
+41: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
+42: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
+43: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
+44: plasma-widget-menubar          -> KDE Plasma widget to display global menus
+45: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
+46: evemu                          -> Linux Evdev Event Emulation Library
+47: frame                          -> Open Input Framework Frame Library
+48: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
+49: libXfixes-ubuntu               -> X.Org fixes extension library
+50: xorg-x11-server-ubuntu         -> Xorg X11 server
+51: grail                          -> Gesture recognition and instantiation lib.
+52: geis                           -> Implementation of the GEIS interface
+53: gcc46                          -> GNU Compiler Collection version 4.6
+54: ibus-ubuntu                    -> Next generation input bus for Linux
+55: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
+56: unity-asset-pool               -> Design assets for Unity
+57: gnome-menus301                 -> GNOME menu specifications
+58: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+59: unity-lens-applications        -> Unity applications lens
+60: unity-lens-files               -> Unity files lens
+61: unity-lens-music               -> Unity music lens
+62: unity-lens-photos              -> Unity photos lens
+63: unity-lens-video               -> Unity video lens
+64: unity-scope-video-remote       -> Remote video search for Unity video lens
+65: compiz                         -> Compiz core components
+66: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
