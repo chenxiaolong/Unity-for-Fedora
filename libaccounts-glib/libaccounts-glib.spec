@@ -112,7 +112,7 @@ rm -v $RPM_BUILD_ROOT%{_datadir}/backup-framework/applications/accounts.conf
 # Remove useless empty files put in the wrong directory
 rm -rv $RPM_BUILD_ROOT%{_prefix}/doc/
 
-# Remove libtool file
+# Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
