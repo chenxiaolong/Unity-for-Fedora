@@ -27,6 +27,7 @@ BuildRequires:	gettext
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk-doc
+BuildRequires:	itstool
 BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
 BuildRequires:	yelp-tools
