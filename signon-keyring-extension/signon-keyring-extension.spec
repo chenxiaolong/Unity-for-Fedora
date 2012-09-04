@@ -17,6 +17,7 @@ License:	LGPLv2
 URL:		https://launchpad.net/online-accounts-keyring-extension
 Source0:	https://launchpad.net/online-accounts-keyring-extension/trunk/%{version}/+download/keyring-%{version}.tar.bz2
 
+BuildRequires:	itstool
 BuildRequires:	pkgconfig
 
 BuildRequires:	pkgconfig(gnome-keyring-1)
