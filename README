@@ -21,45 +21,47 @@ Build order:
 19: sni-qt                         -> Turns Qt tray icons into appindicators
 20: ido                            -> Widgets and objects used for indicators
 21: libaccounts-glib               -> Account mgmt. library for GLib apps
-22: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
-23: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
-24: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
-25: gnome-session-ubuntu           -> GNOME Session Manager
-26: activity-log-manager ************
-27: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
-28: indicator-applet               -> GNOME panel indicator applet
-29: indicator-application          -> Takes menus and puts them in the panel
-30: indicator-appmenu              -> An indicator to host the menus from apps
-31: libtimezonemap                 -> GTK+3 timezone map widget
-32: indicator-datetime             -> A very, very simple clock
-33: indicator-messages             -> Collects messages that need a response
-34: indicator-power                -> Indicator to show battery information
-35: indicator-session              -> Indicator for session management
-36: indicator-sound                -> Indicator displaying a unified sound menu
-37: notify-osd                     -> A unified sound menu
-38: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
-39: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-40: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
-41: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-42: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
-43: evemu                          -> Linux Evdev Event Emulation Library
-44: frame                          -> Open Input Framework Frame Library
-45: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-46: libXfixes-ubuntu               -> X.Org fixes extension library
-47: xorg-x11-server-ubuntu         -> Xorg X11 server
-48: grail                          -> Gesture recognition and instantiation lib.
-49: geis                           -> Implementation of the GEIS interface
-50: gcc46                          -> GNU Compiler Collection version 4.6
-51: ibus-ubuntu                    -> Next generation input bus for Linux
-52: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
-53: unity-asset-pool               -> Design assets for Unity
-54: gnome-menus301                 -> GNOME menu specifications
-55: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-56: unity-lens-applications        -> Unity applications lens
-57: unity-lens-files               -> Unity files lens
-58: unity-lens-music               -> Unity music lens
-59: unity-lens-photos              -> Unity photos lens
-60: unity-lens-video               -> Unity video lens
-61: unity-scope-video-remote       -> Remote video search for Unity video lens
-62: compiz                         -> Compiz core components
-63: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+22: signon                         -> Single Sign On Framework
+23: libsignon-glib                 -> Authentication mgmt. library for GLib apps
+24: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
+25: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
+26: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
+27: gnome-session-ubuntu           -> GNOME Session Manager
+28: activity-log-manager ************
+29: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
+30: indicator-applet               -> GNOME panel indicator applet
+31: indicator-application          -> Takes menus and puts them in the panel
+32: indicator-appmenu              -> An indicator to host the menus from apps
+33: libtimezonemap                 -> GTK+3 timezone map widget
+34: indicator-datetime             -> A very, very simple clock
+35: indicator-messages             -> Collects messages that need a response
+36: indicator-power                -> Indicator to show battery information
+37: indicator-session              -> Indicator for session management
+38: indicator-sound                -> Indicator displaying a unified sound menu
+39: notify-osd                     -> A unified sound menu
+40: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
+41: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
+42: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
+43: plasma-widget-menubar          -> KDE Plasma widget to display global menus
+44: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
+45: evemu                          -> Linux Evdev Event Emulation Library
+46: frame                          -> Open Input Framework Frame Library
+47: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
+48: libXfixes-ubuntu               -> X.Org fixes extension library
+49: xorg-x11-server-ubuntu         -> Xorg X11 server
+50: grail                          -> Gesture recognition and instantiation lib.
+51: geis                           -> Implementation of the GEIS interface
+52: gcc46                          -> GNU Compiler Collection version 4.6
+53: ibus-ubuntu                    -> Next generation input bus for Linux
+54: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
+55: unity-asset-pool               -> Design assets for Unity
+56: gnome-menus301                 -> GNOME menu specifications
+57: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+58: unity-lens-applications        -> Unity applications lens
+59: unity-lens-files               -> Unity files lens
+60: unity-lens-music               -> Unity music lens
+61: unity-lens-photos              -> Unity photos lens
+62: unity-lens-video               -> Unity video lens
+63: unity-scope-video-remote       -> Remote video search for Unity video lens
+64: compiz                         -> Compiz core components
+65: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
