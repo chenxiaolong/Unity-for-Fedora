@@ -173,6 +173,10 @@ tar zxvf '%{SOURCE99}'
     sed -i '/git_new_bluetooth_api.patch/d' debian/patches/series
     sed -i '/00git_online_accounts_gtkgrid.patch/d' debian/patches/series
 
+# Fix patches
+  # Don't use types from unreleased versions of gnome-desktop
+    sed -i 's/gnome_rr_labeler_get_rgba_for_output/gnome_rr_labeler_get_color_for_output/;s/GdkRGBA/GdkColor/' debian/patches/51_unity_options_in_display_panel.patch
+
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
 done
