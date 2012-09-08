@@ -113,10 +113,6 @@ Requires:	gsettings-desktop-schemas
 # Requited for GConf to GSettings migration script
 Requires:	gnome-python2-gconf
 
-# gtk-window-decorator reads its settings from metacity and mutter
-Requires:	metacity >= 2.34.1
-Requires:	mutter
-
 %description
 Compiz is an OpenGL compositing manager that uses GLX_EXT_texture_from_pixmap
 for binding redirected top-level windows to texture objects. It has a flexible
@@ -159,6 +155,10 @@ License:	LGPLv2+
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 Requires:	control-center-filesystem
+
+# gtk-window-decorator reads its settings from metacity and mutter
+Requires:	metacity >= 2.34.1
+Requires:	mutter
 
 %description gnome
 This package contains the GNOME window decorator and GNOME support files for
