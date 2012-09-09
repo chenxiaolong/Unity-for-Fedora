@@ -2,7 +2,7 @@
 
 # Partially based off of Fedora 17's spec file
 
-%define _ubuntu_rel 0ubuntu13
+%define _ubuntu_rel 0ubuntu14
 
 %define _obsolete_ver 1:3.5.0-100
 
@@ -175,6 +175,7 @@ tar zxvf '%{SOURCE99}'
 
 # Fix patches
   # Don't use types from unreleased versions of gnome-desktop
+  # (thanks to oi_wtf!)
     sed -i 's/gnome_rr_labeler_get_rgba_for_output/gnome_rr_labeler_get_color_for_output/;s/GdkRGBA/GdkColor/' debian/patches/51_unity_options_in_display_panel.patch
 
 for i in $(grep -v '#' debian/patches/series); do
@@ -445,6 +446,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sat Sep 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-3.0ubuntu14
+- Version 3.4.2
+- Ubuntu release 0ubuntu14
+
 * Thu Aug 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-3.0ubuntu13
 - Fix duplicate settings panels
 
