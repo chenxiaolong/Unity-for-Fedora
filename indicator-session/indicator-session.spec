@@ -1,8 +1,8 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-session
-Version:	12.10.1
-Release:	2%{?dist}
+Version:	12.10.2
+Release:	1%{?dist}
 Summary:	Indicator for session management and status information
 
 Group:		User Interface/Desktops
@@ -12,7 +12,6 @@ Source0:	https://launchpad.net/indicator-session/12.10/%{version}/+download/indi
 
 Patch0:		0001_Revert_new_glib_stuff.patch
 Patch1:		0002_There_is_no_help.patch
-Patch2:		0003_Workaround_disappearing_icon.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -48,7 +47,6 @@ of the desktop to make them available and easy to use.
 
 %patch0 -p1 -b .newglibstuff
 %patch1 -p1 -b .nohelp
-%patch2 -p1 -b .disappearingicon
 
 sed -i 's/2\.33/2.22/g' configure.ac
 autoreconf -vfi
@@ -100,6 +98,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat Sep 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2-1
+- Version 12.10.2
+
 * Thu Aug 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-2
 - Workaround disappearing icon
 
