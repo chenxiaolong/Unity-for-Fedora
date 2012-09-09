@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-photos
-Version:	0.3
+Version:	0.4
 Release:	1%{?dist}
 Summary:	Unity lens for browsing photos
 
@@ -65,6 +65,9 @@ install -m644 build/share/unity/lenses/photos/photos.lens \
 
 
 %changelog
+* Sat Sep 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.4-1
+- Version 0.4
+
 * Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3-1
 - Version 0.3
 
