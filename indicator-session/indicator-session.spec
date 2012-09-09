@@ -12,6 +12,7 @@ Source0:	https://launchpad.net/indicator-session/12.10/%{version}/+download/indi
 
 Patch0:		0001_Revert_new_glib_stuff.patch
 Patch1:		0002_There_is_no_help.patch
+Patch2:		0003_Workaround_disappearing_icon.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -47,6 +48,7 @@ of the desktop to make them available and easy to use.
 
 %patch0 -p1 -b .newglibstuff
 %patch1 -p1 -b .nohelp
+%patch2 -p1 -b .disappearingicon
 
 sed -i 's/2\.33/2.22/g' configure.ac
 autoreconf -vfi
