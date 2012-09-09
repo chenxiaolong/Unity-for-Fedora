@@ -30,9 +30,9 @@ Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/network-manager-a
 Patch0:		0001_Disable_-Werror.patch
 
 # Fedora's patches
-Patch10:	nm-applet-no-notifications.patch
-Patch11:	nm-applet-wifi-dialog-ui-fixes.patch
-Patch12:	applet-ignore-deprecated.patch
+Patch10:	fedora_nm-applet-no-notifications.patch
+Patch11:	fedora_nm-applet-wifi-dialog-ui-fixes.patch
+Patch12:	fedora_applet-ignore-deprecated.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
