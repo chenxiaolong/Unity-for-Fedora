@@ -40,18 +40,18 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	docbook-utils
 BuildRequires:	gettext
 BuildRequires:	intltool
+BuildRequires:	pkgconfig
 
-BuildRequires:	dbus-glib-devel
-BuildRequires:	GConf2-devel
-BuildRequires:	glib2-devel
-BuildRequires:	gnome-bluetooth-libs-devel
-# Dependencies use gtk3-ubuntu
-BuildRequires:	gtk3-ubuntu-devel
-BuildRequires:	iso-codes-devel
-BuildRequires:	libappindicator-gtk3-devel
-BuildRequires:	libgnome-keyring-devel
-BuildRequires:	libnotify-devel
-BuildRequires:	NetworkManager-glib-devel
+BuildRequires:	pkgconfig(appindicator3-0.1)
+BuildRequires:	pkgconfig(dbus-glib-1)
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gnome-bluetooth-1.0)
+BuildRequires:	pkgconfig(gnome-keyring-1)
+BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(iso-codes)
+BuildRequires:	pkgconfig(libnotify)
+BuildRequires:	pkgconfig(NetworkManager)
 
 Requires(pre):	GConf2
 Requires(post):	GConf2
