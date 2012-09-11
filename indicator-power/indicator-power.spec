@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-power
-Version:	12.10.0
+Version:	12.10.1
 Release:	1%{?dist}
 Summary:	Indicator to show the battery status
 
@@ -38,6 +38,8 @@ hidden.
 
 %patch0 -p1
 
+sed -i 's/2.33/2.22/g' configure.ac
+
 intltoolize --force
 aclocal --verbose --force
 autoconf -v -f
@@ -69,13 +71,18 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %files
 %doc AUTHORS ChangeLog
+%dir %{_libdir}/indicators3/
+%dir %{_libdir}/indicators3/7/
 %{_libdir}/indicators3/7/libpower.so
 %{_datadir}/glib-2.0/schemas/com.canonical.indicator.power.gschema.xml
 
 
 %changelog
-* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+* Thu Aug 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
 - Version 12.10.1
+
+* Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
+- Version 12.10.0
 
 * Sun Jul 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.0-1
 - Initial release
