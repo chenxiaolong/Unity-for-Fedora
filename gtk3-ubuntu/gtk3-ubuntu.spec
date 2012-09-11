@@ -5,7 +5,7 @@
 
 # 'fedora_' is prefixed to the sources and patches to group them together in OBS
 
-%define _ubuntu_rel 0ubuntu0.3
+%define _ubuntu_rel 0ubuntu0.4
 
 %global glib2_version 2.32.0
 %global pango_version 1.30.0
@@ -322,6 +322,9 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
 %changelog
+* Mon Sep 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.4
+- Ubuntu release 0ubuntu0.4
+
 * Sat Jul 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu0.3
 - Fix hardcoded path in patch for overlay scrollbars
 
