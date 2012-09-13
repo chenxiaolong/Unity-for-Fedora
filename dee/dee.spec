@@ -19,7 +19,6 @@ Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/dee_%{version}-%{
 
 BuildRequires:	gtk-doc
 BuildRequires:	pkgconfig
-BuildRequires:	python
 BuildRequires:	vala-tools
 
 BuildRequires:	pkgconfig(dbus-1)
@@ -27,6 +26,8 @@ BuildRequires:	pkgconfig(dbus-glib-1)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(icu-i18n)
+BuildRequires:	pkgconfig(python2)
+BuildRequires:	pkgconfig(python3)
 
 %description
 Libdee is a library that uses DBus to provide objects allowing you to create
@@ -75,12 +76,28 @@ zcat '%{SOURCE99}' | patch -Np1
 
 
 %build
-%configure --enable-gtk-doc
+%global _configure ../configure
+mkdir build-python2 build-python3
+
+pushd build-python2/
+%configure --disable-static --enable-gtk-doc
 make %{?_smp_mflags}
+popd
+
+pushd build-python3/
+export PYTHON=python3
+%configure --disable-static
+popd
 
 
 %install
+pushd build-python2/
 make install DESTDIR=$RPM_BUILD_ROOT
+popd
+
+pushd build-python3/bindings/python/
+make install DESTDIR=$RPM_BUILD_ROOT
+popd
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
@@ -96,6 +113,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_libdir}/libdee-1.0.so.*
 %{_libdir}/girepository-1.0/Dee-1.0.typelib
 %{python_sitearch}/gi/overrides/Dee.py*
+%{python3_sitearch}/gi/overrides/Dee.py*
 
 
 %files devel
