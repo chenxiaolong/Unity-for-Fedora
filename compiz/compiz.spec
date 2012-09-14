@@ -9,19 +9,19 @@
 %define _gconf_schemas_obsolete compiz-animationaddon compiz-bicubic compiz-blur compiz-colorfilter compiz-cubeaddon compiz-gears compiz-group compiz-loginout compiz-reflex compiz-stackswitch compiz-thumbnail compiz-trip compiz-wallpaper
 %define _gconf_schemas compiz-addhelper compiz-animation compiz-annotate compiz-bench compiz-ccp compiz-clone compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gnomecompat compiz-grid compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
 
+%define _ubuntu_ver 0.9.8.0
 %define _ubuntu_rel 0ubuntu1
 
 Name:		compiz
-Version:	0.9.8.0
-Release:	2.%{_ubuntu_rel}%{?dist}
+Version:	0.9.8.2
+Release:	1.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
 License:	GPLv2+
 URL:		https://launchpad.net/compiz
 
-# Ubuntu's packaging is now combined with the source tarball
-Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}.orig.tar.gz
+Source0:	https://launchpad.net/compiz/0.9.8/%{version}/+download/compiz-%{version}.tar.bz2
 
 # Wrapper for compiz to simulate Ubuntu's gconf-defaults mechanism
 Source1:	compiz.wrapper
@@ -32,7 +32,7 @@ Source2:	compiz.reset
 # Autostart desktop file for migrating GConf settings to GSettings
 Source3:	compiz-migrate-to-dconf.desktop
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}-%{_ubuntu_rel}.diff.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{_ubuntu_ver}-%{_ubuntu_rel}.diff.gz
 
 # Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
 Patch0:		0001_Fix_library_directory.patch
@@ -50,9 +50,6 @@ Patch3:		0004_Fix_gsettings_backend_libdir.patch
 
 # Put profile conversion files in /usr/share instead of /usr/lib
 Patch4:		0005_Convert_files_libdir_to_datadir.patch
-
-# Port gtk-window-decorator from GConf to GSettings (LP: 1042323)
-Patch5:		0006_GWD_use_GSettings.patch
 
 BuildRequires:	cmake
 BuildRequires:	desktop-file-utils
@@ -235,10 +232,9 @@ its plugins' settings.
 %patch2 -p1 -b .py_install_command
 %patch3 -p1 -b .backend_libdir
 %patch4 -p1 -b .convert_files_datadir
-%patch5 -p0 -b .gwd_use_gsettings
 
 # Apply Ubuntu's patches
-zcat '%{SOURCE99}' | patch -Np1
+(zcat '%{SOURCE99}' | patch -Np1) || true
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
 done
@@ -260,7 +256,8 @@ export COMPIZ_DISABLE_RPATH=1
   -DCOMPIZ_DISABLE_GS_SCHEMAS_INSTALL=OFF \
   -DCOMPIZ_BUILD_TESTING=OFF \
   -DCOMPIZ_DISABLE_PLUGIN_KDE=ON \
-  -DUSE_KDE4=OFF
+  -DUSE_KDE4=OFF \
+  -DBUILD_SHARED_LIBS:BOOL=OFF
 
 make %{?_smp_mflags}
 
@@ -268,11 +265,6 @@ make %{?_smp_mflags}
 %install
 cd build
 GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 make install DESTDIR=$RPM_BUILD_ROOT
-
-# Install gtk-window-decorator library
-install -m755 \
-  gtk/window-decorator/libgtk_window_decorator_settings_notified_interface.so \
-  $RPM_BUILD_ROOT%{_libdir}/
 
 # make findcompiz_install does not work, so we'll install it manually
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/cmake/Modules/
@@ -488,7 +480,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/compizconfig/backends/libgconf.so
 %{_libdir}/compizconfig/backends/libgsettings.so
 %{_libdir}/libcompizconfig_gsettings_backend.so
-%{_libdir}/libgtk_window_decorator_settings_notified_interface.so
 # X11 session script
 %{_sysconfdir}/X11/xinit/xinitrc.d/65compiz_profile-on-session
 # Compiz Unity profile configuration file
@@ -856,8 +847,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_includedir}/compizconfig/ccs-defs.h
 %{_includedir}/compizconfig/ccs-list.h
 %{_includedir}/compizconfig/ccs-object.h
+%{_includedir}/compizconfig/ccs-setting-types.h
 %{_includedir}/compizconfig/ccs-string.h
 %{_libdir}/libcompizconfig.so
+%{_libdir}/pkgconfig/compizconfig-python.pc
 %{_libdir}/pkgconfig/libcompizconfig.pc
 %dir %{_datadir}/cmake/
 %dir %{_datadir}/cmake/Modules/
@@ -869,7 +862,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -n python-compizconfig
 %{python_sitearch}/compizconfig.so
-%{python_sitearch}/compizconfig_python-0.9.5.94-py2.7.egg-info
+%{python_sitearch}/compizconfig_python-%{version}-py2.7.egg-info
 
 
 %files -n ccsm -f build/ccsm.lang
@@ -895,10 +888,19 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{python_sitelib}/ccm/Widgets.py*
 %{python_sitelib}/ccm/Window.py*
 %{python_sitelib}/ccm/__init__.py*
-%{python_sitelib}/ccsm-0.9.5.94-py2.7.egg-info
+%{python_sitelib}/ccsm-%{version}-py2.7.egg-info
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.2-1.ubuntu0.9.8.0.0ubuntu1
+- Version 0.9.8.2
+- Ubuntu packaging version 0.9.8.0 with release 0ubuntu1
+- Drop 0006_GWD_use_GSettings.patch
+-   Merged upstream
+- Refreshed
+-   0001_Fix_library_directory.patch
+-   0003_Fix_python_install_command.patch
+
 * Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.0-2.0ubuntu1
 - Add patch from Launchpad bug 1042323
 +   Ports gtk-window-decorator to GSettings
