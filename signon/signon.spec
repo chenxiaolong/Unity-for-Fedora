@@ -1,9 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu3
+%define _ubuntu_rel 0ubuntu2
 
 Name:		signon
-Version:	8.41
+Version:	8.42
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Single Sign On Framework
 
@@ -159,7 +159,6 @@ find $RPM_BUILD_ROOT -type f -name '*.a' -delete
 
 # Remove tests
 find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
-rm $RPM_BUILD_ROOT%{_bindir}/signonremoteplugin-test.sh
 
 
 %post -n libsignon-qt -p /sbin/ldconfig
@@ -248,6 +247,10 @@ rm $RPM_BUILD_ROOT%{_bindir}/signonremoteplugin-test.sh
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.42-1.0ubuntu2
+- Version 8.42
+- Ubuntu release 0ubuntu2
+
 * Mon Sep 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.41-1.0ubuntu3
 - Initial release
 - Version 8.41
