@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 SPEC_VER="$(rpmspec -q --qf '%{version}\n' overlay-scrollbar.spec | head -1)"
+UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' overlay-scrollbar.spec)"
+BZR_REV="$(sed -n 's/^%define[ ]*_bzr_rev[ ]*\(.*\)$/\1/p' overlay-scrollbar.spec)"
 
 echo "Getting latest Ubuntu version..."
 UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/overlay-scrollbar' -O - | sed -n 's/.*>overlay-scrollbar_\(.*\)-\(.*\)\.tar\.gz<.*/\1 \2/p'))
@@ -10,6 +12,6 @@ UPSTREAM_VER=$(wget -q 'https://launchpad.net/ayatana-scrollbar/+download' -O - 
 
 echo ""
 
-echo -e "spec file version: ${SPEC_VER}"
+echo -e "spec file version: ${SPEC_VER}+r${BZR_REV} ${UBUNTU_REL}"
 echo -e "Upstream version:  ${UPSTREAM_VER}"
 echo -e "Ubuntu version:    ${UBUNTU_VER[@]}"
