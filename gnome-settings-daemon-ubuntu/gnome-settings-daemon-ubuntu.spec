@@ -2,7 +2,7 @@
 
 # Partially based off of the Fedora 17 spec
 
-%define _ubuntu_rel 0ubuntu10
+%define _ubuntu_rel 0ubuntu13
 
 %define _obsolete_ver 3.5.0-100
 
@@ -142,10 +142,6 @@ install -m755 gnome-settings-daemon/gnome-update-wallpaper-cache \
 # added by Ubuntu.
 install -m644 debian/gnome-settings-daemon.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 
-# Install GSettings override file
-install -m644 debian/gnome-settings-daemon.gsettings-override \
-  $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/10_%{name}.gschema.override
-
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
@@ -240,9 +236,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.xrandr.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.xsettings.gschema.xml
 
-# GSchema override
-%{_datadir}/glib-2.0/schemas/10_%{name}.gschema.override
-
 # Data files
 %dir %{_datadir}/gnome-settings-daemon/
 %{_datadir}/gnome-settings-daemon/gsd-a11y-preferences-dialog.ui
@@ -289,6 +282,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu13
+- Version 3.4.2
+- Ubuntu release 0ubuntu13
+
 * Sun Aug 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu10
 - Version 3.4.2
 - Ubuntu release 0ubuntu10
