@@ -2,14 +2,13 @@
 
 # Partially based off of Fedora 17's spec file
 
-%define _ubuntu_ver 3.2.1
-%define _ubuntu_rel 0ubuntu8
+%define _ubuntu_rel 0ubuntu1
 
 %define _obsolete_ver 3.5.0-100
 
 Name:		gnome-session-ubuntu
 Version:	3.4.2.1
-Release:	1.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME session manager
 
 Group:		User Interface/Desktops
@@ -18,33 +17,13 @@ URL:		http://www.gnome.org/
 Source0:	http://download.gnome.org/sources/gnome-session/3.4/gnome-session-%{version}.tar.xz
 
 Source98:	55gnome-session_gnomerc
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 Source1:	gnome-authentication-agent.desktop
 
 # Fedora's patches
 Patch0:		gnome-session-3.3.1-llvmpipe.patch
 Patch1:		gnome-session-3.3.92-nv30.patch
-
-# Refreshed all of the patches for GNOME session 3.4.1
-
-# Uses Debian's alternatives system (Fedora has it too, but other packages need
-# to use it)
-#Patch100:	UBUNTU_01_gnome-wm.patch
-Patch101:	UBUNTU_02_fallback_desktop.patch
-Patch102:	UBUNTU_103_kill_the_fail_whale.patch
-Patch103:	UBUNTU_104_dont_show_fallback_warning.patch
-Patch104:	UBUNTU_105_hide_session_startup_help.patch
-# systemd should make this patch obsolete
-#Patch105:	UBUNTU_12_no_gdm_fallback.patch
-Patch106:	UBUNTU_20_hide_nodisplay.patch
-# systemd should make this patch obsolete too
-#Patch107:	UBUNTU_21_up_start_on_demand.patch
-Patch108:	UBUNTU_22_support_autostart_delay.patch
-Patch109:	UBUNTU_50_ubuntu_sessions.patch
-Patch110:	UBUNTU_51_remove_session_saving_from_gui.patch
-Patch111:	UBUNTU_52_xdg_current_desktop.patch
-Patch112:	UBUNTU_95_dbus_request_shutdown.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -120,21 +99,27 @@ tar zxvf '%{SOURCE99}'
 %patch1 -p1
 
 # Apply Ubuntu's patches
-#patch100 -p1
-%patch101 -p1
-%patch102 -p1
-%patch103 -p1
-%patch104 -p1
-#patch105 -p1
-%patch106 -p1
-#patch107 -p1
-%patch108 -p1
-# Needed because 01_gnome-wm.patch is disabled
-cat '%{PATCH109}' | sed 's/gnome-wm/metacity/g' | patch -s -p1 --fuzz=0
-#patch109 -p1
-%patch110 -p1
-%patch111 -p1
-%patch112 -p1
+tar zxvf '%{SOURCE99}'
+
+# Disable patches
+  # gnome-wm uses Debian's alternatives system (Fedora has it too, but other
+  # packages need to use it)
+    sed -i '/01_gnome-wm.patch/d' debian/patches/series
+  # systemd should make these patches obsolete
+    sed -i '/12_no_gdm_fallback.patch/d' debian/patches/series
+    sed -i '/21_up_start_on_demand.patch/d' debian/patches/series
+  # We're not Ubuntu, do not hide stuff
+    sed -i '/20_hide_nodisplay.patch/d' debian/patches/series
+  # Only Ubuntu uses apport
+    sed -i '/96_no_catch_sigsegv.patch/d' debian/patches/series
+
+# Fix patches
+  # Needed because 01_gnome-wm.patch is disabled
+    sed -i 's/gnome-wm/metacity/g' debian/patches/50_ubuntu_sessions.patch
+
+for i in $(grep -v '#' debian/patches/series); do
+  patch -Np1 -i "debian/patches/${i}"
+done
 
 autoreconf -vfi
 
@@ -165,25 +150,9 @@ desktop-file-validate \
 
 # Install Ubuntu's files
 install -m755 debian/scripts/gnome-session-fallback $RPM_BUILD_ROOT%{_bindir}/
-#install -m755 debian/scripts/gnome-wm $RPM_BUILD_ROOT%{_bindir}/
 
 install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 install -m755 '%{SOURCE98}' $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
-
-install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/gnome/
-install -m644 debian/defaults.list $RPM_BUILD_ROOT%{_sysconfdir}/gnome/
-
-install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome/applications/
-ln -s %{_sysconfdir}/gnome/defaults.list \
-  $RPM_BUILD_ROOT%{_datadir}/gnome/applications/
-
-# Defaults to Ubuntu session
-#install -m644 debian/gnome-session-common.gsettings-override \
-#  $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/10_%{name}.gschema.override
-
-#desktop-file-install \
-#  --dir $RPM_BUILD_ROOT%{_datadir}/applications/ \
-#  debian/gnome-wm.desktop
 
 # /usr/lib/nux -> /usr/libexec
 sed -i 's,lib/nux,libexec,' \
@@ -214,20 +183,14 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %{_bindir}/gnome-session-fallback
 %{_bindir}/gnome-session-properties
 %{_bindir}/gnome-session-quit
-#%{_bindir}/gnome-wm
 %{_libexecdir}/gnome-session-check-accelerated
 %{_libexecdir}/gnome-session-check-accelerated-helper
 %{_sysconfdir}/X11/xinit/xinitrc.d/55gnome-session_gnomerc
-%{_sysconfdir}/gnome/defaults.list
 %{_datadir}/GConf/gsettings/gnome-session.convert
-#%{_datadir}/applications/gnome-wm.desktop
 %{_datadir}/applications/session-properties.desktop
-#%{_datadir}/glib-2.0/schemas/10_gnome-session-ubuntu.gschema.override
 %{_datadir}/glib-2.0/schemas/org.gnome.SessionManager.gschema.xml
 %dir %{_datadir}/gnome/
-%dir %{_datadir}/gnome/applications/
 %dir %{_datadir}/gnome/autostart/
-%{_datadir}/gnome/applications/defaults.list
 %{_datadir}/gnome/autostart/gnome-authentication-agent.desktop
 %dir %{_datadir}/gnome-session/
 %{_datadir}/gnome-session/gsm-inhibit-dialog.ui
@@ -254,13 +217,16 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %doc AUTHORS ChangeLog NEWS README
 %{_datadir}/xsessions/gnome-classic.desktop
 %{_datadir}/xsessions/gnome-fallback.desktop
-%{_datadir}/xsessions/gnome-shell.desktop
 %{_datadir}/xsessions/gnome.desktop
 %{_datadir}/xsessions/ubuntu-2d.desktop
 %{_datadir}/xsessions/ubuntu.desktop
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2.1-2.0ubuntu1
+- Version 3.4.2.1
+- Ubuntu release 0ubuntu1
+
 * Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2.1-1.ubuntu3.2.1.0ubuntu8
 - Version 3.4.2.1
 
