@@ -9,7 +9,7 @@
 %define _obsolete_ver 3.5.0-100
 
 Name:		gsettings-desktop-schemas-ubuntu
-Version:	3.4.1
+Version:	3.4.2
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A collection of GSettings schemas
 
@@ -107,6 +107,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu1
+- Version 3.4.2
+- Ubuntu release 0ubuntu1
+
 * Mon Jul 16 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.1-1.0ubuntu1
 - Initial release
 - Based off of F17's spec
