@@ -8,7 +8,7 @@
 # We'll use the same package names as Ubuntu (gnome-control-center-signon)
 
 Name:		gnome-control-center-signon
-Version:	0.0.13
+Version:	0.0.15
 Release:	1%{?dist}
 Summary:	GNOME Control Center extension for single signon
 
@@ -17,11 +17,6 @@ License:	GPLv3
 URL:		https://launchpad.net/online-accounts-gnome-control-center
 Source0:	https://launchpad.net/online-accounts-gnome-control-center/trunk/%{version}/+download/credentials-control-center-%{version}.tar.bz2
 
-# Remove panel transition (LP: 1043697)
-Patch0:		0001_LP_1043697.patch
-
-BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 BuildRequires:	gnome-common
@@ -32,8 +27,6 @@ BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
 BuildRequires:	yelp-tools
 
-BuildRequires:	pkgconfig(clutter-1.0)
-BuildRequires:	pkgconfig(clutter-gtk-1.0)
 BuildRequires:	pkgconfig(dbus-glib-1)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
@@ -81,10 +74,6 @@ This package contains the documentation for the account-plugin library.
 
 %prep
 %setup -q -n credentials-control-center-%{version}
-
-%patch0 -p0 -b .no-panel-transition
-
-autoreconf -vfi
 
 
 %build
@@ -154,6 +143,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.0.15-1
+- Version 0.0.15
+
 * Tue Sep 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.0.13-1
 - Initial release
 - Version 0.0.13
