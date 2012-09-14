@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-photos
-Version:	0.4
+Version:	0.5
 Release:	1%{?dist}
 Summary:	Unity lens for browsing photos
 
@@ -13,8 +13,18 @@ Source0:	https://launchpad.net/unity-lens-photos/trunk/%{version}/+download/unit
 Patch0:		0001_Use_libexec.patch
 
 BuildRequires:	intltool
+BuildRequires:	desktop-file-utils
 
 BuildRequires:	python-distutils-extra
+
+Requires:	python3-gobject
+#Requires:	python3-oauthlib ### NOT PACKAGED YET
+# Typelibs for the following packages are needed
+Requires:	dee
+Requires:	libaccounts-glib
+Requires:	libdbusmenu-gtk3
+Requires:	libsignon-glib
+Requires:	libunity
 
 Requires:	python(abi) = 2.7
 Requires:	python(abi) = 3.2
@@ -44,6 +54,13 @@ install -dm755 $RPM_BUILD_ROOT%{_datadir}/unity/lenses/photos/
 install -m644 build/share/unity/lenses/photos/photos.lens \
   $RPM_BUILD_ROOT%{_datadir}/unity/lenses/photos/
 
+sed -i \
+  -e '/Categories/ s/$/;/' \
+  -e '/Encoding/d' \
+  $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
+desktop-file-validate \
+  $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop || :
+
 
 %files
 %doc AUTHORS COPYING
@@ -54,10 +71,9 @@ install -m644 build/share/unity/lenses/photos/photos.lens \
 %dir %{_datadir}/accounts/
 %dir %{_datadir}/accounts/applications/
 %{_datadir}/accounts/applications/unity-lens-photos.application
+%{_datadir}/applications/unity-lens-photos.desktop
 %{_datadir}/dbus-1/services/unity-lens-photos.service
-%dir %{_datadir}/unity-lens-photos/
-%dir %{_datadir}/unity-lens-photos/media/
-%{_datadir}/unity-lens-photos/media/*.svg
+%{_datadir}/pixmaps/unity-lens-photos.png
 %dir %{_datadir}/unity/
 %dir %{_datadir}/unity/lenses/
 %dir %{_datadir}/unity/lenses/photos/
@@ -65,6 +81,9 @@ install -m644 build/share/unity/lenses/photos/photos.lens \
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.5-1
+- Version 0.5
+
 * Sat Sep 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.4-1
 - Version 0.4
 
