@@ -4,7 +4,7 @@
 
 Name:		signon
 Version:	8.42
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	Single Sign On Framework
 
 Group:		System Environment/Libraries
@@ -154,9 +154,6 @@ make %{?_smp_mflags}
 %install
 make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
-# Remove static libraries
-find $RPM_BUILD_ROOT -type f -name '*.a' -delete
-
 # Remove tests
 find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 
@@ -181,6 +178,7 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 %dir %{_includedir}/signon-qt/SignOn/
 %{_includedir}/signon-qt/SignOn/*
 %{_libdir}/libsignon-qt.so
+%{_libdir}/libsignon-qt.a
 %{_libdir}/pkgconfig/libsignon-qt.pc
 
 
@@ -236,6 +234,7 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 %dir %{_includedir}/signon-plugins/SignOn/
 %{_includedir}/signon-plugins/SignOn/*.h
 %{_includedir}/signon-plugins/*
+%{_libdir}/libsignon-plugins.a
 %{_libdir}/pkgconfig/signon-plugins-common.pc
 %{_libdir}/pkgconfig/signon-plugins.pc
 %{_qt4_prefix}/mkspecs/features/signon-plugins-common.prf
@@ -247,6 +246,9 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.42-2.0ubuntu2
+- Ship static libraries
+
 * Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.42-1.0ubuntu2
 - Version 8.42
 - Ubuntu release 0ubuntu2
