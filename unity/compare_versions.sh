@@ -4,7 +4,7 @@ SPEC_VER="$(rpmspec -q --qf '%{version}\n' unity.spec | head -1)"
 UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' unity.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/unity' -O - | sed -n 's/.*>unity_\(.*\)-\(.*\)\.tar\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/unity' -O - | sed -n 's/.*>unity_\(.*\)-\(.*\)\.diff\.gz<.*/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q 'https://launchpad.net/unity/+download' -O - | sed -n 's/.*unity-\(.*\)\.tar\.bz2.*/\1/p' | head -n 1)

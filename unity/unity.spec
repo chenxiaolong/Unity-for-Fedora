@@ -1,6 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu4
+%define _ubuntu_rel 0ubuntu6
 
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 %define _gconf_obsolete_schemas compiz-gtkloader
@@ -13,7 +13,7 @@ Summary:	A desktop experience designed for efficiency of space and interaction
 Group:		User Interface/Desktops
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/unity
-Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/unity_%{version}-%{_ubuntu_rel}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/unity_%{version}.orig.tar.gz
 
 # Autostart file for migrating Unity's dconf path
 Source1:	unity-migrate-dconf-path.desktop
@@ -27,6 +27,8 @@ Source1:	unity-migrate-dconf-path.desktop
 # Exported on: Wed, 01 Aug 2012 01:24:23 -0400
 Source90:	http://ompldr.org/vZXh3bw/launchpad-export.tar.gz
 Source91:	http://ompldr.org/vZXh3cA/launchpad-export.tar.gz.asc
+
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/unity_%{version}-%{_ubuntu_rel}.diff.gz
 
 # Fix the gtest search in CMake
 Patch0:		0001_fix_gtest_directory.patch
@@ -183,6 +185,7 @@ needed for writing automated tests in Python.
 %patch6 -p1 -b .gmodule-2.0
 
 # Apply Ubuntu's patches
+zcat '%{SOURCE99}' | patch -Np1
 
 # Use Launchpad translations
 [ -d launchpad-po ] && rm -rv launchpad-po
@@ -408,6 +411,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-2.0ubuntu6
+- Ubuntu release 0ubuntu6
+
 * Mon Sep 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-2.0ubuntu4
 - Ubuntu release 0ubuntu4
 
