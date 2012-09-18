@@ -7,7 +7,7 @@
 
 Name:		nautilus-ubuntu
 Version:	3.4.2
-Release:	2.%{_ubuntu_rel}%{?dist}
+Release:	3.%{_ubuntu_rel}%{?dist}
 Summary:	File manager for GNOME
 
 Group:		User Interface/Desktops
@@ -21,6 +21,9 @@ Patch10:	fedora_rtl-fix.patch
 # GVfs apps should convey when eject/unmount takes a long time
 # https://bugzilla.redhat.com/show_bug.cgi?id=819492
 Patch11:	fedora_nautilus-3.4.3-unmount-notification.patch
+
+# Remove Ubuntu Help Menu Entry
+Patch20:	0001_Remove_Ubuntu_Help.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -120,6 +123,10 @@ tar zxvf '%{SOURCE99}'
     sed -i '/01_lpi.patch/d' debian/patches/series
   # Do not hide nautilus from the startup applications tool
     sed -i '/08_clean_session_capplet.patch/d' debian/patches/series
+
+# Fix patches
+  # Remove Ubuntu Help
+%patch20 -p0 -b .no-nautilus-help
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
@@ -255,6 +262,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Tue Sep 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-3.0ubuntu4
+- Remove "Ubuntu Help" from desktop menu
+
 * Wed Aug 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu4
 - Fix directory ownership
 
