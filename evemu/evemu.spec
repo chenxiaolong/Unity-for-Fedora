@@ -1,5 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+### NOT NEEDED IN FEDORA 18 ###
+
 Name:		evemu
 Version:	1.0.10
 Release:	1%{?dist}
