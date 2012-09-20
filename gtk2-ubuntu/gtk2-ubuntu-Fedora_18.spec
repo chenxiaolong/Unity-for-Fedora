@@ -4,8 +4,6 @@
 # Required when the package is not built in koji
 %global _host %{_target_platform}
 
-%define _obsolete_ver 2.25.0-100
-
 %define _ubuntu_rel 0ubuntu1
 
 # Note that this is NOT a relocatable package
