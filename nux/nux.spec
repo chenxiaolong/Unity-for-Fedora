@@ -3,20 +3,22 @@
 %define _major_ver 3
 
 Name:		nux
-Version:	3.4.0
-Release:	2%{?dist}
+Version:	3.6.0
+Release:	1%{?dist}
 # Summary from Ubuntu
 Summary:	Visual rendering toolkit for real-time applications
 
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/nux
-Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.4/+download/nux-%{version}.tar.gz
+Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.6/+download/nux-%{version}.tar.gz
 Source1:	50_check_unity_support
 
+%if 0%{fedora} <= 17
 # GCC 4.6 required or else Unity will segfault
 BuildRequires:	gcc46-devel
 BuildRequires:	gcc46-static
+%endif
 
 BuildRequires:	xorg-x11-xinit
 
@@ -103,6 +105,8 @@ find -type f \( -name '*.h' -o -name '*.cpp' \) -exec chmod 644 {} \;
 
 
 %build
+%if 0%{fedora} <= 17
+
 # Remove '-gnu' from target triplet
 %global _gnu %{nil}
 
@@ -113,6 +117,8 @@ CPP="%{_bindir}/cpp-4.6 -x c"
 CXXCPP="%{_bindir}/cpp-4.6 -x c++"
 
 export CC CXX CPP CXXCPP
+
+%endif
 
 %configure
 
@@ -148,11 +154,11 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %files
 %doc AUTHORS
 %{_libdir}/libnux-%{_major_ver}.0.so.0
-%{_libdir}/libnux-%{_major_ver}.0.so.0.400.0
+%{_libdir}/libnux-%{_major_ver}.0.so.0.600.0
 %{_libdir}/libnux-core-%{_major_ver}.0.so.0
-%{_libdir}/libnux-core-%{_major_ver}.0.so.0.400.0
+%{_libdir}/libnux-core-%{_major_ver}.0.so.0.600.0
 %{_libdir}/libnux-graphics-%{_major_ver}.0.so.0
-%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.400.0
+%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.600.0
 
 
 %files devel
@@ -202,6 +208,9 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1
+- Version 3.6.0
+
 * Sat Sep 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.0-2
 - GCC 4.6 is still needed (until we have GCC 4.7.1)
 
