@@ -1,0 +1,24 @@
+diff -Nru libdbusmenu-12.10.1.orig/docs/libdbusmenu-glib/reference/libdbusmenu-glib-docs.sgml libdbusmenu-12.10.1/docs/libdbusmenu-glib/reference/libdbusmenu-glib-docs.sgml
+--- libdbusmenu-12.10.1.orig/docs/libdbusmenu-glib/reference/libdbusmenu-glib-docs.sgml	2012-09-20 18:00:24.388851715 -0400
++++ libdbusmenu-12.10.1/docs/libdbusmenu-glib/reference/libdbusmenu-glib-docs.sgml	2012-09-20 18:00:43.000844679 -0400
+@@ -15,9 +15,6 @@
+     <xi:include href="xml/menuitem-proxy.xml"/>
+     <xi:include href="xml/menuitem.xml"/>
+     <xi:include href="xml/client.xml"/>
+-    <xi:include href="xml/client-menuitem.xml"/>
+-    <xi:include href="xml/dbusmenu-client.xml"/>
+-    <xi:include href="xml/dbusmenu-server.xml"/>
+     <xi:include href="xml/types.xml"/>
+ 
+   </chapter>
+diff -Nru libdbusmenu-12.10.1.orig/docs/libdbusmenu-gtk/reference/libdbusmenu-gtk-docs.sgml libdbusmenu-12.10.1/docs/libdbusmenu-gtk/reference/libdbusmenu-gtk-docs.sgml
+--- libdbusmenu-12.10.1.orig/docs/libdbusmenu-gtk/reference/libdbusmenu-gtk-docs.sgml	2012-09-20 18:00:24.355851706 -0400
++++ libdbusmenu-12.10.1/docs/libdbusmenu-gtk/reference/libdbusmenu-gtk-docs.sgml	2012-09-20 18:03:16.153762134 -0400
+@@ -15,7 +15,6 @@
+     <xi:include href="xml/menuitem.xml"/>
+     <xi:include href="xml/client.xml"/>
+     <xi:include href="xml/parser.xml"/>
+-    <xi:include href="xml/serializablemenuitem.xml"/>
+ 
+   </chapter>
+   <chapter id="object-tree">

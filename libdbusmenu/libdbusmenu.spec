@@ -1,14 +1,16 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libdbusmenu
-Version:	0.6.2
-Release:	2%{?dist}
+Version:	12.10.1
+Release:	1%{?dist}
 Summary:	Small library that passes a menu structure across DBus
 
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv2 and LGPLv3
 URL:		https://launchpad.net/dbusmenu
-Source0:	https://launchpad.net/dbusmenu/0.6/%{version}/+download/libdbusmenu-%{version}.tar.gz
+Source0:	https://launchpad.net/dbusmenu/12.10/%{version}/+download/libdbusmenu-%{version}.tar.gz
+
+Patch0:		0001_Fix_sgml.patch
 
 # Require Ubuntu versions of GTK2 and GTK3
 BuildRequires:	gtk2-ubuntu-devel
@@ -163,6 +165,8 @@ This package contains the development files for the dbusmenu-jsonloader library.
 %prep
 %setup -q
 
+%patch0 -p1 -b .fix-sgml
+
 autoreconf -vfi
 
 # Disable rpath (from Debian wiki)
@@ -246,8 +250,7 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 %files glib
 %doc AUTHORS README
-%{_libdir}/libdbusmenu-glib.so.4
-%{_libdir}/libdbusmenu-glib.so.4.0.13
+%{_libdir}/libdbusmenu-glib.so.*
 %{_libdir}/girepository-1.0/Dbusmenu-0.4.typelib
 
 
@@ -336,6 +339,9 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
+- Version 12.10.1
+
 * Fri Aug 17 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6.2-2
 - Clean up spec file
 - Fix directory ownership
