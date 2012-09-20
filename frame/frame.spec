@@ -52,6 +52,11 @@ This package contains testing tools for the frame library.
 
 %build
 %configure --disable-static
+
+# Disable rpath
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
 make %{?_smp_mflags}
 
 
