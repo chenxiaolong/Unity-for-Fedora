@@ -4,8 +4,8 @@
 # developer is reading this, feel free to merge this spec file :)
 
 Name:		libindicator
-Version:	12.10.0
-Release:	2%{?dist}
+Version:	12.10.1
+Release:	1%{?dist}
 Summary:	Shared functions for Ayatana indicators
 
 Group:		System Environment/Libraries
@@ -192,6 +192,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libdummy-indicator-*.so
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
+- Version 12.10.1
+
 * Fri Aug 17 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2
 - Fix directory ownership
 
