@@ -127,7 +127,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_libdir}/girepository-1.0/Accounts-1.0.typelib
 %{python_sitearch}/gi/overrides/Accounts.py*
 %{python3_sitearch}/gi/overrides/Accounts.py*
-%{python3_sitearch}/gi/overrides/__pycache__/Accounts.cpython-32.py*
+%{python3_sitearch}/gi/overrides/__pycache__/Accounts.cpython-*.py*
 
 
 %files devel
