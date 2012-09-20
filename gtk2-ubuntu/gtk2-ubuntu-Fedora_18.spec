@@ -89,6 +89,8 @@ Requires(post):	pango
 Requires(post):	libtiff
 Requires:	libXrandr
 
+Provides:	gtk2-ubuntu = %{version}-%{release}
+
 %description
 GTK+ is a multi-platform toolkit for creating graphical user
 interfaces. Offering a complete set of widgets, GTK+ is suitable for
@@ -144,6 +146,8 @@ Requires:	automake
 
 Provides:	gail-devel = %{version}-%{release}
 Obsoletes:	gail-devel < 2.13.0-1
+
+Provides:	gtk2-ubuntu-devel = %{version}-%{release}
 
 %description devel
 This package contains the libraries amd header files that are needed
