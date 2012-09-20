@@ -14,6 +14,7 @@ Source0:	https://launchpad.net/libindicate/12.10/%{version}/+download/libindicat
 
 Patch1:		0002_missing_documentation.patch
 Patch2:		0003_libpyglib-linking.patch
+Patch3:		0004_Fix_documentation.patch
 
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk-doc
@@ -174,6 +175,7 @@ library.
 %setup -q
 %patch1 -p1 -b .documentation
 %patch2 -p1 -b .libpygliblink
+%patch3 -p1 -b .fixmissingdocs
 
 # Build fix (thanks to Damian!)
 sed -i '/#include "glib\/gmessages.h"/d' libindicate/indicator.c
