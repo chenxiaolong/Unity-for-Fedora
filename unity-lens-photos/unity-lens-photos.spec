@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-photos
-Version:	0.5
+Version:	0.6
 Release:	1%{?dist}
 Summary:	Unity lens for browsing photos
 
@@ -68,11 +68,11 @@ desktop-file-validate \
 %dir %{_libexecdir}/unity-lens-photos/
 %{_libexecdir}/unity-lens-photos/*.py*
 %{_libexecdir}/unity-lens-photos/unity-lens-photos
-%dir %{_datadir}/accounts/
-%dir %{_datadir}/accounts/applications/
-%{_datadir}/accounts/applications/unity-lens-photos.application
 %{_datadir}/applications/unity-lens-photos.desktop
 %{_datadir}/dbus-1/services/unity-lens-photos.service
+%dir %{_datadir}/unity-lens-photos/
+%dir %{_datadir}/unity-lens-photos/media/
+%{_datadir}/unity-lens-photos/media/*.svg
 %{_datadir}/pixmaps/unity-lens-photos.png
 %dir %{_datadir}/unity/
 %dir %{_datadir}/unity/lenses/
@@ -81,6 +81,9 @@ desktop-file-validate \
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.6-1
+- Version 0.6
+
 * Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.5-1
 - Version 0.5
 
