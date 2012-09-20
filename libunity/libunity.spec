@@ -1,18 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu1
-
 Name:		libunity
-Version:	5.96.0
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	6.5.2
+Release:	1%{?dist}
 Summary:	Library for integrating with Unity
 
 Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/libunity
 Source0:	https://launchpad.net/libunity/6.0/%{version}/+download/libunity-%{version}.tar.gz
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity_%{version}-%{_ubuntu_rel}.diff.gz
 
 BuildRequires:	pkgconfig
 BuildRequires:	python2
@@ -57,15 +53,14 @@ This package contains the debugging tools for Unity lens.
 %prep
 %setup -q
 
-# Apply Ubuntu's patches
-zcat '%{SOURCE99}' | patch -Np1
-for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
-done
-
 
 %build
 %configure --enable-headless-tests --disable-static
+
+# Disable rpath
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
 make %{?_smp_mflags}
 
 
@@ -86,7 +81,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_libdir}/libunity.so.*
 %dir %{_libdir}/libunity/
 %{_libdir}/libunity/libunity-protocol-private.so.*
-%{_libdir}/girepository-1.0/Unity-5.0.typelib
+%{_libdir}/girepository-1.0/Unity-6.0.typelib
 %{python_sitearch}/gi/overrides/Unity.py*
 
 
@@ -100,7 +95,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_libdir}/libunity/libunity-protocol-private.so
 %{_libdir}/pkgconfig/unity.pc
 %{_libdir}/pkgconfig/unity-protocol-private.pc
-%{_datadir}/gir-1.0/Unity-5.0.gir
+%{_datadir}/gir-1.0/Unity-6.0.gir
 %{_datadir}/vala/vapi/unity-protocol.vapi
 %{_datadir}/vala/vapi/unity-trace.deps
 %{_datadir}/vala/vapi/unity-trace.vapi
@@ -114,6 +109,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.5.2-1
+- Version 6.5.2
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 5.96.0-1.0ubuntu1
 - Version 5.96.0
 - Ubuntu release 0ubuntu1
