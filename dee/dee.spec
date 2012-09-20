@@ -114,7 +114,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_libdir}/girepository-1.0/Dee-1.0.typelib
 %{python_sitearch}/gi/overrides/Dee.py*
 %{python3_sitearch}/gi/overrides/Dee.py*
-%{python3_sitearch}/gi/overrides/__pycache__/Dee.cpython-32.py*
+%{python3_sitearch}/gi/overrides/__pycache__/Dee.cpython-*.py*
 
 
 %files devel
