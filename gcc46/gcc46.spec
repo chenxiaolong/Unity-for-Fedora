@@ -7,6 +7,8 @@
 # This is only a temporary package until nux and Unity are fixed, so it should
 # be easy to install and remove.
 
+### NOT NEEDED IN FEDORA 18 ###
+
 Name:		gcc46
 Version:	4.6.3
 Release:	3%{?dist}
