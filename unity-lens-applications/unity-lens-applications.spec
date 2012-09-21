@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-applications
-Version:	6.4.0
+Version:	6.6.0
 Release:	1%{?dist}
 Summary:	Unity Applications Lens
 
@@ -11,7 +11,10 @@ URL:		https://launchpad.net/unity-lens-applications
 Source0:	https://launchpad.net/unity-lens-applications/6.0/%{version}/+download/unity-lens-applications-%{version}.tar.gz
 
 Patch0:		10-no-db51.patch
+Patch1:		0001_unity-protocol-private.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gettext
 BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
@@ -22,6 +25,8 @@ BuildRequires:	pkgconfig(gee-1.0)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(libgnome-menu)
 BuildRequires:	pkgconfig(unity)
+BuildRequires:	pkgconfig(unity-protocol-private)
+BuildRequires:	pkgconfig(uuid)
 BuildRequires:	pkgconfig(zeitgeist-1.0)
 
 BuildRequires:	libdb-devel
@@ -36,6 +41,9 @@ applications for the Unity shell.
 %setup -q
 
 %patch0 -p1 -b .dbversion
+%patch1 -p1 -b .unity-protocol-private
+
+autoreconf -vfi
 
 
 %build
@@ -81,6 +89,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0-1
+- Version 6.6.0
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-1
 - Version 6.4.0
 
