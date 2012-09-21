@@ -1,10 +1,10 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu2
+%define _ubuntu_rel 0ubuntu1
 
 Name:		signon
-Version:	8.42
-Release:	2.%{_ubuntu_rel}%{?dist}
+Version:	8.43
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Single Sign On Framework
 
 Group:		System Environment/Libraries
@@ -18,6 +18,7 @@ BuildRequires:	doxygen
 BuildRequires:	graphviz
 BuildRequires:	pkgconfig
 
+BuildRequires:	pkgconfig(libproxy-1.0)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(QtCore)
 
@@ -246,6 +247,10 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.43-1.0ubuntu1
+- Version 8.43
+- Ubuntu release 0ubuntu1
+
 * Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.42-2.0ubuntu2
 - Ship static libraries
 
