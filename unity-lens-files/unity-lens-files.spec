@@ -12,6 +12,8 @@ Source0:	https://launchpad.net/unity-lens-files/6.0/%{version}/+download/unity-l
 
 Patch0:		0001_unity-protocol-private.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gettext
 BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
