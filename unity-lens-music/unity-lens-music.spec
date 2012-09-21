@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-music
-Version:	6.6.0
+Version:	6.8.0
 Release:	1%{?dist}
 Summary:	Unity music lens
 
@@ -10,6 +10,10 @@ License:	GPLv3
 URL:		https://launchpad.net/unity-lens-music
 Source0:	https://launchpad.net/unity-lens-music/6.0/%{version}/+download/unity-lens-music-%{version}.tar.gz
 
+Patch0:		0001_unity-lens-music.patch
+
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
 
@@ -29,6 +33,10 @@ This package contains the music lens which can be used to browse media files.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .unity-protocol-private
+
+autoreconf -vfi
 
 
 %build
@@ -56,6 +64,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.8.0-1
+- Version 6.8.0
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0-1
 - Version 6.6.0
 

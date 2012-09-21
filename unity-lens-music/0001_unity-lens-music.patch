@@ -1,0 +1,11 @@
+diff -Nru unity-lens-music-6.8.0.orig/configure.ac unity-lens-music-6.8.0/configure.ac
+--- unity-lens-music-6.8.0.orig/configure.ac	2012-09-20 20:17:13.745765616 -0400
++++ unity-lens-music-6.8.0/configure.ac	2012-09-20 20:19:13.526754341 -0400
+@@ -65,6 +65,7 @@
+                   gee-1.0
+ 		  json-glib-1.0
+                   unity >= 4.99.0
++                  unity-protocol-private
+                   tdb >= 1.2.6)
+ 
+ PKG_CHECK_MODULES(PREVIEW_PLAYER,
