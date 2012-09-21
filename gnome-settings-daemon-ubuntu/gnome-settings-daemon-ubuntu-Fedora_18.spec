@@ -2,26 +2,36 @@
 
 # Partially based off of the Fedora 17 spec
 
+%define _ubuntu_ver 3.4.2
 %define _ubuntu_rel 0ubuntu13
 
 Name:		gnome-settings-daemon
-Version:	3.4.2
-Release:	2.%{_ubuntu_rel}%{?dist}
+Version:	3.5.92
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	The daemon sharing settings from GNOME to GTK+/KDE applications
 
 Group:		System Environment/Daemons
 License:	GPLv2+
 URL:		http://download.gnome.org/sources/gnome-settings-daemon
-Source0:	http://download.gnome.org/sources/gnome-settings-daemon/3.4/gnome-settings-daemon-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-settings-daemon/3.5/gnome-settings-daemon-%{version}.tar.xz
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_%{version}-%{_ubuntu_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
 
-# Fedora specific patch: do not install security updates automatically as the
-# user can restart the system during the upgrades and mess up the rpm database.
-#
-# The features in the new version of systemd in Fedora 18 will make this patch
-# obsolete.
-Patch0:		gsd-auto-update-type-is-none.patch
+# Refreshed useful patches from Ubuntu's gnome-settings-daemon packaging
+# (version 3.4.2-0ubuntu13). We will not see updates to the patches until
+# Ubuntu 13.04.
+Patch0:		0001_16_use_synchronous_notifications.patch
+Patch1:		0002_51_lock_screen_on_suspend.patch
+Patch2:		0003_52_sync_background_to_accountsservice.patch
+Patch3:		0004_60_unity_hide_status_icon.patch
+Patch4:		0005_62_unity_disable_gsd_printer.patch
+Patch5:		0006_63_unity_start_mounter.patch
+Patch6:		0007_90_set_gmenus_xsettings.patch
+Patch7:		0008_disable_three_touch_tap.patch
+Patch8:		0009_revert_git_datetime_dropping.patch
+Patch9:		0010_correct_logout_action.patch
+Patch10:	0011_power-no-fallback-notifications.patch
+Patch11:	0012_power-check-null-devices.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -37,6 +47,7 @@ BuildRequires:	pkgconfig(gnome-desktop-3.0)
 BuildRequires:	pkgconfig(gsettings-desktop-schemas)
 BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	pkgconfig(gudev-1.0)
+BuildRequires:	pkgconfig(ibus-1.0)
 BuildRequires:	pkgconfig(kbproto)
 BuildRequires:	pkgconfig(lcms2)
 BuildRequires:	pkgconfig(libcanberra-gtk3)
@@ -53,6 +64,7 @@ BuildRequires:	pkgconfig(polkit-gobject-1)
 BuildRequires:	pkgconfig(upower-glib)
 BuildRequires:	pkgconfig(xfixes)
 BuildRequires:	pkgconfig(xi)
+BuildRequires:	pkgconfig(xkbfile)
 BuildRequires:	pkgconfig(xorg-wacom)
 BuildRequires:	pkgconfig(xtst)
 
@@ -85,19 +97,20 @@ gnome-settings-daemon.
 %prep
 %setup -q -n gnome-settings-daemon-%{version}
 
-%patch0 -p1 -b .update-none
-
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
-
-# Fix patches
-  # Fedora 17 moved /bin to /usr/bin
-    sed -i 's,/bin/,/usr/bin/,g' \
-      debian/patches/revert_git_datetime_dropping.patch
-
-for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
-done
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
 
 autoreconf -vfi
 
@@ -234,7 +247,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 # DBus services
 %{_datadir}/dbus-1/interfaces/org.gnome.SettingsDaemonUpdates.xml
-%{_datadir}/dbus-1/services/org.gnome.SettingsDaemon.service
+%{_datadir}/dbus-1/services/org.freedesktop.IBus.service
 %{_datadir}/dbus-1/system-services/org.gnome.SettingsDaemon.DateTimeMechanism.service
 %{_sysconfdir}/dbus-1/system.d/org.gnome.SettingsDaemon.DateTimeMechanism.conf
 
@@ -271,10 +284,29 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %dir %{_datadir}/gnome-settings-daemon-3.0/
 %{_datadir}/gnome-settings-daemon-3.0/input-device-example.sh
 
+# Tests
+%{_libexecdir}/gsd-test-a11y-keyboard
+%{_libexecdir}/gsd-test-a11y-settings
+%{_libexecdir}/gsd-test-background
+%{_libexecdir}/gsd-test-input-helper
+%{_libexecdir}/gsd-test-keyboard
+%{_libexecdir}/gsd-test-media-keys
+%{_libexecdir}/gsd-test-mouse
+%{_libexecdir}/gsd-test-orientation
+%{_libexecdir}/gsd-test-power
+%{_libexecdir}/gsd-test-print-notifications
+%{_libexecdir}/gsd-test-smartcard
+%{_libexecdir}/gsd-test-sound
+%{_libexecdir}/gsd-test-xsettings
+%{_libexecdir}/gsd-list-wacom
+%{_libexecdir}/gsd-test-wacom
+
 
 %changelog
-* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-2.0ubuntu13
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.5.92-1
 - Initial release for Fedora 18
+- Refreshed useful Ubuntu patches for version 3.5.92
+  - Ubuntu will stay with the 3.4 series
 
 * Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu13
 - Version 3.4.2
