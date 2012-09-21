@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-files
-Version:	6.4.0
+Version:	6.6.0
 Release:	1%{?dist}
 Summary:	Unity files lens
 
@@ -9,6 +9,8 @@ Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/unity-lens-files
 Source0:	https://launchpad.net/unity-lens-files/6.0/%{version}/+download/unity-lens-files-%{version}.tar.gz
+
+Patch0:		0001_unity-protocol-private.patch
 
 BuildRequires:	gettext
 BuildRequires:	pkgconfig
@@ -18,6 +20,7 @@ BuildRequires:	pkgconfig(dee-1.0)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gee-1.0)
 BuildRequires:	pkgconfig(unity)
+BuildRequires:	pkgconfig(unity-protocol-private)
 BuildRequires:	pkgconfig(zeitgeist-1.0)
 
 %description
@@ -27,6 +30,10 @@ documents and other files.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b unity-protocol-private
+
+autoreconf -vfi
 
 
 %build
@@ -63,6 +70,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0-1
+- Version 6.6.0
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-1
 - Version 6.4.0
 

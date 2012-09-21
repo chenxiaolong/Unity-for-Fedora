@@ -1,0 +1,13 @@
+diff -Nru unity-lens-files-6.6.0.orig/configure.ac unity-lens-files-6.6.0/configure.ac
+--- unity-lens-files-6.6.0.orig/configure.ac	2012-09-20 20:09:41.106668938 -0400
++++ unity-lens-files-6.6.0/configure.ac	2012-09-20 20:10:05.310652688 -0400
+@@ -63,7 +63,8 @@
+                   gee-1.0
+                   dee-1.0 >= 0.5.16
+                   zeitgeist-1.0 >= 0.3.17
+-                  unity >= 5.93.0)
++                  unity >= 5.93.0
++                  unity-protocol-private)
+ 
+ 
+ AC_SUBST(LENS_DAEMON_CFLAGS)
