@@ -26,9 +26,9 @@ Build order:
 24: signon-keyring-extension       -> GNOME Keyring extension for signond
 25: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
 26: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
-27: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
-28: gnome-control-center-signon    -> GNOME Control Center extension for SSO
-29: gnome-session-ubuntu           -> GNOME Session Manager
+27: gnome-session-ubuntu           -> GNOME Session Manager
+28: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
+29: gnome-control-center-signon    -> GNOME Control Center extension for SSO
 30: activity-log-manager ************
 31: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
 32: indicator-applet               -> GNOME panel indicator applet

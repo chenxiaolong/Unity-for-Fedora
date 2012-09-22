@@ -1,24 +1,44 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-# Partially based off of Fedora 17's spec file
+# Partially based off of Fedora 18's spec file
 
+%define _ubuntu_ver 3.4.2
 %define _ubuntu_rel 0ubuntu15
 
 Name:		control-center
-Version:	3.4.2
-Release:	3.%{_ubuntu_rel}%{?dist}
+Version:	3.5.92
+Release:	1%{?dist}
 Summary:	Utilities to configure the GNOME desktop
 
 Group:		User Interface/Desktops
 License:	GPLv2+ and GFDL
 URL:		http://www.gnome.org
-Source0:	http://download.gnome.org/sources/gnome-control-center/3.4/gnome-control-center-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-control-center/3.5/gnome-control-center-%{version}.tar.xz
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-control-center_%{version}-%{_ubuntu_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-control-center_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
 
-# https://bugzilla.gnome.org/show_bug.cgi?id=672682
-# https://bugzilla.redhat.com/show_bug.cgi?id=802381
-Patch0:		printers-firewalld1-api.patch
+# Useful patches refreshed for version 3.5.92
+Patch0:		0001_04_new_appearance_settings.patch
+Patch1:		0002_10_keyboard_layout_on_unity.patch
+Patch2:		0003_11_power-configure_lid_action.patch
+Patch3:		0004_12_add_never_turn_screen_off.patch
+Patch4:		0005_51_unity_options_in_display_panel.patch
+Patch5:		0006_54_enable_alt_tap_in_shortcut.patch
+Patch6:		0007_55_user_accounts_hide_controls.patch
+Patch7:		0008_57_use_nonsymbolic_keyboard_icon.patch
+Patch8:		0009_61_workaround_online_account.patch
+Patch9:		0010_62_update_translations_template.patch
+Patch10:	0011_64_restore_terminal_keyboard_shortcut.patch
+Patch11:	0012_90_force_fallback.patch
+Patch12:	0013_96_sound_nua_panel.patch
+Patch13:	0014_97_unity_power_ui.patch
+Patch14:	0015_98_default_sound_theme.patch
+Patch15:	0016_revert_git_drop_library.patch
+Patch16:	0017_99_add_lock-on-suspend.patch
+Patch17:	0018_dont_download_local_image.patch
+Patch18:	0019_fix-crash-on-user-panel.patch
+Patch19:	0020_classic_use_sound_indicator.patch
+Patch20:	0021_accounts_fix_unsetting_icon.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -44,6 +64,7 @@ BuildRequires:	pkgconfig(gnome-settings-daemon)
 BuildRequires:	pkgconfig(goa-1.0)
 BuildRequires:	pkgconfig(gsettings-desktop-schemas)
 BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(ibus-1.0)
 BuildRequires:	pkgconfig(iso-codes)
 BuildRequires:	pkgconfig(libcanberra)
 BuildRequires:	pkgconfig(libglade-2.0)
@@ -60,6 +81,7 @@ BuildRequires:	pkgconfig(libwacom)
 BuildRequires:	pkgconfig(libxklavier)
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(polkit-agent-1)
+BuildRequires:	pkgconfig(pwquality)
 BuildRequires:	pkgconfig(upower-glib)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xkbfile)
@@ -86,7 +108,6 @@ Requires:	libXrandr
 
 # User account settings
 Requires:	accountsservice
-Requires:	apg
 
 # Languages
 Requires:	iso-codes
@@ -96,6 +117,9 @@ Requires:	gnome-icon-theme-symbolic
 
 # Printers
 Requires:	cups-pk-helper
+
+# Network settings
+Requires:	nm-connection-editor
 
 # Ubuntu's new sound panel (requires XDG_CURRENT_DESKTOP to be set)
 Requires:	gnome-session-ubuntu
@@ -137,31 +161,30 @@ files that are picked up by the control-center utilities.
 %prep
 %setup -q -n gnome-control-center-%{version}
 
-%patch0 -p1 -b .firewalld1
-
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
 
-# Disable patches
-  # Disable using Ubuntu's update manager
-    sed -i '/05_run_update_manager.patch/d' debian/patches/series
-  # Fedora does not use Ubuntu's language selector
-    sed -i '/52_ubuntu_language_list_mods.patch/d' debian/patches/series
-  # Don't use Ubuntu's help files
-    sed -i '/53_use_ubuntu_help.patch/d' debian/patches/series
-  # Don't use Ubuntu branding.
-    sed -i '/56_use_ubuntu_info_branding.patch/d' debian/patches/series
-  # Do not revert the port to systemd's timedated
-    sed -i '/revert_git_datetime_port.patch/d' debian/patches/series
-  # Fedora does not have ubuntu-system-service
-    sed -i '/50_ubuntu_systemwide_prefs.patch/d' debian/patches/series
-
-for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
-done
-
-# Builds just fine with the stable version of clutter-gtk
-sed -i 's/1\.11\.10/1.10.4/g' configure.ac
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
 
 autoreconf -vfi
 
@@ -178,7 +201,7 @@ autoreconf -vfi
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
-# From Fedora 17 spec: only link against necessary libraries
+# From Fedora 18 spec: only link against necessary libraries
 sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0 /g' -e 's/    if test "$export_dynamic" = yes && test -n "$export_dynamic_flag_spec"; then/      func_append compile_command " -Wl,-O1,--as-needed"\n      func_append finalize_command " -Wl,-O1,--as-needed"\n\0/' libtool
 
 make %{?_smp_mflags}
@@ -197,13 +220,6 @@ install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome/wm-properties/
 # Remove unwanted directories (not packaged in Fedora)
 rm -rvf $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/
 rm -rvf $RPM_BUILD_ROOT%{_datadir}/gnome/cursor-fonts/
-
-# Install Ubuntu's manual page
-pushd debian
-install -dm755 $RPM_BUILD_ROOT%{_mandir}/man1/
-docbook2man gnome-control-center.sgml || true
-install -m644 gnome-control-center.1 $RPM_BUILD_ROOT%{_mandir}/man1/
-popd
 
 # Link gnome-control-center desktop file for indicators
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/indicators/session/applications/
@@ -274,6 +290,8 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 # PolicyKit policies
 %{_datadir}/polkit-1/actions/org.gnome.controlcenter.datetime.policy
+%{_datadir}/polkit-1/actions/org.gnome.controlcenter.user-accounts.policy
+%{_datadir}/polkit-1/rules.d/gnome-control-center.rules
 
 # Desktop files
 %dir %{_datadir}/indicators/
@@ -329,6 +347,7 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 # GNOME Control Center keybindings
 %{_datadir}/gnome-control-center/keybindings/00-multimedia.xml
+%{_datadir}/gnome-control-center/keybindings/01-input-sources.xml
 %{_datadir}/gnome-control-center/keybindings/01-launchers.xml
 %{_datadir}/gnome-control-center/keybindings/01-screenshot.xml
 %{_datadir}/gnome-control-center/keybindings/01-system.xml
@@ -343,23 +362,32 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %dir %{_datadir}/gnome-control-center/ui/
 %{_datadir}/gnome-control-center/bluetooth.ui
 %{_datadir}/gnome-control-center/ui/datetime/datetime.ui
+%dir %{_datadir}/gnome-control-center/ui/background/
 %{_datadir}/gnome-control-center/ui/background/background.ui
 %{_datadir}/gnome-control-center/ui/button-mapping.ui
 %{_datadir}/gnome-control-center/ui/color.ui
 %{_datadir}/gnome-control-center/ui/display-capplet.ui
 %{_datadir}/gnome-control-center/ui/gnome-keyboard-panel.ui
 %{_datadir}/gnome-control-center/ui/gnome-mouse-properties.ui
-%{_datadir}/gnome-control-center/ui/gnome-region-panel-layout-chooser.ui
-%{_datadir}/gnome-control-center/ui/gnome-region-panel-options-dialog.ui
+%{_datadir}/gnome-control-center/ui/gnome-mouse-test.ui
 %{_datadir}/gnome-control-center/ui/gnome-region-panel.ui
+%{_datadir}/gnome-control-center/ui/gnome-region-panel-input-chooser.ui
 %{_datadir}/gnome-control-center/ui/gnome-wacom-properties.ui
 %{_datadir}/gnome-control-center/ui/info.ui
 %{_datadir}/gnome-control-center/ui/language-chooser.ui
 %{_datadir}/gnome-control-center/ui/network.ui
+%{_datadir}/gnome-control-center/ui/network-mobile.ui
+%{_datadir}/gnome-control-center/ui/network-proxy.ui
+%{_datadir}/gnome-control-center/ui/network-vpn.ui
+%{_datadir}/gnome-control-center/ui/network-wifi.ui
+%{_datadir}/gnome-control-center/ui/network-wired.ui
 %{_datadir}/gnome-control-center/ui/online-accounts.ui
 %{_datadir}/gnome-control-center/ui/power.ui
 %dir %{_datadir}/gnome-control-center/ui/printers/
+%{_datadir}/gnome-control-center/ui/printers/jobs-dialog.ui
 %{_datadir}/gnome-control-center/ui/printers/new-printer-dialog.ui
+%{_datadir}/gnome-control-center/ui/printers/options-dialog.ui
+%{_datadir}/gnome-control-center/ui/printers/ppd-selection-dialog.ui
 %{_datadir}/gnome-control-center/ui/printers/printers.ui
 %{_datadir}/gnome-control-center/ui/screen.ui
 %{_datadir}/gnome-control-center/ui/shell.ui
@@ -377,13 +405,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %dir %{_datadir}/gnome-control-center/ui/datetime/
 %{_datadir}/gnome-control-center/ui/datetime/timezone_*.png
 %{_datadir}/gnome-control-center/ui/datetime/bg.png
+%{_datadir}/gnome-control-center/ui/datetime/bg_dim.png
 %{_datadir}/gnome-control-center/ui/datetime/cc.png
 %{_datadir}/gnome-control-center/ui/datetime/pin.png
-
-# GNOME Control Center background panel images
-%dir %{_datadir}/gnome-control-center/ui/background/
-%{_datadir}/gnome-control-center/ui/background/display-base.png
-%{_datadir}/gnome-control-center/ui/background/display-overlay.png
 
 # GNOME Control Center wacom settings panel images
 %{_datadir}/gnome-control-center/ui/wacom-*.svg
@@ -399,6 +423,8 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 # Other GNOME Control Center data files
 %{_datadir}/gnome-control-center/datetime/backward
 %{_datadir}/gnome-control-center/ui/GnomeLogoVerticalMedium.svg
+%{_datadir}/gnome-control-center/ui/scroll-test.svg
+%{_datadir}/gnome-control-center/ui/scroll-test-gegl.svg
 
 # GNOME Keybindings pkgconfig file
 %{_datadir}/pkgconfig/gnome-keybindings.pc
@@ -424,6 +450,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri Sep 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.5.92-1
+- Version 3.5.92
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-3.0ubuntu15
 - Initial release for Fedora 18
 - Version 3.4.2
