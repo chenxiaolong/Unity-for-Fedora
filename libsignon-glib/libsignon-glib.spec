@@ -113,7 +113,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_libdir}/girepository-1.0/Signon-1.0.typelib
 %{python_sitearch}/gi/overrides/Signon.py*
 %{python3_sitearch}/gi/overrides/Signon.py*
-%{python3_sitearch}/gi/overrides/__pycache__/Signon.cpython-32.py*
+%{python3_sitearch}/gi/overrides/__pycache__/Signon.cpython-*.py*
 
 
 %files devel
