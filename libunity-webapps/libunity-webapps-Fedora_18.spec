@@ -10,10 +10,6 @@ License:	LGPLv3
 URL:		https://launchpad.net/libunity-webapps
 Source0:	https://launchpad.net/libunity-webapps/trunk/%{version}/+download/unity_webapps-%{version}.tar.gz
 
-Patch0:		0003_unity-protocol-private.patch
-
-BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRequires:	gettext
 BuildRequires:	gnome-common
 BuildRequires:	gtk-doc
@@ -75,15 +71,11 @@ This package contains the documentation for the unity-webapps library.
 %prep
 %setup -q -n unity_webapps-%{version}
 
-#patch0 -p1 -b .unity-protocol-private
-
-#autoreconf -vfi
-
 
 %build
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:$(pwd)/src/libunity-webapps/.libs:$(pwd)/src/libunity-webapps-repository/.libs"
 
-%configure --disable-static #--enable-introspection=no
+%configure --disable-static
 
 # Disable rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
@@ -138,6 +130,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -n unity-webapps-service -f unity_webapps.lang
 %{_bindir}/ubuntu-webapps-update-index
+%{_bindir}/unity-webapps-desktop-file
 %{_bindir}/unity-webapps-runner
 %{_libexecdir}/unity-webapps-context-daemon
 %{_libexecdir}/unity-webapps-service
