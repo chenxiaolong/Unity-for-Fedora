@@ -38,7 +38,7 @@ BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	pkgconfig(libnotify)
 BuildRequires:	pkgconfig(nautilus-sendto)
 
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	bluez
 Requires:	control-center
 Requires:	desktop-notification-daemon
@@ -74,7 +74,7 @@ Summary:	Development files for gnome-bluetooth-ubuntu-libs
 Group:		Development/Libraries
 License:	LGPLv2+
 
-Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Requires:	pkgconfig(gobject-introspection-1.0)
 
 Provides:       gnome-bluetooth-ubuntu-libs-devel = %{epoch}:%{version}-%{release}
