@@ -1,22 +1,20 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-# Based on Fedora 17's spec file
-
-%define _obsolete_ver 1.13.0-100
+# Based on Fedora 18's spec file
 
 # Released ABI versions. Must keep in sync with the source.
-%define ansic_major 0
-%define ansic_minor 4
-%define videodrv_major 12
-%define videodrv_minor 0
-%define xinput_major 16
-%define xinput_minor 0
-%define extension_major 6
-%define extension_minor 0
+%global ansic_major 0
+%global ansic_minor 4
+%global videodrv_major 13
+%global videodrv_minor 0
+%global xinput_major 18
+%global xinput_minor 0
+%global extension_major 7
+%global extension_minor 0
 
-Name:		xorg-x11-server-ubuntu
-Version:	1.12.2
-Release:	1%{?dist}
+Name:		xorg-x11-server
+Version:	1.13.0
+Release:	100%{?dist}
 Summary:	X.Org X11 X server
 
 Group:		User Interface/X
@@ -31,19 +29,21 @@ Source5:	http://svn.exactcode.de/t2/trunk/package/xorg/xorg-server/xvfb-run.sh
 
 Patch0:		fedora_xserver-1.4.99-ssh-isnt-local.patch
 Patch1:		fedora_xserver-1.6.0-less-acpi-brokenness.patch
-Patch2:		fedora_xserver-1.6.0-displayfd.patch
-Patch3:		fedora_xserver-1.6.99-right-of.patch
-Patch4:		fedora_xserver-1.12-Xext-fix-selinux-build-failure.patch
-Patch5:		fedora_xserver-fix-pci-slot-claims.patch
-Patch6:		fedora_xserver-1.12-modesetting-fallback.patch
-Patch7:		fedora_xserver-1.12.2-xorg-touch-test.patch
-Patch8:		fedora_xserver-1.12-os-print-newline-after-printing-display-name.patch
-Patch9:		fedora_xserver-1.12-xkb-warn-if-XKB-SlowKeys-have-been-automatically-ena.patch
-Patch10:	fedora_xserver-1.12-xkb-fill-in-keycode-and-event-type-for-slow-keys-ena.patch
-# From Ubuntu's packaging version 1.12.1.902 and release 1ubuntu1
-# The patch is included separately as Ubuntu's packaging is deleted when a new
-# version is released.
-# https://launchpad.net/ubuntu/+archive/primary/+files/xorg-server_1.12.1.902-1ubuntu1.diff.gz
+Patch2:		f18_xserver-1.6.99-right-of.patch
+Patch3:		fedora_xserver-1.12-Xext-fix-selinux-build-failure.patch
+Patch4:		f18_xserver-1.12.2-xorg-touch-test.patch
+Patch5:		fedora_xserver-1.12-xkb-fill-in-keycode-and-event-type-for-slow-keys-ena.patch
+Patch6:		fedora_0001-linux-Refactor-xf86-En-Dis-ableIO.patch
+Patch7:		fedora_0002-linux-Make-failure-to-iopl-non-fatal.patch
+Patch8:		fedora_0003-xfree86-Change-the-semantics-of-driverFunc-GET_REQUI.patch
+Patch9:		fedora_0001-Always-install-vbe-and-int10-sdk-headers.patch
+Patch10:	fedora_xserver-autobind-hotplug.patch
+Patch11:	fedora_0003-xf86-fix-multi-seat-video-device-support.patch
+Patch12:	fedora_0001-dri2-invalidate-drawable-after-sharing-pixmap.patch
+Patch13:	fedora_0001-xf86-return-NULL-for-compat-output-if-no-outputs.patch
+Patch14:	fedora_0001-scan-pci-after-probing-devices.patch
+Patch15:	fedora_0001-config-udev-ignore-change-on-drm-devices.patch
+# From Ubuntu's packaging version 1.13.0 and release 0ubuntu4
 #Patch90:	500_pointer_barrier_thresholds.diff
 Source90:	500_pointer_barrier_thresholds.diff
 
@@ -107,10 +107,7 @@ Requires:	pixman >= 0.21.8
 Requires:	xkbcomp
 Requires:	xkeyboard-config
 
-Provides:	xorg-x11-server-common%{?_isa} = %{version}-%{release}
-Provides:	xorg-x11-server-common         = %{version}-%{release}
-Obsoletes:	xorg-x11-server-common%{?_isa} < %{_obsolete_ver}
-Obsoletes:	xorg-x11-server-common         < %{_obsolete_ver}
+Provides:	xorg-x11-server-ubuntu-common = %{version}-%{release}
 
 %description common
 Common files shared among all X servers.
@@ -120,7 +117,7 @@ Common files shared among all X servers.
 Summary:	Xorg X server
 Group:		User Interface/X
 
-Requires:	xorg-x11-server-ubuntu-common >= %{version}-%{release}
+Requires:	xorg-x11-server-common >= %{version}-%{release}
 Requires:	system-setup-keyboard
 
 Provides:	Xorg = %{version}-%{release}
@@ -146,10 +143,7 @@ Obsoletes:	xorg-x11-drv-s3 <= 0.6.3-14.fc17
 Obsoletes:	xorg-x11-drv-tseng <= 1.2.4-12.fc17
 %endif
 
-Provides:	xorg-x11-server-Xorg%{?_isa} = %{version}-%{release}
-Provides:	xorg-x11-server-Xorg         = %{version}-%{release}
-Obsoletes:	xorg-x11-server-Xorg%{?_isa} < %{_obsolete_ver}
-Obsoletes:	xorg-x11-server-Xorg         < %{_obsolete_ver}
+Provides:	xorg-x11-server-ubuntu-Xorg = %{version}-%{release}
 
 %description Xorg
 X.org X11 is an open source implementation of the X Window System. It provides
@@ -161,15 +155,12 @@ the basic low level functionality which full fledged graphical user interfaces
 Summary:	A nested server.
 Group:		User Interface/X
 
-Requires:	xorg-x11-server-ubuntu-common >= %{version}-%{release}
+Requires:	xorg-x11-server-common >= %{version}-%{release}
 
 Provides:	Xnest
 Obsoletes:	xorg-x11-Xnest
 
-Provides:	xorg-x11-server-Xnest%{?_isa} = %{version}-%{release}
-Provides:	xorg-x11-server-Xnest         = %{version}-%{release}
-Obsoletes:	xorg-x11-server-Xnest%{?_isa} < %{_obsolete_ver}
-Obsoletes:	xorg-x11-server-Xnest         < %{_obsolete_ver}
+Provides:	xorg-x11-server-ubuntu-Xnest = %{version}-%{release}
 
 %description Xnest
 Xnest is an X server, which has been implemented as an ordinary X application.
@@ -182,15 +173,12 @@ wish to test their applications without running them on their real X server.
 Summary:	Distributed Multihead X Server and utilities
 Group:		User Interface/X
 
-Requires:	xorg-x11-server-ubuntu-common >= %{version}-%{release}
+Requires:	xorg-x11-server-common >= %{version}-%{release}
 
 Provides:	Xdmx
 Obsoletes:	xorg-x11-Xdmx
 
-Provides:	xorg-x11-server-Xdmx%{?_isa} = %{version}-%{release}
-Provides:	xorg-x11-server-Xdmx         = %{version}-%{release}
-Obsoletes:	xorg-x11-server-Xdmx%{?_isa} < %{_obsolete_ver}
-Obsoletes:	xorg-x11-server-Xdmx         < %{_obsolete_ver}
+Provides:	xorg-x11-server-ubuntu-Xdmx = %{version}-%{release}
 
 %description Xdmx
 Xdmx is proxy X server that provides multi-head support for multiple displays
@@ -209,17 +197,14 @@ Group:		User Interface/X
 # xvfb-run is GPLv2
 License:	GPLv2 and MIT
 
-Requires:	xorg-x11-server-ubuntu-common >= %{version}-%{release}
+Requires:	xorg-x11-server-common >= %{version}-%{release}
 # For xvfb-run
 Requires:	xorg-x11-xauth
 
 Provides:	Xvfb
 Obsoletes:	xorg-x11-Xvfb
 
-Provides:	xorg-x11-server-Xvfb%{?_isa} = %{version}-%{release}
-Provides:	xorg-x11-server-Xvfb         = %{version}-%{release}
-Obsoletes:	xorg-x11-server-Xvfb%{?_isa} < %{_obsolete_ver}
-Obsoletes:	xorg-x11-server-Xvfb         < %{_obsolete_ver}
+Provides:	xorg-x11-server-ubuntu-Xvfb = %{version}-%{release}
 
 %description Xvfb
 Xvfb (X Virtual Frame Buffer) is an X server that is able to run on machines
@@ -232,14 +217,11 @@ otherwise as an X display. Xvfb is normally used for testing servers.
 Summary:	A nested server.
 Group:		User Interface/X
 
-Requires:	xorg-x11-server-ubuntu-common >= %{version}-%{release}
+Requires:	xorg-x11-server-common >= %{version}-%{release}
 
 Provides:	Xephyr
 
-Provides:	xorg-x11-server-Xephyr%{?_isa} = %{version}-%{release}
-Provides:	xorg-x11-server-Xephyr         = %{version}-%{release}
-Obsoletes:	xorg-x11-server-Xephyr%{?_isa} < %{_obsolete_ver}
-Obsoletes:	xorg-x11-server-Xephyr         < %{_obsolete_ver}
+Provides:	xorg-x11-server-ubuntu-Xephyr = %{version}-%{release}
 
 %description Xephyr
 Xephyr is an X server, which has been implemented as an ordinary X application.
@@ -261,10 +243,7 @@ Requires:	pkgconfig(pixman-1)
 Requires:	xorg-x11-proto-devel
 Requires:	xorg-x11-util-macros
 
-Provides:	xorg-x11-server-devel%{?_isa} = %{version}-%{release}
-Provides:	xorg-x11-server-devel         = %{version}-%{release}
-Obsoletes:	xorg-x11-server-devel%{?_isa} < %{_obsolete_ver}
-Obsoletes:	xorg-x11-server-devel         < %{_obsolete_ver}
+Provides:	xorg-x11-server-ubuntu-devel = %{version}-%{release}
 
 %description devel
 The SDK package provides the developmental files which are necessary for
@@ -279,8 +258,7 @@ Group:		Development/Libraries
 
 BuildArch:	noarch
 
-Provides:	xorg-x11-server-source = %{version}-%{release}
-Obsoletes:	xorg-x11-server-source < %{_obsolete_ver}
+Provides:	xorg-x11-server-ubuntu-source = %{version}-%{release}
 
 %description source
 Xserver source code needed to build VNC server (Xvnc)
@@ -334,7 +312,7 @@ autoreconf -vfi
 
 
 %build
-%define default_font_path "catalogue:/etc/X11/fontpath.d,built-ins"
+%global default_font_path "catalogue:/etc/X11/fontpath.d,built-ins"
 
 %configure \
   --enable-maintainer-mode       \
@@ -354,7 +332,6 @@ autoreconf -vfi
   --with-os-name="$(hostname -s) $(uname -r)" \
   --with-xkb-output=%{_localstatedir}/lib/xkb \
   --with-dtrace                  \
-  --disable-xaa                  \
   --enable-xselinux              \
   --enable-record                \
   --enable-config-udev           \
@@ -386,8 +363,8 @@ install -m755 %{SOURCE4} $RPM_BUILD_ROOT%{_bindir}/xserver-sdk-abi-requires
 install -m755 %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}/xvfb-run
 
 # Create the source package
-%define xserver_source_dir %{_datadir}/xorg-x11-server-source
-%define inst_srcdir %{buildroot}/%{xserver_source_dir}
+%global xserver_source_dir %{_datadir}/xorg-x11-server-source
+%global inst_srcdir %{buildroot}/%{xserver_source_dir}
 install -dm755 %{inst_srcdir}/{Xext,xkb,GL,hw/{xquartz/bundle,xfree86/common}}
 install -dm755 %{inst_srcdir}/{hw/dmx/doc,man,doc,hw/dmx/doxygen}
 install -m644 {,%{inst_srcdir}/}hw/xquartz/bundle/cpprules.in
@@ -416,7 +393,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_localstatedir}/lib/xkb/README.compiled
 
 
-%define Xorgperms %attr(4755, root, root)
+%global Xorgperms %attr(4755, root, root)
 
 %files Xorg
 %config %attr(0644,root,root) %{_sysconfdir}/pam.d/xserver
@@ -429,12 +406,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %dir %{_libdir}/xorg/modules/drivers/
 %dir %{_libdir}/xorg/modules/extensions/
 %dir %{_libdir}/xorg/modules/input/
-%{_libdir}/xorg/modules/extensions/libdbe.so
-%{_libdir}/xorg/modules/extensions/libdri.so
-%{_libdir}/xorg/modules/extensions/libdri2.so
-%{_libdir}/xorg/modules/extensions/libextmod.so
 %{_libdir}/xorg/modules/extensions/libglx.so
-%{_libdir}/xorg/modules/extensions/librecord.so
 %{_libdir}/xorg/modules/libexa.so
 %{_libdir}/xorg/modules/libfb.so
 %{_libdir}/xorg/modules/libfbdevhw.so
@@ -508,6 +480,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.0-100
+- Initial release for Fedora 18
+- Version 1.13.0
+
 * Sun Aug 12 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.12.2-1
 - Initial release
 - Based on Fedora 17's spec file
