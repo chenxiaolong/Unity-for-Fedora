@@ -41,29 +41,30 @@ Build order:
 39: indicator-session              -> Indicator for session management
 40: indicator-sound                -> Indicator displaying a unified sound menu
 41: notify-osd                     -> A unified sound menu
-42: NetworkManager-gnome-ubuntu    -> Applet for connecting to networks
-43: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-44: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
-45: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-46: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
-47: evemu                          -> Linux Evdev Event Emulation Library
-48: frame                          -> Open Input Framework Frame Library
-49: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-50: libXfixes-ubuntu               -> X.Org fixes extension library
-51: xorg-x11-server-ubuntu         -> Xorg X11 server
-52: grail                          -> Gesture recognition and instantiation lib.
-53: geis                           -> Implementation of the GEIS interface
-54: gcc46                          -> GNU Compiler Collection version 4.6
-55: ibus-ubuntu                    -> Next generation input bus for Linux
-56: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
-57: unity-asset-pool               -> Design assets for Unity
-58: gnome-menus301                 -> GNOME menu specifications
-59: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-60: unity-lens-applications        -> Unity applications lens
-61: unity-lens-files               -> Unity files lens
-62: unity-lens-music               -> Unity music lens
-63: unity-lens-photos              -> Unity photos lens
-64: unity-lens-video               -> Unity video lens
-65: unity-scope-video-remote       -> Remote video search for Unity video lens
-66: compiz                         -> Compiz core components
-67: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+42: NetworkManager-gnome-ubuntu    -> NetworkManager applet (Fedora 17 only)
+43: network-manager-applet-ubuntu  -> NetworkManager applet (Fedora 18 only)
+44: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
+45: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
+46: plasma-widget-menubar          -> KDE Plasma widget to display global menus
+47: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
+48: evemu                          -> Linux Evdev Event Emulation Library
+49: frame                          -> Open Input Framework Frame Library
+50: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
+51: libXfixes-ubuntu               -> X.Org fixes extension library
+52: xorg-x11-server-ubuntu         -> Xorg X11 server
+53: grail                          -> Gesture recognition and instantiation lib.
+54: geis                           -> Implementation of the GEIS interface
+55: gcc46                          -> GNU Compiler Collection version 4.6
+56 ibus-ubuntu                    -> Next generation input bus for Linux
+57: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
+58: unity-asset-pool               -> Design assets for Unity
+59: gnome-menus301                 -> GNOME menu specifications
+60: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+61: unity-lens-applications        -> Unity applications lens
+62: unity-lens-files               -> Unity files lens
+63: unity-lens-music               -> Unity music lens
+64: unity-lens-photos              -> Unity photos lens
+65: unity-lens-video               -> Unity video lens
+66: unity-scope-video-remote       -> Remote video search for Unity video lens
+67: compiz                         -> Compiz core components
+68: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)

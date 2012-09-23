@@ -1,0 +1,32 @@
+diff -Nru network-manager-applet-0.9.7.0.orig/src/applet-device-gsm.c network-manager-applet-0.9.7.0/src/applet-device-gsm.c
+--- network-manager-applet-0.9.7.0.orig/src/applet-device-gsm.c	2012-09-23 19:19:55.755861988 -0400
++++ network-manager-applet-0.9.7.0/src/applet-device-gsm.c	2012-09-23 19:20:39.074889985 -0400
+@@ -1046,6 +1046,8 @@
+ 	guint32 label1_min = 0, label2_min = 0, label3_min = 0;
+ 	guint32 label1_max = 0, label2_max = 0, label3_max = 0;
+ 	guint32 unlock_code = 0;
++	gboolean show_save = FALSE;
++	NMClientPermission perm;
+ 
+ 	g_return_if_fail (info->unlock_required != NULL);
+ 
+@@ -1089,12 +1091,18 @@
+ 		return;
+ 	}
+ 
++	show_save = (unlock_code == UNLOCK_CODE_PIN) ? TRUE : FALSE;
++	perm = NM_CLIENT_PERMISSION_SETTINGS_MODIFY_OWN;
++	if (! (   info->applet->permissions[perm] == NM_CLIENT_PERMISSION_RESULT_YES
++		   || info->applet->permissions[perm] == NM_CLIENT_PERMISSION_RESULT_AUTH))
++		show_save = FALSE;
++
+ 	/* Construct and run the dialog */
+ 	info->dialog = applet_mobile_pin_dialog_new (title,
+ 	                                             header,
+ 	                                             desc,
+ 	                                             show_pass_label,
+-	                                             (unlock_code == UNLOCK_CODE_PIN) ? TRUE : FALSE);
++	                                             show_save);
+ 	g_free (desc);
+ 	g_return_if_fail (info->dialog != NULL);
+ 

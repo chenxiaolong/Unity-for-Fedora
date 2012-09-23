@@ -1,0 +1,20 @@
+diff -Nru network-manager-applet-0.9.7.0.orig/src/applet.c network-manager-applet-0.9.7.0/src/applet.c
+--- network-manager-applet-0.9.7.0.orig/src/applet.c	2012-09-23 18:29:01.755920260 -0400
++++ network-manager-applet-0.9.7.0/src/applet.c	2012-09-23 18:30:50.083952087 -0400
+@@ -2453,6 +2453,8 @@
+ 
+ 	if (nm_client_get_manager_running (applet->nm_client))
+ 		g_idle_add (foo_set_initial_state, applet);
++
++	applet_schedule_update_icon (applet);
+ }
+ 
+ static GdkPixbuf *
+@@ -2640,7 +2642,6 @@
+ 	applet->update_icon_id = 0;
+ 
+ 	nm_running = nm_client_get_manager_running (applet->nm_client);
+-	gtk_status_icon_set_visible (applet->status_icon, nm_running);
+ 
+ 	/* Handle device state first */
+ 
