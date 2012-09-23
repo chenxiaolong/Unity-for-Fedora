@@ -27,7 +27,11 @@ Requires:	libsignon-glib
 Requires:	libunity
 
 Requires:	python(abi) = 2.7
+%if 0%{fedora} >= 18
+Requires:	python(abi) = 3.3
+%else
 Requires:	python(abi) = 3.2
+%endif
 
 BuildArch:	noarch
 
