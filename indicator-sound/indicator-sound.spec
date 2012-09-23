@@ -6,7 +6,7 @@
 
 Name:		indicator-sound
 Version:	12.10.0
-Release:	2.%{_ubuntu_rel}%{?dist}
+Release:	3.%{_ubuntu_rel}%{?dist}
 Summary:	Indicator for displaying a unified sound menu
 
 Group:		User Interface/Desktops
@@ -20,15 +20,11 @@ BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
 
 BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
-BuildRequires:	pkgconfig(dbusmenu-gtk-0.4)
 BuildRequires:	pkgconfig(dbusmenu-gtk3-0.4)
 BuildRequires:	pkgconfig(gee-1.0)
 BuildRequires:	pkgconfig(glib-2.0)
-BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
-BuildRequires:	pkgconfig(indicator-0.4)
 BuildRequires:	pkgconfig(indicator3-0.4)
-BuildRequires:	pkgconfig(libido-0.1)
 BuildRequires:	pkgconfig(libido3-0.1)
 BuildRequires:	pkgconfig(libnotify)
 BuildRequires:	pkgconfig(libxml-2.0)
@@ -43,16 +39,6 @@ daemon. The sound menu also provides integration with several multimedia
 players (ex: Banshee).
 
 
-%package gtk2
-Summary:	Indicator for displaying a unified sound menu - GTK 2
-Group:		User Interface/Desktops
-
-Requires:	%{name}%{?_isa} = %{version}-%{release}
-
-%description gtk2
-This package contains the GTK 2 version of the sound indicator.
-
-
 %prep
 %setup -q
 
@@ -64,28 +50,12 @@ done
 
 
 %build
-%global _configure ../configure
-mkdir build-gtk2 build-gtk3
-
-pushd build-gtk2
-%configure --with-gtk=2 --disable-static
+%configure --disable-static
 make %{?_smp_mflags}
-popd
-
-pushd build-gtk3
-%configure --with-gtk=3 --disable-static
-make %{?_smp_mflags}
-popd
 
 
 %install
-pushd build-gtk2
 make install DESTDIR=$RPM_BUILD_ROOT
-popd
-
-pushd build-gtk3
-make install DESTDIR=$RPM_BUILD_ROOT
-popd
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
@@ -112,14 +82,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/libindicator/icons/
 
 
-%files gtk2
-%doc AUTHORS
-%dir %{_libdir}/indicators/
-%dir %{_libdir}/indicators/7/
-%{_libdir}/indicators/7/libsoundmenu.so
-
-
 %changelog
+* Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-3.0ubuntu2
+- Drop GTK 2 build and ido doesn't provide a GTK 2 anymore
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2.0ubuntu2
 - Version 12.10.0
 - Ubuntu release 0ubuntu2
