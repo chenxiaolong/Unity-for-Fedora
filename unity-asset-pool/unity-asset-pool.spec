@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-asset-pool
-Version:	0.8.23
-Release:	2%{?dist}
+Version:	0.8.24
+Release:	1%{?dist}
 Summary:	Design assets for Unity
 
 Group:		User Interface/Desktops
 License:	CC-BY-SA
 URL:		https://launchpad.net/unity-asset-pool
-Source0:	https://launchpad.net/unity-asset-pool/0.8/%{version}/+download/unity-asset-pool-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/unity-asset-pool_%{version}.orig.tar.gz
 
 BuildArch:	noarch
 
@@ -76,6 +76,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/unity-icon-theme/ &>/dev/null || :
 
 
 %changelog
+* Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.8.24-1
+- Version 0.8.24
+
 * Tue Aug 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.8.23-2
 - Remove Ubuntu branding icons
 - Fix directory ownership
