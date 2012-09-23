@@ -1,13 +1,12 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu6
+%define _ubuntu_rel 0ubuntu1
 
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
-%define _gconf_obsolete_schemas compiz-gtkloader
 
 Name:		unity
-Version:	6.4.0
-Release:	2.%{_ubuntu_rel}%{?dist}
+Version:	6.6.0
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
 Group:		User Interface/Desktops
@@ -49,9 +48,16 @@ Patch5:		0006_Fedora_Desktop_branding.patch
 # Link against gmodule-2.0
 Patch6:		0007_link_gmodule.patch
 
+%if 0%{fedora} <= 17
+# Revert port to atk-bridge-2.0, which was introduced in GNOME 3.5.91
+Patch7:		0008_Revert_port_to_atk-bridge-2.0.patch
+%endif
+
+%if 0%{fedora} <= 17
 # GCC 4.6 is required or else Unity will segfault
 BuildRequires:	gcc46-devel
 BuildRequires:	gcc46-static
+%endif
 
 # Ubuntu's patched fixesproto and libXfixes is needed
 BuildRequires:	libXfixes-ubuntu-devel
@@ -87,14 +93,15 @@ BuildRequires:	pkgconfig(libnotify)
 BuildRequires:	pkgconfig(sigc++-2.0)
 BuildRequires:	pkgconfig(unity)
 BuildRequires:	pkgconfig(unity-misc)
-BuildRequires:	pkgconfig(unity-protocol-private) >= 5.93.1
-BuildRequires:	pkgconfig(nux-3.0) >= 3.2.0
+BuildRequires:	pkgconfig(unity-protocol-private) >= 6.5.2
+BuildRequires:	pkgconfig(nux-3.0) >= 3.6.0
 BuildRequires:	pkgconfig(pango)
 BuildRequires:	pkgconfig(libstartup-notification-1.0)
 BuildRequires:	pkgconfig(unique-1.0)
 BuildRequires:	pkgconfig(libgeis)
 BuildRequires:	pkgconfig(grail)
 BuildRequires:	pkgconfig(xcb-ewmh)
+BuildRequires:	pkgconfig(zeitgeist-1.0)
 
 Requires:	unity-common%{?_isa} = %{version}-%{release}
 
@@ -106,8 +113,6 @@ Requires:	libXfixes-ubuntu
 Requires:	nux-tools
 Requires:	unity-asset-pool
 
-Requires(pre):	GConf2
-Requires(post):	GConf2
 Requires(preun):	GConf2
 
 Requires:	control-center-filesystem
@@ -183,6 +188,9 @@ needed for writing automated tests in Python.
 %patch4 -p1 -b .dbus-glib
 %patch5 -p1 -b .fedora-branding
 %patch6 -p1 -b .gmodule-2.0
+%if 0%{fedora} <= 17
+%patch7 -p1 -b .revert-atk-bridge-2.0
+%endif
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
@@ -207,22 +215,27 @@ popd
 mkdir build
 cd build
 
+%if 0%{fedora} <= 17
+
 # Remove '-gnu' from target triplet
 %global _gnu %{nil}
 
 C_COMPILER=%{_bindir}/%{_target_platform}-gcc-4.6
 CXX_COMPILER=%{_bindir}/%{_target_platform}-g++-4.6
 
+%endif
+
 %cmake .. \
   -DCOMPIZ_BUILD_WITH_RPATH=FALSE \
   -DCOMPIZ_PACKAGING_ENABLED=TRUE \
   -DCOMPIZ_PLUGIN_INSTALL_TYPE=package \
   -DUSE_GSETTINGS=TRUE \
+%if 0%{fedora} <= 17
   -DCMAKE_C_COMPILER="${C_COMPILER}" \
   -DCMAKE_CXX_COMPILER="${CXX_COMPILER}"
+%endif
 
-#make %{?_smp_mflags}
-make -j1
+make %{?_smp_mflags}
 
 pushd ../tests/autopilot/
 %{__python} setup.py build
@@ -257,26 +270,14 @@ install -dm755 $RPM_BUILD_ROOT%{_datadir}/compiz/migration/
 install -m644 ../tools/convert-files/* \
   $RPM_BUILD_ROOT%{_datadir}/compiz/migration/
 
-# Put GConf schemas in correct directory
-mv $RPM_BUILD_ROOT{%{_datadir},%{_sysconfdir}}/gconf/
-
 # From debian/rules
 rm $RPM_BUILD_ROOT%{_libdir}/compiz/libnetworkarearegion.so
 rm $RPM_BUILD_ROOT%{_libdir}/compiz/libunitydialog.so
 rm $RPM_BUILD_ROOT%{_datadir}/compiz/networkarearegion.xml
 rm $RPM_BUILD_ROOT%{_datadir}/compiz/unitydialog.xml
-rm $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas/compiz-networkarearegion.schemas
-rm $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas/compiz-unitydialog.schemas
 
 %find_lang unity
 
-
-%pre
-%gconf_schema_prepare %{_gconf_schemas}
-%gconf_schema_obsolete %{_gconf_obsolete_schemas}
-
-%post
-%gconf_schema_upgrade %{_gconf_schemas}
 
 %preun
 %gconf_schema_remove %{_gconf_schemas}
@@ -351,8 +352,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.unitydialog.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.unitymtgrabhandles.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.unityshell.gschema.xml
-%{_sysconfdir}/gconf/schemas/compiz-unitymtgrabhandles.schemas
-%{_sysconfdir}/gconf/schemas/compiz-unityshell.schemas
 %dir %{_datadir}/unity/
 %dir %{_datadir}/unity/6/
 %dir %{_datadir}/unity/themes/
@@ -408,9 +407,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{python_sitelib}/unity/tests/test_showdesktop.py*
 %{python_sitelib}/unity/tests/test_switcher.py*
 %{python_sitelib}/unity/tests/test_unity_logging.py*
+%dir %{python_sitelib}/unity/tests/xim/
+%{python_sitelib}/unity/tests/xim/__init__.py*
+%{python_sitelib}/unity/tests/xim/test_gcin.py*
 
 
 %changelog
+* Sat Sep 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0-1.0ubuntu1
+- Version 6.6.0
+- Ubuntu release 0ubuntu1
+
 * Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.4.0-2.0ubuntu6
 - Ubuntu release 0ubuntu6
 

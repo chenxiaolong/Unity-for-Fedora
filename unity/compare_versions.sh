@@ -7,7 +7,7 @@ echo "Getting latest Ubuntu version..."
 UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/unity' -O - | sed -n 's/.*>unity_\(.*\)-\(.*\)\.diff\.gz<.*/\1 \2/p'))
 
 echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q 'https://launchpad.net/unity/+download' -O - | sed -n 's/.*unity-\(.*\)\.tar\.bz2.*/\1/p' | head -n 1)
+UPSTREAM_VER=$(wget -q 'https://launchpad.net/unity/+download' -O - | sed -n 's/.*unity_\(.*\)\.orig\.tar.*/\1/p' | head -n 1)
 
 echo ""
 
