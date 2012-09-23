@@ -10,6 +10,8 @@ License:	LGPLv3
 URL:		https://launchpad.net/bamf
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/bamf_%{version}.orig.tar.gz
 
+Patch0:		0001_Fix_documentation.patch
+
 BuildRequires:	gtk-doc
 BuildRequires:	vala-tools
 
@@ -98,6 +100,8 @@ This package contains the documentation for the bamf library.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .fix-docs
 
 
 %build

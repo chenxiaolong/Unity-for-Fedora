@@ -1,0 +1,17 @@
+diff -Nru bamf-0.3.0.orig/doc/reference/libbamf/libbamf-docs.sgml bamf-0.3.0/doc/reference/libbamf/libbamf-docs.sgml
+--- bamf-0.3.0.orig/doc/reference/libbamf/libbamf-docs.sgml	2012-09-23 12:29:50.191771370 -0400
++++ bamf-0.3.0/doc/reference/libbamf/libbamf-docs.sgml	2012-09-23 12:30:35.657808686 -0400
+@@ -11,13 +11,6 @@
+ 
+   <chapter>
+     <title>Classes</title>
+-    <xi:include href="xml/bamf-matcher.xml"/>
+-    <xi:include href="xml/bamf-window.xml"/>
+-    <xi:include href="xml/bamf-factory.xml"/>
+-    <xi:include href="xml/bamf-control.xml"/>
+-    <xi:include href="xml/bamf-tab-source.xml"/>
+-    <xi:include href="xml/bamf-view.xml"/>
+-    <xi:include href="xml/bamf-application.xml"/>
+ 
+   </chapter>
+   <chapter id="object-tree">
