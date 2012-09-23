@@ -33,7 +33,7 @@ Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
-Provides:	libXfixes-devel-ubuntu = %{version}-%{release}
+Provides:	libXfixes-ubuntu-devel = %{version}-%{release}
 
 %description devel
 This package contains the development files for Ubuntu's patched Xfixes library.
