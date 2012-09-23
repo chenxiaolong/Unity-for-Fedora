@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-appmenu
-Version:	12.10.0
+Version:	12.10.1
 Release:	1%{?dist}
 Summary:	Indicator to host the menus from an application
 
@@ -114,6 +114,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
+- Version 12.10.1
+
 * Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2
 - Fix directory ownership
 - Use pkgconfig for dependencies
