@@ -2,13 +2,15 @@
 
 Name:		libunity
 Version:	6.5.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Library for integrating with Unity
 
 Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/libunity
 Source0:	https://launchpad.net/libunity/6.0/%{version}/+download/libunity-%{version}.tar.gz
+
+Patch0:		0001_unity-protocol-private.patch
 
 BuildRequires:	pkgconfig
 BuildRequires:	python2
@@ -52,6 +54,8 @@ This package contains the debugging tools for Unity lens.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .unity-protocol-private
 
 
 %build
@@ -109,6 +113,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sat Sep 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.5.2-2
+- We disable rpath, so unity-protocol-private must be added to the libunity
+  pkgconfig file
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.5.2-1
 - Version 6.5.2
 

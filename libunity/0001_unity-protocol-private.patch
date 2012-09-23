@@ -1,0 +1,10 @@
+diff -Nru libunity-6.5.2.orig/unity.pc.in libunity-6.5.2/unity.pc.in
+--- libunity-6.5.2.orig/unity.pc.in	2012-09-22 00:57:12.200649863 -0400
++++ libunity-6.5.2/unity.pc.in	2012-09-22 00:57:27.033638894 -0400
+@@ -9,5 +9,5 @@
+ Version: @VERSION@
+ Libs: -L${libdir} -lunity
+ Cflags: -I${includedir}/unity/unity
+-Requires: glib-2.0 gthread-2.0 gobject-2.0 gio-2.0 gio-unix-2.0 dee-1.0 gee-1.0 dbusmenu-glib-0.4
++Requires: glib-2.0 gthread-2.0 gobject-2.0 gio-2.0 gio-unix-2.0 dee-1.0 gee-1.0 dbusmenu-glib-0.4 unity-protocol-private
+ 
