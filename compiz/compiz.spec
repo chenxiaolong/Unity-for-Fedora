@@ -9,22 +9,19 @@
 %define _gconf_schemas_obsolete compiz-animationaddon compiz-bicubic compiz-blur compiz-colorfilter compiz-cubeaddon compiz-gears compiz-group compiz-loginout compiz-reflex compiz-stackswitch compiz-thumbnail compiz-trip compiz-wallpaper
 %define _gconf_schemas compiz-addhelper compiz-animation compiz-annotate compiz-bench compiz-ccp compiz-clone compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gnomecompat compiz-grid compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
 
-%define _ubuntu_ver 0.9.8.0
 %define _ubuntu_rel 0ubuntu1
+%define _bzr_rev 3377
 
 Name:		compiz
 Version:	0.9.8.2
-Release:	1.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Release:	2.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
 License:	GPLv2+
 URL:		https://launchpad.net/compiz
 
-Source0:	https://launchpad.net/compiz/0.9.8/%{version}/+download/compiz-%{version}.tar.bz2
-
-# Wrapper for compiz to simulate Ubuntu's gconf-defaults mechanism
-Source1:	compiz.wrapper
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}.orig.tar.gz
 
 # Script to reset all of Compiz's settings
 Source2:	compiz.reset
@@ -32,7 +29,7 @@ Source2:	compiz.reset
 # Autostart desktop file for migrating GConf settings to GSettings
 Source3:	compiz-migrate-to-dconf.desktop
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{_ubuntu_ver}-%{_ubuntu_rel}.diff.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}-%{_ubuntu_rel}.diff.gz
 
 # Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
 Patch0:		0001_Fix_library_directory.patch
@@ -64,7 +61,6 @@ BuildRequires:	metacity-devel
 
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(dbus-glib-1)
-BuildRequires:	pkgconfig(gconf-2.0)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(glibmm-2.4)
@@ -96,19 +92,6 @@ BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xrender)
 
 BuildRequires:	Pyrex
-
-Requires(pre):	GConf2
-Requires(post):	GConf2
-Requires(preun):	GConf2
-
-# Required for wrapper script
-Requires:	GConf2
-
-# Required for GSettings schemas
-Requires:	gsettings-desktop-schemas
-
-# Requited for GConf to GSettings migration script
-Requires:	gnome-python2-gconf
 
 %description
 Compiz is an OpenGL compositing manager that uses GLX_EXT_texture_from_pixmap
@@ -156,6 +139,14 @@ Requires:	control-center-filesystem
 # gtk-window-decorator reads its settings from metacity and mutter
 Requires:	metacity >= 2.34.1
 Requires:	mutter
+
+Requires(preun):	GConf2
+
+# Requited for GConf to GSettings migration script
+Requires:	gnome-python2-gconf
+
+# Required for GSettings schemas
+Requires:	gsettings-desktop-schemas
 
 %description gnome
 This package contains the GNOME window decorator and GNOME support files for
@@ -225,7 +216,7 @@ its plugins' settings.
 
 
 %prep
-%setup -q
+%setup -q -n compiz-0.9.8.3
 
 %patch0 -p1 -b .pkg_config_path
 %patch1 -p1 -b .cmake_install_dir
@@ -234,7 +225,7 @@ its plugins' settings.
 %patch4 -p1 -b .convert_files_datadir
 
 # Apply Ubuntu's patches
-(zcat '%{SOURCE99}' | patch -Np1) || true
+zcat '%{SOURCE99}' | patch -Np1
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
 done
@@ -253,6 +244,7 @@ export COMPIZ_DISABLE_RPATH=1
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCOMPIZ_PACKAGING_ENABLED=TRUE \
   -DUSE_GSETTINGS=ON \
+  -DUSE_GCONF=OFF \
   -DCOMPIZ_DISABLE_GS_SCHEMAS_INSTALL=OFF \
   -DCOMPIZ_BUILD_TESTING=OFF \
   -DCOMPIZ_DISABLE_PLUGIN_KDE=ON \
@@ -318,19 +310,8 @@ install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome-control-center/keybindings/
 install -m644 gtk/gnome/50-*.xml \
   $RPM_BUILD_ROOT%{_datadir}/gnome-control-center/keybindings/
 
-# Simulate Ubuntu's gconf-defaults functionality with wrapper script
-# Defaults are from debian/compiz-gnome.gconf-defaults
-mv $RPM_BUILD_ROOT%{_bindir}/compiz{,.bin}
-install -m644 ../debian/compiz-gnome.gconf-defaults \
-              $RPM_BUILD_ROOT%{_datadir}/compiz/compiz.gconf-defaults
-install -m755 '%{SOURCE1}' $RPM_BUILD_ROOT%{_bindir}/compiz
-
 # Install script for resetting all of Compiz's settings
 install -m755 '%{SOURCE2}' $RPM_BUILD_ROOT%{_bindir}/compiz.reset
-
-# Put GConf stuff in correct directory
-mv $RPM_BUILD_ROOT%{_datadir}/gconf/ \
-   $RPM_BUILD_ROOT%{_sysconfdir}/gconf/
 
 # Default GSettings settings
 install -m644 ../debian/compiz-gnome.gsettings-override \
@@ -351,6 +332,9 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/ccsm.desktop
 # Fix dependency on '/bin/python' in ccsm
 sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
+# Remove GConf schemas
+rm -v $RPM_BUILD_ROOT%{_datadir}/gconf/schemas/*.schemas
+
 %find_lang compiz
 %find_lang ccsm
 
@@ -364,13 +348,6 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 %postun -n libcompizconfig -p /sbin/ldconfig
 
-
-%pre gnome
-%gconf_schema_prepare %{_gconf_schemas}
-%gconf_schema_obsolete %{_gconf_schemas_obsolete}
-
-%post gnome
-%gconf_schema_upgrade %{_gconf_schemas}
 
 %preun gnome
 %gconf_schema_remove %{_gconf_schemas}
@@ -387,14 +364,13 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %files -f build/compiz.lang
 %doc AUTHORS NEWS README
 %{_bindir}/compiz
-%{_bindir}/compiz.bin
 %{_bindir}/compiz.reset
 %{_bindir}/compiz-decorator
 # Manual pages
 %{_mandir}/man1/compiz.1.gz
 # Compiz libraries
-%{_libdir}/libcompiz_core.so.%{version}
-%{_libdir}/libcompiz_core.so.ABI-20120603
+%{_libdir}/libcompiz_core.so.0.9.8.3
+%{_libdir}/libcompiz_core.so.ABI-20120920
 %{_libdir}/libdecoration.so.0
 %{_libdir}/libdecoration.so.0.0.0
 # Desktop file
@@ -440,7 +416,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_datadir}/compiz/
 %dir %{_datadir}/compiz/xslt/
 %{_datadir}/compiz/xslt/bcop.xslt
-%{_datadir}/compiz/xslt/compiz_gconf_schemas.xslt
 %{_datadir}/compiz/xslt/compiz_gsettings_schemas.xslt
 # CMake files
 %dir %{_datadir}/cmake/
@@ -452,14 +427,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/compiz/cmake/CompizCommon.cmake
 %{_datadir}/compiz/cmake/CompizDefaults.cmake
 %{_datadir}/compiz/cmake/CompizGSettings.cmake
-%{_datadir}/compiz/cmake/CompizGconf.cmake
 %{_datadir}/compiz/cmake/CompizPackage.cmake
 %{_datadir}/compiz/cmake/CompizPlugin.cmake
 %{_datadir}/compiz/cmake/copy_file_install_user_env.cmake
 %{_datadir}/compiz/cmake/recompile_gsettings_schemas_in_dir_user_env.cmake
 %dir %{_datadir}/compiz/cmake/plugin_extensions/
 %{_datadir}/compiz/cmake/plugin_extensions/CompizGenGSettings.cmake
-%{_datadir}/compiz/cmake/plugin_extensions/CompizGenGconf.cmake
 %{_datadir}/compiz/cmake/plugin_extensions/CompizGenInstallData.cmake
 %{_datadir}/compiz/cmake/plugin_extensions/CompizGenInstallImages.cmake
 %{_datadir}/compiz/cmake/plugin_extensions/CompizOpenGLFixups.cmake
@@ -477,7 +450,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 # Compiz configuration backends
 %dir %{_libdir}/compizconfig/
 %dir %{_libdir}/compizconfig/backends/
-%{_libdir}/compizconfig/backends/libgconf.so
 %{_libdir}/compizconfig/backends/libgsettings.so
 %{_libdir}/libcompizconfig_gsettings_backend.so
 # X11 session script
@@ -494,82 +466,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_datadir}/compiz/migration/
 %{_datadir}/compiz/migration/compiz-profile-Default.convert
 %{_datadir}/compiz/migration/compiz-profile-active-Default.convert
-# GConf defaults
-%{_datadir}/compiz/compiz.gconf-defaults
-# GConf schemas
-%{_sysconfdir}/gconf/schemas/compiz-addhelper.schemas
-%{_sysconfdir}/gconf/schemas/compiz-animation.schemas
-%{_sysconfdir}/gconf/schemas/compiz-annotate.schemas
-%{_sysconfdir}/gconf/schemas/compiz-bench.schemas
-%{_sysconfdir}/gconf/schemas/compiz-ccp.schemas
-%{_sysconfdir}/gconf/schemas/compiz-clone.schemas
-%{_sysconfdir}/gconf/schemas/compiz-commands.schemas
-%{_sysconfdir}/gconf/schemas/compiz-compiztoolbox.schemas
-%{_sysconfdir}/gconf/schemas/compiz-composite.schemas
-%{_sysconfdir}/gconf/schemas/compiz-copytex.schemas
-%{_sysconfdir}/gconf/schemas/compiz-core.schemas
-%{_sysconfdir}/gconf/schemas/compiz-crashhandler.schemas
-%{_sysconfdir}/gconf/schemas/compiz-cube.schemas
-%{_sysconfdir}/gconf/schemas/compiz-dbus.schemas
-%{_sysconfdir}/gconf/schemas/compiz-decor.schemas
-%{_sysconfdir}/gconf/schemas/compiz-expo.schemas
-%{_sysconfdir}/gconf/schemas/compiz-extrawm.schemas
-%{_sysconfdir}/gconf/schemas/compiz-ezoom.schemas
-%{_sysconfdir}/gconf/schemas/compiz-fade.schemas
-%{_sysconfdir}/gconf/schemas/compiz-fadedesktop.schemas
-%{_sysconfdir}/gconf/schemas/compiz-firepaint.schemas
-%{_sysconfdir}/gconf/schemas/compiz-gnomecompat.schemas
-%{_sysconfdir}/gconf/schemas/compiz-grid.schemas
-%{_sysconfdir}/gconf/schemas/compiz-imgjpeg.schemas
-%{_sysconfdir}/gconf/schemas/compiz-imgpng.schemas
-%{_sysconfdir}/gconf/schemas/compiz-imgsvg.schemas
-%{_sysconfdir}/gconf/schemas/compiz-inotify.schemas
-# Ubuntu packages the KDE schema too
-%{_sysconfdir}/gconf/schemas/compiz-kdecompat.schemas
-%{_sysconfdir}/gconf/schemas/compiz-mag.schemas
-%{_sysconfdir}/gconf/schemas/compiz-maximumize.schemas
-%{_sysconfdir}/gconf/schemas/compiz-mblur.schemas
-%{_sysconfdir}/gconf/schemas/compiz-mousepoll.schemas
-%{_sysconfdir}/gconf/schemas/compiz-move.schemas
-%{_sysconfdir}/gconf/schemas/compiz-neg.schemas
-%{_sysconfdir}/gconf/schemas/compiz-notification.schemas
-%{_sysconfdir}/gconf/schemas/compiz-obs.schemas
-%{_sysconfdir}/gconf/schemas/compiz-opacify.schemas
-%{_sysconfdir}/gconf/schemas/compiz-opengl.schemas
-%{_sysconfdir}/gconf/schemas/compiz-place.schemas
-%{_sysconfdir}/gconf/schemas/compiz-put.schemas
-%{_sysconfdir}/gconf/schemas/compiz-regex.schemas
-%{_sysconfdir}/gconf/schemas/compiz-resize.schemas
-%{_sysconfdir}/gconf/schemas/compiz-resizeinfo.schemas
-%{_sysconfdir}/gconf/schemas/compiz-ring.schemas
-%{_sysconfdir}/gconf/schemas/compiz-rotate.schemas
-%{_sysconfdir}/gconf/schemas/compiz-scale.schemas
-%{_sysconfdir}/gconf/schemas/compiz-scaleaddon.schemas
-%{_sysconfdir}/gconf/schemas/compiz-scalefilter.schemas
-%{_sysconfdir}/gconf/schemas/compiz-screenshot.schemas
-%{_sysconfdir}/gconf/schemas/compiz-session.schemas
-%{_sysconfdir}/gconf/schemas/compiz-shelf.schemas
-%{_sysconfdir}/gconf/schemas/compiz-shift.schemas
-%{_sysconfdir}/gconf/schemas/compiz-showdesktop.schemas
-%{_sysconfdir}/gconf/schemas/compiz-showmouse.schemas
-%{_sysconfdir}/gconf/schemas/compiz-showrepaint.schemas
-%{_sysconfdir}/gconf/schemas/compiz-snap.schemas
-%{_sysconfdir}/gconf/schemas/compiz-splash.schemas
-%{_sysconfdir}/gconf/schemas/compiz-staticswitcher.schemas
-%{_sysconfdir}/gconf/schemas/compiz-switcher.schemas
-%{_sysconfdir}/gconf/schemas/compiz-td.schemas
-%{_sysconfdir}/gconf/schemas/compiz-text.schemas
-%{_sysconfdir}/gconf/schemas/compiz-titleinfo.schemas
-%{_sysconfdir}/gconf/schemas/compiz-trailfocus.schemas
-%{_sysconfdir}/gconf/schemas/compiz-vpswitch.schemas
-%{_sysconfdir}/gconf/schemas/compiz-wall.schemas
-%{_sysconfdir}/gconf/schemas/compiz-water.schemas
-%{_sysconfdir}/gconf/schemas/compiz-widget.schemas
-%{_sysconfdir}/gconf/schemas/compiz-winrules.schemas
-%{_sysconfdir}/gconf/schemas/compiz-wobbly.schemas
-%{_sysconfdir}/gconf/schemas/compiz-workarounds.schemas
-%{_sysconfdir}/gconf/schemas/compiz-workspacenames.schemas
-%{_sysconfdir}/gconf/schemas/gwd.schemas
+%{_datadir}/compiz/migration/compiz-profile-independent-keys.convert
 # GNOME Control Center keybinding files
 %{_datadir}/gnome-control-center/keybindings/50-compiz-launchers.xml
 %{_datadir}/gnome-control-center/keybindings/50-compiz-navigation.xml
@@ -862,7 +759,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -n python-compizconfig
 %{python_sitearch}/compizconfig.so
-%{python_sitearch}/compizconfig_python-%{version}-py2.7.egg-info
+%{python_sitearch}/compizconfig_python-0.9.8.3-py2.7.egg-info
 
 
 %files -n ccsm -f build/ccsm.lang
@@ -888,10 +785,22 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{python_sitelib}/ccm/Widgets.py*
 %{python_sitelib}/ccm/Window.py*
 %{python_sitelib}/ccm/__init__.py*
-%{python_sitelib}/ccsm-%{version}-py2.7.egg-info
+%{python_sitelib}/ccsm-0.9.8.3-py2.7.egg-info
 
 
 %changelog
+* Sat Sep 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.2-2.bzr3377.0ubuntu1
+- Version 0.9.8.2
+- BZR revision 3377
+- Ubuntu release 0ubuntu1
+- Disabled the building and installing of GConf schemas
+- Remove scriptlets for registering GConf schemas
+  - Left preun scriptlet to unregister the old ones
+- Removed wrapper script that simulated Ubuntu's gconf-defaults functionality
+- Removed pkgconfig(gconf-2.0) from build dependencies
+- Moved gnome-python2-gconf and GSettings dependencies to compiz-gnome package
+- Remove GConf bits from compiz.reset script
+
 * Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.2-1.ubuntu0.9.8.0.0ubuntu1
 - Version 0.9.8.2
 - Ubuntu packaging version 0.9.8.0 with release 0ubuntu1
