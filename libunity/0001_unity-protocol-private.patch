@@ -1,10 +1,24 @@
-diff -Nru libunity-6.5.2.orig/unity.pc.in libunity-6.5.2/unity.pc.in
---- libunity-6.5.2.orig/unity.pc.in	2012-09-22 00:57:12.200649863 -0400
-+++ libunity-6.5.2/unity.pc.in	2012-09-22 00:57:27.033638894 -0400
-@@ -9,5 +9,5 @@
+diff -Nru libunity-6.5.2.orig/protocol/Makefile.am libunity-6.5.2/protocol/Makefile.am
+--- libunity-6.5.2.orig/protocol/Makefile.am	2012-09-23 11:20:23.553484889 -0400
++++ libunity-6.5.2/protocol/Makefile.am	2012-09-23 11:31:01.184699597 -0400
+@@ -4,7 +4,7 @@
+ EXTRA_DIST =
+ EXTRA_FLAGS =
+ 
+-protolibdir = $(libdir)/libunity
++protolibdir = $(libdir)
+ protolib_LTLIBRARIES = \
+   libunity-protocol-private.la
+ 
+diff -Nru libunity-6.5.2.orig/unity-protocol-private.pc.in libunity-6.5.2/unity-protocol-private.pc.in
+--- libunity-6.5.2.orig/unity-protocol-private.pc.in	2012-09-23 11:20:23.554484887 -0400
++++ libunity-6.5.2/unity-protocol-private.pc.in	2012-09-23 11:20:47.460426054 -0400
+@@ -6,7 +6,7 @@
+ Name: libunity-protocol-private
+ Description: Library defining the dbus signatures and interfaces for libunity
  Version: @VERSION@
- Libs: -L${libdir} -lunity
+-Libs: -L${libdir}/libunity -lunity-protocol-private
++Libs: -L${libdir} -lunity-protocol-private
  Cflags: -I${includedir}/unity/unity
--Requires: glib-2.0 gthread-2.0 gobject-2.0 gio-2.0 gio-unix-2.0 dee-1.0 gee-1.0 dbusmenu-glib-0.4
-+Requires: glib-2.0 gthread-2.0 gobject-2.0 gio-2.0 gio-unix-2.0 dee-1.0 gee-1.0 dbusmenu-glib-0.4 unity-protocol-private
+ Requires: glib-2.0 gthread-2.0 gobject-2.0 gio-2.0 dee-1.0 gee-1.0
  

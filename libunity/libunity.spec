@@ -2,7 +2,7 @@
 
 Name:		libunity
 Version:	6.5.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Library for integrating with Unity
 
 Group:		System Environment/Libraries
@@ -12,6 +12,8 @@ Source0:	https://launchpad.net/libunity/6.0/%{version}/+download/libunity-%{vers
 
 Patch0:		0001_unity-protocol-private.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	pkgconfig
 BuildRequires:	python2
 BuildRequires:	vala-tools
@@ -57,6 +59,8 @@ This package contains the debugging tools for Unity lens.
 
 %patch0 -p1 -b .unity-protocol-private
 
+autoreconf -vfi
+
 
 %build
 %configure --enable-headless-tests --disable-static
@@ -83,8 +87,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %files
 %doc AUTHORS README
 %{_libdir}/libunity.so.*
-%dir %{_libdir}/libunity/
-%{_libdir}/libunity/libunity-protocol-private.so.*
+%{_libdir}/libunity-protocol-private.so.*
 %{_libdir}/girepository-1.0/Unity-6.0.typelib
 %{python_sitearch}/gi/overrides/Unity.py*
 
@@ -95,8 +98,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %dir %{_includedir}/unity/unity/
 %{_includedir}/unity/unity/*.h
 %{_libdir}/libunity.so
-%dir %{_libdir}/libunity/
-%{_libdir}/libunity/libunity-protocol-private.so
+%{_libdir}/libunity-protocol-private.so
 %{_libdir}/pkgconfig/unity.pc
 %{_libdir}/pkgconfig/unity-protocol-private.pc
 %{_datadir}/gir-1.0/Unity-6.0.gir
@@ -113,6 +115,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.5.2-3
+- Move libunity-protocol-private.so* to libdir instead of libdir/libunity
+
 * Sat Sep 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.5.2-2
 - We disable rpath, so unity-protocol-private must be added to the libunity
   pkgconfig file
