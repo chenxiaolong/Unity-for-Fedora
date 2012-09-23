@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-datetime
-Version:	12.10.0
+Version:	12.10.1
 Release:	1%{?dist}
 Summary:	Indicator for displaying the date and time
 
@@ -45,7 +45,9 @@ panel.
 %prep
 %setup -q
 
+%if 0%{fedora} <= 17
 %patch0 -p1
+%endif
 %patch1 -p1
 
 autoreconf -vfi
@@ -90,6 +92,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
+- Version 12.10.1
+
 * Mon Aug 13 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-1
 - Version 12.10.0
 - Drop GTK 2 subpackage: deprecated
