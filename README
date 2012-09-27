@@ -71,6 +71,7 @@ Build order:
 69: unity-lens-photos              -> Unity photos lens
 70: unity-lens-video               -> Unity video lens
 71: unity-scope-video-remote       -> Remote video search for Unity video lens
-72: unity-scope-gdocs              -> Google Docs scope for Unity
-73: compiz                         -> Compiz core components
-74: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+73: python3-distutils-extra        -> Enhancements to Python's distutils
+73: unity-scope-gdocs              -> Google Docs scope for Unity
+74: compiz                         -> Compiz core components
+75: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
