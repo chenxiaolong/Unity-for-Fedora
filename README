@@ -23,51 +23,52 @@ Build order:
 21: libaccounts-glib               -> Account mgmt. library for GLib apps
 22: libaccounts-qt                 -> Qt library for Single Sign On
 23: signon                         -> Single Sign On Framework
-24: libsignon-glib                 -> Authentication mgmt. library for GLib apps
-25: signon-keyring-extension       -> GNOME Keyring extension for signond
-26: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
-27: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
-28: gnome-session-ubuntu           -> GNOME Session Manager
-29: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
-30: gnome-control-center-signon    -> GNOME Control Center extension for SSO
-31: activity-log-manager ************
-32: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
-33: indicator-applet               -> GNOME panel indicator applet
-34: indicator-application          -> Takes menus and puts them in the panel
-35: indicator-appmenu              -> An indicator to host the menus from apps
-36: libtimezonemap                 -> GTK+3 timezone map widget
-37: indicator-datetime             -> A very, very simple clock
-38: indicator-messages             -> Collects messages that need a response
-39: indicator-power                -> Indicator to show battery information
-40: indicator-printers             -> Indicator showing active print jobs
-41: indicator-session              -> Indicator for session management
-42: indicator-sound                -> Indicator displaying a unified sound menu
-43: notify-osd                     -> A unified sound menu
-44: NetworkManager-gnome-ubuntu    -> NetworkManager applet (Fedora 17 only)
-45: network-manager-applet-ubuntu  -> NetworkManager applet (Fedora 18 only)
-46: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-47: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
-48: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-49: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
-50: evemu                          -> Linux Evdev Event Emulation Library
-51: frame                          -> Open Input Framework Frame Library
-52: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-53: libXfixes-ubuntu               -> X.Org fixes extension library
-54: xorg-x11-server-ubuntu         -> Xorg X11 server
-55: grail                          -> Gesture recognition and instantiation lib.
-56: geis                           -> Implementation of the GEIS interface
-57: gcc46                          -> GNU Compiler Collection version 4.6
-58: ibus-ubuntu                    -> Next generation input bus for Linux
-59: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
-60: unity-asset-pool               -> Design assets for Unity
-61: gnome-menus301                 -> GNOME menu specifications
-62: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-63: unity-lens-applications        -> Unity applications lens
-64: unity-lens-files               -> Unity files lens
-65: unity-lens-music               -> Unity music lens
-66: unity-lens-photos              -> Unity photos lens
-67: unity-lens-video               -> Unity video lens
-68: unity-scope-video-remote       -> Remote video search for Unity video lens
-69: unity-scope-gdocs              -> Google Docs scope for Unity
-70: compiz                         -> Compiz core components
-71: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+24: signon-ui                      -> Online Accounts Sign On UI
+25: libsignon-glib                 -> Authentication mgmt. library for GLib apps
+26: signon-keyring-extension       -> GNOME Keyring extension for signond
+27: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
+28: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
+29: gnome-session-ubuntu           -> GNOME Session Manager
+30: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
+31: gnome-control-center-signon    -> GNOME Control Center extension for SSO
+32: activity-log-manager ************
+33: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
+34: indicator-applet               -> GNOME panel indicator applet
+35: indicator-application          -> Takes menus and puts them in the panel
+36: indicator-appmenu              -> An indicator to host the menus from apps
+37: libtimezonemap                 -> GTK+3 timezone map widget
+38: indicator-datetime             -> A very, very simple clock
+39: indicator-messages             -> Collects messages that need a response
+40: indicator-power                -> Indicator to show battery information
+41: indicator-printers             -> Indicator showing active print jobs
+42: indicator-session              -> Indicator for session management
+43: indicator-sound                -> Indicator displaying a unified sound menu
+44: notify-osd                     -> A unified sound menu
+45: NetworkManager-gnome-ubuntu    -> NetworkManager applet (Fedora 17 only)
+46: network-manager-applet-ubuntu  -> NetworkManager applet (Fedora 18 only)
+47: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
+48: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
+49: plasma-widget-menubar          -> KDE Plasma widget to display global menus
+50: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
+51: evemu                          -> Linux Evdev Event Emulation Library
+52: frame                          -> Open Input Framework Frame Library
+53: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
+54: libXfixes-ubuntu               -> X.Org fixes extension library
+55: xorg-x11-server-ubuntu         -> Xorg X11 server
+56: grail                          -> Gesture recognition and instantiation lib.
+57: geis                           -> Implementation of the GEIS interface
+58: gcc46                          -> GNU Compiler Collection version 4.6
+59: ibus-ubuntu                    -> Next generation input bus for Linux
+60: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
+61: unity-asset-pool               -> Design assets for Unity
+62: gnome-menus301                 -> GNOME menu specifications
+63: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+64: unity-lens-applications        -> Unity applications lens
+65: unity-lens-files               -> Unity files lens
+66: unity-lens-music               -> Unity music lens
+67: unity-lens-photos              -> Unity photos lens
+68: unity-lens-video               -> Unity video lens
+69: unity-scope-video-remote       -> Remote video search for Unity video lens
+70: unity-scope-gdocs              -> Google Docs scope for Unity
+71: compiz                         -> Compiz core components
+72: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
