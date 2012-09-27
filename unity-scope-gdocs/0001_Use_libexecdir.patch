@@ -1,0 +1,20 @@
+diff -Nru unity-scope-gdocs-0.4.orig/setup.py unity-scope-gdocs-0.4/setup.py
+--- unity-scope-gdocs-0.4.orig/setup.py	2012-09-27 19:52:19.720859885 -0400
++++ unity-scope-gdocs-0.4/setup.py	2012-09-27 19:53:16.904882108 -0400
+@@ -12,7 +12,7 @@
+       url="http://launchpad.net/unity-lens-gdocs",
+       license="GNU General Public License v3 (GPLv3)",
+       data_files=[
+-    ('lib/unity-lens-files', ['unity-scope-gdocs']),
++    ('libexec', ['unity-scope-gdocs']),
+     ('share/applications', ['unity-scope-gdocs.desktop']),
+     ('share/dbus-1/services', ['unity-scope-gdocs.service']),
+     ('share/icons/hicolor/48x48/apps', ['unity-scope-gdocs.png']),
+diff -Nru unity-scope-gdocs-0.4.orig/unity-scope-gdocs.service unity-scope-gdocs-0.4/unity-scope-gdocs.service
+--- unity-scope-gdocs-0.4.orig/unity-scope-gdocs.service	2012-09-27 19:52:19.717859882 -0400
++++ unity-scope-gdocs-0.4/unity-scope-gdocs.service	2012-09-27 19:52:57.026875416 -0400
+@@ -1,3 +1,3 @@
+ [D-BUS Service]
+ Name=net.launchpad.Unity.Scope.GDocs
+-Exec=/usr/lib/unity-lens-files/unity-scope-gdocs
++Exec=/usr/libexec/unity-scope-gdocs
