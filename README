@@ -38,33 +38,34 @@ Build order:
 36: indicator-datetime             -> A very, very simple clock
 37: indicator-messages             -> Collects messages that need a response
 38: indicator-power                -> Indicator to show battery information
-39: indicator-session              -> Indicator for session management
-40: indicator-sound                -> Indicator displaying a unified sound menu
-41: notify-osd                     -> A unified sound menu
-42: NetworkManager-gnome-ubuntu    -> NetworkManager applet (Fedora 17 only)
-43: network-manager-applet-ubuntu  -> NetworkManager applet (Fedora 18 only)
-44: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-45: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
-46: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-47: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
-48: evemu                          -> Linux Evdev Event Emulation Library
-49: frame                          -> Open Input Framework Frame Library
-50: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-51: libXfixes-ubuntu               -> X.Org fixes extension library
-52: xorg-x11-server-ubuntu         -> Xorg X11 server
-53: grail                          -> Gesture recognition and instantiation lib.
-54: geis                           -> Implementation of the GEIS interface
-55: gcc46                          -> GNU Compiler Collection version 4.6
-56 ibus-ubuntu                    -> Next generation input bus for Linux
-57: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
-58: unity-asset-pool               -> Design assets for Unity
-59: gnome-menus301                 -> GNOME menu specifications
-60: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-61: unity-lens-applications        -> Unity applications lens
-62: unity-lens-files               -> Unity files lens
-63: unity-lens-music               -> Unity music lens
-64: unity-lens-photos              -> Unity photos lens
-65: unity-lens-video               -> Unity video lens
-66: unity-scope-video-remote       -> Remote video search for Unity video lens
-67: compiz                         -> Compiz core components
-68: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+39: indicator-printers             -> Indicator showing active print jobs
+49: indicator-session              -> Indicator for session management
+41: indicator-sound                -> Indicator displaying a unified sound menu
+42: notify-osd                     -> A unified sound menu
+43: NetworkManager-gnome-ubuntu    -> NetworkManager applet (Fedora 17 only)
+44: network-manager-applet-ubuntu  -> NetworkManager applet (Fedora 18 only)
+45: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
+46: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
+47: plasma-widget-menubar          -> KDE Plasma widget to display global menus
+48: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
+49: evemu                          -> Linux Evdev Event Emulation Library
+50: frame                          -> Open Input Framework Frame Library
+51: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
+52: libXfixes-ubuntu               -> X.Org fixes extension library
+53: xorg-x11-server-ubuntu         -> Xorg X11 server
+54: grail                          -> Gesture recognition and instantiation lib.
+55: geis                           -> Implementation of the GEIS interface
+56: gcc46                          -> GNU Compiler Collection version 4.6
+57: ibus-ubuntu                    -> Next generation input bus for Linux
+58: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
+59: unity-asset-pool               -> Design assets for Unity
+60: gnome-menus301                 -> GNOME menu specifications
+61: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+62: unity-lens-applications        -> Unity applications lens
+63: unity-lens-files               -> Unity files lens
+64: unity-lens-music               -> Unity music lens
+65: unity-lens-photos              -> Unity photos lens
+66: unity-lens-video               -> Unity video lens
+67: unity-scope-video-remote       -> Remote video search for Unity video lens
+68: compiz                         -> Compiz core components
+69: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
