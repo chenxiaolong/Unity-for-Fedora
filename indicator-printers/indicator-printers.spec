@@ -14,6 +14,8 @@ Source0:	https://launchpad.net/indicator-printers/0.1/%{version}/+download/indic
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-printers_%{version}-%{_ubuntu_rel}.diff.gz
 
+BuildRequires:	intltool
+
 BuildRequires:	cups-devel
 
 BuildRequires:	pkgconfig(dbusmenu-glib-0.4)
