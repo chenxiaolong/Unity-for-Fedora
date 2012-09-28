@@ -9,7 +9,7 @@ echo "Getting latest Ubuntu version..."
 UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/gsettings-desktop-schemas' -O - | sed -n 's/.*>gsettings-desktop-schemas_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
 
 echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/gsettings-desktop-schemas/3.5/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
+UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/gsettings-desktop-schemas/3.6/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
 
 echo ""
 

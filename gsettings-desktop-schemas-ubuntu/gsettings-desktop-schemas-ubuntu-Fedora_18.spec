@@ -7,14 +7,14 @@
 %define _ubuntu_rel 0ubuntu2
 
 Name:		gsettings-desktop-schemas
-Version:	3.5.92
+Version:	3.6.0
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A collection of GSettings schemas
 
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		http://bugzilla.gnome.org/enter_bug.cgi?product=gsettings-desktop-schemas
-Source0:	http://download.gnome.org/sources/gsettings-desktop-schemas/3.5/gsettings-desktop-schemas-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gsettings-desktop-schemas/3.6/gsettings-desktop-schemas-%{version}.tar.xz
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gsettings-desktop-schemas_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
@@ -94,6 +94,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.0ubuntu2
+- Version 3.6.0
+- Ubuntu release 0ubuntu2
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.5.92-1.0ubuntu2
 - Initial release for Fedora 18
 - Version 3.5.92
