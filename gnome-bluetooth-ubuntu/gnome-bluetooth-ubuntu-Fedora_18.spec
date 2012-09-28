@@ -5,7 +5,7 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		gnome-bluetooth
-Version:	3.5.92
+Version:	3.6.0
 Epoch:		1
 Release:	100.%{_ubuntu_rel}%{?dist}
 Summary:	Utilities for connecting to bluetooth devices in GNOME and Unity
@@ -13,7 +13,7 @@ Summary:	Utilities for connecting to bluetooth devices in GNOME and Unity
 Group:		Applications/Communications
 License:	GPLv2+
 URL:		http://live.gnome.org/GnomeBluetooth
-Source0:	http://download.gnome.org/sources/gnome-bluetooth/3.5/gnome-bluetooth-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-bluetooth/3.6/gnome-bluetooth-%{version}.tar.xz
 Source1:	61-gnome-bluetooth-rfkill.rules
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-bluetooth_%{version}-%{_ubuntu_rel}.debian.tar.gz
@@ -228,6 +228,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-100.0ubuntu1
+- Version 3.6.0
+- Ubuntu release 0ubuntu1
+
 * Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.5.92-100.0ubuntu1
 - Initial release for Fedora 18
 - Version 3.5.92
