@@ -16,6 +16,7 @@ Patch0:		0001_Use_libexecdir.patch
 BuildArch:	noarch
 
 BuildRequires:	desktop-file-utils
+BuildRequires:	intltool
 BuildRequires:	python3-distutils-extra
 
 BuildRequires:	pkgconfig(libaccounts-glib)
