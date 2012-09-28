@@ -2,17 +2,17 @@
 
 # Partially based off of Fedora 18's spec file
 
-%define _ubuntu_rel 0ubuntu2
+%define _ubuntu_rel 0ubuntu1
 
 Name:		gnome-session
-Version:	3.5.91
+Version:	3.6.0
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME session manager
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.gnome.org/
-Source0:	http://download.gnome.org/sources/gnome-session/3.5/gnome-session-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-session/3.6/gnome-session-%{version}.tar.xz
 
 Source98:	55gnome-session_gnomerc
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{version}-%{_ubuntu_rel}.debian.tar.gz
@@ -216,6 +216,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.0ubuntu1
+- Version 3.6.0
+- Ubuntu release 0ubuntu1
+
 * Fri Sep 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.5.91-1.0ubuntu2
 - Initial release for Fedora 18
 - Version 3.5.91
