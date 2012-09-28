@@ -3,17 +3,17 @@
 # Partially based off of Fedora 18's spec file
 
 %define _ubuntu_ver 3.4.2
-%define _ubuntu_rel 0ubuntu15
+%define _ubuntu_rel 0ubuntu16
 
 Name:		control-center
-Version:	3.5.92
-Release:	1%{?dist}
+Version:	3.6.0
+Release:	1.ubuntu%{_ubuntu_rev}.%{_ubuntu_rel}%{?dist}
 Summary:	Utilities to configure the GNOME desktop
 
 Group:		User Interface/Desktops
 License:	GPLv2+ and GFDL
 URL:		http://www.gnome.org
-Source0:	http://download.gnome.org/sources/gnome-control-center/3.5/gnome-control-center-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-control-center/3.6/gnome-control-center-%{version}.tar.xz
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-control-center_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
 
@@ -450,6 +450,11 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.ubuntu3.4.2.0ubuntu16
+- Version 3.6.0
+- Ubuntu version 3.4.2
+- Ubuntu release 0ubuntu16
+
 * Fri Sep 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.5.92-1
 - Version 3.5.92
 
