@@ -18,7 +18,7 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	python-distutils-extra
 
 Requires:	python3-gobject
-#Requires:	python3-oauthlib ### NOT PACKAGED YET
+Requires:	python3-oauthlib
 # Typelibs for the following packages are needed
 Requires:	dee
 Requires:	libaccounts-glib
