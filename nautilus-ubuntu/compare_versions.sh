@@ -12,7 +12,7 @@ echo "Getting latest GNOME 3 PPA version..."
 PPA_VER=($(wget -q 'http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/n/nautilus/' -O - | sed -n 's/.*>nautilus_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p' | tail -n 1))
 
 echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/nautilus/3.5/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
+UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/nautilus/3.6/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
 
 echo ""
 
