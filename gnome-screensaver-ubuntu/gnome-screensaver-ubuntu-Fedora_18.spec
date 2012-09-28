@@ -5,14 +5,14 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		gnome-screensaver
-Version:	3.5.5
+Version:	3.6.0
 Release:	100.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME Screensaver
 
 Group:		Amusements/Graphics
 License:	GPLv2+
 URL:		http://www.gnome.org
-Source0:	http://download.gnome.org/sources/gnome-screensaver/3.5/gnome-screensaver-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-screensaver/3.6/gnome-screensaver-%{version}.tar.xz
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-screensaver_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
@@ -98,6 +98,10 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.0ubuntu1
+- Version 3.6.0
+- Ubuntu release 0ubuntu1
+
 * Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.5.5-1.0ubuntu1
 - Initial release for Fedora 18
 - Version 3.5.5

@@ -9,7 +9,7 @@ echo "Getting latest Ubuntu version..."
 UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/gnome-screensaver' -O - | sed -n 's/.*>gnome-screensaver_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
 
 echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/gnome-screensaver/3.5/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
+UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/gnome-screensaver/3.6/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
 
 echo ""
 
