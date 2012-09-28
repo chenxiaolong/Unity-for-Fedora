@@ -6,14 +6,14 @@
 %define _ubuntu_rel 0ubuntu13
 
 Name:		gnome-settings-daemon
-Version:	3.5.92
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	3.6.0
+Release:	1.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	The daemon sharing settings from GNOME to GTK+/KDE applications
 
 Group:		System Environment/Daemons
 License:	GPLv2+
 URL:		http://download.gnome.org/sources/gnome-settings-daemon
-Source0:	http://download.gnome.org/sources/gnome-settings-daemon/3.5/gnome-settings-daemon-%{version}.tar.xz
+Source0:	http://download.gnome.org/sources/gnome-settings-daemon/3.6/gnome-settings-daemon-%{version}.tar.xz
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
 
@@ -178,6 +178,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/gnome-update-wallpaper-cache
 %{_libexecdir}/gsd-backlight-helper
 %{_libexecdir}/gsd-datetime-mechanism
+%{_libexecdir}/gsd-input-sources-switcher
 %{_libexecdir}/gsd-locate-pointer
 %{_libexecdir}/gsd-printer
 %{_libexecdir}/gsd-wacom-led-helper
@@ -303,6 +304,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.ubuntu3.4.2.0ubuntu13
+- Version 3.6.0
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.5.92-1
 - Initial release for Fedora 18
 - Refreshed useful Ubuntu patches for version 3.5.92
