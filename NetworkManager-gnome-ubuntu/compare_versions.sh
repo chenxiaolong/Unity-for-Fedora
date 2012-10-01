@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-SPEC_VER="$(rpmspec -q --qf '%{version}\n' NetworkManager-gnome-ubuntu.spec | head -1)"
-UBUNTU_VER="$(sed -n 's/^%define[ \t]*_ubuntu_ver[ \t]*\(.*\)$/\1/p' NetworkManager-gnome-ubuntu.spec)"
-UBUNTU_REL="$(sed -n 's/^%define[ \t]*_ubuntu_rel[ \t]*\(.*\)$/\1/p' NetworkManager-gnome-ubuntu.spec)"
-SPEC_FCREL="$(sed -n 's/^%define[ \t]*_fedora_rel[ \t]*\(.*\)$/\1/p' NetworkManager-gnome-ubuntu.spec)"
-GIT_DATE="$(sed -n 's/^%define[ \t]*_git_date[ \t]*\(.*\)$/\1/p' NetworkManager-gnome-ubuntu.spec)"
+SPEC_VER="$(rpmspec -q --qf '%{version}\n' NetworkManager-gnome-ubuntu-Fedora_17.spec | head -1)"
+UBUNTU_VER="$(sed -n 's/^%define[ \t]*_ubuntu_ver[ \t]*\(.*\)$/\1/p' NetworkManager-gnome-ubuntu-Fedora_17.spec)"
+UBUNTU_REL="$(sed -n 's/^%define[ \t]*_ubuntu_rel[ \t]*\(.*\)$/\1/p' NetworkManager-gnome-ubuntu-Fedora_17.spec)"
+SPEC_FCREL="$(sed -n 's/^%define[ \t]*_fedora_rel[ \t]*\(.*\)$/\1/p' NetworkManager-gnome-ubuntu-Fedora_17.spec)"
+GIT_DATE="$(sed -n 's/^%define[ \t]*_git_date[ \t]*\(.*\)$/\1/p' NetworkManager-gnome-ubuntu-Fedora_17.spec)"
 
 echo "Getting latest Ubuntu version..."
 UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/precise/source/network-manager-applet' -O - | sed -n 's/.*>network-manager-applet_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
