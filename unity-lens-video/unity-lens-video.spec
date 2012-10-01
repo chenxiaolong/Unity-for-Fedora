@@ -3,7 +3,7 @@
 %define _unity_major_ver 6
 
 Name:		unity-lens-video
-Version:	0.3.9
+Version:	0.3.10
 Release:	1%{?dist}
 Summary:	Unity video lens
 
@@ -14,6 +14,7 @@ Source0:	https://launchpad.net/unity-lens-videos/trunk/%{version}/+download/unit
 
 Patch0:		0001_Use_libexec.patch
 
+BuildRequires:	desktop-file-utils
 BuildRequires:	intltool
 
 BuildRequires:	python-distutils-extra
@@ -26,7 +27,7 @@ the dash of the Unity shell.
 
 
 %prep
-%setup -q
+%setup -q -n unity-lens-videos-%{version}
 
 %patch0 -p1 -b .use_libexec
 
@@ -48,12 +49,21 @@ install -dm755 $RPM_BUILD_ROOT%{_datadir}/unity/lenses/video/
 install -m644 build/share/unity/lenses/video/video.lens \
   $RPM_BUILD_ROOT%{_datadir}/unity/lenses/video/
 
+sed -i \
+  -e '/Encoding/d' \
+  -e '/Categories/ s/$/;/' \
+  $RPM_BUILD_ROOT%{_datadir}/applications/unity-lens-video.desktop
+#desktop-file-validate \
+#  $RPM_BUILD_ROOT%{_datadir}/applications/unity-lens-video.desktop
+
 
 %files
 %doc COPYING
 %{python_sitelib}/unity_lens_video-%{version}-py2.7.egg-info
 %{_libexecdir}/unity-lens-video
 %{_datadir}/dbus-1/services/unity-lens-video.service
+%{_datadir}/applications/unity-lens-video.desktop
+%{_datadir}/pixmaps/unity-lens-video.png
 %dir %{_datadir}/unity/
 %dir %{_datadir}/unity/lenses/
 %dir %{_datadir}/unity/lenses/video/
@@ -61,6 +71,9 @@ install -m644 build/share/unity/lenses/video/video.lens \
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.10-1
+- Version 0.3.10
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.9-1
 - Version 0.3.9
 
