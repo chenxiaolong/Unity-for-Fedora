@@ -7,7 +7,7 @@
 
 Name:		control-center
 Version:	3.6.0
-Release:	1.ubuntu%{_ubuntu_rev}.%{_ubuntu_rel}%{?dist}
+Release:	2.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	Utilities to configure the GNOME desktop
 
 Group:		User Interface/Desktops
