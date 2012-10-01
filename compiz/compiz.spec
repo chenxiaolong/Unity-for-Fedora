@@ -10,18 +10,18 @@
 %define _gconf_schemas compiz-addhelper compiz-animation compiz-annotate compiz-bench compiz-ccp compiz-clone compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gnomecompat compiz-grid compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
 
 %define _ubuntu_rel 0ubuntu1
-%define _bzr_rev 3377
+%define _compiz_abi 20120927
 
 Name:		compiz
-Version:	0.9.8.2
-Release:	2.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
+Version:	0.9.8.4
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
 License:	GPLv2+
 URL:		https://launchpad.net/compiz
 
-Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}.orig.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}.orig.tar.gz
 
 # Script to reset all of Compiz's settings
 Source2:	compiz.reset
@@ -29,7 +29,7 @@ Source2:	compiz.reset
 # Autostart desktop file for migrating GConf settings to GSettings
 Source3:	compiz-migrate-to-dconf.desktop
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}-%{_ubuntu_rel}.diff.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}-%{_ubuntu_rel}.diff.gz
 
 # Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
 Patch0:		0001_Fix_library_directory.patch
@@ -92,6 +92,8 @@ BuildRequires:	pkgconfig(xrandr)
 BuildRequires:	pkgconfig(xrender)
 
 BuildRequires:	Pyrex
+
+Provides:	compiz-ABI = %{_compiz_abi}
 
 %description
 Compiz is an OpenGL compositing manager that uses GLX_EXT_texture_from_pixmap
@@ -216,7 +218,7 @@ its plugins' settings.
 
 
 %prep
-%setup -q -n compiz-0.9.8.3
+%setup -q
 
 %patch0 -p1 -b .pkg_config_path
 %patch1 -p1 -b .cmake_install_dir
@@ -369,8 +371,8 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 # Manual pages
 %{_mandir}/man1/compiz.1.gz
 # Compiz libraries
-%{_libdir}/libcompiz_core.so.0.9.8.3
-%{_libdir}/libcompiz_core.so.ABI-20120920
+%{_libdir}/libcompiz_core.so.%{version}
+%{_libdir}/libcompiz_core.so.ABI-%{_compiz_abi}
 %{_libdir}/libdecoration.so.0
 %{_libdir}/libdecoration.so.0.0.0
 # Desktop file
@@ -468,10 +470,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/compiz/migration/compiz-profile-active-Default.convert
 %{_datadir}/compiz/migration/compiz-profile-independent-keys.convert
 # GNOME Control Center keybinding files
-%{_datadir}/gnome-control-center/keybindings/50-compiz-launchers.xml
 %{_datadir}/gnome-control-center/keybindings/50-compiz-navigation.xml
-%{_datadir}/gnome-control-center/keybindings/50-compiz-screenshot.xml
-%{_datadir}/gnome-control-center/keybindings/50-compiz-system.xml
 %{_datadir}/gnome-control-center/keybindings/50-compiz-windows.xml
 # GSettings schemas
 %{_datadir}/glib-2.0/schemas/org.compiz.addhelper.gschema.xml
@@ -759,7 +758,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -n python-compizconfig
 %{python_sitearch}/compizconfig.so
-%{python_sitearch}/compizconfig_python-0.9.8.3-py2.7.egg-info
+%{python_sitearch}/compizconfig_python-%{version}-py2.7.egg-info
 
 
 %files -n ccsm -f build/ccsm.lang
@@ -785,10 +784,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{python_sitelib}/ccm/Widgets.py*
 %{python_sitelib}/ccm/Window.py*
 %{python_sitelib}/ccm/__init__.py*
-%{python_sitelib}/ccsm-0.9.8.3-py2.7.egg-info
+%{python_sitelib}/ccsm-%{version}-py2.7.egg-info
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.4-1.0ubuntu1
+- Version 0.9.8.4
+- Ubuntu release 0ubuntu1
+
 * Sat Sep 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.2-2.bzr3377.0ubuntu1
 - Version 0.9.8.2
 - BZR revision 3377
