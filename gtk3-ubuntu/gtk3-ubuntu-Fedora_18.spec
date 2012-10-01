@@ -13,7 +13,7 @@ License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
 #VCS:		git:git://git.gnome.org/gtk+
-Source:		http://download.gnome.org/sources/gtk+/3.5/gtk+-%{version}.tar.xz
+Source:		http://download.gnome.org/sources/gtk+/3.6/gtk+-%{version}.tar.xz
 Source1:	fedora_im-cedilla.conf
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_%{version}-%{_ubuntu_rel}.debian.tar.gz

@@ -11,7 +11,7 @@ UBUNTU_1204_VER=($(wget -q 'http://packages.ubuntu.com/precise-updates/source/gt
 UBUNTU_1210_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/gtk+3.0' -O - | sed -n 's/.*>gtk+3.0_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
 
 echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/gtk+/3.5/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
+UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/gtk+/3.6/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
 
 echo ""
 
