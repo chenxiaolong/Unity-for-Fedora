@@ -8,7 +8,7 @@
 # We'll use the same package names as Ubuntu (gnome-control-center-signon)
 
 Name:		gnome-control-center-signon
-Version:	0.0.17
+Version:	0.0.18
 Release:	1%{?dist}
 Summary:	GNOME Control Center extension for single signon
 
@@ -143,6 +143,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.0.18-1
+- Version 0.0.18
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.0.17-1
 - Version 0.0.17
 
