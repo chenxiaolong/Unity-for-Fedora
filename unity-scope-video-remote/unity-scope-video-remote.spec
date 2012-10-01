@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-scope-video-remote
-Version:	0.3.7
+Version:	0.3.8
 Release:	1%{?dist}
 Summary:	Scope that adds remote video search engine support to the Unity video lens
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/unity-lens-videos
-Source0:	https://launchpad.net/unity-lens-videos/remote-videos-scope-trunk/remote-videos-%{version}/+download/unity-scope-video-remote-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/unity-scope-video-remote_%{version}.orig.tar.gz
 
 Patch0:		0001_Use_libexec.patch
 
@@ -49,6 +49,9 @@ search engine support.
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.8-1
+- Version 0.3.8
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.7-1
 - Version 0.3.7
 
