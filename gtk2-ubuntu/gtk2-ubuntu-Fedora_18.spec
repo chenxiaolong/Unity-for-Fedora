@@ -12,7 +12,7 @@
 
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name:		gtk2
-Version:	2.24.12
+Version:	2.24.13
 Release:	1.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -403,6 +403,10 @@ fi
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.13-1.0ubuntu1
+- Version 2.24.13
+- Ubuntu release 0ubuntu1
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.12-1.0ubuntu1
 - Initial release for Fedora 18
 - Version 2.24.12
