@@ -1,6 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu3
 
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 
@@ -105,6 +105,7 @@ BuildRequires:	pkgconfig(zeitgeist-1.0)
 
 Requires:	unity-common%{?_isa} = %{version}-%{release}
 
+Requires:	compiz-ABI = 20120927
 Requires:	compiz-gnome
 Requires:	compiz-plugins
 Requires:	gnome-python2-gconf
@@ -413,6 +414,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0-1.0ubuntu3
+- Ubuntu release 0ubuntu3
+
 * Sat Sep 22 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0-1.0ubuntu1
 - Version 6.6.0
 - Ubuntu release 0ubuntu1
