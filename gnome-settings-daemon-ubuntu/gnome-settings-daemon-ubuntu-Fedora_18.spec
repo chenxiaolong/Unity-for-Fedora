@@ -3,7 +3,7 @@
 # Partially based off of the Fedora 17 spec
 
 %define _ubuntu_ver 3.4.2
-%define _ubuntu_rel 0ubuntu13
+%define _ubuntu_rel 0ubuntu14
 
 Name:		gnome-settings-daemon
 Version:	3.6.0
@@ -304,6 +304,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.ubuntu3.4.2.0ubuntu14
+- Ubuntu release 0ubuntu14
+
 * Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.ubuntu3.4.2.0ubuntu13
 - Version 3.6.0
 

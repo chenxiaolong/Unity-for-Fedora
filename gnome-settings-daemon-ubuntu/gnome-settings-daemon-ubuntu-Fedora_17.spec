@@ -2,7 +2,7 @@
 
 # Partially based off of the Fedora 17 spec
 
-%define _ubuntu_rel 0ubuntu13
+%define _ubuntu_rel 0ubuntu14
 
 %define _obsolete_ver 3.5.0-100
 
@@ -282,6 +282,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu14
+- Ubuntu release 0ubuntu14
+
 * Fri Sep 14 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.4.2-1.0ubuntu13
 - Version 3.4.2
 - Ubuntu release 0ubuntu13
