@@ -103,9 +103,11 @@ BuildRequires:	pkgconfig(grail)
 BuildRequires:	pkgconfig(xcb-ewmh)
 BuildRequires:	pkgconfig(zeitgeist-1.0)
 
+BuildRequires:	compiz-ABI = 20120927
+Requires:	compiz-ABI = 20120927
+
 Requires:	unity-common%{?_isa} = %{version}-%{release}
 
-Requires:	compiz-ABI = 20120927
 Requires:	compiz-gnome
 Requires:	compiz-plugins
 Requires:	gnome-python2-gconf
