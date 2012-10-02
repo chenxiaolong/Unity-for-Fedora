@@ -4,7 +4,7 @@
 # Required when the package is not built in koji
 %global _host %{_target_platform}
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
 
 # Note that this is NOT a relocatable package
 
@@ -43,9 +43,6 @@ Patch17:	fedora_gtk2-fixdso.patch
 # Patch from Arch Linux TU, György Balló, to fix build with the Ubuntu menuproxy
 # code
 Patch90:	fix-ubuntumenuproxy-build.patch
-
-# Fix hardcoded '/lib/' in 100_overlay_scrollbar_loading.patch
-Patch91:	0001_lib64_fix_100_overlay_scrollbar_loading.patch
 
 BuildRequires:	automake
 BuildRequires:	autoconf
@@ -193,12 +190,7 @@ tar zxvf "%{SOURCE99}"
     sed -i '/011_immodule-cache-dir.patch/d' debian/patches/series
 
 for i in $(cat debian/patches/series | grep -v '#'); do
-  # Use my patch which uses '/lib64/' on x86_64
-  if [ "x${i}" == "x100_overlay_scrollbar_loading.patch" ]; then
-%patch91 -p1
-  else
-    patch -Np1 -i "debian/patches/${i}"
-  fi
+  patch -Np1 -i "debian/patches/${i}"
 done
 
 %patch90 -p1 -b .menuproxy
@@ -403,6 +395,12 @@ fi
 
 
 %changelog
+* Tue Oct 02 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.13-1.0ubuntu2
+- Ubuntu release 0ubuntu2
+  - don't crash with latest overlay-scrollbar version
+- Drop 0001_lib64_fix_100_overlay_scrollbar_loading.patch
+  - Not needed anymore
+
 * Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.13-1.0ubuntu1
 - Version 2.24.13
 - Ubuntu release 0ubuntu1
