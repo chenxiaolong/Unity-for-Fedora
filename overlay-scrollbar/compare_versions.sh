@@ -5,7 +5,7 @@ UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' overlay-scrollb
 BZR_REV="$(sed -n 's/^%define[ ]*_bzr_rev[ ]*\(.*\)$/\1/p' overlay-scrollbar.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/overlay-scrollbar' -O - | sed -n 's/.*>overlay-scrollbar_\(.*\)-\(.*\)\.tar\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/overlay-scrollbar' -O - | sed -n 's/.*>overlay-scrollbar_\(.*\)-\(.*\)\.diff\.gz<.*/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q 'https://launchpad.net/ayatana-scrollbar/+download' -O - | sed -n 's/.*overlay-scrollbar-\(.*\)\.tar\.gz.*/\1/p' | head -n 1)

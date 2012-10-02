@@ -7,7 +7,7 @@
 
 Name:		gnome-settings-daemon
 Version:	3.6.0
-Release:	1.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Release:	2.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	The daemon sharing settings from GNOME to GTK+/KDE applications
 
 Group:		System Environment/Daemons
@@ -32,6 +32,7 @@ Patch8:		0009_revert_git_datetime_dropping.patch
 Patch9:		0010_correct_logout_action.patch
 Patch10:	0011_power-no-fallback-notifications.patch
 Patch11:	0012_power-check-null-devices.patch
+Patch12:	0013_64_restore_terminal_keyboard_shortcut_schema.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -111,6 +112,7 @@ tar zxvf '%{SOURCE99}'
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
 
 autoreconf -vfi
 
@@ -304,6 +306,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-2.ubuntu3.4.2.0ubuntu14
+- Add 0013_64_restore_terminal_keyboard_shortcut_schema.patch
+
 * Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.ubuntu3.4.2.0ubuntu14
 - Ubuntu release 0ubuntu14
 
