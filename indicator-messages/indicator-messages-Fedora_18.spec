@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-messages
-Version:	12.10.3
+Version:	12.10.4
 Release:	1%{?dist}
 Summary:	Indicator for collecting messages that need a response
 
@@ -99,6 +99,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Tue Oct 02 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.4-1
+- Version 12.10.4
+
 * Fri Sep 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3-1
 - Version 12.10.3
 - Drop GTK 2 subpackage
