@@ -1,6 +1,6 @@
-diff -Nru unity-lens-photos-0.6.orig/setup.py unity-lens-photos-0.6/setup.py
---- unity-lens-photos-0.6.orig/setup.py	2012-09-27 19:59:59.016974657 -0400
-+++ unity-lens-photos-0.6/setup.py	2012-09-27 20:00:07.232975219 -0400
+diff -Nru unity-lens-photos-0.8.orig/setup.py unity-lens-photos-0.8/setup.py
+--- unity-lens-photos-0.8.orig/setup.py	2012-10-03 23:49:17.261407961 -0400
++++ unity-lens-photos-0.8/setup.py	2012-10-03 23:50:02.473319576 -0400
 @@ -11,11 +11,11 @@
        url="http://launchpad.net/unity-lens-photos",
        license="GNU General Public License (GPL)",
@@ -15,12 +15,12 @@ diff -Nru unity-lens-photos-0.6.orig/setup.py unity-lens-photos-0.6/setup.py
 +    ('libexec/unity-lens-photos', ['src/flickr_scope.py']),
 +    ('libexec/unity-lens-photos', ['src/facebook_scope.py']),
 +    ('libexec/unity-lens-photos', ['src/picasa_scope.py']),
-     ('share/unity-lens-photos/media', ['media/Flickr.svg']),
-     ('share/unity-lens-photos/media', ['media/Facebook.svg']),
-     ('share/unity-lens-photos/media', ['media/Picasa.svg']),
-diff -Nru unity-lens-photos-0.6.orig/unity-lens-photos.service unity-lens-photos-0.6/unity-lens-photos.service
---- unity-lens-photos-0.6.orig/unity-lens-photos.service	2012-09-27 19:59:59.010974655 -0400
-+++ unity-lens-photos-0.6/unity-lens-photos.service	2012-09-27 20:00:34.413976952 -0400
+     ('share/dbus-1/services', ['unity-lens-photos.service']),
+     ('share/applications', ['unity-lens-photos.desktop']),
+     ('share/pixmaps', ['unity-lens-photos.png']),
+diff -Nru unity-lens-photos-0.8.orig/unity-lens-photos.service unity-lens-photos-0.8/unity-lens-photos.service
+--- unity-lens-photos-0.8.orig/unity-lens-photos.service	2012-10-03 23:49:17.251407976 -0400
++++ unity-lens-photos-0.8/unity-lens-photos.service	2012-10-03 23:50:44.286243844 -0400
 @@ -1,3 +1,3 @@
  [D-BUS Service]
  Name=net.launchpad.lens.photos
