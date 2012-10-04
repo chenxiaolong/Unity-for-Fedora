@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libunity-webapps
-Version:	2.3.8
+Version:	2.4.1
 Release:	1%{?dist}
 Summary:	WebApps: Library for the integration with the Unity desktop
 
@@ -143,6 +143,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Wed Oct 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.1-1
+- Version 2.4.1
+
 * Fri Sep 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.3.8-1
 - Version 2.3.8
 
