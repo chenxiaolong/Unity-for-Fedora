@@ -14,7 +14,7 @@
 
 Name:		xorg-x11-server
 Version:	1.13.0
-Release:	100%{?dist}
+Release:	101%{?dist}
 Summary:	X.Org X11 X server
 
 Group:		User Interface/X
@@ -480,6 +480,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.0-101
+- Update xserver-autobind-hotplug.patch from fedpkg
+
 * Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.0-100
 - Initial release for Fedora 18
 - Version 1.13.0
