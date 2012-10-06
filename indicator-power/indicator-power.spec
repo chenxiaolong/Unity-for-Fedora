@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-power
-Version:	12.10.1
+Version:	12.10.2
 Release:	1%{?dist}
 Summary:	Indicator to show the battery status
 
@@ -78,6 +78,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2-1
+- Version 12.10.2
+
 * Thu Aug 30 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
 - Version 12.10.1
 
