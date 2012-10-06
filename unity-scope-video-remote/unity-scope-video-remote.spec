@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-scope-video-remote
-Version:	0.3.8
+Version:	0.3.9
 Release:	1%{?dist}
 Summary:	Scope that adds remote video search engine support to the Unity video lens
 
@@ -49,6 +49,9 @@ search engine support.
 
 
 %changelog
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.9-1
+- Version 0.3.9
+
 * Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.8-1
 - Version 0.3.8
 
