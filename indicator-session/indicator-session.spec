@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-session
-Version:	12.10.3
+Version:	12.10.4
 Release:	1%{?dist}
 Summary:	Indicator for session management and status information
 
@@ -100,6 +100,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.4-1
+- Version 12.10.4
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3-1
 - Version 12.10.3
 - Drop 0003_Workaround_disappearing_icon.patch - merged upstream
