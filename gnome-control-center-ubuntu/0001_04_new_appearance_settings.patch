@@ -1,6 +1,6 @@
-diff -Nru gnome-control-center-3.5.92.orig/panels/background/background.ui gnome-control-center-3.5.92/panels/background/background.ui
---- gnome-control-center-3.5.92.orig/panels/background/background.ui	2012-09-21 15:05:22.577853715 -0400
-+++ gnome-control-center-3.5.92/panels/background/background.ui	2012-09-21 17:13:29.659078446 -0400
+diff -Nru gnome-control-center-3.6.0.orig/panels/background/background.ui gnome-control-center-3.6.0/panels/background/background.ui
+--- gnome-control-center-3.6.0.orig/panels/background/background.ui	2012-10-06 15:31:48.662224750 -0400
++++ gnome-control-center-3.6.0/panels/background/background.ui	2012-10-06 15:31:54.063222884 -0400
 @@ -1,49 +1,148 @@
  <?xml version="1.0" encoding="UTF-8"?>
  <interface>
@@ -708,21 +708,22 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/background.ui gnome
    <object class="GtkListStore" id="sources-liststore">
      <columns>
        <!-- column-name source-name -->
-diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel.c gnome-control-center-3.5.92/panels/background/cc-background-panel.c
---- gnome-control-center-3.5.92.orig/panels/background/cc-background-panel.c	2012-09-21 15:05:22.578853709 -0400
-+++ gnome-control-center-3.5.92/panels/background/cc-background-panel.c	2012-09-21 17:41:53.301580633 -0400
-@@ -55,6 +55,10 @@
+diff -Nru gnome-control-center-3.6.0.orig/panels/background/cc-background-panel.c gnome-control-center-3.6.0/panels/background/cc-background-panel.c
+--- gnome-control-center-3.6.0.orig/panels/background/cc-background-panel.c	2012-10-06 15:31:48.663224749 -0400
++++ gnome-control-center-3.6.0/panels/background/cc-background-panel.c	2012-10-06 15:40:31.999951383 -0400
+@@ -55,6 +55,11 @@
    GDBusConnection *connection;
  
    GSettings *settings;
 +  GSettings *interface_settings;
++  GSettings *canonical_interface_settings;
 +  GSettings *wm_theme_settings;
 +  GSettings *unity_settings;
 +  GSettings *unity2d_settings;
  
    GnomeDesktopThumbnailFactory *thumb_factory;
  
-@@ -68,6 +72,28 @@
+@@ -68,6 +73,29 @@
    char *screenshot_path;
  };
  
@@ -733,6 +734,7 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
 +#define UNITY_LAUNCHERHIDE_KEY "launcher-hide-mode"
 +#define UNITY_LAUNCHERREVEAL_KEY "reveal-trigger"
 +#define UNITY2D_GSETTINGS_LAUNCHER "com.canonical.Unity2d.Launcher"
++#define CANONICAL_DESKTOP_INTERFACE "com.canonical.desktop.interface"
 +
 +#define MIN_ICONSIZE 32.0
 +#define MAX_ICONSIZE 64.0
@@ -751,18 +753,19 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
  #define WID(y) (GtkWidget *) gtk_builder_get_object (priv->builder, y)
  
  static const char *
-@@ -87,6 +113,10 @@
+@@ -87,6 +115,11 @@
    priv->spinner = NULL;
  
    g_clear_object (&priv->settings);
 +  g_clear_object (&priv->interface_settings);
++  g_clear_object (&priv->canonical_interface_settings);
 +  g_clear_object (&priv->wm_theme_settings);
 +  g_clear_object (&priv->unity_settings);
 +  g_clear_object (&priv->unity2d_settings);
  
    if (priv->copy_cancellable)
      {
-@@ -659,11 +689,488 @@
+@@ -659,11 +692,505 @@
    update_preview (self->priv, NULL);
  }
  
@@ -820,6 +823,7 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
 +    return;
 +
 +  g_settings_delay (self->priv->interface_settings);
++  g_settings_delay (self->priv->canonical_interface_settings);
 +
 +  g_settings_set_string (self->priv->interface_settings, "gtk-theme", gtk_theme);
 +  g_settings_set_string (self->priv->interface_settings, "icon-theme", icon_theme);
@@ -827,12 +831,16 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
 +  g_settings_set_string (self->priv->wm_theme_settings, "theme", window_theme);
 +
 +
-+  /* disable overlay scrollbars for a11y */
-+  if (g_strcmp0 (gtk_theme, "HighContrast") == 0 ||
-+      g_strcmp0 (gtk_theme, "HighContrastInverse") == 0)
-+    g_settings_set_boolean (self->priv->interface_settings, "ubuntu-overlay-scrollbars", FALSE);
-+  else
-+    g_settings_reset (self->priv->interface_settings, "ubuntu-overlay-scrollbars");
++  /* disable overlay scrollbars for a11y if installed*/
++  if (self->priv->canonical_interface_settings)
++    {
++      if (g_strcmp0 (gtk_theme, "HighContrast") == 0 ||
++          g_strcmp0 (gtk_theme, "HighContrastInverse") == 0)
++        g_settings_set_string (self->priv->canonical_interface_settings, "scrollbar-mode", "normal");
++      else
++        g_settings_reset (self->priv->canonical_interface_settings, "scrollbar-mode");
++      g_settings_apply (self->priv->canonical_interface_settings);
++    }
 +
 +  g_settings_apply (self->priv->interface_settings);
 +
@@ -850,10 +858,23 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
 +  gint i, current_theme_index = 0;
 +  GtkWidget *widget;
 +  GtkWidget *liststore;
++  const gchar * const *schemas;
 +  CcBackgroundPanelPrivate *priv = self->priv;
 +  GSettings *defaults_settings = g_settings_new ("org.gnome.desktop.interface");
 +
 +  priv->interface_settings = g_settings_new ("org.gnome.desktop.interface");
++
++  schemas = g_settings_list_schemas ();
++  while (*schemas != NULL)
++    {
++      if (g_strcmp0 (*schemas, CANONICAL_DESKTOP_INTERFACE) == 0)
++        {
++          priv->canonical_interface_settings = g_settings_new (CANONICAL_DESKTOP_INTERFACE);
++          break;
++        }
++      schemas++;
++    }
++
 +  priv->wm_theme_settings = g_settings_new ("org.gnome.desktop.wm.preferences");
 +  current_gtk_theme = g_settings_get_string (priv->interface_settings, "gtk-theme");
 +
@@ -969,7 +990,6 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
 +    {
 +      gtk_widget_set_sensitive (WID ("unity_launcher_autohide"), TRUE);
 +      gtk_switch_set_active (GTK_SWITCH (WID ("unity_launcher_autohide")), autohide);
-+      g_settings_set_int (priv->unity2d_settings, "hide-mode", value);
 +    }
 +
 +  hidelauncher_set_sensitivity_reveal (self, autohide);
@@ -1252,7 +1272,7 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
    GError *err = NULL;
    GtkWidget *widget;
  
-@@ -672,9 +1179,15 @@
+@@ -672,9 +1199,15 @@
    priv->builder = gtk_builder_new ();
    priv->connection = g_application_get_dbus_connection (g_application_get_default ());
  
@@ -1271,7 +1291,7 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
  
    if (err)
      {
-@@ -687,7 +1200,10 @@
+@@ -687,7 +1220,10 @@
    g_settings_delay (priv->settings);
  
    /* add the top level widget */
@@ -1283,7 +1303,7 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
  
    gtk_container_add (GTK_CONTAINER (self), widget);
    gtk_widget_show_all (GTK_WIDGET (self));
-@@ -708,6 +1224,18 @@
+@@ -708,6 +1244,18 @@
  
    widget = WID ("background-set-button");
    g_signal_connect (widget, "clicked", G_CALLBACK (on_background_button_clicked), self);
@@ -1302,9 +1322,9 @@ diff -Nru gnome-control-center-3.5.92.orig/panels/background/cc-background-panel
  }
  
  void
-diff -Nru gnome-control-center-3.5.92.orig/panels/background/gnome-background-panel.desktop.in.in gnome-control-center-3.5.92/panels/background/gnome-background-panel.desktop.in.in
---- gnome-control-center-3.5.92.orig/panels/background/gnome-background-panel.desktop.in.in	2012-09-21 15:05:22.581853689 -0400
-+++ gnome-control-center-3.5.92/panels/background/gnome-background-panel.desktop.in.in	2012-09-21 17:42:57.976549697 -0400
+diff -Nru gnome-control-center-3.6.0.orig/panels/background/gnome-background-panel.desktop.in.in gnome-control-center-3.6.0/panels/background/gnome-background-panel.desktop.in.in
+--- gnome-control-center-3.6.0.orig/panels/background/gnome-background-panel.desktop.in.in	2012-10-06 15:31:48.664224744 -0400
++++ gnome-control-center-3.6.0/panels/background/gnome-background-panel.desktop.in.in	2012-10-06 15:31:54.064222883 -0400
 @@ -1,6 +1,6 @@
  [Desktop Entry]
 -_Name=Background

@@ -3,7 +3,7 @@
 # Partially based off of Fedora 18's spec file
 
 %define _ubuntu_ver 3.4.2
-%define _ubuntu_rel 0ubuntu16
+%define _ubuntu_rel 0ubuntu18
 
 Name:		control-center
 Version:	3.6.0
@@ -450,6 +450,11 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.ubuntu3.4.2.0ubuntu18
+- Ubuntu release 0ubuntu18
+  - Refreshed 0001_04_new_appearance_settings.patch
+  - Refreshed 0014_97_unity_power_ui.patch
+
 * Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.ubuntu3.4.2.0ubuntu16
 - Version 3.6.0
 - Ubuntu version 3.4.2
