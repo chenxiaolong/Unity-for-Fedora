@@ -2,11 +2,11 @@
 
 # Based off of Damian's spec file
 
-%define _ubuntu_rel 0ubuntu2
+%define _ubuntu_rel 0ubuntu1
 
 Name:		indicator-sound
-Version:	12.10.0
-Release:	3.%{_ubuntu_rel}%{?dist}
+Version:	12.10.1
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Indicator for displaying a unified sound menu
 
 Group:		User Interface/Desktops
@@ -83,6 +83,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat Oct 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1.0ubuntu1
+- Version 12.10.1
+- Ubuntu release 0ubuntu1
+
 * Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-3.0ubuntu2
 - Drop GTK 2 build and ido doesn't provide a GTK 2 anymore
 
