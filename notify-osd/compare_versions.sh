@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 SPEC_VER="$(rpmspec -q --qf '%{version}\n' notify-osd.spec | head -1)"
+UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' notify-osd.spec)"
 
 echo "Getting latest Ubuntu version..."
 UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/notify-osd' -O - | sed -n 's/.*>notify-osd_\(.*\)-\(.*\)\.diff\.gz<.*/\1 \2/p'))
