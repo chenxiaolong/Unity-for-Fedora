@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-scope-gdocs
-Version:	0.4
+Version:	0.5
 Release:	1%{?dist}
 Summary:	Google Docs scope for Unity
 
@@ -79,6 +79,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.5-1
+- Version 0.5
+
 * Thu Sep 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.4-1
 - Initial release
 - Version 0.4
