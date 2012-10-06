@@ -1,8 +1,8 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libunity
-Version:	6.5.2
-Release:	3%{?dist}
+Version:	6.8.0
+Release:	1%{?dist}
 Summary:	Library for integrating with Unity
 
 Group:		System Environment/Libraries
@@ -81,7 +81,14 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %post -p /sbin/ldconfig
 
-%postun -p /sbin/ldconfig
+%postun
+/sbin/ldconfig
+if [ ${1} -eq 0 ]; then
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
+fi
+
+%posttrans
+glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %files
@@ -90,6 +97,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_libdir}/libunity-protocol-private.so.*
 %{_libdir}/girepository-1.0/Unity-6.0.typelib
 %{python_sitearch}/gi/overrides/Unity.py*
+%{_datadir}/glib-2.0/schemas/com.canonical.Unity.Lenses.gschema.xml
 
 
 %files devel
@@ -115,6 +123,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.8.0-1
+- Version 6.8.0
+- Add GSettings scriptlets
+
 * Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.5.2-3
 - Move libunity-protocol-private.so* to libdir instead of libdir/libunity
 
