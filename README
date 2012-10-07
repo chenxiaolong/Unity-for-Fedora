@@ -33,7 +33,7 @@ Build order:
 31: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
 32: gnome-control-center-signon    -> GNOME Control Center extension for SSO
 33: account-plugins                -> Online Accounts Plugins
-34: activity-log-manager ************
+34: activity-log-manager           -> Activity Log Manager for Zeitgeist
 35: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
 36: indicator-applet               -> GNOME panel indicator applet
 37: indicator-application          -> Takes menus and puts them in the panel
