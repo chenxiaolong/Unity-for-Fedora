@@ -1,11 +1,11 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu3
+%define _ubuntu_rel 0ubuntu1
 
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 
 Name:		unity
-Version:	6.6.0
+Version:	6.8.0
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
@@ -93,8 +93,8 @@ BuildRequires:	pkgconfig(libnotify)
 BuildRequires:	pkgconfig(sigc++-2.0)
 BuildRequires:	pkgconfig(unity)
 BuildRequires:	pkgconfig(unity-misc)
-BuildRequires:	pkgconfig(unity-protocol-private) >= 6.5.2
-BuildRequires:	pkgconfig(nux-3.0) >= 3.6.0
+BuildRequires:	pkgconfig(unity-protocol-private) >= 6.8.0
+BuildRequires:	pkgconfig(nux-3.0) >= 3.8.0
 BuildRequires:	pkgconfig(pango)
 BuildRequires:	pkgconfig(libstartup-notification-1.0)
 BuildRequires:	pkgconfig(unique-1.0)
@@ -382,6 +382,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{python_sitelib}/unity/emulators/launcher.py*
 %{python_sitelib}/unity/emulators/panel.py*
 %{python_sitelib}/unity/emulators/quicklist.py*
+%{python_sitelib}/unity/emulators/screen.py*
 %{python_sitelib}/unity/emulators/shortcut_hint.py*
 %{python_sitelib}/unity/emulators/switcher.py*
 %{python_sitelib}/unity/emulators/tooltip.py*
@@ -406,8 +407,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{python_sitelib}/unity/tests/test_ibus.py*
 %{python_sitelib}/unity/tests/test_panel.py*
 %{python_sitelib}/unity/tests/test_quicklist.py*
+%{python_sitelib}/unity/tests/test_shopping_lens.py*
 %{python_sitelib}/unity/tests/test_shortcut_hint.py*
 %{python_sitelib}/unity/tests/test_showdesktop.py*
+%{python_sitelib}/unity/tests/test_spread.py*
 %{python_sitelib}/unity/tests/test_switcher.py*
 %{python_sitelib}/unity/tests/test_unity_logging.py*
 %dir %{python_sitelib}/unity/tests/xim/
@@ -416,6 +419,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.8.0-1.0ubuntu1
+- Version 6.8.0
+- Ubuntu release 0ubuntu1
+
 * Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0-1.0ubuntu3
 - Ubuntu release 0ubuntu3
 
