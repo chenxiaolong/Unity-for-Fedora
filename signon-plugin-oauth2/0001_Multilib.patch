@@ -1,0 +1,15 @@
+diff -Nru signon-oauth2-0.11.orig/src/signon-oauth2plugin.pc signon-oauth2-0.11/src/signon-oauth2plugin.pc
+--- signon-oauth2-0.11.orig/src/signon-oauth2plugin.pc	2012-10-07 23:23:34.157277657 -0400
++++ signon-oauth2-0.11/src/signon-oauth2plugin.pc	2012-10-07 23:24:01.647269773 -0400
+@@ -1,9 +1,9 @@
+ prefix=/usr
+ exec_prefix=${prefix}
+-libdir=${prefix}/lib/
++libdir=${prefix}/@LIB@/
+ includedir=${prefix}/include
+ Name: signon-oauth2plugin
+ Description: Signon OAuth 2.0 plugin
+ Version: 0.0.1
+ Requires: signon-plugins
+-Libs.private: -L/usr/lib  -lQtCore
++Libs.private: -L/usr/@LIB@  -lQtCore

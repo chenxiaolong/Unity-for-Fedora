@@ -2,13 +2,15 @@
 
 Name:		signon-plugin-oauth2
 Version:	0.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Oauth2 plugin for the Single Sign On Framework
 
 Group:		User Interface/Desktops
 License:	LGPLv2
 URL:		http://code.google.com/p/accounts-sso/
 Source0:	http://accounts-sso.googlecode.com/files/signon-oauth2-%{version}.tar.bz2
+
+Patch0:		0001_Multilib.patch
 
 BuildRequires:	signon-plugins-devel
 
@@ -34,6 +36,9 @@ Sign On Framework.
 
 %prep
 %setup -q -n signon-oauth2-%{version}
+
+%patch0 -p1 -b .multilib
+sed -i 's|@LIB@|%{_lib}|g' src/signon-oauth2plugin.pc
 
 
 %build
@@ -68,6 +73,10 @@ rm -v $RPM_BUILD_ROOT%{_sysconfdir}/signon-ui/webkit-options.d/*
 
 
 %changelog
+* Sun Oct 07 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.11-2
+- Add 0001_Multilib.patch
+  - Use correct multilib libdir
+
 * Thu Sep 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.11-1
 - Initial release
 - Version 0.11
