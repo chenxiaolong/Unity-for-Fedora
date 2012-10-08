@@ -4,7 +4,7 @@
 
 Name:		signon
 Version:	8.43
-Release:	1.%{_ubuntu_rel}%{?dist}
+Release:	2.%{_ubuntu_rel}%{?dist}
 Summary:	Single Sign On Framework
 
 Group:		System Environment/Libraries
@@ -13,6 +13,8 @@ URL:		https://code.google.com/p/accounts-sso/
 Source0:	https://accounts-sso.googlecode.com/files/signon-%{version}.tar.bz2
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/signon_%{version}-%{_ubuntu_rel}.debian.tar.gz
+
+Patch0:		0001_Multilib.patch
 
 BuildRequires:	doxygen
 BuildRequires:	graphviz
@@ -129,6 +131,16 @@ plugins.
 
 %prep
 %setup -q
+
+# Use correct libdir
+%patch0 -p1 -b .multilib
+sed -i 's|@LIB@|%{_lib}|g' \
+  lib/signond/SignOn/SignOnExtension.pc.in \
+  lib/plugins/signon-plugins.pc.in \
+  lib/plugins/signon-plugins-common/signon-plugins-common.pc.in \
+  lib/SignOn/libsignon-qt.pc.in \
+  src/signond/signondaemon.h \
+  src/remotepluginprocess/remotepluginprocess.h
 
 # Fix documentation directory
 sed -i '/^documentation.path/ s/$/-%{version}/' \
@@ -247,6 +259,10 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 
 
 %changelog
+* Sun Oct 07 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.43-2.0ubuntu1
+- Add 0001_Multilib.patch
+  - Use appropriate multilib libdir
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.43-1.0ubuntu1
 - Version 8.43
 - Ubuntu release 0ubuntu1
