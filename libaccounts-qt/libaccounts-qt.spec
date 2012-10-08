@@ -2,13 +2,15 @@
 
 Name:		libaccounts-qt
 Version:	1.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Qt library for Single Sign On
 
 Group:		System Environment/Libraries
 License:	LGPLv2
 URL:		http://code.google.com/p/accounts-sso/
 Source0:	http://accounts-sso.googlecode.com/files/accounts-qt-%{version}.tar.bz2
+
+Patch0:		0001_Multilib.patch
 
 BuildRequires:	doxygen
 
@@ -42,6 +44,12 @@ This package contains the documentation for the accounts-qt library.
 
 %prep
 %setup -q -n accounts-qt-%{version}
+
+# Use correct libdir
+%patch0 -p1 -b .multilib
+sed -i 's|@LIB@|%{_lib}|g' \
+  Accounts/accounts-qt.pc \
+  Accounts/accounts.prf
 
 # Fix documentation directory
 sed -i '/^documentation.path/ s/$/-%{version}/' doc/doc.pri
@@ -90,6 +98,10 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 07 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.2-2
+- Add 0001_Multilib.patch
+  - Use appropriate multilib libdir
+
 * Thu Sep 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.2-1
 - Initial release
 - Version 1.2

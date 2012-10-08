@@ -1,0 +1,30 @@
+diff -Nru accounts-qt-1.2.orig/Accounts/accounts.prf accounts-qt-1.2/Accounts/accounts.prf
+--- accounts-qt-1.2.orig/Accounts/accounts.prf	2012-10-07 20:23:37.170281259 -0400
++++ accounts-qt-1.2/Accounts/accounts.prf	2012-10-07 20:26:11.815245500 -0400
+@@ -1,5 +1,5 @@
+ ACCOUNTS_INC_DIR = /usr/include/accounts-qt
+-ACCOUNTS_LIB_DIR = /usr/lib
++ACCOUNTS_LIB_DIR = /usr/@LIB@
+ 
+ INCLUDEPATH += $${ACCOUNTS_INC_DIR}
+ LIBS += $${ACCOUNTS_LIB_DIR} -laccounts-qt
+diff -Nru accounts-qt-1.2.orig/Accounts/accounts-qt.pc accounts-qt-1.2/Accounts/accounts-qt.pc
+--- accounts-qt-1.2.orig/Accounts/accounts-qt.pc	2012-10-07 20:23:37.173281259 -0400
++++ accounts-qt-1.2/Accounts/accounts-qt.pc	2012-10-07 20:24:23.848269245 -0400
+@@ -1,6 +1,6 @@
+ prefix=/usr
+ exec_prefix=${prefix}
+-libdir=${prefix}/lib/
++libdir=${prefix}/@LIB@/
+ includedir=${prefix}/include/accounts-qt
+ servicefilesdir=${prefix}/share/accounts/services
+ servicetypefilesdir=${prefix}/share/accounts/service-types
+@@ -10,7 +10,7 @@
+ Description: Accounts Library
+ Version: 0.0.1
+ Libs: -L${libdir} -laccounts-qt
+-Libs.private: -L/usr/lib  -lQtSql -lQtCore -lpthread  
++Libs.private: -L/usr/@LIB@  -lQtSql -lQtCore -lpthread  
+ Requires: QtXml
+ Cflags:  -I${includedir}
+ 
