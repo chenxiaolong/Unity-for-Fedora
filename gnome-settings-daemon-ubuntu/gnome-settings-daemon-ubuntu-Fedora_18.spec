@@ -7,7 +7,7 @@
 
 Name:		gnome-settings-daemon
 Version:	3.6.0
-Release:	2.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Release:	3.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	The daemon sharing settings from GNOME to GTK+/KDE applications
 
 Group:		System Environment/Daemons
@@ -33,6 +33,13 @@ Patch9:		0010_correct_logout_action.patch
 Patch10:	0011_power-no-fallback-notifications.patch
 Patch11:	0012_power-check-null-devices.patch
 Patch12:	0013_64_restore_terminal_keyboard_shortcut_schema.patch
+
+# Fedora's patches
+Patch20:	fedora_0001-Clean-up-gsd_power_stop.patch
+# https://bugzilla.gnome.org/show_bug.cgi?id=680689
+Patch21:	fedora_0001-power-and-media-keys-Use-logind-for-suspending-and-r.patch
+# Wacom OSD window: https://bugzilla.gnome.org/show_bug.cgi?id=679062
+Patch22:	fedora_0001-wacom-implement-OSD-help-window.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -95,13 +102,23 @@ This package contains the development files Ubuntu's patched version of
 gnome-settings-daemon.
 
 
+%package updates
+Summary:	Updates plugin for gnome-control-center
+Group:		Development/Libraries
+
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+
+%description updates
+This package contains the PackageKit updates plugin for GNOME Control Center.
+
+
 %prep
 %setup -q -n gnome-settings-daemon-%{version}
 
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
 %patch0 -p1
-%patch1 -p1
+#patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -113,6 +130,11 @@ tar zxvf '%{SOURCE99}'
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+
+# Apply Fedora's patches
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1 -b .wacom-osd-window
 
 autoreconf -vfi
 
@@ -169,6 +191,15 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
+%postun updates
+if [ ${1} -eq 0 ]; then
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
+fi
+
+%posttrans updates
+glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
+
+
 %files -f gnome-settings-daemon.lang
 %doc AUTHORS NEWS
 
@@ -183,6 +214,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/gsd-input-sources-switcher
 %{_libexecdir}/gsd-locate-pointer
 %{_libexecdir}/gsd-printer
+%{_libexecdir}/gsd-test-wacom-osd
 %{_libexecdir}/gsd-wacom-led-helper
 
 # Plugins
@@ -202,7 +234,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/print-notifications.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/smartcard.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/sound.gnome-settings-plugin
-%{_libdir}/gnome-settings-daemon-3.0/updates.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/wacom.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/xrandr.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/xsettings.gnome-settings-plugin
@@ -223,7 +254,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/libprint-notifications.so
 %{_libdir}/gnome-settings-daemon-3.0/libsmartcard.so
 %{_libdir}/gnome-settings-daemon-3.0/libsound.so
-%{_libdir}/gnome-settings-daemon-3.0/libupdates.so
 %{_libdir}/gnome-settings-daemon-3.0/libxrandr.so
 %{_libdir}/gnome-settings-daemon-3.0/libxsettings.so
 
@@ -239,7 +269,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.orientation.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.power.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.print-notifications.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.updates.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.xrandr.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.xsettings.gschema.xml
 
@@ -249,7 +278,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gnome-settings-daemon/icons/
 
 # DBus services
-%{_datadir}/dbus-1/interfaces/org.gnome.SettingsDaemonUpdates.xml
 %{_datadir}/dbus-1/services/org.freedesktop.IBus.service
 %{_datadir}/dbus-1/system-services/org.gnome.SettingsDaemon.DateTimeMechanism.service
 %{_sysconfdir}/dbus-1/system.d/org.gnome.SettingsDaemon.DateTimeMechanism.conf
@@ -305,7 +333,22 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/gsd-test-wacom
 
 
+%files updates
+%dir %{_libdir}/gnome-settings-daemon-3.0/
+%{_libdir}/gnome-settings-daemon-3.0/updates.gnome-settings-plugin
+%{_libdir}/gnome-settings-daemon-3.0/libupdates.so
+%{_datadir}/dbus-1/interfaces/org.gnome.SettingsDaemonUpdates.xml
+%{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.updates.gschema.xml
+
+
 %changelog
+* Mon Oct 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-3.ubuntu3.4.2.0ubuntu14
+- Merge Fedora's changes
+  - 3.6.0-2: Split out PackageKit into a sub package. Fixes #699348
+  - 3.6.0-3: Fix lid close handling with new systemd
+  - 3.6.0-4: Fix an inhibitor leak in the previous patch
+  - 3.6.0-5: Adds Wacom OSD window from upstream bug #679062
+
 * Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-2.ubuntu3.4.2.0ubuntu14
 - Add 0013_64_restore_terminal_keyboard_shortcut_schema.patch
 

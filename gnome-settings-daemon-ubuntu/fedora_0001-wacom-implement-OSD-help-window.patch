@@ -1,0 +1,1697 @@
+From d86992c2ea731194dbf9bb288fe1d5d78114f478 Mon Sep 17 00:00:00 2001
+From: Olivier Fourdan <ofourdan@redhat.com>
+Date: Tue, 3 Jul 2012 09:39:42 +0200
+Subject: [PATCH] wacom: implement OSD help window
+
+The purpose of that OSD window is to give users a simple way
+to display the current pad button functions.
+
+The on-screen buttons also show when a pad button is pressed
+so that users can visually check the matching button/function.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=679062
+---
+ data/gsd-enums.h                     |    3 +-
+ plugins/wacom/Makefile.am            |   37 +-
+ plugins/wacom/gsd-wacom-device.c     |   51 +-
+ plugins/wacom/gsd-wacom-device.h     |   12 +
+ plugins/wacom/gsd-wacom-manager.c    |  116 ++++
+ plugins/wacom/gsd-wacom-osd-window.c | 1026 ++++++++++++++++++++++++++++++++++
+ plugins/wacom/gsd-wacom-osd-window.h |   62 ++
+ plugins/wacom/test-osd-window.c      |  131 +++++
+ 8 files changed, 1427 insertions(+), 11 deletions(-)
+ create mode 100644 plugins/wacom/gsd-wacom-osd-window.c
+ create mode 100644 plugins/wacom/gsd-wacom-osd-window.h
+ create mode 100644 plugins/wacom/test-osd-window.c
+
+diff --git a/data/gsd-enums.h b/data/gsd-enums.h
+index 6c4edd4..6b153fd 100644
+--- a/data/gsd-enums.h
++++ b/data/gsd-enums.h
+@@ -94,7 +94,8 @@ typedef enum
+ {
+   GSD_WACOM_ACTION_TYPE_NONE,
+   GSD_WACOM_ACTION_TYPE_CUSTOM,
+-  GSD_WACOM_ACTION_TYPE_SWITCH_MONITOR
++  GSD_WACOM_ACTION_TYPE_SWITCH_MONITOR,
++  GSD_WACOM_ACTION_TYPE_HELP
+ } GsdWacomActionType;
+ 
+ typedef enum
+diff --git a/plugins/wacom/Makefile.am b/plugins/wacom/Makefile.am
+index 662388b..7a5dab7 100644
+--- a/plugins/wacom/Makefile.am
++++ b/plugins/wacom/Makefile.am
+@@ -7,6 +7,8 @@ libgsdwacom_la_SOURCES =	\
+ 	gsd-wacom-plugin.c	\
+ 	gsd-wacom-manager.h	\
+ 	gsd-wacom-manager.c	\
++	gsd-wacom-osd-window.h	\
++	gsd-wacom-osd-window.c	\
+ 	gsd-wacom-device.c	\
+ 	gsd-wacom-device.h
+ 
+@@ -60,12 +62,14 @@ endif
+ 
+ EXTRA_DIST += org.gnome.settings-daemon.plugins.wacom.policy.in.in
+ 
+-libexec_PROGRAMS += gsd-test-wacom gsd-list-wacom
++libexec_PROGRAMS += gsd-test-wacom gsd-list-wacom gsd-test-wacom-osd
+ 
+ gsd_test_wacom_SOURCES =	\
+ 	test-wacom.c		\
+ 	gsd-wacom-manager.c	\
+ 	gsd-wacom-manager.h	\
++	gsd-wacom-osd-window.h	\
++	gsd-wacom-osd-window.c	\
+ 	gsd-wacom-device.c	\
+ 	gsd-wacom-device.h
+ 
+@@ -123,6 +127,37 @@ gsd_list_wacom_LDADD =						\
+ 	$(WACOM_LIBS)						\
+ 	-lm
+ 
++gsd_test_wacom_osd_SOURCES =					\
++	test-osd-window.c					\
++	gsd-wacom-osd-window.h					\
++	gsd-wacom-osd-window.c					\
++	gsd-wacom-device.c					\
++	gsd-wacom-device.h
++
++gsd_test_wacom_osd_CPPFLAGS = \
++	-I$(top_srcdir)/data/					\
++	-I$(top_srcdir)/gnome-settings-daemon			\
++	-I$(top_srcdir)/plugins/common				\
++	-DBINDIR=\"$(bindir)\"					\
++	-DPIXMAPDIR=\""$(pkgdatadir)"\"				\
++	-DGTKBUILDERDIR=\""$(pkgdatadir)"\"			\
++	-DGNOME_SETTINGS_LOCALEDIR=\""$(datadir)/locale"\"	\
++	-DLIBEXECDIR=\""$(libexecdir)"\"			\
++	$(AM_CPPFLAGS)
++
++gsd_test_wacom_osd_CFLAGS =					\
++	$(SETTINGS_PLUGIN_CFLAGS)				\
++	$(WACOM_CFLAGS)						\
++	$(AM_CFLAGS)
++
++gsd_test_wacom_osd_LDADD = \
++	$(top_builddir)/gnome-settings-daemon/libgsd.la		\
++	$(top_builddir)/plugins/common/libcommon.la		\
++	$(SETTINGS_DAEMON_LIBS)					\
++	$(SETTINGS_PLUGIN_LIBS)					\
++	$(WACOM_LIBS)						\
++	-lm
++
+ plugin_in_files = wacom.gnome-settings-plugin.in
+ 
+ plugin_DATA = $(plugin_in_files:.gnome-settings-plugin.in=.gnome-settings-plugin)
+diff --git a/plugins/wacom/gsd-wacom-device.c b/plugins/wacom/gsd-wacom-device.c
+index 2f52d2a..22ff967 100644
+--- a/plugins/wacom/gsd-wacom-device.c
++++ b/plugins/wacom/gsd-wacom-device.c
+@@ -255,6 +255,7 @@ gsd_wacom_tablet_button_new (const char               *name,
+ 			     const char               *id,
+ 			     const char               *settings_path,
+ 			     GsdWacomTabletButtonType  type,
++			     GsdWacomTabletButtonPos   pos,
+ 			     int                       group_id,
+ 			     int                       idx)
+ {
+@@ -273,6 +274,7 @@ gsd_wacom_tablet_button_new (const char               *name,
+ 	ret->group_id = group_id;
+ 	ret->idx = idx;
+ 	ret->type = type;
++	ret->pos = pos;
+ 
+ 	return ret;
+ }
+@@ -956,17 +958,31 @@ add_stylus_to_device (GsdWacomDevice *device,
+ }
+ 
+ int
+-gsd_wacom_device_set_next_mode (GsdWacomDevice *device,
+-				int             group_id)
++gsd_wacom_device_get_current_mode (GsdWacomDevice *device,
++				   int             group_id)
+ {
+ 	int current_idx;
+-	int num_modes;
+ 
+ 	g_return_val_if_fail (GSD_IS_WACOM_DEVICE (device), -1);
+ 	current_idx = GPOINTER_TO_INT (g_hash_table_lookup (device->priv->modes, GINT_TO_POINTER(group_id)));
+ 	/* That means that the mode doesn't exist, see gsd_wacom_device_add_modes() */
+ 	g_return_val_if_fail (current_idx != 0, -1);
+ 
++	return current_idx;
++}
++
++
++int
++gsd_wacom_device_set_next_mode (GsdWacomDevice *device,
++				int             group_id)
++{
++	int current_idx;
++	int num_modes;
++
++	current_idx = gsd_wacom_device_get_current_mode (device, group_id);
++	/* gsd_wacom_device_get_current_mode() returns -1 when the mode doesn't exist */
++	g_return_val_if_fail (current_idx > 0, -1);
++
+ 	current_idx++;
+ 
+ 	num_modes = GPOINTER_TO_INT (g_hash_table_lookup (device->priv->num_modes, GINT_TO_POINTER(group_id)));
+@@ -1011,7 +1027,7 @@ gsd_wacom_device_add_ring_modes (WacomDevice      *wacom_device,
+ 		for (i = 1; i <= num_modes; i++) {
+ 			name = g_strdup_printf (_("Left Ring Mode #%d"), i);
+ 			id = g_strdup_printf ("left-ring-mode-%d", i);
+-			l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_ELEVATOR, flags_to_group (WACOM_BUTTON_RING_MODESWITCH), i - 1));
++			l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_ELEVATOR, WACOM_TABLET_BUTTON_POS_LEFT, flags_to_group (WACOM_BUTTON_RING_MODESWITCH), i - 1));
+ 			g_free (name);
+ 			g_free (id);
+ 		}
+@@ -1020,7 +1036,7 @@ gsd_wacom_device_add_ring_modes (WacomDevice      *wacom_device,
+ 		for (i = 1; i <= num_modes; i++) {
+ 			name = g_strdup_printf (_("Right Ring Mode #%d"), i);
+ 			id = g_strdup_printf ("right-ring-mode-%d", i);
+-			l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_ELEVATOR, flags_to_group (WACOM_BUTTON_RING2_MODESWITCH), i - 1));
++			l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_ELEVATOR, WACOM_TABLET_BUTTON_POS_RIGHT, flags_to_group (WACOM_BUTTON_RING2_MODESWITCH), i - 1));
+ 			g_free (name);
+ 			g_free (id);
+ 		}
+@@ -1050,7 +1066,7 @@ gsd_wacom_device_add_strip_modes (WacomDevice      *wacom_device,
+ 		for (i = 1; i <= num_modes; i++) {
+ 			name = g_strdup_printf (_("Left Touchstrip Mode #%d"), i);
+ 			id = g_strdup_printf ("left-strip-mode-%d", i);
+-			l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_ELEVATOR, flags_to_group (WACOM_BUTTON_TOUCHSTRIP_MODESWITCH), i - 1));
++			l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_ELEVATOR, WACOM_TABLET_BUTTON_POS_LEFT, flags_to_group (WACOM_BUTTON_TOUCHSTRIP_MODESWITCH), i - 1));
+ 			g_free (name);
+ 			g_free (id);
+ 		}
+@@ -1059,7 +1075,7 @@ gsd_wacom_device_add_strip_modes (WacomDevice      *wacom_device,
+ 		for (i = 1; i <= num_modes; i++) {
+ 			name = g_strdup_printf (_("Right Touchstrip Mode #%d"), i);
+ 			id = g_strdup_printf ("right-strip-mode-%d", i);
+-			l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_ELEVATOR, flags_to_group (WACOM_BUTTON_TOUCHSTRIP2_MODESWITCH), i - 1));
++			l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_ELEVATOR, WACOM_TABLET_BUTTON_POS_RIGHT, flags_to_group (WACOM_BUTTON_TOUCHSTRIP2_MODESWITCH), i - 1));
+ 			g_free (name);
+ 			g_free (id);
+ 		}
+@@ -1089,6 +1105,23 @@ gsd_wacom_device_modeswitch_name (WacomButtonFlags flags,
+ 	return g_strdup_printf (_("Mode Switch #%d"), button_num);
+ }
+ 
++static GsdWacomTabletButtonType
++gsd_wacom_device_button_pos (WacomButtonFlags flags)
++{
++	if (flags & WACOM_BUTTON_POSITION_LEFT)
++		return WACOM_TABLET_BUTTON_POS_LEFT;
++	else if (flags & WACOM_BUTTON_POSITION_RIGHT)
++		return WACOM_TABLET_BUTTON_POS_RIGHT;
++	else if (flags & WACOM_BUTTON_POSITION_TOP)
++		return WACOM_TABLET_BUTTON_POS_TOP;
++	else if (flags & WACOM_BUTTON_POSITION_BOTTOM)
++		return WACOM_TABLET_BUTTON_POS_BOTTOM;
++
++	g_warning ("Unhandled button position");
++
++	return WACOM_TABLET_BUTTON_POS_UNDEF;
++}
++
+ static GList *
+ gsd_wacom_device_add_buttons_dir (WacomDevice      *wacom_device,
+ 				  const char       *settings_path,
+@@ -1115,7 +1148,7 @@ gsd_wacom_device_add_buttons_dir (WacomDevice      *wacom_device,
+ 
+ 		name = g_strdup_printf (button_str, button_num++);
+ 		id = g_strdup_printf ("%s%c", button_str_id, i);
+-		l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_NORMAL, flags_to_group (flags), -1));
++		l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_NORMAL, gsd_wacom_device_button_pos (flags), flags_to_group (flags), -1));
+ 		g_free (name);
+ 		g_free (id);
+ 	}
+@@ -1134,7 +1167,7 @@ gsd_wacom_device_add_buttons_dir (WacomDevice      *wacom_device,
+ 
+ 		name = gsd_wacom_device_modeswitch_name (flags, button_num++);
+ 		id = g_strdup_printf ("%s%c", button_str_id, i);
+-		l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_HARDCODED, flags_to_group (flags), -1));
++		l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_HARDCODED, gsd_wacom_device_button_pos (flags), flags_to_group (flags), -1));
+ 		g_free (name);
+ 		g_free (id);
+ 
+diff --git a/plugins/wacom/gsd-wacom-device.h b/plugins/wacom/gsd-wacom-device.h
+index 24e6e06..b4ad07f 100644
+--- a/plugins/wacom/gsd-wacom-device.h
++++ b/plugins/wacom/gsd-wacom-device.h
+@@ -97,6 +97,15 @@ typedef enum {
+ 	WACOM_TABLET_BUTTON_TYPE_HARDCODED
+ } GsdWacomTabletButtonType;
+ 
++/* Tablet Buttons Position*/
++typedef enum {
++	WACOM_TABLET_BUTTON_POS_UNDEF = 0,
++	WACOM_TABLET_BUTTON_POS_LEFT,
++	WACOM_TABLET_BUTTON_POS_RIGHT,
++	WACOM_TABLET_BUTTON_POS_TOP,
++	WACOM_TABLET_BUTTON_POS_BOTTOM
++} GsdWacomTabletButtonPos;
++
+ #define MAX_GROUP_ID 4
+ 
+ typedef struct
+@@ -105,6 +114,7 @@ typedef struct
+ 	char                     *id;
+ 	GSettings                *settings;
+ 	GsdWacomTabletButtonType  type;
++	GsdWacomTabletButtonPos   pos;
+ 	int                       group_id, idx;
+ } GsdWacomTabletButton;
+ 
+@@ -158,6 +168,8 @@ GList          * gsd_wacom_device_get_buttons       (GsdWacomDevice *device);
+ GsdWacomTabletButton *gsd_wacom_device_get_button   (GsdWacomDevice   *device,
+ 						     int               button,
+ 						     GtkDirectionType *dir);
++int gsd_wacom_device_get_current_mode               (GsdWacomDevice *device,
++						     int             group_id);
+ int gsd_wacom_device_set_next_mode                  (GsdWacomDevice *device,
+ 						     int             group_id);
+ GsdWacomRotation gsd_wacom_device_rotation_name_to_type (const char *rotation);
+diff --git a/plugins/wacom/gsd-wacom-manager.c b/plugins/wacom/gsd-wacom-manager.c
+index 8890988..1fd0167 100644
+--- a/plugins/wacom/gsd-wacom-manager.c
++++ b/plugins/wacom/gsd-wacom-manager.c
+@@ -47,6 +47,7 @@
+ #include "gnome-settings-profile.h"
+ #include "gsd-wacom-manager.h"
+ #include "gsd-wacom-device.h"
++#include "gsd-wacom-osd-window.h"
+ 
+ #define GSD_WACOM_MANAGER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GSD_TYPE_WACOM_MANAGER, GsdWacomManagerPrivate))
+ 
+@@ -83,6 +84,9 @@ struct GsdWacomManagerPrivate
+         /* button capture */
+         GSList *screens;
+         int      opcode;
++
++        /* Help OSD window */
++        GtkWidget *osd_window;
+ };
+ 
+ static void     gsd_wacom_manager_class_init  (GsdWacomManagerClass *klass);
+@@ -890,6 +894,89 @@ last_stylus_changed (GsdWacomDevice  *device,
+ }
+ 
+ static void
++osd_window_hide (GsdWacomManager *manager)
++{
++	g_return_if_fail (manager != NULL);
++
++	if (manager->priv->osd_window) {
++		gtk_widget_destroy (manager->priv->osd_window);
++		manager->priv->osd_window = NULL;
++	}
++}
++
++static gboolean
++osd_window_on_key_release_event (GtkWidget   *widget,
++                                 GdkEventKey *event,
++                                 GsdWacomManager *manager)
++{
++	if (event->type != GDK_KEY_RELEASE)
++		return FALSE;
++	if (event->keyval != GDK_KEY_Escape)
++		return FALSE;
++
++	osd_window_hide (manager);
++
++	return FALSE;
++}
++
++static gboolean
++osd_window_on_focus_out_event (GtkWidget *widget,
++                               GdkEvent  *event,
++                               GsdWacomManager *manager)
++{
++	/* If the OSD window looses focus, hide it */
++	osd_window_hide (manager);
++
++	return FALSE;
++}
++
++static gboolean
++osd_window_toggle_visibility (GsdWacomManager *manager,
++                              GsdWacomDevice  *device)
++{
++	GtkWidget *widget;
++	gchar *message, *name;
++
++	if (manager->priv->osd_window) {
++		osd_window_hide (manager);
++		return FALSE;
++	}
++
++	name = g_markup_printf_escaped ("%s", gsd_wacom_device_get_name (device));
++	message = g_strdup_printf ("<big><b>%s</b></big>", name);
++	widget = gsd_wacom_osd_window_new (device, message);
++	g_free (message);
++	g_free (name);
++
++	/* Connect some signals to the OSD window */
++	g_signal_connect (widget, "key-release-event",
++			  G_CALLBACK(osd_window_on_key_release_event), manager);
++	g_signal_connect (widget, "focus-out-event",
++			  G_CALLBACK(osd_window_on_focus_out_event), manager);
++	g_object_add_weak_pointer (G_OBJECT (widget), (gpointer *) &manager->priv->osd_window);
++
++	gtk_window_present (GTK_WINDOW(widget));
++	manager->priv->osd_window = widget;
++
++	return TRUE;
++}
++
++static gboolean
++osd_window_update_viewable (GsdWacomManager *manager,
++                            gchar           *button_id,
++                            XIEvent         *xiev)
++{
++	if (manager->priv->osd_window == NULL)
++		return FALSE;
++
++	gsd_wacom_osd_window_set_active (GSD_WACOM_OSD_WINDOW (manager->priv->osd_window),
++	                                 button_id,
++	                                 xiev->evtype == XI_ButtonPress);
++	return TRUE;
++
++}
++
++static void
+ device_added_cb (GdkDeviceManager *device_manager,
+                  GdkDevice        *gdk_device,
+                  GsdWacomManager  *manager)
+@@ -1146,6 +1233,7 @@ filter_button_events (XEvent          *xevent,
+ 	int                  button;
+ 	GsdWacomTabletButton *wbutton;
+ 	GtkDirectionType      dir;
++	gboolean emulate;
+ 
+         /* verify we have a key event */
+ 	if (xevent->type != GenericEvent)
+@@ -1167,6 +1255,11 @@ filter_button_events (XEvent          *xevent,
+ 	if (gsd_wacom_device_get_device_type (device) != WACOM_TYPE_PAD)
+ 		return GDK_FILTER_CONTINUE;
+ 
++	if ((manager->priv->osd_window != NULL) &&
++	    (device != gsd_wacom_osd_window_get_device(GSD_WACOM_OSD_WINDOW(manager->priv->osd_window))))
++		/* This is a button event from another device while showing OSD window */
++		osd_window_hide (manager);
++
+ 	button = xev->detail;
+ 
+ 	wbutton = gsd_wacom_device_get_button (device, button, &dir);
+@@ -1188,6 +1281,10 @@ filter_button_events (XEvent          *xevent,
+ 	if (wbutton->type == WACOM_TABLET_BUTTON_TYPE_HARDCODED) {
+ 		int new_mode;
+ 
++		/* Update OSD window if shown */
++		if (osd_window_update_viewable (manager, wbutton->id, xiev))
++			return GDK_FILTER_REMOVE;
++
+ 		/* We switch modes on key release */
+ 		if (xiev->evtype == XI_ButtonRelease)
+ 			return GDK_FILTER_REMOVE;
+@@ -1197,10 +1294,23 @@ filter_button_events (XEvent          *xevent,
+ 		return GDK_FILTER_REMOVE;
+ 	}
+ 
++	/* Update OSD window if shown */
++	emulate = osd_window_update_viewable (manager, wbutton->id, xiev);
++
+ 	/* Nothing to do */
+ 	if (g_settings_get_enum (wbutton->settings, KEY_ACTION_TYPE) == GSD_WACOM_ACTION_TYPE_NONE)
+ 		return GDK_FILTER_REMOVE;
+ 
++	/* Show OSD window when requested */
++	if (g_settings_get_enum (wbutton->settings, KEY_ACTION_TYPE) == GSD_WACOM_ACTION_TYPE_HELP) {
++		if (xiev->evtype == XI_ButtonRelease)
++			osd_window_toggle_visibility (manager, device);
++		return GDK_FILTER_REMOVE;
++	}
++
++	if (emulate)
++		return GDK_FILTER_REMOVE;
++
+ 	/* Switch monitor */
+ 	if (g_settings_get_enum (wbutton->settings, KEY_ACTION_TYPE) == GSD_WACOM_ACTION_TYPE_SWITCH_MONITOR) {
+ 		if (xiev->evtype == XI_ButtonRelease)
+@@ -1386,6 +1496,12 @@ gsd_wacom_manager_stop (GsdWacomManager *manager)
+                 p->device_manager = NULL;
+         }
+ 
++
++        if (p->osd_window) {
++                gtk_widget_destroy (p->osd_window);
++                p->osd_window = NULL;
++        }
++
+         for (ls = p->screens; ls != NULL; ls = ls->next) {
+                 gdk_window_remove_filter (gdk_screen_get_root_window (ls->data),
+                                           (GdkFilterFunc) filter_button_events,
+diff --git a/plugins/wacom/gsd-wacom-osd-window.c b/plugins/wacom/gsd-wacom-osd-window.c
+new file mode 100644
+index 0000000..3f0577f
+--- /dev/null
++++ b/plugins/wacom/gsd-wacom-osd-window.c
+@@ -0,0 +1,1026 @@
++/*
++ * Copyright (C) 2012 Red Hat, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++ *
++ * Author: Olivier Fourdan <ofourdan@redhat.com>
++ *
++ */
++
++#include "config.h"
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <glib/gi18n.h>
++#include <gtk/gtk.h>
++#include <cairo.h>
++
++#include "gsd-wacom-osd-window.h"
++#include "gsd-wacom-device.h"
++#include "gsd-enums.h"
++
++#define ROTATION_KEY                "rotation"
++#define ACTION_TYPE_KEY             "action-type"
++#define CUSTOM_ACTION_KEY           "custom-action"
++#define CUSTOM_ELEVATOR_ACTION_KEY  "custom-elevator-action"
++
++#define BUTTON_ASPECT		0.8
++#define BUTTON_MAX_WIDTH	120
++#define BUTTON_SPACING		30
++#define LABEL_SPACING		20
++#define LINE_WIDTH		5
++#define WINDOW_OPACITY		0.8
++
++static void
++draw_rounded_rectangle (cairo_t         *cr,
++			double           x,
++			double           y,
++			double           width,
++			double           height)
++{
++	double radius = height / 10.0;
++	double degrees = G_PI / 180.0;
++
++	cairo_new_sub_path (cr);
++	cairo_arc (cr, x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees);
++	cairo_arc (cr, x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees);
++	cairo_arc (cr, x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees);
++	cairo_arc (cr, x + radius, y + radius, radius, 180 * degrees, 270 * degrees);
++	cairo_close_path (cr);
++}
++
++static void
++draw_circle (cairo_t         *cr,
++	     double           x,
++	     double           y,
++	     double           radius)
++{
++	cairo_new_sub_path (cr);
++	cairo_arc (cr, x, y, radius, 0, 2 * G_PI);
++	cairo_close_path (cr);
++}
++
++#define GSD_TYPE_WACOM_OSD_BUTTON         (gsd_wacom_osd_button_get_type ())
++#define GSD_WACOM_OSD_BUTTON(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), GSD_TYPE_WACOM_OSD_BUTTON, GsdWacomOSDButton))
++#define GSD_WACOM_OSD_BUTTON_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), GSD_TYPE_WACOM_OSD_BUTTON, GsdWacomOSDButtonClass))
++#define GSD_IS_WACOM_OSD_BUTTON(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), GSD_TYPE_WACOM_OSD_BUTTON))
++#define GSD_IS_WACOM_OSD_BUTTON_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), GSD_TYPE_WACOM_OSD_BUTTON))
++#define GSD_WACOM_OSD_BUTTON_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), GSD_TYPE_WACOM_OSD_BUTTON, GsdWacomOSDButtonClass))
++
++typedef struct GsdWacomOSDButtonPrivate GsdWacomOSDButtonPrivate;
++
++typedef struct {
++        GObject                   parent;
++        GsdWacomOSDButtonPrivate *priv;
++} GsdWacomOSDButton;
++
++typedef struct {
++        GObjectClass              parent_class;
++} GsdWacomOSDButtonClass;
++
++GType                     gsd_wacom_osd_button_get_type        (void) G_GNUC_CONST;
++
++enum {
++	PROP_OSD_BUTTON_0,
++	PROP_OSD_BUTTON_ID,
++	PROP_OSD_BUTTON_LABEL,
++	PROP_OSD_BUTTON_ACTIVE
++};
++
++#define GSD_WACOM_OSD_BUTTON_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), \
++					     GSD_TYPE_WACOM_OSD_BUTTON, \
++					     GsdWacomOSDButtonPrivate))
++
++struct GsdWacomOSDButtonPrivate {
++	char                     *id;
++	char                     *label;
++	GdkRectangle              area;
++	GsdWacomTabletButtonType  type;
++	GsdWacomTabletButtonPos   position;
++	gboolean                  active;
++};
++
++static void     gsd_wacom_osd_button_class_init  (GsdWacomOSDButtonClass *klass);
++static void     gsd_wacom_osd_button_init        (GsdWacomOSDButton      *osd_button);
++static void     gsd_wacom_osd_button_finalize    (GObject                *object);
++
++G_DEFINE_TYPE (GsdWacomOSDButton, gsd_wacom_osd_button, G_TYPE_OBJECT)
++
++static void
++gsd_wacom_osd_button_set_id (GsdWacomOSDButton *osd_button,
++			     const gchar       *str)
++{
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON (osd_button));
++	g_return_if_fail (str != NULL);
++
++	g_free (osd_button->priv->id);
++	osd_button->priv->id = g_strdup (str);
++}
++
++static void
++gsd_wacom_osd_button_set_label (GsdWacomOSDButton *osd_button,
++				const gchar       *str)
++{
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON (osd_button));
++
++	g_free (osd_button->priv->label);
++	osd_button->priv->label = g_strdup (str ? str : "");
++}
++
++static void
++gsd_wacom_osd_button_set_button_type (GsdWacomOSDButton        *osd_button,
++				      GsdWacomTabletButtonType  type)
++{
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON (osd_button));
++
++	osd_button->priv->type = type;
++}
++
++static void
++gsd_wacom_osd_button_set_position (GsdWacomOSDButton        *osd_button,
++				   GsdWacomTabletButtonPos   position)
++{
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON (osd_button));
++
++	osd_button->priv->position = position;
++}
++
++static void
++gsd_wacom_osd_button_set_active (GsdWacomOSDButton *osd_button,
++				 gboolean           active)
++{
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON (osd_button));
++
++	osd_button->priv->active = active;
++}
++
++static void
++gsd_wacom_osd_button_move (GsdWacomOSDButton *osd_button,
++			   gint               x,
++			   gint               y)
++{
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON (osd_button));
++
++	osd_button->priv->area.x = x;
++	osd_button->priv->area.y = y;
++}
++
++static void
++gsd_wacom_osd_button_resize (GsdWacomOSDButton *osd_button,
++			     gint               width,
++			     gint               height)
++{
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON (osd_button));
++
++	osd_button->priv->area.width = width;
++	osd_button->priv->area.height = height;
++}
++
++static GsdWacomOSDButton *
++gsd_wacom_osd_button_new (gint          x,
++			  gint          y,
++			  gint          width,
++			  gint          height)
++{
++	GsdWacomOSDButton *osd_button;
++
++	osd_button = GSD_WACOM_OSD_BUTTON (g_object_new (GSD_TYPE_WACOM_OSD_BUTTON, NULL));
++	osd_button->priv->area.x = x;
++	osd_button->priv->area.y = y;
++	osd_button->priv->area.width = width;
++	osd_button->priv->area.height = height;
++
++	return osd_button;
++}
++
++static void
++gsd_wacom_osd_button_set_property (GObject        *object,
++				   guint           prop_id,
++				   const GValue   *value,
++				   GParamSpec     *pspec)
++{
++	GsdWacomOSDButton *osd_button;
++
++	osd_button = GSD_WACOM_OSD_BUTTON (object);
++
++	switch (prop_id) {
++	case PROP_OSD_BUTTON_ID:
++		gsd_wacom_osd_button_set_id (osd_button, g_value_get_string (value));
++		break;
++	case PROP_OSD_BUTTON_LABEL:
++		gsd_wacom_osd_button_set_label (osd_button, g_value_get_string (value));
++		break;
++	case PROP_OSD_BUTTON_ACTIVE:
++		gsd_wacom_osd_button_set_active (osd_button, g_value_get_boolean (value));
++		break;
++	default:
++		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++		break;
++	}
++}
++
++static void
++gsd_wacom_osd_button_get_property (GObject        *object,
++				   guint           prop_id,
++				   GValue         *value,
++				   GParamSpec     *pspec)
++{
++	GsdWacomOSDButton *osd_button;
++
++	osd_button = GSD_WACOM_OSD_BUTTON (object);
++
++	switch (prop_id) {
++	case PROP_OSD_BUTTON_ID:
++		g_value_set_string (value, osd_button->priv->id);
++		break;
++	case PROP_OSD_BUTTON_LABEL:
++		g_value_set_string (value, osd_button->priv->label);
++		break;
++	case PROP_OSD_BUTTON_ACTIVE:
++		g_value_set_boolean (value, osd_button->priv->active);
++		break;
++	default:
++		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++		break;
++	}
++}
++
++static void
++gsd_wacom_osd_button_class_init (GsdWacomOSDButtonClass *klass)
++{
++	GObjectClass *object_class = G_OBJECT_CLASS (klass);
++
++	object_class->set_property = gsd_wacom_osd_button_set_property;
++	object_class->get_property = gsd_wacom_osd_button_get_property;
++	object_class->finalize = gsd_wacom_osd_button_finalize;
++
++	g_object_class_install_property (object_class,
++	                                 PROP_OSD_BUTTON_ID,
++	                                 g_param_spec_string ("id",
++	                                                      "Button Id",
++	                                                      "The Wacom Button ID",
++	                                                      "",
++	                                                      G_PARAM_READWRITE));
++	g_object_class_install_property (object_class,
++	                                 PROP_OSD_BUTTON_LABEL,
++	                                 g_param_spec_string ("label",
++	                                                      "Label",
++	                                                      "The button label",
++	                                                      "",
++	                                                      G_PARAM_READWRITE));
++	g_object_class_install_property (object_class,
++	                                 PROP_OSD_BUTTON_ACTIVE,
++	                                 g_param_spec_boolean ("active",
++	                                                       "Active",
++	                                                       "Whether the button is active",
++	                                                       FALSE,
++	                                                       G_PARAM_READWRITE));
++
++	g_type_class_add_private (klass, sizeof (GsdWacomOSDButtonPrivate));
++}
++
++static void
++gsd_wacom_osd_button_init (GsdWacomOSDButton *osd_button)
++{
++	osd_button->priv = GSD_WACOM_OSD_BUTTON_GET_PRIVATE (osd_button);
++}
++
++static void
++gsd_wacom_osd_button_finalize (GObject *object)
++{
++	GsdWacomOSDButton *osd_button;
++	GsdWacomOSDButtonPrivate *priv;
++
++	g_return_if_fail (object != NULL);
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON (object));
++
++	osd_button = GSD_WACOM_OSD_BUTTON (object);
++
++	g_return_if_fail (osd_button->priv != NULL);
++
++	priv = osd_button->priv;
++
++	g_free (priv->id);
++	priv->id = NULL;
++
++	g_free (priv->label);
++	priv->label = NULL;
++
++	G_OBJECT_CLASS (gsd_wacom_osd_button_parent_class)->finalize (object);
++}
++
++/* Compute the new actual position once rotation is applied */
++static GsdWacomTabletButtonPos
++get_actual_position (GsdWacomTabletButtonPos position,
++		     GsdWacomRotation        rotation)
++{
++	switch (rotation) {
++	case GSD_WACOM_ROTATION_NONE:
++		return position;
++		break;
++	case GSD_WACOM_ROTATION_HALF:
++		if (position == WACOM_TABLET_BUTTON_POS_LEFT)
++			return WACOM_TABLET_BUTTON_POS_RIGHT;
++		if (position == WACOM_TABLET_BUTTON_POS_RIGHT)
++			return WACOM_TABLET_BUTTON_POS_LEFT;
++		if (position == WACOM_TABLET_BUTTON_POS_TOP)
++			return WACOM_TABLET_BUTTON_POS_BOTTOM;
++		if (position == WACOM_TABLET_BUTTON_POS_BOTTOM)
++			return WACOM_TABLET_BUTTON_POS_TOP;
++		break;
++	case GSD_WACOM_ROTATION_CCW:
++		if (position == WACOM_TABLET_BUTTON_POS_LEFT)
++			return WACOM_TABLET_BUTTON_POS_BOTTOM;
++		if (position == WACOM_TABLET_BUTTON_POS_RIGHT)
++			return WACOM_TABLET_BUTTON_POS_TOP;
++		if (position == WACOM_TABLET_BUTTON_POS_TOP)
++			return WACOM_TABLET_BUTTON_POS_LEFT;
++		if (position == WACOM_TABLET_BUTTON_POS_BOTTOM)
++			return WACOM_TABLET_BUTTON_POS_RIGHT;
++		break;
++	case GSD_WACOM_ROTATION_CW:
++		if (position == WACOM_TABLET_BUTTON_POS_LEFT)
++			return WACOM_TABLET_BUTTON_POS_TOP;
++		if (position == WACOM_TABLET_BUTTON_POS_RIGHT)
++			return WACOM_TABLET_BUTTON_POS_BOTTOM;
++		if (position == WACOM_TABLET_BUTTON_POS_TOP)
++			return WACOM_TABLET_BUTTON_POS_RIGHT;
++		if (position == WACOM_TABLET_BUTTON_POS_BOTTOM)
++			return WACOM_TABLET_BUTTON_POS_LEFT;
++		break;
++	default:
++		break;
++	}
++	/* fallback, should not happen */
++	return position;
++}
++
++/* Compute the new actual index once rotation is applied */
++static gint
++get_actual_index (GsdWacomTabletButtonPos position,
++		  GsdWacomRotation        rotation,
++		  gint                    n_items,
++		  gint                    current)
++{
++	g_return_val_if_fail (current < n_items, current);
++
++	switch (rotation) {
++	case GSD_WACOM_ROTATION_NONE:
++			return current;
++			break;
++		case GSD_WACOM_ROTATION_HALF:
++			return n_items - current - 1;
++			break;
++		case GSD_WACOM_ROTATION_CCW:
++			if (position == WACOM_TABLET_BUTTON_POS_LEFT ||
++			    position == WACOM_TABLET_BUTTON_POS_RIGHT)
++				return current;
++			if (position == WACOM_TABLET_BUTTON_POS_TOP ||
++			    position == WACOM_TABLET_BUTTON_POS_BOTTOM)
++				return n_items - current - 1;
++			break;
++		case GSD_WACOM_ROTATION_CW:
++			if (position == WACOM_TABLET_BUTTON_POS_LEFT ||
++			    position == WACOM_TABLET_BUTTON_POS_RIGHT)
++				return n_items - current - 1;
++			if (position == WACOM_TABLET_BUTTON_POS_TOP ||
++			    position == WACOM_TABLET_BUTTON_POS_BOTTOM)
++				return current;
++			break;
++		default:
++			break;
++	}
++	/* fallback, should not happen */
++	return current;
++}
++
++static void
++gsd_wacom_osd_button_draw (GsdWacomOSDButton *osd_button,
++			   GtkStyleContext   *style_context,
++			   PangoContext      *pango_context,
++			   cairo_t           *cr,
++			   GtkAllocation     *allocation,
++			   GsdWacomRotation   rotation)
++{
++	GsdWacomOSDButtonPrivate *priv;
++	PangoLayout              *layout;
++	PangoRectangle            logical_rect;
++	GsdWacomTabletButtonPos   actual_position;
++	double                    lx, ly;
++	char                     *markup;
++
++	g_return_if_fail (GSD_IS_WACOM_OSD_BUTTON(osd_button));
++
++	priv = osd_button->priv;
++
++	cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
++	cairo_set_line_width (cr, LINE_WIDTH);
++
++	actual_position = get_actual_position (priv->position, rotation);
++
++	if (osd_button->priv->type == WACOM_TABLET_BUTTON_TYPE_HARDCODED)
++		draw_circle (cr,
++		             priv->area.x + priv->area.width / 2,
++		             priv->area.y + priv->area.height / 2,
++		             MIN (priv->area.width, priv->area.height) / 2);
++	else
++		draw_rounded_rectangle(cr,
++		                       priv->area.x, priv->area.y,
++		                       priv->area.width, priv->area.height);
++
++	if (osd_button->priv->active)
++		cairo_fill_preserve(cr);
++	cairo_stroke (cr);
++
++	/* Write the label */
++	layout = pango_layout_new (pango_context);
++
++	switch (actual_position) {
++	case WACOM_TABLET_BUTTON_POS_TOP:
++	case WACOM_TABLET_BUTTON_POS_BOTTOM:
++		pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
++		break;
++	case WACOM_TABLET_BUTTON_POS_RIGHT:
++		pango_layout_set_alignment (layout, PANGO_ALIGN_RIGHT);
++		break;
++	default:
++		pango_layout_set_alignment (layout, PANGO_ALIGN_LEFT);
++		break;
++	}
++	markup = g_strdup_printf ("<span foreground=\"white\">%s</span>", priv->label);
++	pango_layout_set_markup (layout, markup, -1);
++	g_free (markup);
++
++	pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
++	switch (actual_position) {
++	case WACOM_TABLET_BUTTON_POS_TOP:
++		lx = priv->area.x + (priv->area.width - logical_rect.width) / 2 + logical_rect.x;
++		ly = priv->area.y + (priv->area.height + LABEL_SPACING + logical_rect.y);
++		break;
++	case WACOM_TABLET_BUTTON_POS_BOTTOM:
++		lx = priv->area.x + (priv->area.width - logical_rect.width) / 2 + logical_rect.x;
++		ly = priv->area.y - (LABEL_SPACING + logical_rect.y + logical_rect.height);
++		break;
++	case WACOM_TABLET_BUTTON_POS_RIGHT:
++		lx = priv->area.x - (LABEL_SPACING + logical_rect.x + logical_rect.width);
++		ly = priv->area.y + (priv->area.height - logical_rect.height) / 2 + logical_rect.y;
++		break;
++	default:
++		lx = priv->area.x + (priv->area.width + LABEL_SPACING + logical_rect.x);
++		ly = priv->area.y + (priv->area.height - logical_rect.height) / 2 + logical_rect.y;
++		break;
++	}
++	gtk_render_layout (style_context, cr, lx, ly, layout);
++
++	g_object_unref (layout);
++}
++
++enum {
++  PROP_OSD_WINDOW_0,
++  PROP_OSD_WINDOW_MESSAGE,
++  PROP_OSD_WINDOW_GSD_WACOM_DEVICE
++};
++
++#define GSD_WACOM_OSD_WINDOW_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), \
++					     GSD_TYPE_WACOM_OSD_WINDOW, \
++					     GsdWacomOSDWindowPrivate))
++
++struct GsdWacomOSDWindowPrivate
++{
++	char                     *message;
++	GsdWacomDevice           *pad;
++	GsdWacomRotation          rotation;
++	gint                      num_buttons[4]; /* How many button per side */
++	GList                    *buttons;
++};
++
++static void     gsd_wacom_osd_window_class_init  (GsdWacomOSDWindowClass *klass);
++static void     gsd_wacom_osd_window_init        (GsdWacomOSDWindow      *osd_window);
++static void     gsd_wacom_osd_window_finalize    (GObject                *object);
++
++G_DEFINE_TYPE (GsdWacomOSDWindow, gsd_wacom_osd_window, GTK_TYPE_WINDOW)
++
++static void
++gsd_wacom_osd_window_draw_message (GsdWacomOSDWindow   *osd_window,
++				   GtkStyleContext     *style_context,
++				   PangoContext        *pango_context,
++				   cairo_t             *cr,
++				   GtkAllocation       *allocation)
++{
++	PangoRectangle logical_rect;
++	PangoLayout *layout;
++	char *markup;
++	double x;
++	double y;
++
++	layout = pango_layout_new (pango_context);
++	pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
++
++	markup = g_strdup_printf ("<span foreground=\"white\">%s</span>", osd_window->priv->message);
++	pango_layout_set_markup (layout, markup, -1);
++	g_free (markup);
++
++	pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
++	x = (allocation->width - logical_rect.width) / 2 + logical_rect.x;
++	y = (allocation->height - logical_rect.height) / 2 + logical_rect.y;
++
++	gtk_render_layout (style_context, cr, x, y, layout);
++	g_object_unref (layout);
++}
++
++
++static gboolean
++gsd_wacom_osd_window_draw (GtkWidget *widget,
++			   cairo_t   *cr)
++{
++	GsdWacomOSDWindow *osd_window = GSD_WACOM_OSD_WINDOW (widget);
++
++	if (gtk_cairo_should_draw_window (cr, gtk_widget_get_window (widget))) {
++		GtkAllocation        allocation;
++		GtkStyleContext     *style_context;
++		PangoContext        *pango_context;
++		GList               *l;
++
++		style_context = gtk_widget_get_style_context (widget);
++		pango_context = gtk_widget_get_pango_context (widget);
++		gtk_widget_get_allocation(widget, &allocation);
++
++		cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
++		cairo_paint (cr);
++		cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
++
++		/* Draw all buttons */
++		for (l = osd_window->priv->buttons; l != NULL; l = l->next) {
++			GsdWacomOSDButton *osd_button = l->data;
++			gsd_wacom_osd_button_draw (osd_button,
++			                           style_context,
++			                           pango_context,
++			                           cr,
++			                           &allocation,
++			                           osd_window->priv->rotation);
++		}
++
++		/* Draw message */
++		gsd_wacom_osd_window_draw_message (osd_window,
++		                                   style_context,
++		                                   pango_context,
++		                                   cr,
++		                                   &allocation);
++	}
++
++	return FALSE;
++}
++
++static void
++gsd_wacom_osd_window_place_buttons (GsdWacomOSDWindow *osd_window,
++				    GtkAllocation *allocation)
++{
++	gint              buttons[4] = { 0, 0, 0, 0 };
++	GsdWacomRotation  rotation;
++	gint              nw, nh, pw, ph;
++	GList            *l;
++
++	g_return_if_fail (GSD_IS_WACOM_OSD_WINDOW (osd_window));
++
++	rotation = osd_window->priv->rotation;
++	nw = MAX (osd_window->priv->num_buttons[get_actual_position (WACOM_TABLET_BUTTON_POS_TOP,    rotation)],
++	          osd_window->priv->num_buttons[get_actual_position (WACOM_TABLET_BUTTON_POS_BOTTOM, rotation)]) + 3;
++	nh = MAX (osd_window->priv->num_buttons[get_actual_position (WACOM_TABLET_BUTTON_POS_LEFT,   rotation)],
++	          osd_window->priv->num_buttons[get_actual_position (WACOM_TABLET_BUTTON_POS_RIGHT,  rotation)]) + 3;
++
++	pw = MIN (BUTTON_MAX_WIDTH, (allocation->width - (nw + 1) * BUTTON_SPACING) / nw);
++	ph = pw * BUTTON_ASPECT;
++
++	if ((ph + BUTTON_SPACING) * nh > allocation->height) {
++		ph = (allocation->height - (nh + 1) * BUTTON_SPACING) / nh;
++		pw = ph / BUTTON_ASPECT;
++	}
++
++	for (l = osd_window->priv->buttons; l != NULL; l = l->next) {
++		GsdWacomTabletButtonPos  actual_position;
++		GsdWacomOSDButton *osd_button = l->data;
++		gint x, y, index, n_items, current;
++
++		n_items = osd_window->priv->num_buttons[osd_button->priv->position];
++		current = buttons[osd_button->priv->position];
++		index = get_actual_index (osd_button->priv->position, rotation, n_items, current);
++		actual_position = get_actual_position (osd_button->priv->position, rotation);
++
++		gsd_wacom_osd_button_resize (osd_button, pw, ph);
++		switch (actual_position) {
++		case WACOM_TABLET_BUTTON_POS_LEFT:
++			x = BUTTON_SPACING;
++			y = (allocation->height - (n_items * (osd_button->priv->area.height + BUTTON_SPACING) - BUTTON_SPACING)) / 2
++			    + index * (osd_button->priv->area.height + BUTTON_SPACING);
++			break;
++		case WACOM_TABLET_BUTTON_POS_RIGHT:
++			x = allocation->width - (osd_button->priv->area.width + BUTTON_SPACING);
++			y = (allocation->height - (n_items * (osd_button->priv->area.height + BUTTON_SPACING) - BUTTON_SPACING)) / 2
++			    + index * (osd_button->priv->area.height + BUTTON_SPACING);
++			break;
++		case WACOM_TABLET_BUTTON_POS_TOP:
++			x = (allocation->width - (n_items * (osd_button->priv->area.width + BUTTON_SPACING) - BUTTON_SPACING)) / 2
++			    + index * (osd_button->priv->area.width + BUTTON_SPACING);
++			y = BUTTON_SPACING;
++			break;
++		case WACOM_TABLET_BUTTON_POS_BOTTOM:
++			x = (allocation->width - (n_items * (osd_button->priv->area.width + BUTTON_SPACING) - BUTTON_SPACING)) / 2
++			    + index * (osd_button->priv->area.width + BUTTON_SPACING);
++			y = allocation->height - (osd_button->priv->area.height + BUTTON_SPACING);
++			break;
++		case WACOM_TABLET_BUTTON_POS_UNDEF:
++		default:
++			g_assert_not_reached();
++			break;
++		}
++		gsd_wacom_osd_button_move (osd_button, x, y);
++		buttons[osd_button->priv->position]++;
++	}
++}
++
++static gchar *
++get_tablet_button_label (GsdWacomDevice       *device,
++	                 GsdWacomTabletButton *button)
++{
++	gchar *str;
++	guint keyval;
++	GdkModifierType mask;
++
++	g_return_val_if_fail (button, NULL);
++
++	if (button->type == WACOM_TABLET_BUTTON_TYPE_HARDCODED) {
++		gint mode;
++
++		mode = gsd_wacom_device_get_current_mode (device, button->group_id);
++		return g_strdup_printf (_("%s\nCurrent mode %d"), button->name, mode);
++	}
++
++	if (!button->settings)
++		goto out;
++
++	if (button->type == WACOM_TABLET_BUTTON_TYPE_NORMAL) {
++		GsdWacomActionType type;
++		gchar *name;
++
++		type = g_settings_get_enum (button->settings, ACTION_TYPE_KEY);
++		if (type == GSD_WACOM_ACTION_TYPE_NONE)
++			return g_strdup (_("None"));
++
++		if (type == GSD_WACOM_ACTION_TYPE_HELP)
++			return g_strdup (_("Show On-Screen Help"));
++
++		str = g_settings_get_string (button->settings, CUSTOM_ACTION_KEY);
++		if (str == NULL || *str == '\0') {
++			g_free (str);
++			return g_strdup (_("None"));
++		}
++
++		gtk_accelerator_parse (str, &keyval, &mask);
++		g_free (str);
++
++		str = gtk_accelerator_get_label (keyval, mask);
++		name = g_markup_printf_escaped ("Send Keystroke %s", str);
++		g_free (str);
++
++		return name;
++	}
++
++out:
++	return g_strdup (button->name);
++}
++
++/*
++ * Returns the rotation to apply a device to get a represntation relative to
++ * the current rotation of the output.
++ * (This function is _not_ the same as in gsd-wacom-manager.c)
++ */
++static GsdWacomRotation
++display_relative_rotation (GsdWacomRotation device_rotation,
++			   GsdWacomRotation output_rotation)
++{
++	GsdWacomRotation rotations[] = { GSD_WACOM_ROTATION_HALF,
++	                                 GSD_WACOM_ROTATION_CW,
++	                                 GSD_WACOM_ROTATION_NONE,
++	                                 GSD_WACOM_ROTATION_CCW };
++	guint i;
++
++	if (device_rotation == output_rotation)
++		return GSD_WACOM_ROTATION_NONE;
++
++	if (output_rotation == GSD_WACOM_ROTATION_NONE)
++		return device_rotation;
++
++	for (i = 0; i < G_N_ELEMENTS (rotations); i++) {
++		if (device_rotation == rotations[i])
++			break;
++	}
++
++	if (output_rotation == GSD_WACOM_ROTATION_HALF)
++		return rotations[(i + G_N_ELEMENTS (rotations) - 2) % G_N_ELEMENTS (rotations)];
++
++	if (output_rotation == GSD_WACOM_ROTATION_CW)
++		return rotations[(i + 1) % G_N_ELEMENTS (rotations)];
++
++	if (output_rotation == GSD_WACOM_ROTATION_CCW)
++		return rotations[(i + G_N_ELEMENTS (rotations) - 1) % G_N_ELEMENTS (rotations)];
++
++	/* fallback */
++	return GSD_WACOM_ROTATION_NONE;
++}
++
++void
++gsd_wacom_osd_window_set_device (GsdWacomOSDWindow *osd_window,
++				 GsdWacomDevice    *device)
++{
++	GtkAllocation     allocation;
++	GsdWacomRotation  device_rotation;
++	GsdWacomRotation  output_rotation;
++	GSettings        *settings;
++	gint              monitor;
++	GdkRectangle      desktop;
++	GdkScreen        *screen;
++	GList            *list, *l;
++
++	g_return_if_fail (GSD_IS_WACOM_OSD_WINDOW (osd_window));
++	g_return_if_fail (GSD_IS_WACOM_DEVICE (device));
++
++	/* Bind the device with the OSD window */
++	if (osd_window->priv->pad)
++		g_object_weak_unref (G_OBJECT(osd_window->priv->pad),
++		                     (GWeakNotify) gtk_widget_destroy,
++		                     osd_window);
++	osd_window->priv->pad = device;
++	g_object_weak_ref (G_OBJECT(osd_window->priv->pad),
++	                   (GWeakNotify) gtk_widget_destroy,
++	                   osd_window);
++
++	/* Determine the monitor for that device */
++	monitor = gsd_wacom_device_get_display_monitor (device);
++	if (monitor < 0)
++		monitor = 0;
++	screen = gtk_window_get_screen (GTK_WINDOW (osd_window));
++	if (screen == NULL)
++		screen = gdk_screen_get_default ();
++	gdk_screen_get_monitor_geometry (screen, monitor, &desktop);
++
++	/* and place the OSD window accordingly */
++	gtk_window_move (GTK_WINDOW (osd_window), desktop.x, desktop.y);
++	gtk_window_set_default_size (GTK_WINDOW (osd_window), desktop.width, desktop.height);
++
++	/* Capture current rotation, we do not update that later, OSD window is meant to be short lived */
++	settings = gsd_wacom_device_get_settings (osd_window->priv->pad);
++	device_rotation = g_settings_get_enum (settings, ROTATION_KEY);
++	output_rotation = gsd_wacom_device_get_display_rotation (osd_window->priv->pad);
++	osd_window->priv->rotation = display_relative_rotation (device_rotation, output_rotation);
++
++	/* Create the new button hash table */
++	if (osd_window->priv->buttons)
++		g_list_free_full (osd_window->priv->buttons, g_object_unref);
++	osd_window->priv->buttons = NULL;
++
++	/* Create the buttons and compute the number of buttons on each side */
++	list = gsd_wacom_device_get_buttons (device);
++	for (l = list; l != NULL; l = l->next) {
++		GsdWacomTabletButton *tablet_button = l->data;
++
++		if (tablet_button->type == WACOM_TABLET_BUTTON_TYPE_NORMAL ||
++		    tablet_button->type == WACOM_TABLET_BUTTON_TYPE_HARDCODED) {
++			GsdWacomOSDButton *osd_button;
++			gchar *str;
++
++			/* For now, place all buttons at (0,0) we'll move them later */
++			osd_button = gsd_wacom_osd_button_new (0, 0, 0, 0);
++			str = get_tablet_button_label (device, tablet_button);
++			gsd_wacom_osd_button_set_label (osd_button, str);
++			g_free (str);
++			gsd_wacom_osd_button_set_id (osd_button, tablet_button->id);
++			gsd_wacom_osd_button_set_button_type (osd_button, tablet_button->type);
++			gsd_wacom_osd_button_set_position (osd_button, tablet_button->pos);
++			osd_window->priv->buttons = g_list_append (osd_window->priv->buttons, osd_button);
++
++			osd_window->priv->num_buttons[tablet_button->pos]++;
++		}
++	}
++	g_list_free (list);
++
++	gtk_widget_get_allocation(GTK_WIDGET(osd_window), &allocation);
++	gsd_wacom_osd_window_place_buttons (osd_window, &allocation);
++}
++
++GsdWacomDevice *
++gsd_wacom_osd_window_get_device (GsdWacomOSDWindow *osd_window)
++{
++	g_return_val_if_fail (GSD_IS_WACOM_OSD_WINDOW (osd_window), NULL);
++
++	return osd_window->priv->pad;
++}
++
++void
++gsd_wacom_osd_window_set_message (GsdWacomOSDWindow *osd_window,
++				  const gchar       *str)
++{
++	g_return_if_fail (GSD_IS_WACOM_OSD_WINDOW (osd_window));
++	g_return_if_fail (str != NULL);
++
++	g_free (osd_window->priv->message);
++	osd_window->priv->message = g_strdup (str);
++}
++
++const char *
++gsd_wacom_osd_window_get_message (GsdWacomOSDWindow *osd_window)
++{
++	g_return_val_if_fail (GSD_IS_WACOM_OSD_WINDOW (osd_window), NULL);
++
++	return osd_window->priv->message;
++}
++
++static void
++gsd_wacom_osd_window_set_property (GObject        *object,
++				   guint           prop_id,
++				   const GValue   *value,
++				   GParamSpec     *pspec)
++{
++	GsdWacomOSDWindow *osd_window;
++
++	osd_window = GSD_WACOM_OSD_WINDOW (object);
++
++	switch (prop_id) {
++	case PROP_OSD_WINDOW_MESSAGE:
++		gsd_wacom_osd_window_set_message (osd_window, g_value_get_string (value));
++		break;
++	case PROP_OSD_WINDOW_GSD_WACOM_DEVICE:
++		gsd_wacom_osd_window_set_device (osd_window, g_value_get_object (value));
++		break;
++	default:
++		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++		break;
++	}
++}
++
++static void
++gsd_wacom_osd_window_get_property (GObject        *object,
++				   guint           prop_id,
++				   GValue         *value,
++				   GParamSpec     *pspec)
++{
++	GsdWacomOSDWindow *osd_window;
++
++	osd_window = GSD_WACOM_OSD_WINDOW (object);
++
++	switch (prop_id) {
++	case PROP_OSD_WINDOW_MESSAGE:
++		g_value_set_string (value, osd_window->priv->message);
++		break;
++	case PROP_OSD_WINDOW_GSD_WACOM_DEVICE:
++		g_value_set_object (value, (GObject*) osd_window->priv->pad);
++		break;
++	default:
++		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++		break;
++	}
++}
++
++void
++gsd_wacom_osd_window_set_active (GsdWacomOSDWindow *osd_window,
++				 gchar             *button_id,
++				 gboolean           active)
++{
++	GdkWindow *win;
++	GList *l;
++
++	g_return_if_fail (GSD_IS_WACOM_OSD_WINDOW (osd_window));
++	g_return_if_fail (button_id != NULL);
++
++	for (l = osd_window->priv->buttons; l != NULL; l = l->next) {
++		GsdWacomOSDButton *osd_button = l->data;
++		if (g_strcmp0 (osd_button->priv->id, button_id) == 0) {
++			gsd_wacom_osd_button_set_active (osd_button, active);
++			win = gtk_widget_get_window(GTK_WIDGET(osd_window));
++			gdk_window_invalidate_rect(win, &osd_button->priv->area, FALSE);
++		}
++	}
++}
++
++GtkWidget *
++gsd_wacom_osd_window_new (GsdWacomDevice       *pad,
++			  const gchar          *message)
++{
++	GsdWacomOSDWindow *osd_window;
++	GdkWindow         *window;
++	GdkRGBA            black;
++	GdkCursor         *cursor;
++
++	osd_window = GSD_WACOM_OSD_WINDOW (g_object_new (GSD_TYPE_WACOM_OSD_WINDOW,
++	                                                 "wacom-device", pad,
++	                                                 "message", message,
++	                                                 NULL));
++
++	gtk_widget_set_app_paintable (GTK_WIDGET (osd_window), TRUE);
++
++	gdk_rgba_parse (&black, "rgb(0,0,0)");
++	gtk_window_set_opacity (GTK_WINDOW (osd_window), WINDOW_OPACITY);
++
++	gtk_widget_realize (GTK_WIDGET (osd_window));
++	window = gtk_widget_get_window (GTK_WIDGET (osd_window));
++	gdk_window_set_background_rgba (window, &black);
++
++	cursor = gdk_cursor_new (GDK_BLANK_CURSOR);
++	gdk_window_set_cursor (window, cursor);
++	g_object_unref (cursor);
++
++	gtk_widget_set_can_focus (GTK_WIDGET (osd_window), TRUE);
++	gtk_window_set_focus_on_map (GTK_WINDOW (osd_window), TRUE);
++	gtk_window_set_decorated (GTK_WINDOW (osd_window), FALSE);
++	gtk_window_set_deletable (GTK_WINDOW (osd_window), FALSE);
++	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (osd_window), TRUE);
++	gtk_window_set_skip_pager_hint (GTK_WINDOW (osd_window), TRUE);
++	gtk_window_set_keep_above (GTK_WINDOW (osd_window), TRUE);
++	gtk_window_fullscreen (GTK_WINDOW (osd_window));
++
++	return GTK_WIDGET (osd_window);
++}
++
++static void
++gsd_wacom_osd_window_size_allocate (GtkWidget     *widget,
++				    GtkAllocation *allocation)
++{
++	/* Recompute buttons position */
++	gsd_wacom_osd_window_place_buttons (GSD_WACOM_OSD_WINDOW (widget), allocation);
++}
++
++static void
++gsd_wacom_osd_window_class_init (GsdWacomOSDWindowClass *klass)
++{
++	GObjectClass *gobject_class;
++	GtkWidgetClass *widget_class;
++
++	gobject_class = G_OBJECT_CLASS (klass);
++	widget_class  = GTK_WIDGET_CLASS (klass);
++
++	gobject_class->set_property = gsd_wacom_osd_window_set_property;
++	gobject_class->get_property = gsd_wacom_osd_window_get_property;
++	gobject_class->finalize     = gsd_wacom_osd_window_finalize;
++	widget_class->draw          = gsd_wacom_osd_window_draw;
++	widget_class->size_allocate = gsd_wacom_osd_window_size_allocate;
++
++	g_object_class_install_property (gobject_class,
++	                                 PROP_OSD_WINDOW_MESSAGE,
++	                                 g_param_spec_string ("message",
++	                                                      "Window message",
++	                                                      "The message shown in the OSD window",
++	                                                      "",
++	                                                      G_PARAM_READWRITE));
++	g_object_class_install_property (gobject_class,
++	                                 PROP_OSD_WINDOW_GSD_WACOM_DEVICE,
++	                                 g_param_spec_object ("wacom-device",
++	                                                      "Wacom device",
++	                                                      "The Wacom device represented by the OSD window",
++	                                                      GSD_TYPE_WACOM_DEVICE,
++	                                                      G_PARAM_READWRITE));
++
++	g_type_class_add_private (klass, sizeof (GsdWacomOSDWindowPrivate));
++}
++
++static void
++gsd_wacom_osd_window_init (GsdWacomOSDWindow *osd_window)
++{
++	osd_window->priv = GSD_WACOM_OSD_WINDOW_GET_PRIVATE (osd_window);
++}
++
++static void
++gsd_wacom_osd_window_finalize (GObject *object)
++{
++	GsdWacomOSDWindow *osd_window;
++	GsdWacomOSDWindowPrivate *priv;
++
++	g_return_if_fail (object != NULL);
++	g_return_if_fail (GSD_IS_WACOM_OSD_WINDOW (object));
++
++	osd_window = GSD_WACOM_OSD_WINDOW (object);
++
++	g_return_if_fail (osd_window->priv != NULL);
++
++	priv = osd_window->priv;
++
++	g_free (priv->message);
++	priv->message = NULL;
++
++	if (priv->buttons) {
++		g_list_free_full (priv->buttons, g_object_unref);
++		priv->buttons = NULL;
++	}
++
++	G_OBJECT_CLASS (gsd_wacom_osd_window_parent_class)->finalize (object);
++}
+diff --git a/plugins/wacom/gsd-wacom-osd-window.h b/plugins/wacom/gsd-wacom-osd-window.h
+new file mode 100644
+index 0000000..a1f669e
+--- /dev/null
++++ b/plugins/wacom/gsd-wacom-osd-window.h
+@@ -0,0 +1,62 @@
++/*
++ * Copyright (C) 2012 Red Hat, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++ *
++ * Author: Olivier Fourdan <ofourdan@redhat.com>
++ *
++ */
++
++#ifndef __GSD_WACOM_OSD_WINDOW_H
++#define __GSD_WACOM_OSD_WINDOW_H
++
++#include <gtk/gtk.h>
++#include <glib-object.h>
++#include "gsd-wacom-device.h"
++
++#define GSD_TYPE_WACOM_OSD_WINDOW         (gsd_wacom_osd_window_get_type ())
++#define GSD_WACOM_OSD_WINDOW(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), GSD_TYPE_WACOM_OSD_WINDOW, GsdWacomOSDWindow))
++#define GSD_WACOM_OSD_WINDOW_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), GSD_TYPE_WACOM_OSD_WINDOW, GsdWacomOSDWindowClass))
++#define GSD_IS_WACOM_OSD_WINDOW(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), GSD_TYPE_WACOM_OSD_WINDOW))
++#define GSD_IS_WACOM_OSD_WINDOW_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), GSD_TYPE_WACOM_OSD_WINDOW))
++#define GSD_WACOM_OSD_WINDOW_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), GSD_TYPE_WACOM_OSD_WINDOW, GsdWacomOSDWindowClass))
++
++typedef struct GsdWacomOSDWindowPrivate GsdWacomOSDWindowPrivate;
++
++typedef struct
++{
++        GtkWindow                 window;
++        GsdWacomOSDWindowPrivate *priv;
++} GsdWacomOSDWindow;
++
++typedef struct
++{
++        GtkWindowClass            parent_class;
++} GsdWacomOSDWindowClass;
++
++GType                     gsd_wacom_osd_window_get_type        (void) G_GNUC_CONST;
++void                      gsd_wacom_osd_window_set_device      (GsdWacomOSDWindow        *osd_window,
++			                                        GsdWacomDevice           *device);
++GsdWacomDevice *          gsd_wacom_osd_window_get_device      (GsdWacomOSDWindow        *osd_window);
++void                      gsd_wacom_osd_window_set_message     (GsdWacomOSDWindow        *osd_window,
++                                                                const gchar              *str);
++const char *              gsd_wacom_osd_window_get_message     (GsdWacomOSDWindow        *osd_window);
++void                      gsd_wacom_osd_window_set_active      (GsdWacomOSDWindow        *osd_window,
++                                                                gchar                    *button_id,
++                                                                gboolean                  active);
++GtkWidget *               gsd_wacom_osd_window_new             (GsdWacomDevice           *pad,
++                                                                const gchar              *message);
++
++#endif /* __GSD_WACOM_OSD_WINDOW_H */
+diff --git a/plugins/wacom/test-osd-window.c b/plugins/wacom/test-osd-window.c
+new file mode 100644
+index 0000000..484515e
+--- /dev/null
++++ b/plugins/wacom/test-osd-window.c
+@@ -0,0 +1,131 @@
++/*
++ * Copyright (C) 2012 Red Hat, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++ *
++ * Author: Olivier Fourdan <ofourdan@redhat.com>
++ *
++ */
++
++#include "config.h"
++
++#include <stdlib.h>
++#include <ctype.h>
++#include <string.h>
++#include <dirent.h>
++#include <glib/gi18n.h>
++#include "gsd-wacom-osd-window.h"
++
++static gboolean fake_device = FALSE;
++static gboolean option_debug = FALSE;
++
++static GsdWacomDevice *
++search_pad_device (void)
++{
++	GdkDeviceManager *mgr;
++	GList *list, *l;
++
++	mgr = gdk_display_get_device_manager (gdk_display_get_default ());
++	list = gdk_device_manager_list_devices (mgr, GDK_DEVICE_TYPE_SLAVE);
++	for (l = list; l ; l = l->next) {
++		GsdWacomDevice *device;
++
++		device = gsd_wacom_device_new (l->data);
++		if (gsd_wacom_device_get_device_type (device) == WACOM_TYPE_PAD)
++			return (device);
++		g_object_unref (device);
++	}
++	g_list_free (list);
++
++	return NULL;
++}
++
++static GsdWacomDevice *
++create_fake_device (void)
++{
++	return gsd_wacom_device_create_fake (WACOM_TYPE_PAD,
++					     "Wacom Cintiq 21UX2",
++					     "Wacom Cintiq 21UX2 pad");
++}
++
++static gboolean
++on_key_release_event(GtkWidget   *widget,
++                     GdkEventKey *event,
++                     gpointer     data)
++{
++	if (event->type != GDK_KEY_RELEASE)
++		return FALSE;
++	if (event->keyval != GDK_KEY_Escape)
++		return FALSE;
++
++	gtk_main_quit();
++
++	return FALSE;
++}
++
++int main(int argc, char** argv)
++{
++	GtkWidget *widget;
++	GError *error = NULL;
++	GOptionContext *context;
++	GsdWacomDevice *device;
++	gchar *message;
++	const GOptionEntry entries[] = {
++		{ "fake", 'f', 0, G_OPTION_ARG_NONE, &fake_device, "Fake Wacom Cintiq 21UX2", NULL },
++		{ "debug", 'd', 0, G_OPTION_ARG_NONE, &option_debug, "Debug output", NULL },
++		{ NULL }
++	};
++
++	gtk_init (&argc, &argv);
++
++	context = g_option_context_new ("- test functions");
++	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
++
++	if (g_option_context_parse (context, &argc, &argv, &error) == FALSE) {
++		g_print ("Option parsing failed: %s\n", error->message);
++		return 1;
++	}
++
++	if (option_debug)
++		g_setenv ("G_MESSAGES_DEBUG", "all", TRUE);
++
++	if (fake_device == FALSE)
++		device = search_pad_device ();
++	else
++		device = create_fake_device ();
++
++	if (device == NULL) {
++		g_print ("No pad device found, consider using --fake\n");
++		return 1;
++	}
++
++	gtk_init(&argc, &argv);
++
++	message = g_strdup_printf ("<big><b>%s</b></big>\n<i>Test OSD application</i>", gsd_wacom_device_get_name (device));
++	widget = gsd_wacom_osd_window_new (device, message);
++	g_free (message);
++
++	g_signal_connect (widget, "key-release-event",
++			  G_CALLBACK(on_key_release_event), NULL);
++	g_signal_connect (widget, "delete-event",
++			  G_CALLBACK (gtk_main_quit), NULL);
++	g_signal_connect (widget, "unmap",
++			  G_CALLBACK (gtk_main_quit), NULL);
++
++	gtk_widget_show (widget);
++	gtk_main ();
++
++	return 0;
++}
+-- 
+1.7.12.1
+
