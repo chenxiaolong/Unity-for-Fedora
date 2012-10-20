@@ -2,11 +2,12 @@
 
 # Partially based off of Fedora 18's spec file
 
+%define _ubuntu_ver 3.6.0
 %define _ubuntu_rel 0ubuntu1
 
 Name:		gnome-session
-Version:	3.6.0
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	3.6.1
+Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME session manager
 
 Group:		User Interface/Desktops
@@ -15,13 +16,14 @@ URL:		http://www.gnome.org/
 Source0:	http://download.gnome.org/sources/gnome-session/3.6/gnome-session-%{version}.tar.xz
 
 Source98:	55gnome-session_gnomerc
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{version}-%{_ubuntu_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
 
 Source1:	gnome-authentication-agent.desktop
 
 # Fedora's patches
 Patch0:		gnome-session-3.3.1-llvmpipe.patch
 Patch1:		gnome-session-3.3.92-nv30.patch
+Patch2:		fedora_0001-main-Set-XDG_MENU_PREFIX.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -87,8 +89,9 @@ to the display manager menus.
 tar zxvf '%{SOURCE99}'
 
 # Apply Fedora's patches
-%patch0 -p1
-%patch1 -p1
+%patch0 -p1 -b .llvmpipe
+%patch1 -p1 -b .nv30
+%patch2 -p1 -b .set-xdg-menu-prefix
 
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
@@ -123,7 +126,6 @@ autoreconf -vfi
 %configure \
   --enable-docbook-docs \
   --docdir=%{_datadir}/doc/%{name}-%{version} \
-  --with-gtk=3.0 \
   --enable-systemd
 
 make %{?_smp_mflags}
@@ -216,6 +218,12 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-1.ubuntu3.6.0.0ubuntu1
+- Version 3.6.1
+- Merge Fedora's changes
+  - 3.6.1-2: Set XDG_MENU_PREFIX to pick the correct menu layout in gnome-shell
+    and alacarte
+
 * Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.0ubuntu1
 - Version 3.6.0
 - Ubuntu release 0ubuntu1
