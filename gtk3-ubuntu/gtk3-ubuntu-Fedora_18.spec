@@ -9,7 +9,7 @@
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name:		gtk3
 Version:	3.6.1
-Release:	1.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
