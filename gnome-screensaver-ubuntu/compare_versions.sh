@@ -6,7 +6,7 @@ F18_SPEC_VER="$(rpmspec -q --qf '%{version}\n' gnome-screensaver-ubuntu-Fedora_1
 F18_UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' gnome-screensaver-ubuntu-Fedora_18.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/gnome-screensaver' -O - | sed -n 's/.*>gnome-screensaver_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/gnome-screensaver' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/gnome-screensaver/3.6/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')

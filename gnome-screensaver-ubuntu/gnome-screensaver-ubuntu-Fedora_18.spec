@@ -2,11 +2,12 @@
 
 # Based off of the Fedora 18 spec file
 
+%define _ubuntu_ver 3.6.0
 %define _ubuntu_rel 0ubuntu1
 
 Name:		gnome-screensaver
-Version:	3.6.0
-Release:	100.%{_ubuntu_rel}%{?dist}
+Version:	3.6.1
+Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME Screensaver
 
 Group:		Amusements/Graphics
@@ -14,7 +15,7 @@ License:	GPLv2+
 URL:		http://www.gnome.org
 Source0:	http://download.gnome.org/sources/gnome-screensaver/3.6/gnome-screensaver-%{version}.tar.xz
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-screensaver_%{version}-%{_ubuntu_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-screensaver_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
 
 Patch0:		gnome-screensaver-2.20.0-selinux-permit.patch
 
@@ -98,6 +99,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ubuntu3.6.0.0ubuntu1
+- Version 3.6.1
+
 * Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.0ubuntu1
 - Version 3.6.0
 - Ubuntu release 0ubuntu1
