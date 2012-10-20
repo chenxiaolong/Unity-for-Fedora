@@ -3,14 +3,14 @@
 # Partially based off of Fedora 18's spec file
 
 %define _ubuntu_ver 3.4.2
-%define _ubuntu_rel 0ubuntu18
+%define _ubuntu_rel 0ubuntu19
 
 Name:		control-center
-Version:	3.6.0
-Release:	2.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Epoch:		1
+Version:	3.6.1
+Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	Utilities to configure the GNOME desktop
 
-Group:		User Interface/Desktops
 License:	GPLv2+ and GFDL
 URL:		http://www.gnome.org
 Source0:	http://download.gnome.org/sources/gnome-control-center/3.6/gnome-control-center-%{version}.tar.xz
@@ -39,6 +39,10 @@ Patch17:	0018_dont_download_local_image.patch
 Patch18:	0019_fix-crash-on-user-panel.patch
 Patch19:	0020_classic_use_sound_indicator.patch
 Patch20:	0021_accounts_fix_unsetting_icon.patch
+
+# Fedora's patches
+# https://bugzilla.gnome.org/show_bug.cgi?id=683567
+Patch30:	fedora_0001-wacom-Add-show-help-window-to-the-list-of-actions.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -94,7 +98,7 @@ BuildRequires:	cups-devel
 # Requires Ubuntu's patched gnome-settings-daemon
 Requires:	gnome-settings-daemon-ubuntu
 
-Requires:	control-center-filesystem = %{version}-%{release}
+Requires:	control-center-filesystem = %{epoch}:%{version}-%{release}
 
 Requires:	alsa-lib
 Requires:	dbus-x11
@@ -124,7 +128,7 @@ Requires:	nm-connection-editor
 # Ubuntu's new sound panel (requires XDG_CURRENT_DESKTOP to be set)
 Requires:	gnome-session-ubuntu
 
-Provides:	control-center-ubuntu = %{version}-%{release}
+Provides:	control-center-ubuntu = %{epoch}:%{version}-%{release}
 
 %description
 This package contains configuration utilities for the GNOME desktop, which
@@ -135,11 +139,10 @@ properties, screen resolution, and other settings.
 
 %package devel
 Summary:	Development files for the GNOME Control Center library
-Group:		Development/Libraries
 
-Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
 
-Provides:       control-center-ubuntu-devel = %{version}-%{release}
+Provides:       control-center-ubuntu-devel = %{epoch}:%{version}-%{release}
 
 %description devel
 This package contains the development files for Ubuntu's patched version of the
@@ -148,9 +151,8 @@ GNOME Control Center library.
 
 %package filesystem
 Summary:	GNOME Control Center directories
-Group:		Development/Libraries
 
-Provides:	control-center-ubuntu-filesystem = %{version}-%{release}
+Provides:	control-center-ubuntu-filesystem = %{epoch}:%{version}-%{release}
 
 %description filesystem
 The GNOME control-center provides a number of extension points for applications.
@@ -185,6 +187,9 @@ tar zxvf '%{SOURCE99}'
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
+
+# Apply Fedora's patches
+%patch30 -p1 -b .wacom-osd-window
 
 autoreconf -vfi
 
@@ -447,9 +452,22 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %dir %{_datadir}/gnome/wm-properties/
 %dir %{_datadir}/gnome-control-center/
 %dir %{_datadir}/gnome-control-center/keybindings/
+%dir %{_datadir}/gnome-control-center/sounds/
 
 
 %changelog
+* Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ubuntu3.4.2.0ubuntu19
+- Version 3.6.1
+- Ubuntu version 3.4.2
+- Ubuntu release 0ubuntu19
+  - Nothing new for Fedora
+- Merge Fedora's changes
+  - git: Update to recent packaging guidelines
+         This removes the now obsolete 'Group:' tag, and update the scriptlets.
+         It also makes the filesystem subpackage own a previously unowned dir.
+  - 3.6.0-2: Add Wacom OSD window from upstream bug #683567
+- Match Fedora's epoch of 1
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.ubuntu3.4.2.0ubuntu18
 - Ubuntu release 0ubuntu18
   - Refreshed 0001_04_new_appearance_settings.patch

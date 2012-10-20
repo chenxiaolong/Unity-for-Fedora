@@ -1,0 +1,30 @@
+From a1090ffafad98f0953cb906d62619ebbe3a21676 Mon Sep 17 00:00:00 2001
+From: Olivier Fourdan <ofourdan@redhat.com>
+Date: Fri, 7 Sep 2012 13:52:08 +0200
+Subject: [PATCH] wacom: Add show help window to the list of actions
+
+for pad buttons, once the OSD window patch is
+merged in gnome-settings-daemon.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=683567
+---
+ panels/wacom/cc-wacom-page.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/panels/wacom/cc-wacom-page.c b/panels/wacom/cc-wacom-page.c
+index d2a211a..ddaafa6 100644
+--- a/panels/wacom/cc-wacom-page.c
++++ b/panels/wacom/cc-wacom-page.c
+@@ -117,7 +117,8 @@ static struct {
+ } action_table[] = {
+        { GSD_WACOM_ACTION_TYPE_NONE,           NC_("Wacom action-type", "None")                },
+        { GSD_WACOM_ACTION_TYPE_CUSTOM,         NC_("Wacom action-type", "Send Keystroke")      },
+-       { GSD_WACOM_ACTION_TYPE_SWITCH_MONITOR, NC_("Wacom action-type", "Switch Monitor")      }
++       { GSD_WACOM_ACTION_TYPE_SWITCH_MONITOR, NC_("Wacom action-type", "Switch Monitor")      },
++       { GSD_WACOM_ACTION_TYPE_HELP,           NC_("Wacom action-type", "Show On-Screen Help") }
+ };
+ 
+ #define WACOM_C(x) g_dpgettext2(NULL, "Wacom action-type", x)
+-- 
+1.7.12.1
+
