@@ -6,7 +6,7 @@ F18_SPEC_VER="$(rpmspec -q --qf '%{version}\n' nautilus-ubuntu-Fedora_18.spec | 
 F18_PPA_REL="$(sed -n 's/^%define[ ]*_ppa_rel[ ]*\(.*\)$/\1/p' nautilus-ubuntu-Fedora_18.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/precise-updates/source/nautilus' -O - | sed -n 's/.*>nautilus_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/nautilus' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
 
 echo "Getting latest GNOME 3 PPA version..."
 PPA_VER=($(wget -q 'http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/n/nautilus/' -O - | sed -n 's/.*>nautilus_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p' | tail -n 1))

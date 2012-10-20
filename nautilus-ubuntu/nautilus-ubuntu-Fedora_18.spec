@@ -4,18 +4,19 @@
 
 # Nautilus 3.6 won't be included in Ubuntu 12.10, so we'll use the patches from
 # the GNOME3 PPA
+%define _ppa_ver 3.6.0
 %define _ppa_rel 0ubuntu1~ubuntu12.10.1
 
 Name:		nautilus
-Version:	3.6.0
-Release:	100.ppa%{_ppa_rel}%{?dist}
+Version:	3.6.1
+Release:	100.ppa%{_ppa_ver}.ppa%{_ppa_rel}%{?dist}
 Summary:	File manager for GNOME
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://projects.gnome.org/nautilus/
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/nautilus/3.6/nautilus-%{version}.tar.xz
-Source99:	http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/n/nautilus/nautilus_%{version}-%{_ppa_rel}.debian.tar.gz
+Source99:	http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/n/nautilus/nautilus_%{_ppa_ver}-%{_ppa_rel}.debian.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -221,6 +222,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ppa3.6.0.ppa0ubuntu1~ubuntu12.10.1
+- Version 3.6.1
+
 * Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-100.0ubuntu1~ubuntu12.10.1
 - Version 3.6.0
 - GNOME 3 PPA release 0ubuntu1~ubuntu12.10.1
