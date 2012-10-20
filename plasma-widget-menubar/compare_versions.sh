@@ -3,7 +3,7 @@
 SPEC_VER="$(rpmspec -q --qf '%{version}\n' plasma-widget-menubar.spec | head -1)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/plasma-widget-menubar' -O - | sed -n 's/.*>plasma-widget-menubar_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/plasma-widget-menubar' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q 'https://launchpad.net/plasma-widget-menubar/+download' -O - | sed -n 's/.*plasma-widget-menubar-\(.*\)\.tar\.bz2.*/\1/p' | head -n 1)
