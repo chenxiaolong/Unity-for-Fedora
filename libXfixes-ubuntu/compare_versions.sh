@@ -6,7 +6,7 @@ F18_SPEC_VER="$(rpmspec -q --qf '%{version}\n' libXfixes-ubuntu-Fedora_18.spec |
 F18_UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' libXfixes-ubuntu-Fedora_18.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/libxfixes' -O - | sed -n 's/.*>libxfixes_\(.*\)-\(.*\)\.diff\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/libxfixes' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q http://xorg.freedesktop.org/releases/individual/lib/ -O - | sed -n 's/.*libXfixes-\(.*\).tar.bz2.*/\1/p' | tail -n 1)
