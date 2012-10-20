@@ -7,7 +7,7 @@ F18_UBUNTU_VER="$(sed -n 's/^%define[ ]*_ubuntu_ver[ ]*\(.*\)$/\1/p' gnome-setti
 F18_UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' gnome-settings-daemon-ubuntu-Fedora_18.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/gnome-settings-daemon' -O - | sed -n 's/.*>gnome-settings-daemon_\(.*\)-\(.*\)\.debian\.tar\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/gnome-settings-daemon' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/gnome-settings-daemon/3.6/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')

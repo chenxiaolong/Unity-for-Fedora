@@ -1223,7 +1223,7 @@ index 0e06495..7c120c4 100644
 +        g_debug ("Removing suspend delay inhibitor");
 +        close (manager->priv->inhibit_suspend_fd);
 +        manager->priv->inhibit_suspend_fd = -1;
-+        manager->priv->inhibit_suspend_taken = TRUE;
++        manager->priv->inhibit_suspend_taken = FALSE;
 +}
 +
 +static gboolean

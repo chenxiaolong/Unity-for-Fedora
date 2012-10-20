@@ -6,8 +6,8 @@
 %define _ubuntu_rel 0ubuntu14
 
 Name:		gnome-settings-daemon
-Version:	3.6.0
-Release:	3.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Version:	3.6.1
+Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
 Summary:	The daemon sharing settings from GNOME to GTK+/KDE applications
 
 Group:		System Environment/Daemons
@@ -35,7 +35,6 @@ Patch11:	0012_power-check-null-devices.patch
 Patch12:	0013_64_restore_terminal_keyboard_shortcut_schema.patch
 
 # Fedora's patches
-Patch20:	fedora_0001-Clean-up-gsd_power_stop.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=680689
 Patch21:	fedora_0001-power-and-media-keys-Use-logind-for-suspending-and-r.patch
 # Wacom OSD window: https://bugzilla.gnome.org/show_bug.cgi?id=679062
@@ -46,6 +45,7 @@ BuildRequires:	automake
 BuildRequires:	gettext
 BuildRequires:	intltool
 BuildRequires:	libtool
+BuildRequires:	libxslt
 BuildRequires:	pkgconfig
 
 BuildRequires:	pkgconfig(colord)
@@ -132,7 +132,6 @@ tar zxvf '%{SOURCE99}'
 %patch12 -p1
 
 # Apply Fedora's patches
-%patch20 -p1
 %patch21 -p1
 %patch22 -p1 -b .wacom-osd-window
 
@@ -342,6 +341,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 
 
 %changelog
+* Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ubuntu3.4.2.0ubuntu14
+- Version 3.6.1
+- Merge Fedora's changes
+  - 3.6.1-3: Fix a typo in the suspend patch (#858259)
+- fedora_0001-Clean-up-gsd_power_stop.patch
+  - Dropped: merged upstream
+- Add libxslt to build dependencies
+
 * Mon Oct 08 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-3.ubuntu3.4.2.0ubuntu14
 - Merge Fedora's changes
   - 3.6.0-2: Split out PackageKit into a sub package. Fixes #699348
