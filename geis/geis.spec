@@ -4,15 +4,19 @@
 %filter_provides_in %{python_sitearch}/_geis_bindings\.so$
 %filter_setup
 
+%define _ubuntu_rel 0ubuntu2
+
 Name:		geis
 Version:	2.2.12
-Release:	1%{?dist}
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	An implementation of the GEIS interface
 
 Group:		System Environment/Libraries
 License:	GPLv2 and LGPLv3
 URL:		https://launchpad.net/geis
 Source0:	https://launchpad.net/geis/trunk/%{version}/+download/geis-%{version}.tar.xz
+
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/geis_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 BuildRequires:	asciidoc
 BuildRequires:	desktop-file-utils
@@ -80,6 +84,12 @@ This package contains the testing tools for the geis library.
 
 # Fix Python architecture-dependant site-packages directory
 #sed -i '/am_cv_python_pythondir=/ s/lib/%{_lib}/g' aclocal.m4
+
+# Apply Ubuntu's patches
+tar zxvf '%{SOURCE99}'
+for i in $(grep -v '#' debian/patches/series); do
+  patch -Np1 -i "debian/patches/${i}"
+done
 
 
 %build
@@ -163,6 +173,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sun Oct 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.12-1.0ubuntu2
+- Ubuntu release 0ubuntu2
+  - Fix Geisv1 gesture class IDs (LP: #1047596)
+
 * Mon Sep 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.12-1
 - Version 2.2.12
 
