@@ -26,6 +26,8 @@ BuildRequires:	pkgconfig(upower-glib)
 # From Ubuntu packaging
 Requires:	control-center
 Requires:	gnome-settings-daemon
+# gnome-power-statistics needed
+Requires:	gnome-power-manager
 
 %description
 This package contains an indicator to show the battery status. It replaces the
