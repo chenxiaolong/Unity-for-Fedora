@@ -100,6 +100,8 @@ tar zxvf '%{SOURCE99}'
     sed -i '/15_use-ubuntu-help.patch/d' debian/patches/series
   # Do not hide nautilus from the startup applications tool
     sed -i '/08_clean_session_capplet.patch/d' debian/patches/series
+  # Fixed upstream (with another patch)
+    sed -i '/21_correct_timestamp_use_fix_focus_issue.patch/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
