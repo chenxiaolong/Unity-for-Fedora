@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-lens-applications
-Version:	6.8.0
+Version:	6.10.0
 Release:	1%{?dist}
 Summary:	Unity Applications Lens
 
@@ -87,6 +87,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.10.0-1
+- Version 6.10.0
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.8.0-1
 - Version 6.8.0
 
