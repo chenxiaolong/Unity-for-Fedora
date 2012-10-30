@@ -5,7 +5,7 @@
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 
 Name:		unity
-Version:	6.8.0
+Version:	6.10.0
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
@@ -361,6 +361,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/unity/6/dash-widgets.json
 %{_datadir}/unity/6/*.png
 %{_datadir}/unity/6/*.svg
+%{_datadir}/unity/6/searchingthedashlegalnotice.html
 %{_datadir}/unity/themes/dash-widgets.json
 
 
@@ -419,6 +420,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.10.0-1.0ubuntu1
+- Version 6.10.0
+- Ubuntu release 0ubuntu1
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.8.0-1.0ubuntu1
 - Version 6.8.0
 - Ubuntu release 0ubuntu1
