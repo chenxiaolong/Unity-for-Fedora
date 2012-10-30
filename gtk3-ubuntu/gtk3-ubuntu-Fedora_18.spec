@@ -2,7 +2,7 @@
 # Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 %define _ubuntu_ver 3.6.0
-%define _ubuntu_rel 0ubuntu3
+%define _ubuntu_rel 0ubuntu3.1
 
 %global bin_version 3.0.0
 
@@ -72,8 +72,6 @@ Summary:	Input methods for GTK+
 Group:		System Environment/Libraries
 
 Requires:	gtk3%{?_isa} = %{version}-%{release}
-# for /etc/X11/xinit/xinput.d
-Requires:	imsettings
 
 %description immodules
 The gtk3-immodules package contains standalone input methods that
@@ -135,13 +133,14 @@ tar zxvf "%{SOURCE99}"
 # Do not apply these patches
   # Debian/Ubuntu's multiarch
     sed -i '/061_multiarch_module_fallback.patch/d' debian/patches/series
-  # Included in Fedora's patches
-    sed -i '/git_layouts_handling.patch/d' debian/patches/series
-  # Only causes problems in Ubuntu
-    sed -i '/revert_git_a11y_stopped.patch/d' debian/patches/series
-  # Merged upstream
-    sed -i '/git_use_right_display.patch/d' debian/patches/series
-    sed -i '/git_iconview_render_item_select.patch/d' debian/patches/series
+  # Fedora's tracker is not compiled with FTS
+    sed -i '/044_tracker_fts.patch/d' debian/patches/series
+  # Ubuntu's defaults
+    sed -i '/022_disable-viqr-im-for-vi-locale.patch/d' debian/patches/series
+  # Not needed
+    sed -i '/071_fix-installation-of-HTML-images.patch/d' debian/patches/series
+  # Drop git patches
+    sed -i '/git/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
@@ -252,6 +251,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/themes/Emacs
 %{_libdir}/girepository-1.0
 %dir %{_sysconfdir}/gtk-3.0
+%dir %{_sysconfdir}/X11/xinit/xinput.d/
 %{_sysconfdir}/X11/xinit/xinput.d/im-cedilla.conf
 %ghost %{_libdir}/gtk-3.0/%{bin_version}/immodules.cache
 %{_mandir}/man1/gtk-query-immodules-3.0.1.gz
@@ -296,7 +296,12 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
 %changelog
-* Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-1.ubuntu3.6.0.0ubuntu2
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-1.ubuntu3.6.0.0ubuntu3.1
+- Ubuntu release 0ubuntu3.1
+- Merge Fedora's changes:
+  - 3.6.1-2: Don't pull in imsettings just for a directory
+
+* Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-1.ubuntu3.6.0.0ubuntu3
 - Version 3.6.1
 - Ubuntu version 3.6.0
 - Ubuntu release 0ubuntu3
