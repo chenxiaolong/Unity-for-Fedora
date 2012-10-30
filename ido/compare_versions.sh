@@ -4,7 +4,7 @@ F17_SPEC_VER="$(rpmspec -q --qf '%{version}\n' ido-Fedora_17.spec | head -1)"
 F18_SPEC_VER="$(rpmspec -q --qf '%{version}\n' ido-Fedora_18.spec | head -1)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q 'http://packages.ubuntu.com/quantal/source/ido' -O - | sed -n 's/.*>ido_\(.*\)-\(.*\)\.diff\.gz<.*/\1 \2/p'))
+UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/ido' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q 'https://launchpad.net/ido/+download' -O - | sed -n 's/.*ido-\(.*\)\.tar\.gz.*/\1/p' | head -n 1)
