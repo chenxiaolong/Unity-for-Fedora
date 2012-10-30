@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		bamf
-Version:	0.3.2
+Version:	0.3.4
 Release:	1%{?dist}
 Summary:	Application Matching Framework - GTK 2
 
@@ -189,6 +189,9 @@ touch $RPM_BUILD_ROOT%{_datadir}/applications/bamf.index
 
 
 %changelog
+* Sat Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.4-1
+- Version 0.3.4
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.2-1
 - Version 0.3.2
 
