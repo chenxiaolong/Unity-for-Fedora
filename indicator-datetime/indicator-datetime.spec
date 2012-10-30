@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-datetime
-Version:	12.10.1
+Version:	12.10.2
 Release:	1%{?dist}
 Summary:	Indicator for displaying the date and time
 
@@ -11,7 +11,8 @@ URL:		https://launchpad.net/indicator-datetime
 Source0:	https://launchpad.net/indicator-datetime/12.10/%{version}/+download/indicator-datetime-%{version}.tar.gz
 
 Patch0:		0001_Revert_port_to_EDS_3.6_API.patch
-Patch1:		0002_Read_etc_sysconfig_clock.patch
+Patch1:		0001_Port_to_systemd_timedated.patch
+Patch2:		0002_Remove_timezone_functionality.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -45,10 +46,22 @@ panel.
 %prep
 %setup -q
 
+# Revert port to evolution-data-server 3.6's API
 %if 0%{fedora} <= 17
 %patch0 -p1
 %endif
-%patch1 -p1
+
+# Port to systemd's timedated
+%patch1 -p1 -b .systemd
+
+# Removes all timezone functionality from the indicator.
+# - Removes indicator-datetime's own timezone settings. They do not work with
+#   systemd and requires much work to be ported when GNOME's own timezone
+#   settings can be used instead.
+# - Removes dependencies on libtimezonemap and geoclue
+# - Removes ability to disable multiple timezones
+# - Removes ability to changes timezone based on physical location
+%patch2 -p1 -b .timezone
 
 autoreconf -vfi
 
@@ -92,6 +105,18 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2-1
+- Version 12.10.2
+- Add patches:
+  - 0001_Port_to_systemd_timedated.patch
+    - Read timezone from the timedated daemon
+  - 0002_Remove_timezone_functionality.patch
+    - Remove any timezone related features as they don't work with
+      systemd's timedated
+
+* Tue Oct 02 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-2
+- Add patch to get timezone from systemd's timedated daemon
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
 - Version 12.10.1
 
