@@ -4,19 +4,18 @@
 
 # Nautilus 3.6 won't be included in Ubuntu 12.10, so we'll use the patches from
 # the GNOME3 PPA
-%define _ppa_ver 3.6.0
-%define _ppa_rel 0ubuntu1~ubuntu12.10.1
+%define _ppa_rel 0ubuntu1~ubuntu12.10.2
 
 Name:		nautilus
 Version:	3.6.1
-Release:	100.ppa%{_ppa_ver}.ppa%{_ppa_rel}%{?dist}
+Release:	101.ppa%{_ppa_rel}%{?dist}
 Summary:	File manager for GNOME
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://projects.gnome.org/nautilus/
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/nautilus/3.6/nautilus-%{version}.tar.xz
-Source99:	http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/n/nautilus/nautilus_%{_ppa_ver}-%{_ppa_rel}.debian.tar.gz
+Source99:	http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/n/nautilus/nautilus_%{version}-%{_ppa_rel}.debian.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -100,8 +99,6 @@ tar zxvf '%{SOURCE99}'
     sed -i '/15_use-ubuntu-help.patch/d' debian/patches/series
   # Do not hide nautilus from the startup applications tool
     sed -i '/08_clean_session_capplet.patch/d' debian/patches/series
-  # Fixed upstream (with another patch)
-    sed -i '/21_correct_timestamp_use_fix_focus_issue.patch/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
@@ -224,6 +221,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-101.ppa0ubuntu1~ubuntu12.10.2
+- PPA release 0ubuntu1~ubuntu12.10.2
+
 * Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ppa3.6.0.ppa0ubuntu1~ubuntu12.10.1
 - Version 3.6.1
 
