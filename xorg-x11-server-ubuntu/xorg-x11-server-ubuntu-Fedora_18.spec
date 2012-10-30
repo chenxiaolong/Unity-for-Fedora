@@ -14,7 +14,7 @@
 
 Name:		xorg-x11-server
 Version:	1.13.0
-Release:	101%{?dist}
+Release:	102%{?dist}
 Summary:	X.Org X11 X server
 
 Group:		User Interface/X
@@ -43,6 +43,11 @@ Patch12:	fedora_0001-dri2-invalidate-drawable-after-sharing-pixmap.patch
 Patch13:	fedora_0001-xf86-return-NULL-for-compat-output-if-no-outputs.patch
 Patch14:	fedora_0001-scan-pci-after-probing-devices.patch
 Patch15:	fedora_0001-config-udev-ignore-change-on-drm-devices.patch
+# Bug 871064 - Add touchscreen fixes for F18
+Patch16:	fedora_0001-Sync-TouchListener-memory-allocation-with-population.patch
+Patch17:	fedora_0001-Xi-Call-UpdateDeviceState-after-the-first-emulated-m.patch
+Patch18:	fedora_0001-Xi-Don-t-check-for-TOUCH_END-it-s-never-set.patch
+Patch19:	fedora_0001-Xi-don-t-deliver-TouchEnd-to-a-client-waiting-for-To.patch
 # From Ubuntu's packaging version 1.13.0 and release 0ubuntu4
 #Patch90:	500_pointer_barrier_thresholds.diff
 Source90:	500_pointer_barrier_thresholds.diff
@@ -480,6 +485,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.0-102
+- Merge Fedora's changes:
+  - Add touchscreen fixes (including pointer emulation) #871064
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.0-101
 - Update xserver-autobind-hotplug.patch from fedpkg
 
