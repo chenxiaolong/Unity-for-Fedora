@@ -4,7 +4,7 @@
 
 %global debug_package %{nil}
 
-%define _ubuntu_rel 0ubuntu2
+%define _ubuntu_rel 0ubuntu3
 
 Name:		gsettings-desktop-schemas
 Version:	3.6.0
@@ -50,6 +50,11 @@ gsettings-desktop-schemas.
 
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
+
+# Disable patches
+  # Migration code is useless for us
+    sed -i '/ubuntu_overlay-scrollbars.patch/d' debian/patches/series
+
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
 done
@@ -94,6 +99,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.0ubuntu3
+- Version 3.6.0
+- Ubuntu release 0ubuntu3
+
 * Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.0ubuntu2
 - Version 3.6.0
 - Ubuntu release 0ubuntu2
