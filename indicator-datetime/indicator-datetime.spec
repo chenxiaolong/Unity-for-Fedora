@@ -34,7 +34,6 @@ BuildRequires:	pkgconfig(libgnome-control-center)
 BuildRequires:	pkgconfig(libical)
 BuildRequires:	pkgconfig(libido3-0.1)
 BuildRequires:	pkgconfig(polkit-gobject-1)
-BuildRequires:	pkgconfig(timezonemap)
 
 Requires:	control-center-ubuntu
 
