@@ -3,7 +3,7 @@
 # Based off of the Fedora 18 spec file
 
 %define _ubuntu_ver 3.6.0
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
 
 Name:		gnome-screensaver
 Version:	3.6.1
@@ -99,6 +99,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ubuntu3.6.0.0ubuntu2
+- Ubuntu release 0ubuntu2
+
 * Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ubuntu3.6.0.0ubuntu1
 - Version 3.6.1
 
