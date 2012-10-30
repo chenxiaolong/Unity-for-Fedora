@@ -3,7 +3,7 @@
 %define _unity_major_ver 6
 
 Name:		unity-lens-video
-Version:	0.3.12
+Version:	0.3.14
 Release:	1%{?dist}
 Summary:	Unity video lens
 
@@ -27,7 +27,7 @@ the dash of the Unity shell.
 
 
 %prep
-%setup -q
+%setup -q -n unity-lens-videos-%{version}
 
 %patch0 -p1 -b .use_libexec
 
@@ -71,6 +71,9 @@ sed -i \
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.14-1
+- Version 0.3.14
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.12-1
 - Version 0.3.12
 
