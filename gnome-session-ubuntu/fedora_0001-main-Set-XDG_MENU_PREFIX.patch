@@ -11,7 +11,7 @@ diff --git a/gnome-session/main.c b/gnome-session/main.c
 index 1903381..147daec 100644
 --- a/gnome-session/main.c
 +++ b/gnome-session/main.c
-@@ -347,6 +347,11 @@ main (int argc, char **argv)
+@@ -348,6 +348,11 @@ main (int argc, char **argv)
           */
          gsm_util_setenv ("GNOME_DESKTOP_SESSION_ID", "this-is-deprecated");
  
@@ -22,7 +22,7 @@ index 1903381..147daec 100644
 +
          client_store = gsm_store_new ();
  
-         xsmp_server = gsm_xsmp_server_new (client_store);
+         /* Talk to logind before acquiring a name, since it does synchronous
 -- 
 1.7.12.1
 

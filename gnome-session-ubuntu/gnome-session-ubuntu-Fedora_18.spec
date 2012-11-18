@@ -2,12 +2,11 @@
 
 # Partially based off of Fedora 18's spec file
 
-%define _ubuntu_ver 3.6.0
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
 
 Name:		gnome-session
-Version:	3.6.1
-Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Version:	3.6.2
+Release:	101.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME session manager
 
 Group:		User Interface/Desktops
@@ -16,7 +15,7 @@ URL:		http://www.gnome.org/
 Source0:	http://download.gnome.org/sources/gnome-session/3.6/gnome-session-%{version}.tar.xz
 
 Source98:	55gnome-session_gnomerc
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 Source1:	gnome-authentication-agent.desktop
 
@@ -24,6 +23,7 @@ Source1:	gnome-authentication-agent.desktop
 Patch0:		gnome-session-3.3.1-llvmpipe.patch
 Patch1:		gnome-session-3.3.92-nv30.patch
 Patch2:		fedora_0001-main-Set-XDG_MENU_PREFIX.patch
+Patch3:		fedora_reject-shutdown-clients.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -92,6 +92,7 @@ tar zxvf '%{SOURCE99}'
 %patch0 -p1 -b .llvmpipe
 %patch1 -p1 -b .nv30
 %patch2 -p1 -b .set-xdg-menu-prefix
+%patch3 -p1 -b .reject-shutdown-clients
 
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
@@ -218,6 +219,15 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-1.0ubuntu2
+- Version 3.6.2
+- Ubuntu release 0ubuntu2
+- Merge Fedora's changes
+  - 3.6.2-1: Rebase the XDG_MENU_PREFIX patch
+  - 3.6.2-2: Add upstream patch to fix handling of client registration during
+  -          shutdown
+  -        : Fixes slow gnome-session shutdown for maliit users
+
 * Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-1.ubuntu3.6.0.0ubuntu1
 - Version 3.6.1
 - Merge Fedora's changes

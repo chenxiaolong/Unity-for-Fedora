@@ -1,0 +1,172 @@
+From f2bee2cb89056d597d5815a1c403466234093a7d Mon Sep 17 00:00:00 2001
+From: Daniel Drake <dsd@laptop.org>
+Date: Mon, 12 Nov 2012 15:29:13 -0600
+Subject: [PATCH] Reject new XSMP clients earlier in the shutdown path
+
+When we are ending the session, a new client connecting and trying to
+register causes things to get confused and long delays to happen.
+
+Move GsmXsmpServer to be managed by GsmManager, which can now tell the
+server at a much earlier time when we are shutting down. Now new clients
+are rejected much earlier and the confusion and delays are gone.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=688209
+---
+ gnome-session/gsm-manager.c     | 11 +++++++++++
+ gnome-session/gsm-xsmp-server.c | 13 ++++++++++---
+ gnome-session/gsm-xsmp-server.h |  1 +
+ gnome-session/main.c            |  6 ------
+ 4 files changed, 22 insertions(+), 9 deletions(-)
+
+Index: gnome-session-3.6.2/gnome-session/gsm-manager.c
+===================================================================
+--- gnome-session-3.6.2.orig/gnome-session/gsm-manager.c
++++ gnome-session-3.6.2/gnome-session/gsm-manager.c
+@@ -48,6 +48,7 @@
+ #include "gsm-presence.h"
+ #include "gsm-shell.h"
+ 
++#include "gsm-xsmp-server.h"
+ #include "gsm-xsmp-client.h"
+ #include "gsm-dbus-client.h"
+ 
+@@ -118,6 +119,7 @@ struct GsmManagerPrivate
+         GsmStore               *inhibitors;
+         GsmStore               *apps;
+         GsmPresence            *presence;
++        GsmXsmpServer          *xsmp_server;
+ 
+         char                   *session_name;
+         gboolean                is_fallback_session : 1;
+@@ -1584,6 +1586,7 @@ start_phase (GsmManager *manager)
+                 update_idle (manager);
+                 break;
+         case GSM_MANAGER_PHASE_QUERY_END_SESSION:
++                gsm_xsmp_server_stop_accepting_new_clients (manager->priv->xsmp_server);
+                 do_phase_query_end_session (manager);
+                 break;
+         case GSM_MANAGER_PHASE_END_SESSION:
+@@ -1641,6 +1644,7 @@ gsm_manager_start (GsmManager *manager)
+ 
+         g_return_if_fail (GSM_IS_MANAGER (manager));
+ 
++        gsm_xsmp_server_start (manager->priv->xsmp_server);
+         gsm_manager_set_phase (manager, GSM_MANAGER_PHASE_INITIALIZATION);
+         debug_app_summary (manager);
+         start_phase (manager);
+@@ -2380,6 +2384,11 @@ gsm_manager_set_client_store (GsmManager
+         manager->priv->clients = store;
+ 
+         if (manager->priv->clients != NULL) {
++                if (manager->priv->xsmp_server)
++                        g_object_unref (manager->priv->xsmp_server);
++
++                manager->priv->xsmp_server = gsm_xsmp_server_new (store);
++
+                 g_signal_connect (manager->priv->clients,
+                                   "added",
+                                   G_CALLBACK (on_store_client_added),
+@@ -2504,6 +2513,8 @@ gsm_manager_dispose (GObject *object)
+ 
+         g_debug ("GsmManager: disposing manager");
+ 
++        g_clear_object (&manager->priv->xsmp_server);
++
+         if (manager->priv->clients != NULL) {
+                 g_signal_handlers_disconnect_by_func (manager->priv->clients,
+                                                       on_store_client_added,
+Index: gnome-session-3.6.2/gnome-session/gsm-xsmp-server.c
+===================================================================
+--- gnome-session-3.6.2.orig/gnome-session/gsm-xsmp-server.c
++++ gnome-session-3.6.2/gnome-session/gsm-xsmp-server.c
+@@ -71,7 +71,7 @@ struct GsmXsmpServerPrivate
+         IceListenObj   *xsmp_sockets;
+         int             num_xsmp_sockets;
+         int             num_local_xsmp_sockets;
+-
++        gboolean        stopping;
+ };
+ 
+ enum {
+@@ -248,6 +248,14 @@ gsm_xsmp_server_start (GsmXsmpServer *se
+         }
+ }
+ 
++void
++gsm_xsmp_server_stop_accepting_new_clients (GsmXsmpServer *server)
++{
++        g_return_if_fail (GSM_IS_XSMP_SERVER (server));
++        g_debug ("gsm_xsmp_server_stop");
++        server->priv->stopping = TRUE;
++}
++
+ static void
+ gsm_xsmp_server_set_client_store (GsmXsmpServer *xsmp_server,
+                                   GsmStore      *store)
+@@ -319,8 +327,7 @@ accept_xsmp_connection (SmsConn        s
+         GsmClient             *client;
+         GsmIceConnectionWatch *data;
+ 
+-        /* FIXME: what about during shutdown but before gsm_xsmp_shutdown? */
+-        if (server->priv->xsmp_sockets == NULL) {
++        if (server->priv->stopping) {
+                 g_debug ("GsmXsmpServer: In shutdown, rejecting new client");
+ 
+                 *failure_reason_ret = strdup (_("Refusing new client connection because the session is currently being shut down\n"));
+Index: gnome-session-3.6.2/gnome-session/gsm-xsmp-server.h
+===================================================================
+--- gnome-session-3.6.2.orig/gnome-session/gsm-xsmp-server.h
++++ gnome-session-3.6.2/gnome-session/gsm-xsmp-server.h
+@@ -52,6 +52,7 @@ GType               gsm_xsmp_server_get_
+ 
+ GsmXsmpServer *     gsm_xsmp_server_new                            (GsmStore      *client_store);
+ void                gsm_xsmp_server_start                          (GsmXsmpServer *server);
++void                gsm_xsmp_server_stop_accepting_new_clients     (GsmXsmpServer *server);
+ 
+ G_END_DECLS
+ 
+Index: gnome-session-3.6.2/gnome-session/main.c
+===================================================================
+--- gnome-session-3.6.2.orig/gnome-session/main.c
++++ gnome-session-3.6.2/gnome-session/main.c
+@@ -45,7 +45,6 @@
+ #include "gsm-session-fill.h"
+ #include "gsm-store.h"
+ #include "gsm-system.h"
+-#include "gsm-xsmp-server.h"
+ #include "gsm-fail-whale-dialog.h"
+ 
+ #define GSM_DBUS_NAME "org.gnome.SessionManager"
+@@ -283,7 +282,6 @@ main (int argc, char **argv)
+         char             *display_str;
+         GsmManager       *manager;
+         GsmStore         *client_store;
+-        GsmXsmpServer    *xsmp_server;
+         GdmSignalHandler *signal_handler;
+         static char     **override_autostart_dirs = NULL;
+         static char      *session_name = NULL;
+@@ -357,8 +355,6 @@ main (int argc, char **argv)
+          */
+         g_object_unref (gsm_get_system ());
+ 
+-        xsmp_server = gsm_xsmp_server_new (client_store);
+-
+         if (!acquire_name ()) {
+                 gsm_fail_whale_dialog_we_failed (TRUE, TRUE, NULL);
+                 gtk_main ();
+@@ -385,15 +381,10 @@ main (int argc, char **argv)
+                 gsm_util_init_error (TRUE, "Failed to load session \"%s\"", session_name ? session_name : "(null)");
+         }
+ 
+-        gsm_xsmp_server_start (xsmp_server);
+         gsm_manager_start (manager);
+ 
+         gtk_main ();
+ 
+-        if (xsmp_server != NULL) {
+-                g_object_unref (xsmp_server);
+-        }
+-
+         if (manager != NULL) {
+                 g_debug ("Unreffing manager");
+                 g_object_unref (manager);
