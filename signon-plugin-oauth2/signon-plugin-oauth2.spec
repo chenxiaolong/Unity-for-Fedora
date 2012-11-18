@@ -1,8 +1,8 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		signon-plugin-oauth2
-Version:	0.11
-Release:	2%{?dist}
+Version:	0.12
+Release:	1%{?dist}
 Summary:	Oauth2 plugin for the Single Sign On Framework
 
 Group:		User Interface/Desktops
@@ -73,6 +73,9 @@ rm -v $RPM_BUILD_ROOT%{_sysconfdir}/signon-ui/webkit-options.d/*
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.12-1
+- Version 0.12
+
 * Sun Oct 07 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.11-2
 - Add 0001_Multilib.patch
   - Use correct multilib libdir
