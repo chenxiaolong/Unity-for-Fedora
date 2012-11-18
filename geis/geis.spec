@@ -7,7 +7,7 @@
 %define _ubuntu_rel 0ubuntu2
 
 Name:		geis
-Version:	2.2.12
+Version:	2.2.14
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	An implementation of the GEIS interface
 
@@ -173,6 +173,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.14-1.0ubuntu2
+- Version 2.2.14
+- Ubuntu release 0ubuntu2
+
 * Sun Oct 21 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.12-1.0ubuntu2
 - Ubuntu release 0ubuntu2
   - Fix Geisv1 gesture class IDs (LP: #1047596)
