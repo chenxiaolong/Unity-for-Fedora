@@ -3,8 +3,8 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		signon
-Version:	8.43
-Release:	2.%{_ubuntu_rel}%{?dist}
+Version:	8.44
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Single Sign On Framework
 
 Group:		System Environment/Libraries
@@ -148,9 +148,6 @@ sed -i '/^documentation.path/ s/$/-%{version}/' \
   lib/plugins/doc/doc.pri \
   lib/SignOn/doc/doc.pri
 
-sed -i '/^example.path/ s/\(libsignon-qt-dev\)/\1-%{version}/' \
-  src/example/example.pro
-
 sed -i '/^example.path/ s/\(signon-plugins-dev\)/\1-%{version}/' \
   src/plugins/example/example.pro
 
@@ -186,7 +183,6 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 
 
 %files -n libsignon-qt-devel
-%doc %{_docdir}/libsignon-qt-dev-%{version}/
 %dir %{_includedir}/signon-qt/
 %dir %{_includedir}/signon-qt/SignOn/
 %{_includedir}/signon-qt/SignOn/*
@@ -201,7 +197,6 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 
 %files -n signond
 %doc COPYING
-%{_bindir}/signonclient
 %{_bindir}/signond
 %{_bindir}/signonpluginprocess
 %config(noreplace) %{_sysconfdir}/signond.conf
@@ -259,6 +254,10 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.44-1.0ubuntu1
+- Version 8.44
+- Ubuntu release 0ubuntu1
+
 * Sun Oct 07 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.43-2.0ubuntu1
 - Add 0001_Multilib.patch
   - Use appropriate multilib libdir

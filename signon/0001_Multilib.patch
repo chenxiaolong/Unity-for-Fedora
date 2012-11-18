@@ -1,6 +1,6 @@
-diff -Nru signon-8.43.orig/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in signon-8.43/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in
---- signon-8.43.orig/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in	2012-10-07 22:51:03.823590603 -0400
-+++ signon-8.43/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in	2012-10-07 22:53:16.482298566 -0400
+diff -Nru signon-8.44.orig/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in signon-8.44/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in
+--- signon-8.44.orig/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in	2012-11-18 14:07:28.652921000 -0500
++++ signon-8.44/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in	2012-11-18 14:07:57.166960000 -0500
 @@ -6,5 +6,5 @@
  Name: signon-plugins-common
  Description: SignonPluginsCommon
@@ -8,9 +8,9 @@ diff -Nru signon-8.43.orig/lib/plugins/signon-plugins-common/signon-plugins-comm
 -Libs.private: -L/usr/lib  -lQtCore
 +Libs.private: -L/usr/@LIB@  -lQtCore
  Cflags:  -I${includedir}/signon-plugins -I${includedir}/signon-plugins/SignOn
-diff -Nru signon-8.43.orig/lib/plugins/signon-plugins.pc.in signon-8.43/lib/plugins/signon-plugins.pc.in
---- signon-8.43.orig/lib/plugins/signon-plugins.pc.in	2012-10-07 22:51:03.823590603 -0400
-+++ signon-8.43/lib/plugins/signon-plugins.pc.in	2012-10-07 22:52:43.751962763 -0400
+diff -Nru signon-8.44.orig/lib/plugins/signon-plugins.pc.in signon-8.44/lib/plugins/signon-plugins.pc.in
+--- signon-8.44.orig/lib/plugins/signon-plugins.pc.in	2012-11-18 14:07:28.651639000 -0500
++++ signon-8.44/lib/plugins/signon-plugins.pc.in	2012-11-18 14:08:19.724582000 -0500
 @@ -8,6 +8,6 @@
  Description: SignonPlugins
  Version: PROJECT_VERSION
@@ -19,9 +19,9 @@ diff -Nru signon-8.43.orig/lib/plugins/signon-plugins.pc.in signon-8.43/lib/plug
 +Libs.private: -L/usr/@LIB@  -lQtCore
  Cflags:  -I${includedir}/signon-plugins -I${includedir}/signon-plugins/SignOn
  Libs: -lsignon-plugins
-diff -Nru signon-8.43.orig/lib/SignOn/libsignon-qt.pc.in signon-8.43/lib/SignOn/libsignon-qt.pc.in
---- signon-8.43.orig/lib/SignOn/libsignon-qt.pc.in	2012-10-07 22:51:03.827590605 -0400
-+++ signon-8.43/lib/SignOn/libsignon-qt.pc.in	2012-10-07 22:53:51.928588355 -0400
+diff -Nru signon-8.44.orig/lib/SignOn/libsignon-qt.pc.in signon-8.44/lib/SignOn/libsignon-qt.pc.in
+--- signon-8.44.orig/lib/SignOn/libsignon-qt.pc.in	2012-11-18 14:07:28.642814000 -0500
++++ signon-8.44/lib/SignOn/libsignon-qt.pc.in	2012-11-18 14:08:41.896849000 -0500
 @@ -7,5 +7,5 @@
  Description: Client library for the Single Sign On daemon, Qt bindings.
  Version: PROJECT_VERSION
@@ -29,19 +29,9 @@ diff -Nru signon-8.43.orig/lib/SignOn/libsignon-qt.pc.in signon-8.43/lib/SignOn/
 -Libs.private: -L/usr/lib  -lQtSql -lQtCore -lpthread  
 +Libs.private: -L/usr/@LIB@  -lQtSql -lQtCore -lpthread  
  Cflags: -I${includedir}/signon-qt -I${includedir}/signon-qt/SignOn
-diff -Nru signon-8.43.orig/lib/signond/SignOn/SignOnExtension.pc.in signon-8.43/lib/signond/SignOn/SignOnExtension.pc.in
---- signon-8.43.orig/lib/signond/SignOn/SignOnExtension.pc.in	2012-10-07 22:51:03.819590599 -0400
-+++ signon-8.43/lib/signond/SignOn/SignOnExtension.pc.in	2012-10-07 22:52:22.113508865 -0400
-@@ -9,5 +9,5 @@
- Version: PROJECT_VERSION
- Requires: QtCore
- Libs: -L${libdir} -lsignon-extension
--Libs.private: -L/usr/lib -lQtCore
-+Libs.private: -L/usr/@LIB@ -lQtCore
- Cflags: -I${includedir}/signon-extension
-diff -Nru signon-8.43.orig/src/remotepluginprocess/remotepluginprocess.h signon-8.43/src/remotepluginprocess/remotepluginprocess.h
---- signon-8.43.orig/src/remotepluginprocess/remotepluginprocess.h	2012-10-07 22:51:03.844590618 -0400
-+++ signon-8.43/src/remotepluginprocess/remotepluginprocess.h	2012-10-07 22:55:54.294160926 -0400
+diff -Nru signon-8.44.orig/src/remotepluginprocess/remotepluginprocess.h signon-8.44/src/remotepluginprocess/remotepluginprocess.h
+--- signon-8.44.orig/src/remotepluginprocess/remotepluginprocess.h	2012-11-18 14:07:28.676707000 -0500
++++ signon-8.44/src/remotepluginprocess/remotepluginprocess.h	2012-11-18 14:09:45.844795000 -0500
 @@ -47,7 +47,7 @@
  }
  
@@ -51,9 +41,9 @@ diff -Nru signon-8.43.orig/src/remotepluginprocess/remotepluginprocess.h signon-
  #endif
  
  #ifndef SIGNON_PLUGIN_PREFIX
-diff -Nru signon-8.43.orig/src/signond/signondaemon.h signon-8.43/src/signond/signondaemon.h
---- signon-8.43.orig/src/signond/signondaemon.h	2012-10-07 22:51:03.841590615 -0400
-+++ signon-8.43/src/signond/signondaemon.h	2012-10-07 22:55:07.309482102 -0400
+diff -Nru signon-8.44.orig/src/signond/signondaemon.h signon-8.44/src/signond/signondaemon.h
+--- signon-8.44.orig/src/signond/signondaemon.h	2012-11-18 14:07:28.687703000 -0500
++++ signon-8.44/src/signond/signondaemon.h	2012-11-18 14:10:10.394754000 -0500
 @@ -39,7 +39,7 @@
  #include "credentialsaccessmanager.h"
  
