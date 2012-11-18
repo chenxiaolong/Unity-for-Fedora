@@ -1,6 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu4
+%define _ubuntu_rel 0ubuntu4.1
 
 Name:		activity-log-manager
 Version:	0.9.4
@@ -112,6 +112,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.4-1.0ubuntu4.1
+- Version 0.9.4
+- Ubuntu release 0ubuntu4.1
+
 * Sun Oct 07 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.4-1.0ubuntu4
 - Initial release
 - Version 0.9.4
