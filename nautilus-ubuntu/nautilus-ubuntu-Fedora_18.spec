@@ -2,20 +2,18 @@
 
 # Based off of Fedora 18's spec file
 
-# Nautilus 3.6 won't be included in Ubuntu 12.10, so we'll use the patches from
-# the GNOME3 PPA
-%define _ppa_rel 0ubuntu1~ubuntu12.10.2
+%define _ubuntu_rel 0ubuntu1
 
 Name:		nautilus
-Version:	3.6.1
-Release:	101.ppa%{_ppa_rel}%{?dist}
+Version:	3.6.3
+Release:	100.%{_ubuntu_rel}%{?dist}
 Summary:	File manager for GNOME
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://projects.gnome.org/nautilus/
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/nautilus/3.6/nautilus-%{version}.tar.xz
-Source99:	http://ppa.launchpad.net/gnome3-team/gnome3/ubuntu/pool/main/n/nautilus/nautilus_%{version}-%{_ppa_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/nautilus_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -221,6 +219,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu1
+- Version 3.6.3
+- Ubuntu release 0ubuntu1
+
 * Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-101.ppa0ubuntu1~ubuntu12.10.2
 - PPA release 0ubuntu1~ubuntu12.10.2
 
