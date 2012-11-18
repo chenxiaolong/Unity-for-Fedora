@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libunity
-Version:	6.10.0
+Version:	6.12.0
 Release:	1%{?dist}
 Summary:	Library for integrating with Unity
 
@@ -123,6 +123,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.12.0-1
+- Version 6.12.0
+
 * Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.10.0-1
 - Version 6.10.0
 
