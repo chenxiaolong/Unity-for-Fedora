@@ -8,14 +8,14 @@
 # We'll use the same package names as Ubuntu (gnome-control-center-signon)
 
 Name:		gnome-control-center-signon
-Version:	0.0.18
+Version:	0.1.1
 Release:	1%{?dist}
 Summary:	GNOME Control Center extension for single signon
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/online-accounts-gnome-control-center
-Source0:	https://launchpad.net/online-accounts-gnome-control-center/trunk/%{version}/+download/credentials-control-center-%{version}.tar.bz2
+Source0:	https://launchpad.net/gnome-control-center-signon/13.04/%{version}/+download/credentials-control-center-%{version}.tar.bz2
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
@@ -143,6 +143,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.1.1-1
+- Version 0.1.1
+
 * Mon Oct 01 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.0.18-1
 - Version 0.0.18
 
