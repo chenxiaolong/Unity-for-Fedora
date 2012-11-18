@@ -1,8 +1,8 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libaccounts-qt
-Version:	1.2
-Release:	2%{?dist}
+Version:	1.3
+Release:	1%{?dist}
 Summary:	Qt library for Single Sign On
 
 Group:		System Environment/Libraries
@@ -98,6 +98,9 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.3-1
+- Version 1.3
+
 * Sun Oct 07 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.2-2
 - Add 0001_Multilib.patch
   - Use appropriate multilib libdir
