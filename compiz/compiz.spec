@@ -10,13 +10,13 @@
 %define _gconf_schemas compiz-addhelper compiz-animation compiz-annotate compiz-bench compiz-ccp compiz-clone compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gnomecompat compiz-grid compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
 
 %define _ubuntu_rel 0ubuntu1
-%define _bzr_rev 3407
+%define _bzr_rev 3412
 %define _compiz_abi 20120927
 %define _disguised_as 0.9.8.5
 
 Name:		compiz
 Version:	0.9.8.4
-Release:	2.%{_ubuntu_rel}.bzr%{_bzr_rev}%{?dist}
+Release:	3.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
@@ -790,6 +790,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.4-3.bzr3412.0ubuntu1
+- Version 0.9.8.4
+- BZR revision 2312
+- Ubuntu release 0ubuntu1
+
 * Wed Oct 31 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.4-2.0ubuntu1.bzr3407
 - Version 0.9.8.4
 - Ubuntu release 0ubuntu1
