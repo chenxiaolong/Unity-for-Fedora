@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		frame
-Version:	2.2.4
+Version:	2.4.3
 Release:	1%{?dist}
 Summary:	Open Input Framework Frame Library
 
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/frame
-Source0:	https://launchpad.net/frame/trunk/utouch-frame-%{version}/+download/frame-%{version}.tar.xz
+Source0:	https://launchpad.net/frame/trunk/v%{version}/+download/frame-%{version}.tar.xz
 
 BuildRequires:	asciidoc
 BuildRequires:	xmlto
@@ -81,6 +81,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %doc README
 %dir %{_includedir}/oif
 %{_includedir}/oif/frame.h
+%{_includedir}/oif/frame_backend.h
 %{_includedir}/oif/frame_internal.h
 %{_includedir}/oif/frame_x11.h
 %{_libdir}/libframe.so
@@ -93,6 +94,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.3-1
+- Version 2.4.3
+
 * Tue Jul 24 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.4-1
 - Version 2.2.4
 - Upstream renamed from utouch-frame to frame
