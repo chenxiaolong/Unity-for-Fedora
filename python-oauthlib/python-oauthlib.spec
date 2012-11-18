@@ -1,9 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
 
 Name:		python-oauthlib
-Version:	0.3.0
+Version:	0.3.3
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A Python implementation of the OAuth request-signing logic
 
@@ -48,7 +48,7 @@ veneer on top of OAuthLib and get OAuth support for very little effort.
 
 
 %prep
-%setup -q -n oauthlib-0.3.0
+%setup -q -n oauthlib-%{version}
 
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
@@ -71,18 +71,20 @@ done
 %files -n python-oauthlib
 %doc LICENSE README.rst
 %{python_sitelib}/oauthlib/
-%{python_sitelib}/tests/
 %{python_sitelib}/oauthlib-%{version}-py*.egg-info/
 
 
 %files -n python3-oauthlib
 %doc LICENSE README.rst
 %{python3_sitelib}/oauthlib/
-%{python3_sitelib}/tests/
 %{python3_sitelib}/oauthlib-%{version}-py*.egg-info/
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.3-1.0ubuntu2
+- Version 0.3.3
+- Ubuntu release 0ubuntu2
+
 * Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.0-1.0ubuntu1
 - Initial release
 - Version 0.3.0

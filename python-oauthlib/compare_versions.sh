@@ -4,7 +4,7 @@ SPEC_VER="$(rpmspec -q --qf '%{version}\n' python-oauthlib.spec | head -1)"
 UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' python-oauthlib.spec)"
 
 echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/python-oauthlib' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
+UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/raring/+source/python-oauthlib' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
 
 echo "Getting latest upstream version..."
 UPSTREAM_VER=$(wget -q 'http://pypi.python.org/pypi/oauthlib' -O - | sed -n 's/.*>oauthlib-\(.*\)\.tar\.gz<.*/\1/p' | head -1)
