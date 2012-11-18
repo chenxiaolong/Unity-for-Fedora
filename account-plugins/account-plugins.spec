@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		account-plugins
-Version:	0.8
+Version:	0.9
 Release:	1%{?dist}
 Summary:	GNOME Control Center account plugins for Single Sign On
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		https://launchpad.net/online-accounts-account-plugins
-Source0:	https://launchpad.net/online-accounts-account-plugins/trunk/%{version}/+download/account-plugins-%{version}.tar.gz
+Source0:	https://launchpad.net/account-plugins/12.10/%{version}/+download/account-plugins-%{version}.tar.gz
 
 BuildRequires:	vala
 
@@ -424,6 +424,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9-1
+- Version 0.9
+
 * Thu Sep 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.8-1
 - Initial release
 - Version 0.8
