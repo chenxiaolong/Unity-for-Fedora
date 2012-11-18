@@ -1,14 +1,18 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _ubuntu_rel 0ubuntu3.1
+
 Name:		libunity-webapps
 Version:	2.4.1
-Release:	1%{?dist}
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	WebApps: Library for the integration with the Unity desktop
 
 Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/libunity-webapps
 Source0:	https://launchpad.net/libunity-webapps/trunk/%{version}/+download/unity_webapps-%{version}.tar.gz
+
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity-webapps_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 BuildRequires:	gettext
 BuildRequires:	gnome-common
@@ -70,6 +74,12 @@ This package contains the documentation for the unity-webapps library.
 
 %prep
 %setup -q -n unity_webapps-%{version}
+
+# Apply Ubuntu's patches
+tar zxvf '%{SOURCE99}'
+for i in $(grep -v '#' debian/patches/series); do
+  patch -p1 -i "debian/patches/${i}"
+done
 
 
 %build
@@ -143,6 +153,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.1-1.0ubuntu3.1
+- Version 2.4.1
+- Ubuntu release 0ubuntu3.1
+
 * Wed Oct 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.1-1
 - Version 2.4.1
 
