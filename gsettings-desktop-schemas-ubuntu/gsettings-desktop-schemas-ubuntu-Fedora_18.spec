@@ -4,10 +4,10 @@
 
 %global debug_package %{nil}
 
-%define _ubuntu_rel 0ubuntu3
+%define _ubuntu_rel 0ubuntu1
 
 Name:		gsettings-desktop-schemas
-Version:	3.6.0
+Version:	3.6.1
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A collection of GSettings schemas
 
@@ -99,6 +99,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-1.0ubuntu1
+- Version 3.6.1
+- Ubuntu release 0ubuntu1
+
 * Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-1.0ubuntu3
 - Version 3.6.0
 - Ubuntu release 0ubuntu3
