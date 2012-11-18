@@ -5,7 +5,7 @@
 %define _gconf_schemas compiz-unitymtgrabhandles compiz-unityshell
 
 Name:		unity
-Version:	6.10.0
+Version:	6.12.0
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A desktop experience designed for efficiency of space and interaction
 
@@ -38,6 +38,9 @@ Patch1:		0002_fix_directories.patch
 # Ignore error about deprecated paths in GSettings schemas
 Patch2:		0003_Ignore_deprecated_schema_path.patch
 
+# CMake workaround for the detection of gettext
+Patch3:		0004_CMake_workaround.patch
+
 # Link against dbus-glib to avoid:
 #  /usr/bin/ld: CMakeFiles/panel.dir/StandalonePanel.cpp.o: undefined reference to symbol 'dbus_g_thread_init'
 Patch4:		0005_link_dbus-glib.patch
@@ -52,6 +55,9 @@ Patch6:		0007_link_gmodule.patch
 # Revert port to atk-bridge-2.0, which was introduced in GNOME 3.5.91
 Patch7:		0008_Revert_port_to_atk-bridge-2.0.patch
 %endif
+
+# iostream needs to be included to use std::cout
+Patch8:		0009_Include_iostream.patch
 
 %if 0%{fedora} <= 17
 # GCC 4.6 is required or else Unity will segfault
@@ -188,12 +194,14 @@ needed for writing automated tests in Python.
 %patch0 -p1 -b .gtestdir
 %patch1 -p1 -b .fixdirs
 %patch2 -p1 -b .gsettingsfail
+%patch3 -p1 -b .cmake-workaround
 %patch4 -p1 -b .dbus-glib
 %patch5 -p1 -b .fedora-branding
 %patch6 -p1 -b .gmodule-2.0
 %if 0%{fedora} <= 17
 %patch7 -p1 -b .revert-atk-bridge-2.0
 %endif
+%patch8 -p1 -b .include-iostream
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
@@ -420,6 +428,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.12.0-1.0ubuntu1
+- Version 6.12.0
+- Ubuntu release 0ubuntu1
+
 * Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.10.0-1.0ubuntu1
 - Version 6.10.0
 - Ubuntu release 0ubuntu1
