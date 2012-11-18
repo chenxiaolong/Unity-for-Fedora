@@ -5,7 +5,7 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		gnome-bluetooth
-Version:	3.6.0
+Version:	3.6.1
 Epoch:		1
 Release:	100.%{_ubuntu_rel}%{?dist}
 Summary:	Utilities for connecting to bluetooth devices in GNOME and Unity
@@ -228,6 +228,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.0ubuntu1
+- Version 3.6.1
+- Ubuntu release 0ubuntu1
+
 * Fri Sep 28 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.0-100.0ubuntu1
 - Version 3.6.0
 - Ubuntu release 0ubuntu1
