@@ -3,7 +3,7 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		libsignon-glib
-Version:	1.6
+Version:	1.7
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Authentication management library for GLib applications
 
@@ -130,6 +130,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.7-1.0ubuntu1
+- Version 1.7
+
 * Mon Sep 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.6-1.0ubuntu1
 - Initial release
 - Version 1.6
