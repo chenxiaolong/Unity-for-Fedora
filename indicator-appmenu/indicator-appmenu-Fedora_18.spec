@@ -1,8 +1,10 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _ubuntu_rel 0ubuntu2
+
 Name:		indicator-appmenu
 Version:	12.10.3
-Release:	1%{?dist}
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Indicator to host the menus from an application
 
 Group:		User Interface/Desktops
@@ -10,8 +12,12 @@ License:	GPLv3
 URL:		https://launchpad.net/indicator-appmenu
 Source0:	https://launchpad.net/indicator-appmenu/12.10/%{version}/+download/indicator-appmenu-%{version}.tar.gz
 
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-appmenu_%{version}-%{_ubuntu_rel}.diff.gz
+
 Patch0:		0001_Fix_dbusmenu-dumper_path.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gnome-doc-utils
 BuildRequires:	intltool
 BuildRequires:	pkgconfig
@@ -48,6 +54,15 @@ This package contains debugging tools for the appmenu indicator.
 %setup -q
 
 %patch0 -p1 -b .dbusmenu-dumper
+
+# Apply Ubuntu's patches
+zcat '%{SOURCE99}' | patch -p1
+for i in $(grep -v '#' debian/patches/series); do
+  patch -p1 -i "debian/patches/${i}"
+done
+
+autoreconf -vfi
+intltoolize -f
 
 
 %build
@@ -114,6 +129,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3-1.0ubuntu2
+- Version 12.10.3
+- Ubuntu release 0ubuntu2
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3-1
 - Version 12.10.3
 
