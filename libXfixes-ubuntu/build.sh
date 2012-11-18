@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SPECFILE=libXfixes-ubuntu.spec
+SPECFILE=libXfixes-ubuntu-Fedora_$(rpm -E '%fedora').spec
 MULTILIB=true
 MULTILIB_PACKAGES=('libXfixes-ubuntu' 'libXfixes-ubuntu-devel')
 DO_NOT_INSTALL=('libXfixes-ubuntu-debuginfo')
