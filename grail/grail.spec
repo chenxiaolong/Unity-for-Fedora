@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		grail
-Version:	3.0.6
+Version:	3.0.8
 Release:	1%{?dist}
 Summary:	Gesture Recognition And Instantiation Library
 
@@ -103,6 +103,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.8-1
+- Version 3.0.8
+
 * Fri Jul 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.6-1
 - Version 3.0.6
 - Upstream renamed from utouch-grail to grail
