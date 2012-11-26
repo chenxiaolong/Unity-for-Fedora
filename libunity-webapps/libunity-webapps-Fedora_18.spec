@@ -1,6 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu3.1
+%define _ubuntu_rel 0ubuntu3.2
 
 Name:		libunity-webapps
 Version:	2.4.1
@@ -153,6 +153,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.1-1.0ubuntu3.2
+- Version 2.4.1
+- Ubuntu release 0ubuntu3.2
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.1-1.0ubuntu3.1
 - Version 2.4.1
 - Ubuntu release 0ubuntu3.1
