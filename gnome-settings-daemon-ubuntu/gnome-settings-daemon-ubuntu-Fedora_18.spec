@@ -1,13 +1,12 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-# Partially based off of the Fedora 17 spec
+# Partially based off of the Fedora 18 spec
 
-%define _ubuntu_ver 3.4.2
-%define _ubuntu_rel 0ubuntu14
+%define _ubuntu_rel 0ubuntu2
 
 Name:		gnome-settings-daemon
-Version:	3.6.1
-Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Version:	3.6.3
+Release:	100.%{_ubuntu_rel}%{?dist}
 Summary:	The daemon sharing settings from GNOME to GTK+/KDE applications
 
 Group:		System Environment/Daemons
@@ -15,24 +14,7 @@ License:	GPLv2+
 URL:		http://download.gnome.org/sources/gnome-settings-daemon
 Source0:	http://download.gnome.org/sources/gnome-settings-daemon/3.6/gnome-settings-daemon-%{version}.tar.xz
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
-
-# Refreshed useful patches from Ubuntu's gnome-settings-daemon packaging
-# (version 3.4.2-0ubuntu13). We will not see updates to the patches until
-# Ubuntu 13.04.
-Patch0:		0001_16_use_synchronous_notifications.patch
-Patch1:		0002_51_lock_screen_on_suspend.patch
-Patch2:		0003_52_sync_background_to_accountsservice.patch
-Patch3:		0004_60_unity_hide_status_icon.patch
-Patch4:		0005_62_unity_disable_gsd_printer.patch
-Patch5:		0006_63_unity_start_mounter.patch
-Patch6:		0007_90_set_gmenus_xsettings.patch
-Patch7:		0008_disable_three_touch_tap.patch
-Patch8:		0009_revert_git_datetime_dropping.patch
-Patch9:		0010_correct_logout_action.patch
-Patch10:	0011_power-no-fallback-notifications.patch
-Patch11:	0012_power-check-null-devices.patch
-Patch12:	0013_64_restore_terminal_keyboard_shortcut_schema.patch
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 # Fedora's patches
 # https://bugzilla.gnome.org/show_bug.cgi?id=680689
@@ -42,6 +24,7 @@ Patch22:	fedora_0001-wacom-implement-OSD-help-window.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	docbook-style-xsl
 BuildRequires:	gettext
 BuildRequires:	intltool
 BuildRequires:	libtool
@@ -117,19 +100,28 @@ This package contains the PackageKit updates plugin for GNOME Control Center.
 
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
-%patch0 -p1
-#patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
+
+# Disable patches
+  # Ubuntu specific
+    sed -i '/sync_keyboard_layout_to_accountsservice.patch/d' debian/patches/series
+    sed -i '/61_revert_libgnomekbd_drop/d' debian/patches/series
+    sed -i '/43_disable_locale_settings.patch/d' debian/patches/series
+  # Ubuntu is too lazy to port their patches to the latest IBus release
+    sed -i '/revert_new_ibus_use.patch/d' debian/patches/series
+  # systemd should make this obsolete
+    sed -i '/revert_git_datetime_dropping.patch/d' debian/patches/series
+  # We do use PackageKit in Fedora
+    sed -i '/53_update_schemas_warning.patch/d' debian/patches/series
+  # Merged upstream. How does Debian/Ubuntu's quilt not error out, I have no
+  # idea. https://launchpadlibrarian.net/124034045/buildlog_ubuntu-raring-amd64.gnome-settings-daemon_3.6.3-0ubuntu2_BUILDING.txt.gz
+    sed -i '/48_register_client_before_idle_callbacks.patch/d' debian/patches/series
+  # Conflicts with Fedora's patches
+    sed -i '/51_lock_screen_on_suspend.patch/d' debian/patches/series
+    sed -i '/bugzilla_segfault_dpms.patch/d' debian/patches/series
+
+for i in $(grep -v '#' debian/patches/series); do
+  patch -p1 -i "debian/patches/${i}"
+done
 
 # Apply Fedora's patches
 %patch21 -p1
@@ -148,26 +140,9 @@ autoreconf -vfi
 
 make %{?_smp_mflags}
 
-gcc -o gnome-settings-daemon/gnome-update-wallpaper-cache \
-       debian/gnome-update-wallpaper-cache.c \
-       $(pkg-config --cflags --libs \
-         glib-2.0 \
-         gdk-3.0 \
-         gdk-x11-3.0 \
-         gio-2.0 \
-         gnome-desktop-3.0)
-
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
-install -dm755 $RPM_BUILD_ROOT%{_libexecdir}/
-install -m755 gnome-settings-daemon/gnome-update-wallpaper-cache \
-              $RPM_BUILD_ROOT%{_libexecdir}/
-
-# Ubuntu's manual page contains GConf command line option information that was
-# added by Ubuntu.
-install -m644 debian/gnome-settings-daemon.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
@@ -207,9 +182,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 
 %{_libexecdir}/gnome-fallback-mount-helper
 %{_libexecdir}/gnome-settings-daemon
-%{_libexecdir}/gnome-update-wallpaper-cache
 %{_libexecdir}/gsd-backlight-helper
-%{_libexecdir}/gsd-datetime-mechanism
 %{_libexecdir}/gsd-input-sources-switcher
 %{_libexecdir}/gsd-locate-pointer
 %{_libexecdir}/gsd-printer
@@ -278,8 +251,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 
 # DBus services
 %{_datadir}/dbus-1/services/org.freedesktop.IBus.service
-%{_datadir}/dbus-1/system-services/org.gnome.SettingsDaemon.DateTimeMechanism.service
-%{_sysconfdir}/dbus-1/system.d/org.gnome.SettingsDaemon.DateTimeMechanism.conf
 
 # Desktop files
 %{_sysconfdir}/xdg/autostart/gnome-fallback-mount-helper.desktop
@@ -298,7 +269,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 # PolicyKit policies
 %{_datadir}/polkit-1/actions/org.gnome.settings-daemon.plugins.power.policy
 %{_datadir}/polkit-1/actions/org.gnome.settings-daemon.plugins.wacom.policy
-%{_datadir}/polkit-1/actions/org.gnome.settingsdaemon.datetimemechanism.policy
 
 # Manual pages
 %{_mandir}/man1/gnome-settings-daemon.1.gz
@@ -341,6 +311,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu2
+- Version 3.6.3
+- Ubuntu release 0ubuntu2
+- Merge Fedora's changes
+  - 3.6.3-1: Drop the static man page patch and BR docbook-style-xsl instead
+- gnome-update-wallpaper-cache
+  - Dropped: not used
+- gnome-settings-daemon.1
+  - Dropped: not useful anymore
+
 * Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ubuntu3.4.2.0ubuntu14
 - Version 3.6.1
 - Merge Fedora's changes

@@ -1,4 +1,4 @@
-From d86992c2ea731194dbf9bb288fe1d5d78114f478 Mon Sep 17 00:00:00 2001
+From b33a8940f58560ccdbc67e7b8127f96079c4dc4f Mon Sep 17 00:00:00 2001
 From: Olivier Fourdan <ofourdan@redhat.com>
 Date: Tue, 3 Jul 2012 09:39:42 +0200
 Subject: [PATCH] wacom: implement OSD help window
@@ -25,7 +25,7 @@ https://bugzilla.gnome.org/show_bug.cgi?id=679062
  create mode 100644 plugins/wacom/test-osd-window.c
 
 diff --git a/data/gsd-enums.h b/data/gsd-enums.h
-index 6c4edd4..6b153fd 100644
+index 49e07db..1aff185 100644
 --- a/data/gsd-enums.h
 +++ b/data/gsd-enums.h
 @@ -94,7 +94,8 @@ typedef enum
@@ -106,7 +106,7 @@ index 662388b..7a5dab7 100644
  
  plugin_DATA = $(plugin_in_files:.gnome-settings-plugin.in=.gnome-settings-plugin)
 diff --git a/plugins/wacom/gsd-wacom-device.c b/plugins/wacom/gsd-wacom-device.c
-index 2f52d2a..22ff967 100644
+index 7b9a3e1..9fdf34f 100644
 --- a/plugins/wacom/gsd-wacom-device.c
 +++ b/plugins/wacom/gsd-wacom-device.c
 @@ -255,6 +255,7 @@ gsd_wacom_tablet_button_new (const char               *name,
@@ -160,7 +160,7 @@ index 2f52d2a..22ff967 100644
  	current_idx++;
  
  	num_modes = GPOINTER_TO_INT (g_hash_table_lookup (device->priv->num_modes, GINT_TO_POINTER(group_id)));
-@@ -1011,7 +1027,7 @@ gsd_wacom_device_add_ring_modes (WacomDevice      *wacom_device,
+@@ -1012,7 +1028,7 @@ gsd_wacom_device_add_ring_modes (WacomDevice      *wacom_device,
  		for (i = 1; i <= num_modes; i++) {
  			name = g_strdup_printf (_("Left Ring Mode #%d"), i);
  			id = g_strdup_printf ("left-ring-mode-%d", i);
@@ -169,7 +169,7 @@ index 2f52d2a..22ff967 100644
  			g_free (name);
  			g_free (id);
  		}
-@@ -1020,7 +1036,7 @@ gsd_wacom_device_add_ring_modes (WacomDevice      *wacom_device,
+@@ -1022,7 +1038,7 @@ gsd_wacom_device_add_ring_modes (WacomDevice      *wacom_device,
  		for (i = 1; i <= num_modes; i++) {
  			name = g_strdup_printf (_("Right Ring Mode #%d"), i);
  			id = g_strdup_printf ("right-ring-mode-%d", i);
@@ -178,7 +178,7 @@ index 2f52d2a..22ff967 100644
  			g_free (name);
  			g_free (id);
  		}
-@@ -1050,7 +1066,7 @@ gsd_wacom_device_add_strip_modes (WacomDevice      *wacom_device,
+@@ -1053,7 +1069,7 @@ gsd_wacom_device_add_strip_modes (WacomDevice      *wacom_device,
  		for (i = 1; i <= num_modes; i++) {
  			name = g_strdup_printf (_("Left Touchstrip Mode #%d"), i);
  			id = g_strdup_printf ("left-strip-mode-%d", i);
@@ -187,7 +187,7 @@ index 2f52d2a..22ff967 100644
  			g_free (name);
  			g_free (id);
  		}
-@@ -1059,7 +1075,7 @@ gsd_wacom_device_add_strip_modes (WacomDevice      *wacom_device,
+@@ -1063,7 +1079,7 @@ gsd_wacom_device_add_strip_modes (WacomDevice      *wacom_device,
  		for (i = 1; i <= num_modes; i++) {
  			name = g_strdup_printf (_("Right Touchstrip Mode #%d"), i);
  			id = g_strdup_printf ("right-strip-mode-%d", i);
@@ -196,7 +196,7 @@ index 2f52d2a..22ff967 100644
  			g_free (name);
  			g_free (id);
  		}
-@@ -1089,6 +1105,23 @@ gsd_wacom_device_modeswitch_name (WacomButtonFlags flags,
+@@ -1093,6 +1109,23 @@ gsd_wacom_device_modeswitch_name (WacomButtonFlags flags,
  	return g_strdup_printf (_("Mode Switch #%d"), button_num);
  }
  
@@ -220,7 +220,7 @@ index 2f52d2a..22ff967 100644
  static GList *
  gsd_wacom_device_add_buttons_dir (WacomDevice      *wacom_device,
  				  const char       *settings_path,
-@@ -1115,7 +1148,7 @@ gsd_wacom_device_add_buttons_dir (WacomDevice      *wacom_device,
+@@ -1119,7 +1152,7 @@ gsd_wacom_device_add_buttons_dir (WacomDevice      *wacom_device,
  
  		name = g_strdup_printf (button_str, button_num++);
  		id = g_strdup_printf ("%s%c", button_str_id, i);
@@ -229,7 +229,7 @@ index 2f52d2a..22ff967 100644
  		g_free (name);
  		g_free (id);
  	}
-@@ -1134,7 +1167,7 @@ gsd_wacom_device_add_buttons_dir (WacomDevice      *wacom_device,
+@@ -1138,7 +1171,7 @@ gsd_wacom_device_add_buttons_dir (WacomDevice      *wacom_device,
  
  		name = gsd_wacom_device_modeswitch_name (flags, button_num++);
  		id = g_strdup_printf ("%s%c", button_str_id, i);
@@ -237,7 +237,7 @@ index 2f52d2a..22ff967 100644
 +		l = g_list_append (l, gsd_wacom_tablet_button_new (name, id, settings_path, WACOM_TABLET_BUTTON_TYPE_HARDCODED, gsd_wacom_device_button_pos (flags), flags_to_group (flags), -1));
  		g_free (name);
  		g_free (id);
- 
+ 	}
 diff --git a/plugins/wacom/gsd-wacom-device.h b/plugins/wacom/gsd-wacom-device.h
 index 24e6e06..b4ad07f 100644
 --- a/plugins/wacom/gsd-wacom-device.h
