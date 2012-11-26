@@ -1,15 +1,17 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-messages
-Version:	12.10.5
+Version:	12.10.6daily12.11.22
 Release:	1%{?dist}
 Summary:	Indicator for collecting messages that need a response
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-messages
-Source0:	https://launchpad.net/indicator-messages/12.10/%{version}/+download/indicator-messages-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-messages_%{version}.orig.tar.gz
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	intltool
 BuildRequires:	hicolor-icon-theme
 BuildRequires:	gtk-doc
@@ -42,6 +44,10 @@ for the messages indicator.
 
 %prep
 %setup -q
+
+gtkdocize
+autoreconf -vfi
+intltoolize
 
 
 %build
@@ -99,6 +105,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.6daily12.11.22
+- Version 12.10.6
+- Ubuntu daily build from 2012-11-22
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.5-1
 - Version 12.10.5
 
