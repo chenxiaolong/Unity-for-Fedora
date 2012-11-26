@@ -1,15 +1,14 @@
 # Based off of Fedora 17's spec
 # Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_ver 3.6.0
-%define _ubuntu_rel 0ubuntu3.1
+%define _ubuntu_rel 0ubuntu1
 
 %global bin_version 3.0.0
 
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name:		gtk3
 Version:	3.6.2
-Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Release:	101.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
@@ -17,7 +16,7 @@ URL:		http://www.gtk.org
 Source:		http://download.gnome.org/sources/gtk+/3.6/gtk+-%{version}.tar.xz
 Source1:	fedora_im-cedilla.conf
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -296,6 +295,10 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-101.0ubuntu1
+- Version 3.6.2
+- Ubuntu release 0ubuntu1
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-1.ubuntu3.6.0.0ubuntu3.1
 - Version 3.6.2
 
