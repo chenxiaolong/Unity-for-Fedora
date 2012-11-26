@@ -3,7 +3,7 @@
 # This package uses the same structure as the official (outdated) Fedora
 # package. Feel free to merge it :)
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
 
 Name:		dee
 Version:	1.0.14
@@ -143,6 +143,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.14-1.0ubuntu2
+- Version 1.0.14
+- Ubuntu release 0ubuntu2
+
 * Mon Aug 27 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.14-1.0ubuntu1
 - Version 1.0.14
 - Ubuntu release 0ubuntu1
