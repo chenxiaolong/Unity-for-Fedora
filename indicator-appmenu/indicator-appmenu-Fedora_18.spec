@@ -1,18 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu2
-
 Name:		indicator-appmenu
-Version:	12.10.3
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	12.10.4daily12.11.23
+Release:	1%{?dist}
 Summary:	Indicator to host the menus from an application
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-appmenu
-Source0:	https://launchpad.net/indicator-appmenu/12.10/%{version}/+download/indicator-appmenu-%{version}.tar.gz
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-appmenu_%{version}-%{_ubuntu_rel}.diff.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-appmenu_%{version}.orig.tar.gz
 
 Patch0:		0001_Fix_dbusmenu-dumper_path.patch
 
@@ -55,12 +51,7 @@ This package contains debugging tools for the appmenu indicator.
 
 %patch0 -p1 -b .dbusmenu-dumper
 
-# Apply Ubuntu's patches
-zcat '%{SOURCE99}' | patch -p1
-for i in $(grep -v '#' debian/patches/series); do
-  patch -p1 -i "debian/patches/${i}"
-done
-
+gtkdocize
 autoreconf -vfi
 intltoolize -f
 
@@ -83,9 +74,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
-
-# Remove documentation (Ubuntu doesn't package it)
-rm -rv $RPM_BUILD_ROOT%{_datadir}/gtk-doc/
 
 
 %postun
@@ -129,6 +117,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.4daily12.11.23-1
+- Version 12.10.4
+- Ubuntu daily build from 2012-11-23
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3-1.0ubuntu2
 - Version 12.10.3
 - Ubuntu release 0ubuntu2
