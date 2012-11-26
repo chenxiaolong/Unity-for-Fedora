@@ -2,43 +2,19 @@
 
 # Partially based off of Fedora 18's spec file
 
-%define _ubuntu_ver 3.4.2
-%define _ubuntu_rel 0ubuntu19
+%define _ubuntu_rel 0ubuntu8
 
 Name:		control-center
 Epoch:		1
-Version:	3.6.1
-Release:	100.ubuntu%{_ubuntu_ver}.%{_ubuntu_rel}%{?dist}
+Version:	3.6.3
+Release:	100.%{_ubuntu_rel}%{?dist}
 Summary:	Utilities to configure the GNOME desktop
 
 License:	GPLv2+ and GFDL
 URL:		http://www.gnome.org
 Source0:	http://download.gnome.org/sources/gnome-control-center/3.6/gnome-control-center-%{version}.tar.xz
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-control-center_%{_ubuntu_ver}-%{_ubuntu_rel}.debian.tar.gz
-
-# Useful patches refreshed for version 3.5.92
-Patch0:		0001_04_new_appearance_settings.patch
-Patch1:		0002_10_keyboard_layout_on_unity.patch
-Patch2:		0003_11_power-configure_lid_action.patch
-Patch3:		0004_12_add_never_turn_screen_off.patch
-Patch4:		0005_51_unity_options_in_display_panel.patch
-Patch5:		0006_54_enable_alt_tap_in_shortcut.patch
-Patch6:		0007_55_user_accounts_hide_controls.patch
-Patch7:		0008_57_use_nonsymbolic_keyboard_icon.patch
-Patch8:		0009_61_workaround_online_account.patch
-Patch9:		0010_62_update_translations_template.patch
-Patch10:	0011_64_restore_terminal_keyboard_shortcut.patch
-Patch11:	0012_90_force_fallback.patch
-Patch12:	0013_96_sound_nua_panel.patch
-Patch13:	0014_97_unity_power_ui.patch
-Patch14:	0015_98_default_sound_theme.patch
-Patch15:	0016_revert_git_drop_library.patch
-Patch16:	0017_99_add_lock-on-suspend.patch
-Patch17:	0018_dont_download_local_image.patch
-Patch18:	0019_fix-crash-on-user-panel.patch
-Patch19:	0020_classic_use_sound_indicator.patch
-Patch20:	0021_accounts_fix_unsetting_icon.patch
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-control-center_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 # Fedora's patches
 # https://bugzilla.gnome.org/show_bug.cgi?id=683567
@@ -72,7 +48,6 @@ BuildRequires:	pkgconfig(ibus-1.0)
 BuildRequires:	pkgconfig(iso-codes)
 BuildRequires:	pkgconfig(libcanberra)
 BuildRequires:	pkgconfig(libglade-2.0)
-BuildRequires:	pkgconfig(libgnomekbd)
 BuildRequires:	pkgconfig(libgnome-menu-3.0)
 BuildRequires:	pkgconfig(libgtop-2.0)
 BuildRequires:	pkgconfig(libnm-glib)
@@ -82,7 +57,6 @@ BuildRequires:	pkgconfig(libpulse) >= 2.0-1
 BuildRequires:	pkgconfig(librsvg-2.0)
 BuildRequires:	pkgconfig(libsystemd-daemon)
 BuildRequires:	pkgconfig(libwacom)
-BuildRequires:	pkgconfig(libxklavier)
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(polkit-agent-1)
 BuildRequires:	pkgconfig(pwquality)
@@ -125,6 +99,9 @@ Requires:	cups-pk-helper
 # Network settings
 Requires:	nm-connection-editor
 
+# System Information
+Requires:	glx-utils
+
 # Ubuntu's new sound panel (requires XDG_CURRENT_DESKTOP to be set)
 Requires:	gnome-session-ubuntu
 
@@ -166,27 +143,28 @@ files that are picked up by the control-center utilities.
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
 
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
+# Disable patches
+  # Ubuntu is too lazy to port their patches to the latest version of IBus
+    sed -i '/revert_new_ibus_keyboard_use.patch/d' debian/patches/series
+  # systemd should make this obsolete
+    sed -i '/revert_git_datetime_port.patch/d' debian/patches/series
+  # The gnome-settings-daemon-ubuntu patch for this conflicts with Fedora's
+  # patches
+    sed -i '/99_add_lock-on-suspend.patch/d' debian/patches/series
+  # Fedora uses PackageKit
+    sed -i '/05_run_update_manager.patch/d' debian/patches/series
+  # Ubuntu specific
+    sed -i '/10_keyboard_layout_on_unity.patch/d' debian/patches/series
+    sed -i '/50_ubuntu_systemwide_proxy.patch/d' debian/patches/series
+    sed -i '/52_ubuntu_language_list_mods.patch/d' debian/patches/series
+    sed -i '/53_use_ubuntu_help.patch/d' debian/patches/series
+    sed -i '/56_use_ubuntu_info_branding.patch/d' debian/patches/series
+    sed -i '/62_update_translations_template.patch/d' debian/patches/series
+
+tar zxvf '%{SOURCE99}'
+for i in $(grep -v '#' debian/patches/series); do
+  patch -p1 -i "debian/patches/${i}"
+done
 
 # Apply Fedora's patches
 %patch30 -p1 -b .wacom-osd-window
@@ -456,6 +434,12 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu8
+- Version 3.6.3
+- Ubuntu release 0ubuntu8
+- Merge Fedora's changes
+  - 3.6.2-2: Require glx-utils for the info panel
+
 * Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.ubuntu3.4.2.0ubuntu19
 - Version 3.6.1
 - Ubuntu version 3.4.2
