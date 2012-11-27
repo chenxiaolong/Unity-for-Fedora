@@ -2,20 +2,18 @@
 
 # Based off of Damian's spec file
 
-%define _ubuntu_rel 0ubuntu1
-
 Name:		indicator-sound
-Version:	12.10.1
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	12.10.2daily12.11.21.1
+Release:	1%{?dist}
 Summary:	Indicator for displaying a unified sound menu
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-sound
-Source0:	https://launchpad.net/indicator-sound/12.10/%{version}/+download/indicator-sound-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-sound_%{version}.orig.tar.gz
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-sound_%{version}-%{_ubuntu_rel}.debian.tar.gz
-
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
 
@@ -42,16 +40,14 @@ players (ex: Banshee).
 %prep
 %setup -q
 
-# Apply Ubuntu's patches
-tar zxvf '%{SOURCE99}'
-for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
-done
+autoreconf -vfi
+intltoolize -f
 
 
 %build
 %configure --disable-static
-make %{?_smp_mflags}
+#make %{?_smp_mflags}
+make -j1
 
 
 %install
@@ -83,6 +79,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2daily12.11.21.1-1
+- Version 12.10.2
+- Ubuntu daily build from 2012-11-21
+
 * Sat Oct 04 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1.0ubuntu1
 - Version 12.10.1
 - Ubuntu release 0ubuntu1
