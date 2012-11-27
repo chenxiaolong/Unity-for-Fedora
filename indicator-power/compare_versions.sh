@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SPEC_VER="$(rpmspec -q --qf '%{version}\n' indicator-power.spec | head -1)"
+F18_SPEC_VER="$(rpmspec -q --qf '%{version}\n' indicator-power-Fedora_18.spec | head -1)"
 
 echo "Getting latest Ubuntu version..."
 UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/raring/+source/indicator-power' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
@@ -10,6 +10,6 @@ UPSTREAM_VER=$(wget -q 'https://launchpad.net/indicator-power/+download' -O - | 
 
 echo ""
 
-echo -e "spec file version: ${SPEC_VER}"
-echo -e "Upstream version:  ${UPSTREAM_VER}"
-echo -e "Ubuntu version:    ${UBUNTU_VER[@]}"
+echo -e "F18 spec version: ${F18_SPEC_VER}"
+echo -e "Upstream version: ${UPSTREAM_VER}"
+echo -e "Ubuntu version:   ${UBUNTU_VER[@]}"

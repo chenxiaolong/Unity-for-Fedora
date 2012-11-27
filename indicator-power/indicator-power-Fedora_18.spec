@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-power
-Version:	12.10.5
+Version:	12.10.6daily12.11.21.1
 Release:	1%{?dist}
 Summary:	Indicator to show the battery status
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-power
-Source0:	https://launchpad.net/indicator-power/12.10/%{version}/+download/indicator-power-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-power_%{version}.orig.tar.gz
 
 Patch0:		0001_Disable_-Werror.patch
 
@@ -40,13 +40,8 @@ hidden.
 
 %patch0 -p1
 
-sed -i 's/2.33/2.22/g' configure.ac
-
-intltoolize --force
-aclocal --verbose --force
-autoconf -v -f
-automake -f
-#autoreconf -vfi
+autoreconf -vfi
+intltoolize -f
 
 
 %build
@@ -72,7 +67,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %files
-%doc AUTHORS ChangeLog
+%doc NEWS
 %dir %{_libdir}/indicators3/
 %dir %{_libdir}/indicators3/7/
 %{_libdir}/indicators3/7/libpower.so
@@ -80,6 +75,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.6daily12.11.21.1-1
+- Version 12.10.6
+- Ubuntu daily build from 2012-11-21
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.5-1
 - Version 12.10.5
 
