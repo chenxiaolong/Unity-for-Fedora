@@ -2,12 +2,13 @@
 
 # Based off of Fedora 18's spec file
 
-%define _git_date 20120820
+%define _git_date 20121016
 %define _nm_version 1:0.9.7.0
-%define _obsolete_ver 1:0.9.5.96
+%define _obsolete_ver 1:0.9.7
 
 Name:		network-manager-applet
 Version:	0.9.7.0
+# I will not put the Ubuntu version and release here. That would be way too long
 Release:	100.git%{_git_date}%{?dist}
 Summary:	A network control and status applet for NetworkManager
 
@@ -20,19 +21,11 @@ URL:		http://www.gnome.org/projects/NetworkManager/
 #   fedpkg sources
 Source0:	network-manager-applet-%{version}.git%{_git_date}.tar.bz2
 
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/network-manager-applet_0.9.6.2+git201211052130.2d666bc-0ubuntu1.debian.tar.gz
+
 Patch0:		fedora_nm-applet-no-notifications.patch
 Patch1:		fedora_nm-applet-wifi-dialog-ui-fixes.patch
 Patch2:		fedora_applet-ignore-deprecated.patch
-
-# Patches from Ubuntu's packaging version 0.9.6.2 release 0ubuntu5
-Patch10:	0001_lp289466_always_show_tray_icon.patch
-Patch11:	0002_applet-wifi-menu-before-vpn.patch
-Patch12:	0003_lp829673_gconf_hide_applet.patch
-Patch13:	0004_nm-applet-use-indicator.patch
-Patch14:	0005_make_menu_items_insensitive_based_on_permissions.patch
-Patch15:	0006_hide_policy_items_env_var.patch
-Patch16:	0007_lp1048516_dont_req_keyring_in_greeter.patch
-Patch17:	0008_lp1048520_delay_pin_dialog_in_greeter.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -54,6 +47,7 @@ BuildRequires:	pkgconfig(gnome-bluetooth-1.0)
 BuildRequires:	pkgconfig(gnome-keyring-1)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(gudev-1.0) >= 147
 BuildRequires:	pkgconfig(iso-codes)
 BuildRequires:	pkgconfig(libnotify)
 
@@ -142,14 +136,10 @@ nm-applet, nm-connection-editor, and the GNOME control center.
 %patch2 -p1 -b .no-deprecated
 
 # Apply Ubuntu's patches
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
+tar zxvf '%{SOURCE99}'
+for i in $(grep -v '#' debian/patches/series); do
+  patch -p1 -i "debian/patches/${i}"
+done
 
 autoreconf -vfi
 
@@ -257,6 +247,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 %files -n libnm-gtk
 %{_libdir}/libnm-gtk.so.0
 %{_libdir}/libnm-gtk.so.0.0.0
+%{_libdir}/girepository-1.0/NMGtk-1.0.typelib
 %dir %{_datadir}/libnm-gtk/
 %{_datadir}/libnm-gtk/wifi.ui
 
@@ -266,9 +257,18 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 %{_includedir}/libnm-gtk/*.h
 %{_libdir}/libnm-gtk.so
 %{_libdir}/pkgconfig/libnm-gtk.pc
+%{_datadir}/gir-1.0/NMGtk-1.0.gir
 
 
 %changelog
+* Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.0-100.git20121016
+- Update to Fedora-git-snapshot 20121016
+- Ubuntu version 0.9.6.2+git201211052130.2d666bc
+- Ubuntu release 0ubuntu1
+
+* Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.0-100.git20121004
+- Update to Fedora git snapshot 20121004
+
 * Sun Sep 23 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.0-100.git20120820
 - Initial release
 - Based on Fedora 18's spec file
