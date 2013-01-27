@@ -1,6 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_match_rel 5
+%define _ubuntu_rel 5
 
 Name:		libindicate-qt
 Version:	0.2.5.91
