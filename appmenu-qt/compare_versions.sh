@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-SPEC_VER="$(rpmspec -q --qf '%{version}\n' appmenu-qt.spec | head -1)"
+SPECFILE=appmenu-qt.spec
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/appmenu-qt' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q 'https://launchpad.net/appmenu-qt/+download' -O - | sed -n 's/.*appmenu-qt-\(.*\)\.tar\.bz2.*/\1/p' | head -n 1)
-
-echo ""
-
-echo -e "spec file version: ${SPEC_VER}"
-echo -e "Upstream version:  ${UPSTREAM_VER}"
-echo -e "Ubuntu version:    ${UBUNTU_VER[@]}"
+echo -e "spec file version: $(get_spec_version)"
+echo -e "Upstream version:  $(get_launchpad_version appmenu-qt)"
+echo -e "Ubuntu version:    $(get_ubuntu_version appmenu-qt ${1:-raring})"

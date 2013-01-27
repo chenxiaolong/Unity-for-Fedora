@@ -1,17 +1,16 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		appmenu-qt
-Version:	0.2.6
+Version:	0.2.7daily13.01.18
 Release:	1%{?dist}
 Summary:	Application menu support for Qt
 
 Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/appmenu-qt
-Source0:	https://launchpad.net/appmenu-qt/trunk/%{version}/+download/appmenu-qt-%{version}.tar.bz2
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/appmenu-qt_%{version}.orig.tar.gz
 
 BuildRequires:	cmake
-BuildRequires:	gcc-c++
 
 BuildRequires:	pkgconfig(dbusmenu-qt)
 BuildRequires:	pkgconfig(QtCore)
@@ -43,6 +42,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.7daily13.01.18-1
+- Version 0.2.7daily13.01.18
+
 * Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.6-3
 - Use pkgconfig for dependencies for portability
 
