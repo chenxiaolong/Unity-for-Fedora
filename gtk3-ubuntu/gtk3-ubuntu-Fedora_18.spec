@@ -1,14 +1,14 @@
-# Based off of Fedora 17's spec
+# Based off of Fedora 18's spec
 # Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu3
 
 %global bin_version 3.0.0
 
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name:		gtk3
-Version:	3.6.2
-Release:	101.%{_ubuntu_rel}%{?dist}
+Version:	3.6.4
+Release:	100.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://www.gtk.org
@@ -140,6 +140,8 @@ tar zxvf "%{SOURCE99}"
     sed -i '/071_fix-installation-of-HTML-images.patch/d' debian/patches/series
   # Drop git patches
     sed -i '/git/d' debian/patches/series
+    # Except this one
+      echo 'git_gtkcellrenderer_grabbing_modifier.patch' >> debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
@@ -159,7 +161,7 @@ autoreconf -vfi
   --enable-xcomposite \
   --enable-xdamage \
   --enable-x11-backend \
-  --enable-colord \
+  --enable-colord
 
 # fight unused direct deps
 sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
@@ -295,6 +297,10 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
 %changelog
+* Sat Jan 26 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu3
+- Version 3.6.4
+- Ubuntu release 0ubuntu3
+
 * Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-101.0ubuntu1
 - Version 3.6.2
 - Ubuntu release 0ubuntu1
