@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-SPEC_VER="$(rpmspec -q --qf '%{version}\n' libdbusmenu.spec | head -1)"
-UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' libdbusmenu.spec)"
+SPECFILE=libdbusmenu.spec
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/libdbusmenu' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q 'https://launchpad.net/dbusmenu/+download' -O - | sed -n 's/.*libdbusmenu-\(.*\)\.tar\.gz.*/\1/p' | head -n 1)
-
-echo ""
-
-echo -e "spec file version: ${SPEC_VER} ${UBUNTU_REL}"
-echo -e "Upstream version:  ${UPSTREAM_VER}"
-echo -e "Ubuntu version:    ${UBUNTU_VER[@]}"
+echo -e "spec file version: $(get_spec_version) $(get_spec_release --ubuntu)"
+echo -e "Upstream version:  $(get_launchpad_version dbusmenu)"
+echo -e "Ubuntu version:    $(get_ubuntu_version libdbusmenu ${1:-raring})"
