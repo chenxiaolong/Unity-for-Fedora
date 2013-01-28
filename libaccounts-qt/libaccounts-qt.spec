@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libaccounts-qt
-Version:	1.3
+Version:	1.4
 Release:	1%{?dist}
 Summary:	Qt library for Single Sign On
 
@@ -9,8 +9,6 @@ Group:		System Environment/Libraries
 License:	LGPLv2
 URL:		http://code.google.com/p/accounts-sso/
 Source0:	http://accounts-sso.googlecode.com/files/accounts-qt-%{version}.tar.bz2
-
-Patch0:		0001_Multilib.patch
 
 BuildRequires:	doxygen
 
@@ -45,12 +43,6 @@ This package contains the documentation for the accounts-qt library.
 %prep
 %setup -q -n accounts-qt-%{version}
 
-# Use correct libdir
-%patch0 -p1 -b .multilib
-sed -i 's|@LIB@|%{_lib}|g' \
-  Accounts/accounts-qt.pc \
-  Accounts/accounts.prf
-
 # Fix documentation directory
 sed -i '/^documentation.path/ s/$/-%{version}/' doc/doc.pri
 
@@ -70,6 +62,9 @@ make %{?_smp_mflags}
 %install
 make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
+# Silence rpmlint
+find -type d -name '.moc' -exec rm -rvf {} \+
+
 
 %post -p /sbin/ldconfig
 
@@ -78,7 +73,6 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 %files
 %doc COPYING
-%{_bindir}/account-tool
 %{_bindir}/accountstest
 %{_libdir}/libaccounts-qt.so.*
 %{_datadir}/libaccounts-qt-tests/
@@ -90,7 +84,6 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 %{_includedir}/accounts-qt/Accounts/*
 %{_libdir}/libaccounts-qt.so
 %{_libdir}/pkgconfig/accounts-qt.pc
-%{_libdir}/qt4/mkspecs/features/accounts.prf
 
 
 %files docs
@@ -98,6 +91,11 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.4-1
+- Version 1.4
+- Drop 0001_Multilib.patch
+  - Upstream tarball is multilib-compatible now
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.3-1
 - Version 1.3
 
