@@ -1,14 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		ido
-Version:	12.10.2
+Version:	12.10.3daily13.01.11
 Release:	1%{?dist}
 Summary:	Widgets and other objects used for indicators
 
 Group:		System Environment/Libraries
 License:	LGPLv2 and LGPLv3
 URL:		https://launchpad.net/ido
-Source0:	https://launchpad.net/ido/12.10/%{version}/+download/ido-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/ido_%{version}.orig.tar.gz
 
 BuildRequires:	gtk-doc
 BuildRequires:	pkgconfig
@@ -48,6 +48,8 @@ This package contains the development files for the ido library.
 %prep
 %setup -q
 
+autoreconf -vfi
+
 
 %build
 %configure --disable-static
@@ -69,6 +71,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %files -n %{name}3
 %doc AUTHORS
 %{_libdir}/libido3-0.1.so.*
+%{_libdir}/girepository-1.0/Ido3-0.1.typelib
 
 
 %files -n %{name}3-devel
@@ -78,9 +81,14 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_includedir}/libido3-0.1/libido/*.h
 %{_libdir}/libido3-0.1.so
 %{_libdir}/pkgconfig/libido3-0.1.pc
+%{_datadir}/gir-1.0/Ido3-0.1.gir
+%{_datadir}/vala/vapi/Ido3-0.1.vapi
 
 
 %changelog
+* Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily13.01.11-1
+- 12.10.3daily13.01.11
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2-1
 - Initial release for Fedora 18
 - Version 12.10.2
