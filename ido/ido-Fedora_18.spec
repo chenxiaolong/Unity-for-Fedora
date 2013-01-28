@@ -12,11 +12,13 @@ Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/ido_%{version}.ori
 
 BuildRequires:	gtk-doc
 BuildRequires:	pkgconfig
+BuildRequires:	vala-tools
 
 # Ubuntu's gtk3 package is required
 BuildRequires:	gtk3-ubuntu-devel
 
 BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
 
 %description
 (no files installed)
