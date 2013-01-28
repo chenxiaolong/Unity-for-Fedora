@@ -51,7 +51,7 @@ get_launchpad_version() {
     TARBALL=${2}
   fi
   wget -q -O - "https://launchpad.net/${PACKAGE}/+download" | \
-    sed -n "s/.*${TARBALL}-\(.*\)\.tar.*/\1/p" | head -n 1
+    sed -n "s/.*${TARBALL}[-_]\+\(.*\)\.tar.*/\1/p" | head -n 1
 }
 
 get_pypi_version() {
@@ -60,7 +60,7 @@ get_pypi_version() {
     exit 1
   fi
   wget -q -O - "http://pypi.python.org/pypi/${1}" | \
-    sed -n "s/.*>${1}-\(.*\)\.tar.*<.*/\1/p" | head -n 1
+    sed -n "s/.*>${1}-\(.*\)\.\(tar\.\|zip\).*<.*/\1/p" | head -n 1
 }
 
 get_gnome_version() {
