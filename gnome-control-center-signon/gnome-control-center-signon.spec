@@ -8,20 +8,23 @@
 # We'll use the same package names as Ubuntu (gnome-control-center-signon)
 
 Name:		gnome-control-center-signon
-Version:	0.1.1
+Version:	0.1.2bzr12.12.05
 Release:	1%{?dist}
 Summary:	GNOME Control Center extension for single signon
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/online-accounts-gnome-control-center
-Source0:	https://launchpad.net/gnome-control-center-signon/13.04/%{version}/+download/credentials-control-center-%{version}.tar.bz2
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-control-center-signon_%{version}.orig.tar.gz
 
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 BuildRequires:	gnome-common
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk-doc
+BuildRequires:	intltool
 BuildRequires:	itstool
 BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
@@ -73,7 +76,12 @@ This package contains the documentation for the account-plugin library.
 
 
 %prep
-%setup -q -n credentials-control-center-%{version}
+%setup -q
+
+aclocal -I m4 --install --force
+gtkdocize
+autoreconf -vfi
+intltoolize -f
 
 
 %build
@@ -143,6 +151,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.1.2bzr12.12.05-1
+- Version 0.1.2bzr12.12.05
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.1.1-1
 - Version 0.1.1
 
