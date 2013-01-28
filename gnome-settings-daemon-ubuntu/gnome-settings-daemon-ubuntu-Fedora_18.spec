@@ -2,10 +2,10 @@
 
 # Partially based off of the Fedora 18 spec
 
-%define _ubuntu_rel 0ubuntu2
+%define _ubuntu_rel 0ubuntu1
 
 Name:		gnome-settings-daemon
-Version:	3.6.3
+Version:	3.6.4
 Release:	100.%{_ubuntu_rel}%{?dist}
 Summary:	The daemon sharing settings from GNOME to GTK+/KDE applications
 
@@ -17,10 +17,14 @@ Source0:	http://download.gnome.org/sources/gnome-settings-daemon/3.6/gnome-setti
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 # Fedora's patches
+# https://bugzilla.redhat.com/show_bug.cgi?id=816764
+Patch1:		fedora_g-s-d-3.6.4-reset-a11y-keyboard.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=680689
-Patch21:	fedora_0001-power-and-media-keys-Use-logind-for-suspending-and-r.patch
+Patch2:		fedora_0001-power-and-media-keys-Use-logind-for-suspending-and-r.patch
 # Wacom OSD window: https://bugzilla.gnome.org/show_bug.cgi?id=679062
-Patch22:	fedora_0001-wacom-implement-OSD-help-window.patch
+Patch3:		fedora_0001-wacom-implement-OSD-help-window.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=873103
+Patch4:		fedora_0001-keyboard-Make-ibus-libpinyin-the-default-engine-for-.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -72,7 +76,7 @@ desktop-wide settings.
 
 
 %package devel
-Summary:	Development files for gnome-settings-daemon-ubuntu
+Summary:	Development files for gnome-settings-daemon
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
@@ -86,13 +90,13 @@ gnome-settings-daemon.
 
 
 %package updates
-Summary:	Updates plugin for gnome-control-center
+Summary:	Updates plugin for gnome-settings-daemon
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description updates
-This package contains the PackageKit updates plugin for GNOME Control Center.
+This package contains the PackageKit updates plugin for gnome-settings-daemon.
 
 
 %prep
@@ -110,22 +114,21 @@ tar zxvf '%{SOURCE99}'
     sed -i '/revert_new_ibus_use.patch/d' debian/patches/series
   # systemd should make this obsolete
     sed -i '/revert_git_datetime_dropping.patch/d' debian/patches/series
-  # We do use PackageKit in Fedora
-    sed -i '/53_update_schemas_warning.patch/d' debian/patches/series
   # Merged upstream. How does Debian/Ubuntu's quilt not error out, I have no
   # idea. https://launchpadlibrarian.net/124034045/buildlog_ubuntu-raring-amd64.gnome-settings-daemon_3.6.3-0ubuntu2_BUILDING.txt.gz
     sed -i '/48_register_client_before_idle_callbacks.patch/d' debian/patches/series
   # Conflicts with Fedora's patches
     sed -i '/51_lock_screen_on_suspend.patch/d' debian/patches/series
-    sed -i '/bugzilla_segfault_dpms.patch/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -p1 -i "debian/patches/${i}"
 done
 
 # Apply Fedora's patches
-%patch21 -p1
-%patch22 -p1 -b .wacom-osd-window
+#patch1 -p1 # BROKEN
+%patch2 -p1
+%patch3 -p1 -b .wacom-osd-window
+%patch4 -p1
 
 autoreconf -vfi
 
@@ -146,6 +149,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
+
+install -dm755 $RPM_BUILD_ROOT%{_libdir}/gnome-settings-daemon-3.0/gtk-modules/
 
 %find_lang gnome-settings-daemon
 
@@ -186,11 +191,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 %{_libexecdir}/gsd-input-sources-switcher
 %{_libexecdir}/gsd-locate-pointer
 %{_libexecdir}/gsd-printer
-%{_libexecdir}/gsd-test-wacom-osd
 %{_libexecdir}/gsd-wacom-led-helper
 
 # Plugins
 %dir %{_libdir}/gnome-settings-daemon-3.0/
+%dir %{_libdir}/gnome-settings-daemon-3.0/gtk-modules/
 %{_libdir}/gnome-settings-daemon-3.0/a11y-keyboard.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/a11y-settings.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/background.gnome-settings-plugin
@@ -204,6 +209,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/orientation.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/power.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/print-notifications.gnome-settings-plugin
+%{_libdir}/gnome-settings-daemon-3.0/screensaver-proxy.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/smartcard.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/sound.gnome-settings-plugin
 %{_libdir}/gnome-settings-daemon-3.0/wacom.gnome-settings-plugin
@@ -224,6 +230,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/liborientation.so
 %{_libdir}/gnome-settings-daemon-3.0/libpower.so
 %{_libdir}/gnome-settings-daemon-3.0/libprint-notifications.so
+%{_libdir}/gnome-settings-daemon-3.0/libscreensaver-proxy.so
 %{_libdir}/gnome-settings-daemon-3.0/libsmartcard.so
 %{_libdir}/gnome-settings-daemon-3.0/libsound.so
 %{_libdir}/gnome-settings-daemon-3.0/libxrandr.so
@@ -295,11 +302,13 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 %{_libexecdir}/gsd-test-orientation
 %{_libexecdir}/gsd-test-power
 %{_libexecdir}/gsd-test-print-notifications
+%{_libexecdir}/gsd-test-screensaver-proxy
 %{_libexecdir}/gsd-test-smartcard
 %{_libexecdir}/gsd-test-sound
 %{_libexecdir}/gsd-test-xsettings
 %{_libexecdir}/gsd-list-wacom
 %{_libexecdir}/gsd-test-wacom
+%{_libexecdir}/gsd-test-wacom-osd
 
 
 %files updates
@@ -311,6 +320,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 
 
 %changelog
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu1
+- Version 3.6.4
+- Ubuntu release 0ubuntu1
+
 * Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu2
 - Version 3.6.3
 - Ubuntu release 0ubuntu2

@@ -1,0 +1,27 @@
+From 994fcfffff2c7162dc9ef1a4243db0bbfa535388 Mon Sep 17 00:00:00 2001
+From: Rui Matos <tiagomatos@gmail.com>
+Date: Thu, 20 Dec 2012 12:59:36 +0000
+Subject: [PATCH] keyboard: Make ibus-libpinyin the default engine for the
+ zh_CN locale
+
+This is now the default IBus pinyin engine in Fedora 18.
+---
+ plugins/keyboard/gsd-keyboard-manager.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/keyboard/gsd-keyboard-manager.c b/plugins/keyboard/gsd-keyboard-manager.c
+index aa123c6..19ba139 100644
+--- a/plugins/keyboard/gsd-keyboard-manager.c
++++ b/plugins/keyboard/gsd-keyboard-manager.c
+@@ -486,7 +486,7 @@ engine_from_locale (void)
+                 { "sd_IN", "m17n:sd:inscript" },
+                 { "ta_IN", "m17n:ta:tamil99" },
+                 { "te_IN", "m17n:te:inscript" },
+-                { "zh_CN", "pinyin" },
++                { "zh_CN", "libpinyin" },
+                 { "zh_HK", "cangjie3" },
+                 { "zh_TW", "chewing" },
+         };
+-- 
+1.8.0.1
+
