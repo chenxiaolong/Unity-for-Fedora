@@ -2,7 +2,7 @@
 
 # Partially based off of Fedora 18's spec file
 
-%define _ubuntu_rel 0ubuntu2
+%define _ubuntu_rel 0ubuntu3
 
 Name:		gnome-session
 Version:	3.6.2
@@ -195,7 +195,7 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %{_datadir}/gnome-session/hardware-compatibility
 %{_datadir}/gnome-session/session-properties.ui
 %dir %{_datadir}/gnome-session/sessions/
-%{_datadir}/gnome-session/sessions/gnome-classic.session
+%{_datadir}/gnome-session/sessions/gnome-fallback-compiz.session
 %{_datadir}/gnome-session/sessions/gnome-fallback.session
 %{_datadir}/gnome-session/sessions/gnome.session
 %{_datadir}/gnome-session/sessions/ubuntu.session
@@ -212,13 +212,17 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 %files xsession
 %doc AUTHORS ChangeLog NEWS README
-%{_datadir}/xsessions/gnome-classic.desktop
+%{_datadir}/xsessions/gnome-fallback-compiz.desktop
 %{_datadir}/xsessions/gnome-fallback.desktop
 %{_datadir}/xsessions/gnome.desktop
 %{_datadir}/xsessions/ubuntu.desktop
 
 
 %changelog
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-1.0ubuntu3
+- Version 3.6.2
+- Ubuntu release 0ubuntu3
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-1.0ubuntu2
 - Version 3.6.2
 - Ubuntu release 0ubuntu2
