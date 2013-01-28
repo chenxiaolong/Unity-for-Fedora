@@ -2,7 +2,7 @@
 
 # Partially based off of Fedora 18's spec file
 
-%define _ubuntu_rel 0ubuntu8
+%define _ubuntu_rel 0ubuntu12
 
 Name:		control-center
 Epoch:		1
@@ -49,6 +49,7 @@ BuildRequires:	pkgconfig(iso-codes)
 BuildRequires:	pkgconfig(libcanberra)
 BuildRequires:	pkgconfig(libglade-2.0)
 BuildRequires:	pkgconfig(libgnome-menu-3.0)
+BuildRequires:	pkgconfig(libgnomekbdui)
 BuildRequires:	pkgconfig(libgtop-2.0)
 BuildRequires:	pkgconfig(libnm-glib)
 BuildRequires:	pkgconfig(libnm-gtk)
@@ -161,7 +162,6 @@ tar zxvf '%{SOURCE99}'
     sed -i '/56_use_ubuntu_info_branding.patch/d' debian/patches/series
     sed -i '/62_update_translations_template.patch/d' debian/patches/series
 
-tar zxvf '%{SOURCE99}'
 for i in $(grep -v '#' debian/patches/series); do
   patch -p1 -i "debian/patches/${i}"
 done
@@ -177,8 +177,7 @@ autoreconf -vfi
   --disable-static \
   --disable-update-mimedb \
   --with-libsocialweb=no \
-  --enable-systemd \
-  --with-clutter
+  --enable-systemd
 
 # Disable rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
@@ -434,6 +433,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu12
+- Version 3.6.3
+- Ubuntu release 0ubuntu12
+
 * Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu8
 - Version 3.6.3
 - Ubuntu release 0ubuntu8
