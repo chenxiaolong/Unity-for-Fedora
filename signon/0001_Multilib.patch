@@ -1,37 +1,42 @@
-diff -Nru signon-8.44.orig/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in signon-8.44/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in
---- signon-8.44.orig/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in	2012-11-18 14:07:28.652921000 -0500
-+++ signon-8.44/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in	2012-11-18 14:07:57.166960000 -0500
+--- a/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in
++++ b/lib/plugins/signon-plugins-common/signon-plugins-common.pc.in
 @@ -6,5 +6,5 @@
  Name: signon-plugins-common
  Description: SignonPluginsCommon
- Version: PROJECT_VERSION
+ Version: $$PROJECT_VERSION
 -Libs.private: -L/usr/lib  -lQtCore
 +Libs.private: -L/usr/@LIB@  -lQtCore
  Cflags:  -I${includedir}/signon-plugins -I${includedir}/signon-plugins/SignOn
-diff -Nru signon-8.44.orig/lib/plugins/signon-plugins.pc.in signon-8.44/lib/plugins/signon-plugins.pc.in
---- signon-8.44.orig/lib/plugins/signon-plugins.pc.in	2012-11-18 14:07:28.651639000 -0500
-+++ signon-8.44/lib/plugins/signon-plugins.pc.in	2012-11-18 14:08:19.724582000 -0500
+--- a/lib/plugins/signon-plugins.pc.in
++++ b/lib/plugins/signon-plugins.pc.in
 @@ -8,6 +8,6 @@
  Description: SignonPlugins
- Version: PROJECT_VERSION
+ Version: $$PROJECT_VERSION
  Requires: libsignon-qt
 -Libs.private: -L/usr/lib  -lQtCore
 +Libs.private: -L/usr/@LIB@  -lQtCore
  Cflags:  -I${includedir}/signon-plugins -I${includedir}/signon-plugins/SignOn
  Libs: -lsignon-plugins
-diff -Nru signon-8.44.orig/lib/SignOn/libsignon-qt.pc.in signon-8.44/lib/SignOn/libsignon-qt.pc.in
---- signon-8.44.orig/lib/SignOn/libsignon-qt.pc.in	2012-11-18 14:07:28.642814000 -0500
-+++ signon-8.44/lib/SignOn/libsignon-qt.pc.in	2012-11-18 14:08:41.896849000 -0500
-@@ -7,5 +7,5 @@
- Description: Client library for the Single Sign On daemon, Qt bindings.
- Version: PROJECT_VERSION
- Libs: -L${libdir} -lsignon-qt
--Libs.private: -L/usr/lib  -lQtSql -lQtCore -lpthread  
-+Libs.private: -L/usr/@LIB@  -lQtSql -lQtCore -lpthread  
- Cflags: -I${includedir}/signon-qt -I${includedir}/signon-qt/SignOn
-diff -Nru signon-8.44.orig/src/remotepluginprocess/remotepluginprocess.h signon-8.44/src/remotepluginprocess/remotepluginprocess.h
---- signon-8.44.orig/src/remotepluginprocess/remotepluginprocess.h	2012-11-18 14:07:28.676707000 -0500
-+++ signon-8.44/src/remotepluginprocess/remotepluginprocess.h	2012-11-18 14:09:45.844795000 -0500
+--- a/src/plugins/example/exampleplugin.pro
++++ b/src/plugins/example/exampleplugin.pro
+@@ -1,7 +1,7 @@
+ 
+ TEMPLATE = lib
+ TARGET = exampleplugin
+-DESTDIR = lib/signon
++DESTDIR = @LIB@/signon
+ QT += core
+ 
+ CONFIG += plugin \
+@@ -21,5 +21,5 @@
+ QMAKE_CLEAN += libexample.so
+ headers.files = $$HEADERS
+ 
+-target.path  = $${INSTALL_PREFIX}/lib/signon
++target.path  = $${INSTALL_PREFIX}/@LIB@/signon
+ INSTALLS = target
+--- a/src/remotepluginprocess/remotepluginprocess.h
++++ b/src/remotepluginprocess/remotepluginprocess.h
 @@ -47,7 +47,7 @@
  }
  
@@ -41,9 +46,8 @@ diff -Nru signon-8.44.orig/src/remotepluginprocess/remotepluginprocess.h signon-
  #endif
  
  #ifndef SIGNON_PLUGIN_PREFIX
-diff -Nru signon-8.44.orig/src/signond/signondaemon.h signon-8.44/src/signond/signondaemon.h
---- signon-8.44.orig/src/signond/signondaemon.h	2012-11-18 14:07:28.687703000 -0500
-+++ signon-8.44/src/signond/signondaemon.h	2012-11-18 14:10:10.394754000 -0500
+--- a/src/signond/signondaemon.h
++++ b/src/signond/signondaemon.h
 @@ -39,7 +39,7 @@
  #include "credentialsaccessmanager.h"
  
