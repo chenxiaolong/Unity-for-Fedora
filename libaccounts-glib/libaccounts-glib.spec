@@ -3,7 +3,7 @@
 %define _ubuntu_rel 0ubuntu2
 
 Name:		libaccounts-glib
-Version:	1.3
+Version:	1.5
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Account management library for GLib Applications
 
@@ -20,8 +20,6 @@ BuildRequires:	gtk-doc
 BuildRequires:	pkgconfig
 
 BuildRequires:	pkgconfig(check)
-BuildRequires:	pkgconfig(dbus-1)
-BuildRequires:	pkgconfig(dbus-glib-1)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(libxml-2.0)
@@ -41,7 +39,6 @@ Summary:	Development files for libaccounts-glib
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-Requires:	pkgconfig(dbus-glib-1)
 Requires:	pkgconfig(glib-2.0)
 Requires:	pkgconfig(libxml-2.0)
 Requires:	pkgconfig(sqlite3)
@@ -109,9 +106,6 @@ popd
 # Remove Meego specific file
 rm -v $RPM_BUILD_ROOT%{_datadir}/backup-framework/applications/accounts.conf
 
-# Remove useless empty files put in the wrong directory
-rm -rv $RPM_BUILD_ROOT%{_prefix}/doc/
-
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
@@ -147,9 +141,21 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %files tools
 %{_bindir}/ag-backup
 %{_bindir}/ag-tool
+%{_mandir}/man1/ag-backup.1.gz
+%{_mandir}/man1/ag-tool.1.gz
+# Do these belong here?
+%dir %{_datadir}/xml/
+%dir %{_datadir}/xml/accounts/schema/
+%dir %{_datadir}/xml/accounts/schema/dtd/
+%{_datadir}/xml/accounts/schema/dtd/accounts-*.dtd
 
 
 %changelog
+* Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.5-1.0ubuntu2
+- Version 1.5
+- Ubuntu release 0ubuntu2
+- Drop dependencies on dbus-glib
+
 * Mon Sep 03 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.3-1.0ubuntu2
 - Initial release
 - Version 1.3
