@@ -3,7 +3,7 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		libsignon-glib
-Version:	1.7
+Version:	1.8
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Authentication management library for GLib applications
 
@@ -95,9 +95,6 @@ pushd build-python3/pygobject/
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
 
-# Remove useless empty files put in the wrong directory
-rm -rv $RPM_BUILD_ROOT%{_prefix}/doc/
-
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
@@ -130,6 +127,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.8-1.0ubuntu1
+- Version 1.8
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.7-1.0ubuntu1
 - Version 1.7
 
