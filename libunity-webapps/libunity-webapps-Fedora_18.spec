@@ -1,22 +1,17 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu3.2
-
 Name:		libunity-webapps
-Version:	2.4.1
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	2.4.3daily13.01.10
+Release:	1%{?dist}
 Summary:	WebApps: Library for the integration with the Unity desktop
 
 Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/libunity-webapps
-Source0:	https://launchpad.net/libunity-webapps/trunk/%{version}/+download/unity_webapps-%{version}.tar.gz
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity-webapps_%{version}-%{_ubuntu_rel}.debian.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity-webapps_%{version}.orig.tar.gz
 
 BuildRequires:	gettext
 BuildRequires:	gnome-common
-BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pkgconfig
 
@@ -62,24 +57,11 @@ This package contains the DBus service, the GSettings schemas, the daemon, etc.
 for the unity-webapps library.
 
 
-%package docs
-Summary:	Documentation for the unity-webapps library
-Group:		Documentation
-
-BuildArch:	noarch
-
-%description docs
-This package contains the documentation for the unity-webapps library.
-
-
 %prep
-%setup -q -n unity_webapps-%{version}
+%setup -q
 
-# Apply Ubuntu's patches
-tar zxvf '%{SOURCE99}'
-for i in $(grep -v '#' debian/patches/series); do
-  patch -p1 -i "debian/patches/${i}"
-done
+autoreconf -vfi
+intltoolize -f
 
 
 %build
@@ -148,11 +130,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/com.canonical.unity.webapps.gschema.xml
 
 
-%files docs
-%doc %{_datadir}/gtk-doc/html/libunity-webapps/
-
-
 %changelog
+* Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.3daily13.01.10-1
+- Version 2.4.3daily13.01.10
+- Drop docs subpackage (non-existant documentation)
+
 * Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.1-1.0ubuntu3.2
 - Version 2.4.1
 - Ubuntu release 0ubuntu3.2
