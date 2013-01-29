@@ -2,7 +2,7 @@
 
 # Based off of Fedora 18's spec file
 
-%define _git_date 20121016
+%define _git_date 20121211
 %define _nm_version 1:0.9.7.0
 %define _obsolete_ver 1:0.9.7
 
@@ -21,11 +21,13 @@ URL:		http://www.gnome.org/projects/NetworkManager/
 #   fedpkg sources
 Source0:	network-manager-applet-%{version}.git%{_git_date}.tar.bz2
 
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/network-manager-applet_0.9.6.2+git201211052130.2d666bc-0ubuntu1.debian.tar.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/network-manager-applet_0.9.6.2+git201212301945.bac0998-0ubuntu1.debian.tar.gz
 
 Patch0:		fedora_nm-applet-no-notifications.patch
 Patch1:		fedora_nm-applet-wifi-dialog-ui-fixes.patch
 Patch2:		fedora_applet-ignore-deprecated.patch
+Patch3:		fedora_editor-revert-bridges.patch
+Patch4:		fedora_fix-firewall-zone.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -134,6 +136,8 @@ nm-applet, nm-connection-editor, and the GNOME control center.
 %patch0 -p1 -b .no-notifications
 %patch1 -p1 -b .applet-wifi-ui
 %patch2 -p1 -b .no-deprecated
+%patch3 -p1 -b .revert-bridges
+%patch4 -p1 -b .fix-firewall-zone
 
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
@@ -158,7 +162,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 
-install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome-vpn-properties
+install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome-vpn-properties/
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
@@ -261,6 +265,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.0-100.git20121211
+- Update to Fedora-git-snapshot 20121211
+- Ubuntu version 0.9.6.2+git201212301945.bac0998
+- Ubuntu release 0ubuntu1
+
 * Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.7.0-100.git20121016
 - Update to Fedora-git-snapshot 20121016
 - Ubuntu version 0.9.6.2+git201211052130.2d666bc
