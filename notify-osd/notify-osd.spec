@@ -1,18 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu5
-
 Name:		notify-osd
-Version:	0.9.34
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	0.9.35daily12.11.28
+Release:	1%{?dist}
 Summary:	Notification daemon which displays semi-transparent click-through bubbles
 
 Group:		User Interface/X
 License:	GPLv3
 URL:		https://launchpad.net/notify-osd
-Source0:	https://launchpad.net/notify-osd/precise/%{version}/+download/notify-osd-%{version}.tar.gz
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/notify-osd_%{version}-%{_ubuntu_rel}.diff.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/notify-osd_%{version}.orig.tar.gz
 
 BuildRequires:	gnome-common
 BuildRequires:	intltool
@@ -42,10 +38,7 @@ from a particular person.
 %prep
 %setup -q
 
-# Apply Ubuntu's patches
-cp data/org.freedesktop.Notifications.service.in{,.orig}
-zcat '%{SOURCE99}' | patch -Np1
-cp data/org.freedesktop.Notifications.service.in{.orig,}
+autoreconf -vfi
 
 
 %build
@@ -77,6 +70,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.35daily12.11.28-1
+- Version 0.9.35daily12.11.28
+
 * Tue Oct 02 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.34-1.0ubuntu5
 - Ubuntu release 0ubuntu5
 
