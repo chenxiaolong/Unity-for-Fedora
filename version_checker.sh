@@ -16,7 +16,7 @@ get_spec_release() {
     exit 1
   fi
   if [ "x${1}" == "x--ubuntu" ]; then
-    sed -n 's/^%define[ \t]*_ubuntu_rel[ ]*\(.*\)$/\1/p' ${SPECFILE}
+    sed -n 's/^%define[ \t]*_ubuntu_rel[ \t]*\(.*\)$/\1/p' ${SPECFILE}
   else
     rpmspec -q --qf '%{release}\n' ${SPECFILE} | head -1
   fi
