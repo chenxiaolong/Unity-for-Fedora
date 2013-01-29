@@ -47,8 +47,8 @@ get_fedora_version() {
   pushd "${TEMP}" &>/dev/null
   wget -q --content-disposition \
     "http://pkgs.fedoraproject.org/cgit/${1}.git/plain/${1}.spec?h=f${2}"
-  rpm -q --qf '%{version} %{release}' --specfile ${1}.spec | \
-    sed 's/\.fc[0-9]\+$//g'
+  rpm -q --qf '%{version} %{release}\n' --specfile ${1}.spec | \
+    sed 's/\.fc[0-9]\+$//g' | head -n 1
   popd &>/dev/null
   rm -rf "${TEMP}"
 }
