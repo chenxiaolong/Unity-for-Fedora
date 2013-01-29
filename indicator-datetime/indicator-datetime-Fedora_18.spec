@@ -1,18 +1,18 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-datetime
-Version:	12.10.2
+Version:	12.10.3daily13.01.25
 Release:	1%{?dist}
 Summary:	Indicator for displaying the date and time
 
 Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-datetime
-Source0:	https://launchpad.net/indicator-datetime/12.10/%{version}/+download/indicator-datetime-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-datetime_%{version}.orig.tar.gz
 
-Patch0:		0001_Revert_port_to_EDS_3.6_API.patch
 Patch1:		0001_Port_to_systemd_timedated.patch
 Patch2:		0002_Remove_timezone_functionality.patch
+Patch3:		revert_r201.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -45,11 +45,6 @@ panel.
 %prep
 %setup -q
 
-# Revert port to evolution-data-server 3.6's API
-%if 0%{fedora} <= 17
-%patch0 -p1
-%endif
-
 # Port to systemd's timedated
 %patch1 -p1 -b .systemd
 
@@ -62,12 +57,15 @@ panel.
 # - Removes ability to changes timezone based on physical location
 %patch2 -p1 -b .timezone
 
+%patch3 -p0
+
 autoreconf -vfi
+intltoolize -f
 
 
 %build
 %configure --disable-static
-make %{?_smp_mflags}
+make -j1
 
 
 %install
@@ -104,6 +102,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily13.01.25-1
+- Version 12.10.3daily13.01.25
+
 * Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2-1
 - Version 12.10.2
 - Add patches:
