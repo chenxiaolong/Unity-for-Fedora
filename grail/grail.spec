@@ -1,16 +1,18 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		grail
-Version:	3.0.8
+Version:	3.0.9daily12.12.07.1
 Release:	1%{?dist}
 Summary:	Gesture Recognition And Instantiation Library
 
 Group:		System Environment/Libraries
 License:	GPLv3
 URL:		https://launchpad.net/grail
-Source0:	https://launchpad.net/grail/trunk/%{version}/+download/grail-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/grail_%{version}.orig.tar.gz
 
 BuildRequires:	asciidoc
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	xmlto
 
 BuildRequires:	pkgconfig(evemu)
@@ -55,6 +57,8 @@ This package contains testing tools for the grail library.
 
 %prep
 %setup -q
+
+autoreconf -vfi
 
 
 %build
@@ -103,6 +107,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.9daily12.12.07.1-1
+- Version 3.0.9daily12.12.07.1
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.8-1
 - Version 3.0.8
 
