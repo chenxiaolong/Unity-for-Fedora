@@ -28,10 +28,29 @@ get_spec_define() {
     exit 1
   fi
   if [ -z "${1}" ]; then
-    echo "No argument provided!"
+    echo "No argument was provided"
     exit 1
   fi
   sed -n "s/^%define[ \t]\+${1}[ \t]\+\(.*\)$/\1/p" ${SPECFILE}
+}
+
+get_fedora_version() {
+  if [ -z "${1}" ]; then
+    echo "No package was provided"
+    exit 1
+  fi
+  if [ -z "${2}" ]; then
+    echo "No Fedora version was provided"
+    exit 1
+  fi
+  local TEMP=$(mktemp -d)
+  pushd "${TEMP}" &>/dev/null
+  wget -q --content-disposition \
+    "http://pkgs.fedoraproject.org/cgit/${1}.git/plain/${1}.spec?h=f${2}"
+  rpm -q --qf '%{version} %{release}' --specfile ${1}.spec | \
+    sed 's/\.fc[0-9]\+$//g'
+  popd &>/dev/null
+  rm -rf "${TEMP}"
 }
 
 get_ubuntu_version() {
