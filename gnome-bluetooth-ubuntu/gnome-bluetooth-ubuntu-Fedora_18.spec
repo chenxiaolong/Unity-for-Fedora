@@ -28,6 +28,7 @@ BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	itstool
 BuildRequires:	rarian-compat
+BuildRequires:	yelp-tools
 BuildRequires:	pkgconfig
 
 BuildRequires:	pkgconfig(appindicator3-0.1)
