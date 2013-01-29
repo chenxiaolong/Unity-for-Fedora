@@ -1,19 +1,12 @@
 #!/usr/bin/env bash
 
-F17_SPEC_VER="$(rpmspec -q --qf '%{version}\n' libXfixes-ubuntu-Fedora_17.spec | head -1)"
-F17_UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' libXfixes-ubuntu-Fedora_17.spec)"
-F18_SPEC_VER="$(rpmspec -q --qf '%{version}\n' libXfixes-ubuntu-Fedora_18.spec | head -1)"
-F18_UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' libXfixes-ubuntu-Fedora_18.spec)"
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/libxfixes' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
-
-echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q http://xorg.freedesktop.org/releases/individual/lib/ -O - | sed -n 's/.*libXfixes-\(.*\).tar.bz2.*/\1/p' | tail -n 1)
-
-echo ""
-
-echo -e "F17 spec version: ${F17_SPEC_VER} ${F17_UBUNTU_REL}"
-echo -e "F18 spec version: ${F18_SPEC_VER} ${F18_UBUNTU_REL}"
-echo -e "Upstream version: ${UPSTREAM_VER}"
-echo -e "Ubuntu version:   ${UBUNTU_VER[@]}"
+SPECFILE=libXfixes-ubuntu-Fedora_17.spec
+echo -e "F17 spec version:   $(get_spec_version) $(get_spec_release --ubuntu)"
+echo -e "F18 Fedora version: $(get_fedora_version libXfixes 17)"
+SPECFILE=libXfixes-ubuntu-Fedora_18.spec
+echo -e "F18 spec version:   $(get_spec_version) $(get_spec_release --ubuntu)"
+echo -e "F18 Fedora version: $(get_fedora_version libXfixes 18)"
+echo -e "Upstream version:   $(get_xorg_version libXfixes lib)"
+echo -e "Ubuntu version:     $(get_ubuntu_version libxfixes ${1:-raring})"
