@@ -1,16 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-### NOT NEEDED IN FEDORA 18 ###
-
 Name:		evemu
-Version:	1.0.10
+Version:	1.0.11daily12.11.29.1
 Release:	1%{?dist}
 Summary:	Linux Evdev Event Emulation Library
 
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/evemu
-Source0:	https://launchpad.net/evemu/trunk/evemu-%{version}/+download/evemu-%{version}.tar.xz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/evemu_%{version}.orig.tar.gz
 
 BuildRequires:	asciidoc
 BuildRequires:	python2-devel
@@ -62,7 +60,7 @@ autoreconf -vfi
 
 %build
 %configure --disable-static
-make %{?_smp_mflags}
+make -j1
 
 
 %install
@@ -78,12 +76,12 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files
-%doc ChangeLog README
+%doc README
 %{_libdir}/libevemu.so.*
 
 
 %files devel
-%doc ChangeLog README
+%doc README
 %{_includedir}/evemu.h
 %{_libdir}/libevemu.so
 %{_libdir}/pkgconfig/evemu.pc
@@ -97,12 +95,13 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_bindir}/evemu-record
 %{_mandir}/man1/evemu-describe.1.gz
 %{_mandir}/man1/evemu-device.1.gz
+%{_mandir}/man1/evemu-event.1.gz
 %{_mandir}/man1/evemu-play.1.gz
 %{_mandir}/man1/evemu-record.1.gz
 
 
 %files -n python-evemu
-%doc ChangeLog README
+%doc README
 %dir %{python_sitelib}/evemu/
 %{python_sitelib}/evemu/__init__.py*
 %{python_sitelib}/evemu/base.py*
@@ -111,6 +110,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.11daily12.11.29.1-1
+- Version 1.0.11daily12.11.29.1
+
 * Tue Jul 24 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.10-1
 - Version 1.0.10
 - Upstream renamed from utouch-evemu to evemu
