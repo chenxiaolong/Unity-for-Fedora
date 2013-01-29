@@ -2,11 +2,11 @@
 
 # Based off of the Fedora 18 spec file
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
 
 Name:		gnome-screensaver
 Version:	3.6.1
-Release:	101.%{_ubuntu_rel}%{?dist}
+Release:	100.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME Screensaver
 
 Group:		Amusements/Graphics
@@ -98,6 +98,10 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu2
+- Version 3.6.1
+- Ubuntu release 0ubuntu2
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-101.0ubuntu1
 - Version 3.6.1
 - Ubuntu release 0ubuntu1
