@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		indicator-appmenu
-Version:	12.10.4daily12.11.23
+Version:	12.10.4daily13.01.25
 Release:	1%{?dist}
 Summary:	Indicator to host the menus from an application
 
@@ -11,6 +11,7 @@ URL:		https://launchpad.net/indicator-appmenu
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-appmenu_%{version}.orig.tar.gz
 
 Patch0:		0001_Fix_dbusmenu-dumper_path.patch
+Patch1:		revert_r229.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -50,6 +51,7 @@ This package contains debugging tools for the appmenu indicator.
 %setup -q
 
 %patch0 -p1 -b .dbusmenu-dumper
+%patch1 -p0
 
 gtkdocize
 autoreconf -vfi
@@ -117,6 +119,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.4daily13.01.25-1
+- Version 12.10.4daily13.01.25
+
 * Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.4daily12.11.23-1
 - Version 12.10.4
 - Ubuntu daily build from 2012-11-23

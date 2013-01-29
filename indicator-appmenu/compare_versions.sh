@@ -1,17 +1,10 @@
 #!/usr/bin/env bash
 
-F17_SPEC_VER="$(rpmspec -q --qf '%{version}\n' indicator-appmenu-Fedora_17.spec | head -1)"
-F18_SPEC_VER="$(rpmspec -q --qf '%{version}\n' indicator-appmenu-Fedora_18.spec | head -1)"
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/raring/+source/indicator-appmenu' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
-
-echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q 'https://launchpad.net/indicator-appmenu/+download' -O - | sed -n 's/.*indicator-appmenu-\(.*\)\.tar\.gz.*/\1/p' | head -n 1)
-
-echo ""
-
-echo -e "F17 spec version: ${F17_SPEC_VER}"
-echo -e "F18 spec version: ${F18_SPEC_VER}"
-echo -e "Upstream version: ${UPSTREAM_VER}"
-echo -e "Ubuntu version:   ${UBUNTU_VER[@]}"
+SPECFILE=indicator-appmenu-Fedora_17.spec
+echo -e "F17 spec version: $(get_spec_version)"
+SPECFILE=indicator-appmenu-Fedora_18.spec
+echo -e "F18 spec version: $(get_spec_version)"
+echo -e "Upstream version: $(get_launchpad_version indicator-appmenu)"
+echo -e "Ubuntu version:   $(get_ubuntu_version indicator-appmenu ${1:-raring})"
