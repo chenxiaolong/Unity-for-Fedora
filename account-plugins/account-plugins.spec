@@ -1,15 +1,19 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		account-plugins
-Version:	0.9
+Version:	0.10bzr12.12.10
 Release:	1%{?dist}
 Summary:	GNOME Control Center account plugins for Single Sign On
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		https://launchpad.net/online-accounts-account-plugins
-Source0:	https://launchpad.net/account-plugins/12.10/%{version}/+download/account-plugins-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/account-plugins_%{version}.orig.tar.gz
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	intltool
+BuildRequires:	libxml2
 BuildRequires:	vala
 
 BuildRequires:	pkgconfig(account-plugin)
@@ -124,8 +128,12 @@ Sina.
 %package -n account-plugin-tools
 Summary:	GNOME Control Center account plugin for Single Sign On - Tools
 
+# Explicitly require for GObject Introspection bindings
+Requires:	libaccounts-glib
+Requires:	libsignon-glib
 Requires:	signon-keyring-extension
 Requires:	signon-plugin-oauth2
+Requires:	python3-gobject
 
 %description -n account-plugin-tools
 This package contains some tools for the GNOME Control Center account plugins.
@@ -144,6 +152,9 @@ This package contains the icons for the GNOME Control Center account plugins.
 
 %prep
 %setup -q
+
+autoreconf -vfi
+intltoolize -f
 
 
 %build
@@ -322,6 +333,7 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %dir %{_datadir}/accounts/services/
 %dir %{_datadir}/accounts/providers/
 %{_sysconfdir}/signon-ui/webkit-options.d/login.yahoo.com.conf
+%{_sysconfdir}/signon-ui/webkit-options.d/secure.flickr.com.conf
 %{_libdir}/libaccount-plugin-1.0/providers/libflickr.so
 %{_datadir}/accounts/services/flickr-microblog.service
 %{_datadir}/accounts/services/flickr-sharing.service
@@ -424,6 +436,12 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.10bzr12.12.10-1
+- Version 0.10bzr12.12.10
+- Add python3-gobject to account-plugins-tools's dependencies
+  - Also libacounts-glib and libsignon-glib for their GObject Introspection
+    bindings
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9-1
 - Version 0.9
 
