@@ -1,16 +1,18 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		frame
-Version:	2.4.3
+Version:	2.5.0daily12.12.13
 Release:	1%{?dist}
 Summary:	Open Input Framework Frame Library
 
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/frame
-Source0:	https://launchpad.net/frame/trunk/v%{version}/+download/frame-%{version}.tar.xz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/frame_%{version}.orig.tar.gz
 
 BuildRequires:	asciidoc
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	xmlto
 BuildRequires:	pkgconfig
 
@@ -49,6 +51,8 @@ This package contains testing tools for the frame library.
 %prep
 %setup -q
 
+autoreconf -vfi
+
 
 %build
 %configure --disable-static
@@ -86,6 +90,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_includedir}/oif/frame_x11.h
 %{_libdir}/libframe.so
 %{_libdir}/pkgconfig/frame.pc
+%{_libdir}/pkgconfig/frame-x11.pc
 
 
 %files tools
@@ -94,6 +99,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.5.0daily12.12.13-1
+- Version 2.5.0daily12.12.13
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.3-1
 - Version 2.4.3
 
