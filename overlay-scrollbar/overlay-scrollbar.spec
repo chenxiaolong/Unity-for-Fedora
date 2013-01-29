@@ -1,19 +1,16 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _bzr_rev 357
-%define _ubuntu_rel 0ubuntu1
-
 # Workaround: the overlay-scrollbar needs to be noarch, but the subpackages
 # need to be arch-dependent. RPM doesn't support this.
 Name:		abcdefghijklmnopqrstuvwxyz
-Version:	0.2.16
-Release:	1.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
+Version:	0.2.16+r359daily12.11.30
+Release:	1%{?dist}
 Summary:	Overlayed scrollbar widget for GTK
 
 Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		https://launchpad.net/ayatana-scrollbar
-Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/overlay-scrollbar_%{version}+r%{_bzr_rev}-%{_ubuntu_rel}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/overlay-scrollbar_%{version}.orig.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -71,9 +68,7 @@ This package contains a GTK 3 widget allowing for a overlayed scrollbar.
 
 
 %prep
-%setup -q -n overlay-scrollbar-%{version}+r%{_bzr_rev}
-
-patch -Np1 -i debian/patches/01_workaround_qt_overlay_crash.patch
+%setup -q -n overlay-scrollbar-%{version}
 
 autoreconf -vfi
 
@@ -138,6 +133,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Tue Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.16+r359daily12.11.30-1
+- Version 0.2.16+r359daily12.11.30
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.16-1.bzr357.0ubuntu1
 - Version 0.2.16
 - BZR revision 257
