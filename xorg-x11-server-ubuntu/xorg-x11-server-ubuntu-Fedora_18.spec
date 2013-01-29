@@ -6,15 +6,15 @@
 %global ansic_major 0
 %global ansic_minor 4
 %global videodrv_major 13
-%global videodrv_minor 0
+%global videodrv_minor 1
 %global xinput_major 18
 %global xinput_minor 0
 %global extension_major 7
 %global extension_minor 0
 
 Name:		xorg-x11-server
-Version:	1.13.0
-Release:	102%{?dist}
+Version:	1.13.2
+Release:	100%{?dist}
 Summary:	X.Org X11 X server
 
 Group:		User Interface/X
@@ -32,22 +32,23 @@ Patch1:		fedora_xserver-1.6.0-less-acpi-brokenness.patch
 Patch2:		f18_xserver-1.6.99-right-of.patch
 Patch3:		fedora_xserver-1.12-Xext-fix-selinux-build-failure.patch
 Patch4:		f18_xserver-1.12.2-xorg-touch-test.patch
-Patch5:		fedora_xserver-1.12-xkb-fill-in-keycode-and-event-type-for-slow-keys-ena.patch
-Patch6:		fedora_0001-linux-Refactor-xf86-En-Dis-ableIO.patch
-Patch7:		fedora_0002-linux-Make-failure-to-iopl-non-fatal.patch
-Patch8:		fedora_0003-xfree86-Change-the-semantics-of-driverFunc-GET_REQUI.patch
-Patch9:		fedora_0001-Always-install-vbe-and-int10-sdk-headers.patch
-Patch10:	fedora_xserver-autobind-hotplug.patch
-Patch11:	fedora_0003-xf86-fix-multi-seat-video-device-support.patch
-Patch12:	fedora_0001-dri2-invalidate-drawable-after-sharing-pixmap.patch
-Patch13:	fedora_0001-xf86-return-NULL-for-compat-output-if-no-outputs.patch
-Patch14:	fedora_0001-scan-pci-after-probing-devices.patch
-Patch15:	fedora_0001-config-udev-ignore-change-on-drm-devices.patch
-# Bug 871064 - Add touchscreen fixes for F18
-Patch16:	fedora_0001-Sync-TouchListener-memory-allocation-with-population.patch
-Patch17:	fedora_0001-Xi-Call-UpdateDeviceState-after-the-first-emulated-m.patch
-Patch18:	fedora_0001-Xi-Don-t-check-for-TOUCH_END-it-s-never-set.patch
-Patch19:	fedora_0001-Xi-don-t-deliver-TouchEnd-to-a-client-waiting-for-To.patch
+Patch5:		fedora_0001-linux-Refactor-xf86-En-Dis-ableIO.patch
+Patch6:		fedora_0002-linux-Make-failure-to-iopl-non-fatal.patch
+Patch7:		fedora_0003-xfree86-Change-the-semantics-of-driverFunc-GET_REQUI.patch
+Patch8:		fedora_0001-Always-install-vbe-and-int10-sdk-headers.patch
+Patch9:		fedora_xserver-autobind-hotplug.patch
+Patch10:	fedora_0001-xf86-return-NULL-for-compat-output-if-no-outputs.patch
+Patch11:	fedora_0001-xf86-Fix-build-against-recent-Linux-kernel.patch
+Patch12:	fedora_0001-linux-Prefer-ioctl-KDSKBMUTE-1-over-ioctl-KDSKBMODE-.patch
+Patch13:	fedora_0001-mieq-Bump-default-queue-size-to-512.patch
+Patch14:	fedora_0001-xfree86-hotplug-cleanup-properly-if-the-screen-fails.patch
+Patch15:	fedora_0001-xf86crtc-don-t-use-display-for-vx-vy-for-gpu-screens.patch
+Patch16:	fedora_0001-dix-allow-pixmap-dirty-helper-to-be-used-for-non-sha.patch
+Patch17:	fedora_0001-xserver-call-CSR-for-gpus.patch
+Patch18:	fedora_0001-xf86-actually-set-the-compat-output-in-the-failure-c.patch
+Patch19:	fedora_0001-randr-cleanup-provider-properly.patch
+Patch20:	fedora_0001-autoconfig-fixup-tell-changed-so-randr-clients-can-t.patch
+Patch21:	fedora_0001-dmx-don-t-include-dmx-config.h-from-xdmxconfig-37502.patch
 # From Ubuntu's packaging version 1.13.0 and release 0ubuntu4
 #Patch90:	500_pointer_barrier_thresholds.diff
 Source90:	500_pointer_barrier_thresholds.diff
@@ -349,6 +350,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot} moduledir=%{_libdir}/xorg/modules
 
+rm -f $RPM_BUILD_ROOT%{_libdir}/xorg/modules/libxf8_16bpp.so
 rm -rv $RPM_BUILD_ROOT%{_libdir}/xorg/modules/multimedia/
 install -dm755 $RPM_BUILD_ROOT%{_libdir}/xorg/modules/{drivers,input}/
 
@@ -485,6 +487,29 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.2-100
+- Version 1.13.2
+- Merge Fedora's changes:
+  - 1.13.0-7: Fix build issues on new kernels caused by removal of _INPUT_H
+  - 1.13.0-8: Fix for non-PCI configuration-less setups
+  - 1.13.0-9: Fix server crash when a XI 1.x device grab is activated on a
+              disabled synaptics touchpad is disabled
+  - 1.13.0-10: Fix VT switch key handling
+  - 1.13.0-11: Bump default EQ length to reduce the number of unhelpful abrt
+               reports
+  - 1.13.0-12: backout non-pci configuration less patch, its breaks multi-GPU
+  - 1.13.0-13: fix hotplug issue with usb devices and large screens
+  - 1.13.0-14: add events for autoconfig of gpus devices, allow usb devices to
+               notify gnome
+  - 1.13.0-15: Cherry-pick a fix for selection for TouchBegin from multiple
+               clients
+  - 1.13.1-2: fix bugs with autobinding output/offload slave from same driver
+  - 1.13.1-3: fixes for reverse optimus support
+  - 1.13.1-4: fix bug on server shutdown + valgrind warnings (#891140)
+  - 1.13.1-5: Add quirk for Evoluent Vertical Mouse 3, button mapping is quirky
+              (#612140)
+  - 1.13.2-2: Fix differing sizeof XGCValues in xdmxconfig (#903986)
+
 * Mon Oct 29 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.0-102
 - Merge Fedora's changes:
   - Add touchscreen fixes (including pointer emulation) #871064
