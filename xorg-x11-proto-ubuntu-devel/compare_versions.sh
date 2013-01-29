@@ -1,29 +1,14 @@
 #!/usr/bin/env bash
 
-F17_SPEC_VER="$(sed -n 's/^%define[ \t]*_ver_fixesproto[ \t]*\(.*\)$/\1/p' xorg-x11-proto-ubuntu-devel-Fedora_17.spec)"
-F17_UBUNTU_REL="$(sed -n 's/^%define[ \t]*_ubuntu_rel[ \t]*\(.*\)$/\1/p' xorg-x11-proto-ubuntu-devel-Fedora_17.spec)"
-F17_SPEC_REAL_VER="$(rpmspec -q --qf '%{version}\n' xorg-x11-proto-ubuntu-devel-Fedora_17.spec | head -1)"
-F17_SPEC_FCREL="$(sed -n 's/^%define[ \t]*_fedora_rel[ \t]*\(.*\)$/\1/p' xorg-x11-proto-ubuntu-devel-Fedora_17.spec)"
-F18_SPEC_VER="$(sed -n 's/^%define[ \t]*_ver_fixesproto[ \t]*\(.*\)$/\1/p' xorg-x11-proto-ubuntu-devel-Fedora_18.spec)"
-F18_UBUNTU_REL="$(sed -n 's/^%define[ \t]*_ubuntu_rel[ \t]*\(.*\)$/\1/p' xorg-x11-proto-ubuntu-devel-Fedora_18.spec)"
-F18_SPEC_REAL_VER="$(rpmspec -q --qf '%{version}\n' xorg-x11-proto-ubuntu-devel-Fedora_18.spec | head -1)"
-F18_SPEC_FCREL="$(sed -n 's/^%define[ \t]*_fedora_rel[ \t]*\(.*\)$/\1/p' xorg-x11-proto-ubuntu-devel-Fedora_18.spec)"
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/x11proto-fixes' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
-
-echo "Getting latest Fedora version..."
-FEDORA_VER="$(wget -q 'http://pkgs.fedoraproject.org/gitweb/?p=xorg-x11-proto-devel.git;a=blob_plain;f=xorg-x11-proto-devel.spec;hb=HEAD' -O tmp.spec && rpm -q --qf '%{version} %{release}' --specfile tmp.spec | sed 's/\.fc[0-9]*//' && rm tmp.spec)"
-
-echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q http://xorg.freedesktop.org/releases/individual/proto/ -O - | sed -n 's/.*fixesproto-\(.*\).tar.bz2.*/\1/p' | tail -n 1)
-
-echo ""
-
-echo -e "F17 real spec version: ${F17_SPEC_REAL_VER} ${F17_SPEC_FCREL}"
-echo -e "F17 spec file version: ${F17_SPEC_VER} ${F17_UBUNTU_REL}"
-echo -e "F18 real spec version: ${F18_SPEC_REAL_VER} ${F18_SPEC_FCREL}"
-echo -e "F18 spec file version: ${F18_SPEC_VER} ${F18_UBUNTU_REL}"
-echo -e "F18 Fedora version:    ${FEDORA_VER}"
-echo -e "Upstream version:      ${UPSTREAM_VER}"
-echo -e "Ubuntu version:        ${UBUNTU_VER[@]}"
+SPECFILE=xorg-x11-proto-ubuntu-devel-Fedora_17.spec
+echo -e "F17 real spec version: $(get_spec_version) $(get_spec_define _fedora_rel)"
+echo -e "F17 spec file version: $(get_spec_define _ver_fixesproto) $(get_spec_release --ubuntu)"
+echo -e "F17 Fedora version:    $(get_fedora_version xorg-x11-proto-devel 17)"
+SPECFILE=xorg-x11-proto-ubuntu-devel-Fedora_18.spec
+echo -e "F18 real spec version: $(get_spec_version) $(get_spec_define _fedora_rel)"
+echo -e "F18 spec file version: $(get_spec_define _ver_fixesproto) $(get_spec_release --ubuntu)"
+echo -e "F18 Fedora version:    $(get_fedora_version xorg-x11-proto-devel 18)"
+echo -e "Upstream version:      $(get_xorg_version fixesproto proto)"
+echo -e "Ubuntu version:        $(get_ubuntu_version x11proto-fixes ${1:-raring})"
