@@ -16,10 +16,22 @@ get_spec_release() {
     exit 1
   fi
   if [ "x${1}" == "x--ubuntu" ]; then
-    sed -n 's/^%define[ \t]*_ubuntu_rel[ \t]*\(.*\)$/\1/p' ${SPECFILE}
+    sed -n 's/^%define[ \t]\+_ubuntu_rel[ \t]\+\(.*\)$/\1/p' ${SPECFILE}
   else
     rpmspec -q --qf '%{release}\n' ${SPECFILE} | head -1
   fi
+}
+
+get_spec_define() {
+  if [ -z "${SPECFILE}" ]; then
+    echo "\${SPECFILE} was not set!"
+    exit 1
+  fi
+  if [ -z "${1}" ]; then
+    echo "No argument provided!"
+    exit 1
+  fi
+  sed -n "s/^%define[ \t]\+${1}[ \t]\+\(.*\)$/\1/p" ${SPECFILE}
 }
 
 get_ubuntu_version() {
