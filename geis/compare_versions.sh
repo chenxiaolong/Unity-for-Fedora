@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-SPEC_VER="$(rpmspec -q --qf '%{version}\n' geis.spec | head -1)"
-UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' geis.spec)"
+SPECFILE=geis.spec
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/raring/+source/geis' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q 'https://launchpad.net/geis/+download' -O - | sed -n 's/.*geis-\(.*\)\.tar\.gz.*/\1/p' | head -n 1)
-
-echo ""
-
-echo -e "spec file version: ${SPEC_VER} ${UBUNTU_REL}"
-echo -e "Upstream version:  ${UPSTREAM_VER}"
-echo -e "Ubuntu version:    ${UBUNTU_VER[@]}"
+echo -e "spec file version: $(get_spec_version)"
+echo -e "Upstream version:  $(get_launchpad_version geis)"
+echo -e "Ubuntu version:    $(get_ubuntu_version geis ${1:-raring})"

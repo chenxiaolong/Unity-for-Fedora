@@ -1,24 +1,22 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 # Do not provide the Python 2 binding library
-%filter_provides_in %{python_sitearch}/_geis_bindings\.so$
+%filter_provides_in %{python3_sitearch}/_geis_bindings\.so$
 %filter_setup
 
-%define _ubuntu_rel 0ubuntu2
-
 Name:		geis
-Version:	2.2.14
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	2.2.15daily12.12.10
+Release:	1%{?dist}
 Summary:	An implementation of the GEIS interface
 
 Group:		System Environment/Libraries
 License:	GPLv2 and LGPLv3
 URL:		https://launchpad.net/geis
-Source0:	https://launchpad.net/geis/trunk/%{version}/+download/geis-%{version}.tar.xz
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/geis_%{version}-%{_ubuntu_rel}.debian.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/geis_%{version}.orig.tar.gz
 
 BuildRequires:	asciidoc
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	desktop-file-utils
 BuildRequires:	doxygen
 BuildRequires:	xmlto
@@ -26,7 +24,7 @@ BuildRequires:	xmlto
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(evemu)
 BuildRequires:	pkgconfig(grail)
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python3)
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xcb)
 BuildRequires:	pkgconfig(xi)
@@ -82,14 +80,7 @@ This package contains the testing tools for the geis library.
 %prep
 %setup -q
 
-# Fix Python architecture-dependant site-packages directory
-#sed -i '/am_cv_python_pythondir=/ s/lib/%{_lib}/g' aclocal.m4
-
-# Apply Ubuntu's patches
-tar zxvf '%{SOURCE99}'
-for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
-done
+autoreconf -vfi
 
 
 %build
@@ -101,7 +92,7 @@ make -C doc doc-html
 
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT pythondir=%{python_sitearch}
+make install DESTDIR=$RPM_BUILD_ROOT pythondir=%{python3_sitearch}
 
 # Install HTML documentation
 make -C doc install-html
@@ -114,7 +105,7 @@ mv $RPM_BUILD_ROOT%{_docdir}/geis/ \
    $RPM_BUILD_ROOT%{_docdir}/geis-docs-%{version}/
 
 # Avoid rpmlint non-executable-script error
-sed -i '/^#[ \t]*\!/d' $RPM_BUILD_ROOT%{python_sitearch}/geisview/__init__.py
+sed -i '/^#[ \t]*\!/d' $RPM_BUILD_ROOT%{python3_sitearch}/geisview/__init__.py
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
@@ -141,17 +132,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 %files -n python-geis
 %doc ChangeLog NEWS README
-%dir %{python_sitearch}/geis/
-%{python_sitearch}/geis/__init__.py*
-%{python_sitearch}/geis/geis_v2.py*
-%dir %{python_sitearch}/geisview/
-%{python_sitearch}/geisview/__init__.py*
-%{python_sitearch}/geisview/classview.py*
-%{python_sitearch}/geisview/defaults.py*
-%{python_sitearch}/geisview/deviceview.py*
-%{python_sitearch}/geisview/filter_definition.py*
-%{python_sitearch}/geisview/filter_list.py*
-%{python_sitearch}/_geis_bindings.so
+%{python3_sitearch}/geis/
+%{python3_sitearch}/geisview/
+%{python3_sitearch}/_geis_bindings.so
 
 
 %files docs
@@ -173,6 +156,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.15daily12.12.10-1
+- Version 2.2.15daily12.12.10
+- Add build dependency for Python 3
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.14-1.0ubuntu2
 - Version 2.2.14
 - Ubuntu release 0ubuntu2
