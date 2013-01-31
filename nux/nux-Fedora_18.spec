@@ -1,9 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _major_ver 3
+%define _major_ver 4
 
 Name:		nux
-Version:	3.10.0
+Version:	4.0.0daily13.01.25
 Release:	1%{?dist}
 # Summary from Ubuntu
 Summary:	Visual rendering toolkit for real-time applications
@@ -11,20 +11,14 @@ Summary:	Visual rendering toolkit for real-time applications
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/nux
-Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.10/+download/nux-%{version}.tar.gz
-Source1:	50_check_unity_support
-
-%if 0%{fedora} <= 17
-# GCC 4.6 required or else Unity will segfault
-BuildRequires:	gcc46-devel
-BuildRequires:	gcc46-static
-%endif
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/nux_%{version}.orig.tar.gz
 
 BuildRequires:	xorg-x11-xinit
 
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	doxygen
+BuildRequires:	gnome-common
 BuildRequires:	graphviz
 
 BuildRequires:	boost-devel
@@ -57,6 +51,7 @@ Requires:	xorg-x11-xinit
 Nux is a graphical user interface toolkit for applications that mixes OpenGL
 hardware acceleration with high quality visual rendering.
 
+
 %package devel
 Summary:	Development files for the Nux library
 Group:		Development/Libraries
@@ -77,6 +72,7 @@ Requires:	pkgconfig(libpcre)
 %description devel
 This package contains the development files for the Nux library.
 
+
 %package common
 Summary:	Common files for the Nux library
 Group:		System Environment/Libraries
@@ -88,6 +84,7 @@ Requires:	%{name} = %{version}-%{release}
 %description common
 This package contains the architecture-independent files for the Nux library.
 
+
 %package tools
 Summary:	Visual rendering toolkit for real-time applications - Tools
 Group:		Development/Tools
@@ -97,29 +94,18 @@ Requires:	%{name}%{?_isa} = %{version}-%{release}
 %description tools
 This package contains various tools for the Nux library.
 
+
 %prep
 %setup -q
 
 # Avoid rpmlint spurious-executable-perm error in debuginfo package
 find -type f \( -name '*.h' -o -name '*.cpp' \) -exec chmod 644 {} \;
 
+#autoreconf -vfi
+./autogen.sh
+
 
 %build
-%if 0%{fedora} <= 17
-
-# Remove '-gnu' from target triplet
-%global _gnu %{nil}
-
-CC=%{_bindir}/%{_target_platform}-gcc-4.6
-CXX=%{_bindir}/%{_target_platform}-g++-4.6
-
-CPP="%{_bindir}/cpp-4.6 -x c"
-CXXCPP="%{_bindir}/cpp-4.6 -x c++"
-
-export CC CXX CPP CXXCPP
-
-%endif
-
 %configure
 
 # Disable rpath
@@ -141,10 +127,6 @@ rm -rv $RPM_BUILD_ROOT%{_datadir}/nux/gputests/
 # Avoid rpmlint zero-length error. Remove empty files.
 find $RPM_BUILD_ROOT -type f -empty -delete
 
-# Install X startup session file
-install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
-install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
-
 
 %post -p /sbin/ldconfig
 
@@ -154,17 +136,18 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %files
 %doc AUTHORS
 %{_libdir}/libnux-%{_major_ver}.0.so.0
-%{_libdir}/libnux-%{_major_ver}.0.so.0.1000.0
+%{_libdir}/libnux-%{_major_ver}.0.so.0.0.0
 %{_libdir}/libnux-core-%{_major_ver}.0.so.0
-%{_libdir}/libnux-core-%{_major_ver}.0.so.0.1000.0
+%{_libdir}/libnux-core-%{_major_ver}.0.so.0.0.0
 %{_libdir}/libnux-graphics-%{_major_ver}.0.so.0
-%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.1000.0
+%{_libdir}/libnux-graphics-%{_major_ver}.0.so.0.0.0
 
 
 %files devel
 %doc AUTHORS
 %dir %{_includedir}/Nux-%{_major_ver}.0/
-%dir %{_includedir}/Nux-%{_major_ver}.0/Nux
+%dir %{_includedir}/Nux-%{_major_ver}.0/Nux/
+%dir %{_includedir}/Nux-%{_major_ver}.0/Nux/KineticScrolling/
 %dir %{_includedir}/Nux-%{_major_ver}.0/Nux/ProgramFramework/
 %dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/
 %dir %{_includedir}/Nux-%{_major_ver}.0/NuxCore/Character/
@@ -173,6 +156,7 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %dir %{_includedir}/Nux-%{_major_ver}.0/NuxGraphics/
 %{_includedir}/Nux-%{_major_ver}.0/Nux/Readme.txt
 %{_includedir}/Nux-%{_major_ver}.0/Nux/*.h
+%{_includedir}/Nux-%{_major_ver}.0/Nux/KineticScrolling/*.h
 %{_includedir}/Nux-%{_major_ver}.0/Nux/ProgramFramework/*.h
 %{_includedir}/Nux-%{_major_ver}.0/NuxCore/*.h
 %{_includedir}/Nux-%{_major_ver}.0/NuxCore/Character/*.h
@@ -203,11 +187,15 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 %files tools
 %doc AUTHORS
-%{_libexecdir}/unity_support_test
-%{_sysconfdir}/X11/xinit/xinitrc.d/50_check_unity_support
+%dir %{_libexecdir}/nux/
+%{_libexecdir}/nux/unity_support_test
 
 
 %changelog
+* Wed Jan 30 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.0.0daily13.01.25-1
+- Version 4.0.0daily13.01.25
+- Drop X11 startup file
+
 * Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.10.0-1
 - Version 3.10.0
 
