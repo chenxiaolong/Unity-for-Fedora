@@ -4,7 +4,7 @@
 
 Name:		nux
 Version:	3.10.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 # Summary from Ubuntu
 Summary:	Visual rendering toolkit for real-time applications
 
@@ -12,7 +12,6 @@ Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv3
 URL:		https://launchpad.net/nux
 Source0:	https://launchpad.net/nux/%{_major_ver}.0/3.10/+download/nux-%{version}.tar.gz
-Source1:	50_check_unity_support
 
 %if 0%{fedora} <= 17
 # GCC 4.6 required or else Unity will segfault
@@ -141,10 +140,6 @@ rm -rv $RPM_BUILD_ROOT%{_datadir}/nux/gputests/
 # Avoid rpmlint zero-length error. Remove empty files.
 find $RPM_BUILD_ROOT -type f -empty -delete
 
-# Install X startup session file
-install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
-install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
-
 
 %post -p /sbin/ldconfig
 
@@ -204,10 +199,12 @@ install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 %files tools
 %doc AUTHORS
 %{_libexecdir}/unity_support_test
-%{_sysconfdir}/X11/xinit/xinitrc.d/50_check_unity_support
 
 
 %changelog
+* Wed Jan 30 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.10.0-2
+- Drop X11 startup file
+
 * Sat Oct 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.10.0-1
 - Version 3.10.0
 
