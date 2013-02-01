@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
 
-SPEC_VER="$(rpmspec -q --qf '%{version}\n' unity-lens-applications.spec | head -1)"
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/quantal/+source/unity-lens-applications' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
-
-echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q 'https://launchpad.net/unity-lens-applications/+download' -O - | sed -n 's/.*unity-lens-applications-\(.*\)\.tar\.gz.*/\1/p' | head -n 1)
-
-echo ""
-
-echo -e "spec file version: ${SPEC_VER}"
-echo -e "Upstream version:  ${UPSTREAM_VER}"
-echo -e "Ubuntu version:    ${UBUNTU_VER[@]}"
+SPECFILE=unity-lens-applications-Fedora_17.spec
+echo -e "F17 spec version: $(get_spec_version)"
+SPECFILE=unity-lens-applications-Fedora_18.spec
+echo -e "F18 spec version: $(get_spec_version)"
+echo -e "Upstream version: $(get_launchpad_version unity-lens-applications)"
+echo -e "Ubuntu version:   $(get_ubuntu_version unity-lens-applications ${1:-raring})"
