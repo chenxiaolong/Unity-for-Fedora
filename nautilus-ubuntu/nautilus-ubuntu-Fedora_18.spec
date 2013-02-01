@@ -2,7 +2,7 @@
 
 # Based off of Fedora 18's spec file
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu5
 
 Name:		nautilus
 Version:	3.6.3
@@ -78,6 +78,7 @@ License:	LGPLv2+
 Group:		Development/Libraries
 
 Requires:	%{name}%{_isa} = %{version}-%{release}
+Requires:	%{name}-extensions%{_isa} = %{version}-%{release}
 
 Provides:	nautilus-ubuntu-devel = %{version}-%{release}
 
@@ -219,6 +220,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Thu Jan 31 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu5
+- Version 3.6.3
+- Ubuntu release 0ubuntu5
+- Merge Fedora's changes:
+  - 3.6.3-2: nautilus-devel should require nautilus-extensions
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu1
 - Version 3.6.3
 - Ubuntu release 0ubuntu1

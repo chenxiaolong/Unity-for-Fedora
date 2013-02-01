@@ -1,19 +1,10 @@
 #!/usr/bin/env bash
 
-F17_SPEC_VER="$(rpmspec -q --qf '%{version}\n' nautilus-ubuntu-Fedora_17.spec | head -1)"
-F17_UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' nautilus-ubuntu-Fedora_17.spec)"
-F18_SPEC_VER="$(rpmspec -q --qf '%{version}\n' nautilus-ubuntu-Fedora_18.spec | head -1)"
-F18_UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' nautilus-ubuntu-Fedora_18.spec)"
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/raring/+source/nautilus' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
-
-echo "Getting latest upstream version..."
-UPSTREAM_VER=$(wget -q "http://ftp.gnome.org/pub/GNOME/sources/nautilus/3.6/" -O - | sed -n 's/.*>LATEST-IS-\(.*\)<.*/\1/p')
-
-echo ""
-
-echo -e "F17 spec version: ${F17_SPEC_VER} ${F17_UBUNTU_REL}"
-echo -e "F18 spec version: ${F18_SPEC_VER} ${F18_UBUNTU_REL}"
-echo -e "Upstream version: ${UPSTREAM_VER}"
-echo -e "Ubuntu version:   ${UBUNTU_VER[@]}"
+SPECFILE=nautilus-ubuntu-Fedora_17.spec
+echo -e "F17 spec version: $(get_spec_version) $(get_spec_release --ubuntu)"
+SPECFILE=nautilus-ubuntu-Fedora_18.spec
+echo -e "F18 spec version: $(get_spec_version) $(get_spec_release --ubuntu)"
+echo -e "Upstream version: $(get_gnome_version nautilus 3.6)"
+echo -e "Ubuntu version:   $(get_ubuntu_version nautilus ${1:-raring})"
