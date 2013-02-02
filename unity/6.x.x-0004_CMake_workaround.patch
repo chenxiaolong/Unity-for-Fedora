@@ -1,6 +1,5 @@
-diff -Nru unity-6.8.0.orig/CMakeLists.txt unity-6.8.0/CMakeLists.txt
---- unity-6.8.0.orig/CMakeLists.txt	2012-11-05 13:56:29.845197263 -0500
-+++ unity-6.8.0/CMakeLists.txt	2012-11-05 13:56:55.738394713 -0500
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -103,6 +103,7 @@
  		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
  		)

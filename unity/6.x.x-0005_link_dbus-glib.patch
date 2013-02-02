@@ -1,6 +1,5 @@
-diff -Nru unity-6.0.0.orig/launcher/CMakeLists.txt unity-6.0.0/launcher/CMakeLists.txt
---- unity-6.0.0.orig/launcher/CMakeLists.txt	2012-07-28 00:58:52.414179609 -0700
-+++ unity-6.0.0/launcher/CMakeLists.txt	2012-07-28 12:23:53.957482734 -0700
+--- a/launcher/CMakeLists.txt
++++ b/launcher/CMakeLists.txt
 @@ -91,8 +91,10 @@
  #
  add_executable (launcher StandaloneLauncher.cpp)
@@ -14,9 +13,8 @@ diff -Nru unity-6.0.0.orig/launcher/CMakeLists.txt unity-6.0.0/launcher/CMakeLis
 -target_link_libraries (switcher switcher-lib launcher-lib unity-shared)
 +pkg_check_modules (CACHED_DBUS_GLIB REQUIRED dbus-glib-1)
 +target_link_libraries (switcher switcher-lib launcher-lib unity-shared ${CACHED_DBUS_GLIB_LIBRARIES})
-diff -Nru unity-6.0.0.orig/panel/CMakeLists.txt unity-6.0.0/panel/CMakeLists.txt
---- unity-6.0.0.orig/panel/CMakeLists.txt	2012-07-28 00:58:52.408179645 -0700
-+++ unity-6.0.0/panel/CMakeLists.txt	2012-07-28 10:48:03.278135975 -0700
+--- a/panel/CMakeLists.txt
++++ b/panel/CMakeLists.txt
 @@ -47,4 +47,5 @@
  #
  add_executable (panel StandalonePanel.cpp)

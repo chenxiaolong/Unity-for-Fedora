@@ -30,34 +30,34 @@ Source91:	http://ompldr.org/vZXh3cA/launchpad-export.tar.gz.asc
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/unity_%{version}-%{_ubuntu_rel}.diff.gz
 
 # Fix the gtest search in CMake
-Patch0:		0001_fix_gtest_directory.patch
+Patch0:		6.x.x-0001_fix_gtest_directory.patch
 
 # Fix directories in source code and CMake (/usr/lib hardcoded)
-Patch1:		0002_fix_directories.patch
+Patch1:		6.x.x-0002_fix_directories.patch
 
 # Ignore error about deprecated paths in GSettings schemas
-Patch2:		0003_Ignore_deprecated_schema_path.patch
+Patch2:		6.x.x-0003_Ignore_deprecated_schema_path.patch
 
 # CMake workaround for the detection of gettext
-Patch3:		0004_CMake_workaround.patch
+Patch3:		6.x.x-0004_CMake_workaround.patch
 
 # Link against dbus-glib to avoid:
 #  /usr/bin/ld: CMakeFiles/panel.dir/StandalonePanel.cpp.o: undefined reference to symbol 'dbus_g_thread_init'
-Patch4:		0005_link_dbus-glib.patch
+Patch4:		6.x.x-0005_link_dbus-glib.patch
 
 # Make desktop show "Fedora Desktop" in the panel instead of "Ubuntu Desktop"
-Patch5:		0006_Fedora_Desktop_branding.patch
+Patch5:		6.x.x-0006_Fedora_Desktop_branding.patch
 
 # Link against gmodule-2.0
-Patch6:		0007_link_gmodule.patch
+Patch6:		6.x.x-0007_link_gmodule.patch
 
 %if 0%{fedora} <= 17
 # Revert port to atk-bridge-2.0, which was introduced in GNOME 3.5.91
-Patch7:		0008_Revert_port_to_atk-bridge-2.0.patch
+Patch7:		6.x.x-0008_Revert_port_to_atk-bridge-2.0.patch
 %endif
 
 # iostream needs to be included to use std::cout
-Patch8:		0009_Include_iostream.patch
+Patch8:		6.x.x-0009_Include_iostream.patch
 
 %if 0%{fedora} <= 17
 # GCC 4.6 is required or else Unity will segfault

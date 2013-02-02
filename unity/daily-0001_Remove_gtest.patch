@@ -1,10 +1,10 @@
-diff -Nru unity-6.0.0.orig/CMakeLists.txt unity-6.0.0/CMakeLists.txt
---- unity-6.0.0.orig/CMakeLists.txt	2012-07-28 00:58:52.393179728 -0700
-+++ unity-6.0.0/CMakeLists.txt	2012-07-28 00:59:00.254138047 -0700
-@@ -153,23 +153,7 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -232,33 +232,6 @@
+ 
  # subdirs
  add_subdirectory(doc)
- 
+-
 -# Check for google test and build it locally
 -set(
 -  GTEST_ROOT_DIR
@@ -14,7 +14,15 @@ diff -Nru unity-6.0.0.orig/CMakeLists.txt unity-6.0.0/CMakeLists.txt
 -  "Path to Google test srcs"
 -)
 -
- find_path(GTEST_INCLUDE_DIR gtest/gtest.h)
+-set(
+-  GTEST_INCLUDE_DIR
+-  "/usr/include/gtest"
+-  CACHE
+-  PATH
+-  "Path to Google tests include"
+-)
+-
+-find_path(GTEST_INCLUDE_DIR gtest/gtest.h)
 -if (GTEST_INCLUDE_DIR)
 -  #FIXME - hardcoded is bad!
 -  add_subdirectory(
@@ -22,6 +30,7 @@ diff -Nru unity-6.0.0.orig/CMakeLists.txt unity-6.0.0/CMakeLists.txt
 -    gtest
 -  )
 -endif(GTEST_INCLUDE_DIR)
- 
+-
  add_subdirectory(services)
  add_subdirectory(tests)
+ add_subdirectory(tools)
