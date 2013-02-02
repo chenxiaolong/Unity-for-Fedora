@@ -139,12 +139,8 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/
-desktop-file-install \
-  --dir $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/ \
-  %{SOURCE1}
-desktop-file-install \
-  --dir $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/ \
-  %{SOURCE2}
+install -m644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/
+install -m644 %{SOURCE2} $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/
 
 desktop-file-validate \
   $RPM_BUILD_ROOT%{_datadir}/applications/session-properties.desktop
