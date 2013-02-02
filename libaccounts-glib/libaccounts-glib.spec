@@ -145,6 +145,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_mandir}/man1/ag-tool.1.gz
 # Do these belong here?
 %dir %{_datadir}/xml/
+%dir %{_datadir}/xml/accounts/
 %dir %{_datadir}/xml/accounts/schema/
 %dir %{_datadir}/xml/accounts/schema/dtd/
 %{_datadir}/xml/accounts/schema/dtd/accounts-*.dtd
