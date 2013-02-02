@@ -1,0 +1,71 @@
+--- a/cmake/base.cmake
++++ b/cmake/base.cmake
+@@ -80,13 +80,13 @@
+ 
+ # add install prefix to pkgconfig search path if needed
+ string (REGEX REPLACE "([\\+\\(\\)\\^\\\$\\.\\-\\*\\?\\|])" "\\\\\\1" PKGCONFIG_REGEX ${CMAKE_INSTALL_PREFIX})
+-set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
++set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib${LIB_SUFFIX}/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
+ 
+ if (NOT "$ENV{PKG_CONFIG_PATH}" MATCHES "${PKGCONFIG_REGEX}")
+     if ("" STREQUAL "$ENV{PKG_CONFIG_PATH}")
+-	set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
++	set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
+     else ()
+ 	set (ENV{PKG_CONFIG_PATH}
+-	    "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
++	    "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+     endif ()
+ endif ()
+--- a/cmake/FindCompiz.cmake
++++ b/cmake/FindCompiz.cmake
+@@ -55,16 +55,16 @@
+ 
+ 	# add install prefix to pkgconfig search path if needed
+         string (REGEX REPLACE "([\\+\\(\\)\\^\\\$\\.\\-\\*\\?\\|])" "\\\\\\1" PKGCONFIG_REGEX ${CMAKE_INSTALL_PREFIX})
+-	set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
++	set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib${LIB_SUFFIX}/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
+ 
+ 	if (NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+ 
+ 	    if (NOT "$ENV{PKG_CONFIG_PATH}" MATCHES "${PKGCONFIG_REGEX}")
+ 		if ("" STREQUAL "$ENV{PKG_CONFIG_PATH}")
+-		    set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
++		    set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
+ 	    	else ()
+ 		    set (ENV{PKG_CONFIG_PATH}
+-		         "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
++		         "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+ 		endif ()
+ 	    endif ()
+ 
+--- a/compizconfig/libcompizconfig/cmake/FindCompizConfig.cmake
++++ b/compizconfig/libcompizconfig/cmake/FindCompizConfig.cmake
+@@ -53,14 +53,14 @@
+ 
+ 	# add install prefix to pkgconfig search path if needed
+         string (REGEX REPLACE "([\\+\\(\\)\\^\\\$\\.\\-\\*\\?\\|])" "\\\\\\1" PKGCONFIG_REGEX ${CMAKE_INSTALL_PREFIX})
+-	set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
++	set (PKGCONFIG_REGEX ".*${PKGCONFIG_REGEX}/lib${LIB_SUFFIX}/pkgconfig:${PKGCONFIG_REGEX}/share/pkgconfig.*")
+ 
+ 	if (NOT "$ENV{PKG_CONFIG_PATH}" MATCHES "${PKGCONFIG_REGEX}")
+ 	    if ("" STREQUAL "$ENV{PKG_CONFIG_PATH}")
+-		set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
++		set (ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
+ 	    else ()
+ 		set (ENV{PKG_CONFIG_PATH}
+-		    "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
++		    "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig:${CMAKE_INSTALL_PREFIX}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+ 	    endif ()
+ 	endif ()
+ 
+--- a/compizconfig/libcompizconfig/cmake/LibCompizConfigCommon.cmake
++++ b/compizconfig/libcompizconfig/cmake/LibCompizConfigCommon.cmake
+@@ -122,6 +122,6 @@
+ 
+     install (
+ 	TARGETS ${bname}
+-	DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/compizconfig/backends
++	DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/compizconfig/backends
+     )
+ endfunction (compizconfig_backend bname)

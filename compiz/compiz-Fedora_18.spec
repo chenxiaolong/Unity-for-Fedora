@@ -10,34 +10,30 @@
 %define _gconf_schemas compiz-addhelper compiz-animation compiz-annotate compiz-bench compiz-ccp compiz-clone compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gnomecompat compiz-grid compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
 
 %define _ubuntu_rel 0ubuntu1
-%define _bzr_rev 3412
-%define _compiz_abi 20120927
-%define _disguised_as 0.9.8.5
+%define _compiz_abi 20121210
+%define _disguised_as 0.9.9.0
 
 Name:		compiz
-Version:	0.9.8.4
-Release:	3.bzr%{_bzr_rev}.%{_ubuntu_rel}%{?dist}
+Version:	0.9.9~daily13.01.25
+Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
 Group:		User Interface/X
 License:	GPLv2+
 URL:		https://launchpad.net/compiz
 
-Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}.orig.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}.orig.tar.gz
 
 # Script to reset all of Compiz's settings
 Source2:	compiz.reset
 
-# Autostart desktop file for migrating GConf settings to GSettings
-Source3:	compiz-migrate-to-dconf.desktop
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}+bzr%{_bzr_rev}-%{_ubuntu_rel}.diff.gz
+Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}-%{_ubuntu_rel}.diff.gz
 
 # Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
-Patch0:		0001_Fix_library_directory.patch
+Patch0:		0001_Fix_library_directory_F18.patch
 
 # Fix the directory for FindCompiz.cmake and FindCompizConfig.cmake
-Patch1:		0002_Fix_cmake_install_dir.patch
+Patch1:		0002_Fix_cmake_install_dir_F18.patch
 
 # Compiz's build system appends --install-layout=deb to the python install
 # command (for python-compizconfig and ccsm) whether or not COMPIZ_DEB_BUILD is
@@ -45,10 +41,13 @@ Patch1:		0002_Fix_cmake_install_dir.patch
 Patch2:		0003_Fix_python_install_command.patch
 
 # Install GSettings backend to libdir
-Patch3:		0004_Fix_gsettings_backend_libdir.patch
+Patch3:		0004_Fix_gsettings_backend_libdir_F18.patch
 
 # Put profile conversion files in /usr/share instead of /usr/lib
 Patch4:		0005_Convert_files_libdir_to_datadir.patch
+
+# Make sure everything is installed to the proper libdir
+Patch5:		0006_Fix_remaining_libdir_issues.patch
 
 BuildRequires:	cmake
 BuildRequires:	desktop-file-utils
@@ -146,9 +145,6 @@ Requires:	mutter
 
 Requires(preun):	GConf2
 
-# Requited for GConf to GSettings migration script
-Requires:	gnome-python2-gconf
-
 # Required for GSettings schemas
 Requires:	gsettings-desktop-schemas
 
@@ -220,13 +216,14 @@ its plugins' settings.
 
 
 %prep
-%setup -q -n %{name}-%{_disguised_as}
+%setup -q
 
 %patch0 -p1 -b .pkg_config_path
 %patch1 -p1 -b .cmake_install_dir
 %patch2 -p1 -b .py_install_command
 %patch3 -p1 -b .backend_libdir
 %patch4 -p1 -b .convert_files_datadir
+%patch5 -p1 -b .remaining_libdir
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
@@ -321,14 +318,6 @@ install -m755 '%{SOURCE2}' $RPM_BUILD_ROOT%{_bindir}/compiz.reset
 install -m644 ../debian/compiz-gnome.gsettings-override \
   $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/10_compiz-ubuntu.gschema.override
 
-# Install script for migrating GConf settings to GSettings
-install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/
-install -dm755 $RPM_BUILD_ROOT%{_libexecdir}/compiz/
-install -m644 ../postinst/migration-scripts/02_migrate_to_gsettings.py \
-  $RPM_BUILD_ROOT%{_libexecdir}/compiz/
-install -m644 %{SOURCE3} \
-  $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/
-
 # Validate desktop files
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/compiz.desktop
 desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/ccsm.desktop
@@ -338,6 +327,12 @@ sed -i '/#!/ s|^.*$|#!/usr/bin/env python2|' $RPM_BUILD_ROOT%{_bindir}/ccsm
 
 # Remove GConf schemas
 rm -v $RPM_BUILD_ROOT%{_datadir}/gconf/schemas/*.schemas
+
+# Ugly libdir hack
+if [ "%{_libdir}" != "%{_prefix}/lib" ]; then
+  mv $RPM_BUILD_ROOT%{_prefix}/lib/python2.7/site-packages/compizconfig_python-%{_disguised_as}-py2.7.egg-info \
+     $RPM_BUILD_ROOT%{_libdir}/python2.7/site-packages/
+fi
 
 %find_lang compiz
 %find_lang ccsm
@@ -446,11 +441,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/gtk-window-decorator
 # Manual page
 %{_mandir}/man1/gtk-window-decorator.1.gz
-# GConf to GSettings migration autostart file
-%{_sysconfdir}/xdg/autostart/compiz-migrate-to-dconf.desktop
-# GConf to GSettings migration script
-%dir %{_libexecdir}/compiz/
-%{_libexecdir}/compiz/02_migrate_to_gsettings.py*
 # Compiz configuration backends
 %dir %{_libdir}/compizconfig/
 %dir %{_libdir}/compizconfig/backends/
@@ -488,6 +478,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.core.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.crashhandler.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.cube.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.cubeaddon.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.dbus.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.decor.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.expo.gschema.xml
@@ -539,13 +530,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.switcher.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.td.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.text.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.thumbnail.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.titleinfo.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.trailfocus.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.vpswitch.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.wall.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.wallpaper.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.water.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.widget.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.winrules.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.wizard.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.wobbly.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.workarounds.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.workspacenames.gschema.xml
@@ -566,6 +560,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/compiz/libcopytex.so
 %{_libdir}/compiz/libcrashhandler.so
 %{_libdir}/compiz/libcube.so
+%{_libdir}/compiz/libcubeaddon.so
 %{_libdir}/compiz/libdbus.so
 %{_libdir}/compiz/libdecor.so
 %{_libdir}/compiz/libexpo.so
@@ -614,13 +609,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/compiz/libswitcher.so
 %{_libdir}/compiz/libtd.so
 %{_libdir}/compiz/libtext.so
+%{_libdir}/compiz/libthumbnail.so
 %{_libdir}/compiz/libtitleinfo.so
 %{_libdir}/compiz/libtrailfocus.so
 %{_libdir}/compiz/libvpswitch.so
 %{_libdir}/compiz/libwall.so
+%{_libdir}/compiz/libwallpaper.so
 %{_libdir}/compiz/libwater.so
 %{_libdir}/compiz/libwidget.so
 %{_libdir}/compiz/libwinrules.so
+%{_libdir}/compiz/libwizard.so
 %{_libdir}/compiz/libwobbly.so
 %{_libdir}/compiz/libworkarounds.so
 %{_libdir}/compiz/libworkspacenames.so
@@ -637,6 +635,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/compiz/core.xml
 %{_datadir}/compiz/crashhandler.xml
 %{_datadir}/compiz/cube.xml
+%{_datadir}/compiz/cubeaddon.xml
+%dir %{_datadir}/compiz/cubeaddon/
+%dir %{_datadir}/compiz/cubeaddon/images/
+%{_datadir}/compiz/cubeaddon/images/compizcap.png
+%{_datadir}/compiz/cubeaddon/images/cubecap_release.png
+%{_datadir}/compiz/cubeaddon/images/fusioncap.png
 %dir %{_datadir}/compiz/cube/
 %dir %{_datadir}/compiz/cube/images/
 %{_datadir}/compiz/cube/images/freedesktop.png
@@ -709,13 +713,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/compiz/switcher.xml
 %{_datadir}/compiz/td.xml
 %{_datadir}/compiz/text.xml
+%{_datadir}/compiz/thumbnail.xml
 %{_datadir}/compiz/titleinfo.xml
 %{_datadir}/compiz/trailfocus.xml
 %{_datadir}/compiz/vpswitch.xml
 %{_datadir}/compiz/wall.xml
+%{_datadir}/compiz/wallpaper.xml
 %{_datadir}/compiz/water.xml
 %{_datadir}/compiz/widget.xml
 %{_datadir}/compiz/winrules.xml
+%{_datadir}/compiz/wizard.xml
 %{_datadir}/compiz/wobbly.xml
 %{_datadir}/compiz/workarounds.xml
 %{_datadir}/compiz/workspacenames.xml
@@ -740,9 +747,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -n libcompizconfig-devel
 %dir %{_includedir}/compizconfig/
-%{_includedir}/compizconfig/ccs-backend.h
 %{_includedir}/compizconfig/ccs.h
+%{_includedir}/compizconfig/ccs-backend.h
 %{_includedir}/compizconfig/ccs-defs.h
+%{_includedir}/compizconfig/ccs-fwd.h
 %{_includedir}/compizconfig/ccs-list.h
 %{_includedir}/compizconfig/ccs-object.h
 %{_includedir}/compizconfig/ccs-setting-types.h
@@ -790,6 +798,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Fri Feb 01 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.9~daily13.01.25-1.0ubuntu1
+- Version 0.9.9~daily13.01.25
+- Ubuntu release 0ubuntu1
+- Drop gconf -> dconf migration scripts
+
 * Sun Nov 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.8.4-3.bzr3412.0ubuntu1
 - Version 0.9.8.4
 - BZR revision 2312

@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 
-SPEC_VER="$(rpmspec -q --qf '%{version}\n' compiz.spec | head -1)"
-UBUNTU_REL="$(sed -n 's/^%define[ ]*_ubuntu_rel[ ]*\(.*\)$/\1/p' compiz.spec)"
-BZR_REV="$(sed -n 's/^%define[ ]*_bzr_rev[ ]*\(.*\)$/\1/p' compiz.spec)"
+source "$(dirname ${0})/../version_checker.sh"
 
-echo "Getting latest Ubuntu version..."
-UBUNTU_VER=($(wget -q -O - 'https://launchpad.net/ubuntu/raring/+source/compiz' | sed -n 's/^.*current\ release\ (\(.*\)-\(.*\)).*$/\1 \2/p'))
-
-echo ""
-
-echo -e "spec file version: ${SPEC_VER}+bzr${BZR_REV} ${UBUNTU_REL}"
-echo -e "Upstream version:  (none)"
-echo -e "Ubuntu version:    ${UBUNTU_VER[@]}"
+SPECFILE=compiz-Fedora_17.spec
+echo -e "F17 spec version: $(get_spec_version)+bzr$(get_spec_define _bzr_rev) $(get_spec_release --ubuntu)"
+SPECFILE=compiz-Fedora_18.spec
+echo -e "F18 spec version: $(get_spec_version) $(get_spec_release --ubuntu)"
+echo -e "Upstream version: $(get_launchpad_version compiz)"
+echo -e "Ubuntu version:   $(get_ubuntu_version compiz ${1:-raring})"

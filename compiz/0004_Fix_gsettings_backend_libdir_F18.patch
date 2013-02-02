@@ -1,0 +1,10 @@
+--- a/compizconfig/gsettings/gsettings_backend_shared/CMakeLists.txt
++++ b/compizconfig/gsettings/gsettings_backend_shared/CMakeLists.txt
+@@ -77,6 +77,6 @@
+                            ${GSETTINGS_UTIL_LIBRARIES})
+ 
+     install (TARGETS compizconfig_gsettings_backend
+-	     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++	     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+ 
+ endif (GSETTINGS_UTIL_FOUND)

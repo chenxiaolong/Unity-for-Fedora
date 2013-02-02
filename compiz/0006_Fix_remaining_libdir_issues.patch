@@ -1,0 +1,44 @@
+--- a/compizconfig/integration/gnome/gsettings/tests/CMakeLists.txt
++++ b/compizconfig/integration/gnome/gsettings/tests/CMakeLists.txt
+@@ -6,7 +6,7 @@
+ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../../../gsettings/tests)
+ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../../../gsettings/mocks)
+ include_directories (${CMAKE_SOURCE_DIR}/compizconfig/tests)
+-link_directories (${CMAKE_INSTALL_PREFIX}/lib)
++link_directories (${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+ link_directories (${CMAKE_CURRENT_BINARY_DIR}/../../mocks/libcompizconfig)
+ link_directories (${CMAKE_CURRENT_BINARY_DIR}/../../tests/)
+ link_directories (${CMAKE_CURRENT_BINARY_DIR}/../src/)
+--- a/compizconfig/integration/gnome/tests/CMakeLists.txt
++++ b/compizconfig/integration/gnome/tests/CMakeLists.txt
+@@ -6,7 +6,7 @@
+ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../../gsettings/tests)
+ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../../gsettings/mocks)
+ include_directories (${CMAKE_SOURCE_DIR}/compizconfig/tests)
+-link_directories (${CMAKE_INSTALL_PREFIX}/lib)
++link_directories (${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+ 
+ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+ 
+--- a/compizconfig/libcompizconfig/tests/CMakeLists.txt
++++ b/compizconfig/libcompizconfig/tests/CMakeLists.txt
+@@ -4,7 +4,7 @@
+ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../mocks/libcompizconfig)
+ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../src)
+ include_directories (${CMAKE_SOURCE_DIR}/compizconfig/tests)
+-link_directories (${CMAKE_INSTALL_PREFIX}/lib)
++link_directories (${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+ link_directories (${CMAKE_CURRENT_BINARY_DIR}/../../mocks/libcompizconfig)
+ link_directories (${CMAKE_CURRENT_BINARY_DIR}/../../tests/)
+ link_directories (${CMAKE_CURRENT_BINARY_DIR}/../src/)
+--- a/compizconfig/mocks/libcompizconfig/CMakeLists.txt
++++ b/compizconfig/mocks/libcompizconfig/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ include_directories (${GTEST_INCLUDE_DIRS})
+ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../libcompizconfig/include)
+ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../libcompizconfig/src)
+-link_directories (${CMAKE_INSTALL_PREFIX}/lib)
++link_directories (${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+ link_directories (${CMAKE_CURRENT_BINARY_DIR}/../../libcompizconfig/src)
+ 
+ if (HAVE_PROTOBUF)
