@@ -6,7 +6,7 @@
 
 Name:		gnome-session
 Version:	3.6.2
-Release:	101.%{_ubuntu_rel}%{?dist}
+Release:	102.%{_ubuntu_rel}%{?dist}
 Summary:	GNOME session manager
 
 Group:		User Interface/Desktops
@@ -18,6 +18,7 @@ Source98:	55gnome-session_gnomerc
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 Source1:	gnome-authentication-agent.desktop
+Source2:	gnome-authentication-agent-unity.desktop
 
 # Fedora's patches
 Patch0:		gnome-session-3.3.1-llvmpipe.patch
@@ -138,10 +139,10 @@ make install DESTDIR=$RPM_BUILD_ROOT
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/
 desktop-file-install \
   --dir $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/ \
-  --add-only-show-in Unity \
-  --set-comment "PolicyKit Authentication Agent for GNOME 3 Classic and Unity" \
-  --remove-key "AutostartCondition" \
   %{SOURCE1}
+desktop-file-install \
+  --dir $RPM_BUILD_ROOT%{_datadir}/gnome/autostart/ \
+  %{SOURCE2}
 
 desktop-file-validate \
   $RPM_BUILD_ROOT%{_datadir}/applications/session-properties.desktop
@@ -190,6 +191,7 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %dir %{_datadir}/gnome/
 %dir %{_datadir}/gnome/autostart/
 %{_datadir}/gnome/autostart/gnome-authentication-agent.desktop
+%{_datadir}/gnome/autostart/gnome-authentication-agent-unity.desktop
 %dir %{_datadir}/gnome-session/
 %{_datadir}/gnome-session/gsm-inhibit-dialog.ui
 %{_datadir}/gnome-session/hardware-compatibility
@@ -219,7 +221,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
-* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-1.0ubuntu3
+* Sat Feb 02 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-102.0ubuntu3
+- Make sure polkit-gnome-authentication-agent-1 does not start in GNOME Shell
+
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-101.0ubuntu3
 - Version 3.6.2
 - Ubuntu release 0ubuntu3
 
