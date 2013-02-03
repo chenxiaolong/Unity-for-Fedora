@@ -1,6 +1,6 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-# Do not provide the Python 2 binding library
+# Do not provide the Python 3 binding library
 %filter_provides_in %{python3_sitearch}/_geis_bindings\.so$
 %filter_setup
 
@@ -47,13 +47,13 @@ This package contains the development files for the geis library.
 
 
 %package -n python-geis
-Summary:	Python 2 bindings for the geis library
+Summary:	Python 3 bindings for the geis library
 Group:		Development/Libraries
 
 Requires:	%{name}%{?_isa} = %{version}-%{release}
 
 %description -n python-geis
-This package contains the Python 2 bindings for the geis library.
+This package contains the Python 3 bindings for the geis library.
 
 
 %package docs
