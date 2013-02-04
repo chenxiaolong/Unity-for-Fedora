@@ -63,7 +63,7 @@ Patch17:	fedora_gtk2-fixdso.patch
 Patch90:	fix-ubuntumenuproxy-build.patch
 
 # Fix hardcoded '/lib/' in 100_overlay_scrollbar_loading.patch
-Patch91:	0001_lib64_fix_100_overlay_scrollbar_loading.patch
+Patch91:	100_overlay_scrollbar_loading.patch
 
 BuildRequires:	atk-devel >= %{atk_version}
 BuildRequires:	glib2-devel >= %{glib2_version}
