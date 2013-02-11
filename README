@@ -40,7 +40,7 @@ Build order:
 38: indicator-printers             -> Indicator showing active print jobs
 39: indicator-session              -> Indicator for session management
 40: indicator-sound                -> Indicator displaying a unified sound menu
-41: notify-osd                     -> A unified sound menu
+41: notify-osd                     -> ##########################################
 42: NetworkManager-gnome-ubuntu    -> NetworkManager applet (Fedora 17 only)
 43: network-manager-applet-ubuntu  -> NetworkManager applet (Fedora 18 only)
 44: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
@@ -55,7 +55,7 @@ Build order:
 53: grail                          -> Gesture recognition and instantiation lib.
 54: geis                           -> Implementation of the GEIS interface
 55: gcc46                          -> GNU Compiler Collection version 4.6
-56: nux                            -> An OpenGL toolkit (Ubuntu 12.10 version)
+56: nux                            -> An OpenGL toolkit
 57: unity-asset-pool               -> Design assets for Unity
 58: gnome-menus301                 -> GNOME menu specifications
 59: nautilus-ubuntu                -> File manager and graphics shell for GNOME
