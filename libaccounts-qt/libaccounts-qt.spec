@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libaccounts-qt
-Version:	1.4
+Version:	1.7
 Release:	1%{?dist}
 Summary:	Qt library for Single Sign On
 
@@ -91,6 +91,9 @@ find -type d -name '.moc' -exec rm -rvf {} \+
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.7-1
+- Version 1.7
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.4-1
 - Version 1.4
 - Drop 0001_Multilib.patch
