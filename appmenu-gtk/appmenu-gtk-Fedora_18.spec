@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		appmenu-gtk
-Version:	12.10.3daily12.11.28
+Version:	12.10.3daily13.04.03
 Release:	1%{?dist}
 Summary:	Application menu module for GTK+
 
@@ -100,6 +100,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily13.04.03-1
+- Version 12.10.3daily13.04.03
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily12.11.28-1
 - Version 12.10.3daily12.11.28
 
