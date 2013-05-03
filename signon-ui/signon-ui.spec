@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		signon-ui
-Version:	0.12bzr13.01.09
+Version:	0.14
 Release:	1%{?dist}
 Summary:	Single Sign On UI
 
@@ -48,11 +48,15 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 %doc COPYING
 %{_bindir}/signon-ui
 %{_bindir}/signon-ui-unittest
+%{_bindir}/tst_inactivity_timer
 %{_datadir}/dbus-1/services/com.canonical.indicators.webcredentials.service
 %{_datadir}/dbus-1/services/com.nokia.singlesignonui.service
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.14-1
+- Version 0.14
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.12bzr13.01.09-1
 - Version 0.12bzr13.01.09
 - Fix libdir path
