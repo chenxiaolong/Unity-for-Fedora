@@ -3,19 +3,21 @@
 # This package uses the same structure as the official (outdated) Fedora
 # package. Feel free to merge it :)
 
-%define _ubuntu_rel 0ubuntu2
+%define _ubuntu_rel 0ubuntu1
 
 Name:		dee
-Version:	1.0.14
+Version:	1.2.3~daily13.03.13.1
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	Library for creating Model-View-Controller programs across DBus
 
 Group:		System Environment/Libraries
 License:	LGPLv3
 URL:		https://launchpad.net/dee
-Source0:	https://launchpad.net/dee/1.0/%{version}/+download/dee-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/dee_%{version}.orig.tar.gz
 
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/dee_%{version}-%{_ubuntu_rel}.diff.gz
+
+Patch0:		0001_Disable_Werror.patch
 
 BuildRequires:	gtk-doc
 BuildRequires:	pkgconfig
@@ -28,6 +30,9 @@ BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(python2)
 BuildRequires:	pkgconfig(python3)
+
+# CheckRequires
+BuildRequires:	dbus-test-runner
 
 %description
 Libdee is a library that uses DBus to provide objects allowing you to create
@@ -71,8 +76,12 @@ This package contains the documentation for the dee library.
 %prep
 %setup -q
 
+%patch0 -p1 -b .disable-Werror
+
 # Apply Ubuntu's patches
-zcat '%{SOURCE99}' | patch -Np1
+zcat '%{SOURCE99}' | patch -p1
+
+autoreconf -vfi
 
 
 %build
@@ -87,6 +96,12 @@ popd
 pushd build-python3/
 export PYTHON=python3
 %configure --disable-static
+popd
+
+
+%check
+pushd build-python2/
+make check
 popd
 
 
@@ -143,6 +158,10 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.2.3~daily13.03.13.1-1.0ubuntu1
+- Version 1.2.3~daily13.03.13.1
+- Ubuntu release 0ubuntu1
+
 * Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.14-1.0ubuntu2
 - Version 1.0.14
 - Ubuntu release 0ubuntu2
