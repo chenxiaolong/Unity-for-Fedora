@@ -1,15 +1,16 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libappindicator
-Version:	12.10.0
+Version:	12.10.1daily13.04.15
 Release:	1%{?dist}
 Summary:	Application indicators library
 
 Group:		System Environment/Libraries
 License:	LGPLv2 and LGPLv3
 URL:		https://launchpad.net/libappindicator
-Source0:	https://launchpad.net/libappindicator/12.10/%{version}/+download/libappindicator-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libappindicator_%{version}.orig.tar.gz
 Patch0:		0001_Fix_mono_dir.patch
+Patch1:		0002_g_type_init.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -32,6 +33,10 @@ BuildRequires:	pkgconfig(indicator3-0.4)
 BuildRequires:	pkgconfig(mono)
 BuildRequires:	pkgconfig(mono-nunit)
 BuildRequires:	pkgconfig(pygtk-2.0)
+
+# CheckDepends
+BuildRequires:	dbus-test-runner
+BuildRequires:	xorg-x11-server-Xvfb
 
 %description
 A library to allow applications to export a menu into the Unity Menu bar. Based
@@ -121,7 +126,11 @@ This package contains the development files for the appindicator-sharp library.
 %prep
 %setup -q
 %patch0 -p1 -b .monodir
+%patch1 -p1 -b .g_type_init
 
+sed -i 's/2\.35\.4/2.34.0/g' configure.ac
+
+gtkdocize
 autoreconf -vfi
 
 
@@ -137,6 +146,16 @@ popd
 pushd build-gtk3
 %configure --with-gtk=3 --enable-gtk-doc --disable-static
 make -j1
+popd
+
+
+%check
+pushd build-gtk2
+make check
+popd
+
+pushd build-gtk3
+make check
 popd
 
 
@@ -163,7 +182,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files
-%doc AUTHORS README
+%doc README
 %{_libdir}/libappindicator.so.*
 %{_libdir}/girepository-1.0/AppIndicator-0.1.typelib
 
@@ -190,7 +209,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files gtk3
-%doc AUTHORS README
+%doc README
 %{_libdir}/libappindicator3.so.*
 %{_libdir}/girepository-1.0/AppIndicator3-0.1.typelib
 
@@ -236,6 +255,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1daily13.04.15-1
+- Version 12.10.1daily13.04.15
+
 * Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.0-2
 - Fix directory ownership
 - Use pkgconfig for dependencies
