@@ -1,10 +1,8 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu2
-
 Name:		libunity-misc
-Version:	4.0.4
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	4.0.5daily13.02.26
+Release:	1%{?dist}
 Summary:	Differently licensed stuff for Unity
 
 Group:		System Environment/Libraries
@@ -22,9 +20,7 @@ Group:		System Environment/Libraries
 # - All other files
 License:	GPLv2 and GPLv3 and LGPLv2
 URL:		https://launchpad.net/libunity-misc
-Source0:	https://launchpad.net/libunity-misc/trunk/%{version}/+download/libunity-misc-%{version}.tar.gz
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity-misc_%{version}-%{_ubuntu_rel}.diff.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity-misc_%{version}.orig.tar.gz
 
 BuildRequires:	pkgconfig
 
@@ -61,14 +57,12 @@ This package contains the documentation for the unity-misc library.
 %prep
 %setup -q
 
-# Apply Ubuntu's patches
-# - update-notifier systray icons showed and the wrong place and size
-#   (LP: #856125)
-zcat '%{SOURCE99}' | patch -Np1
+gtkdocize
+autoreconf -vfi
 
 
 %build
-%configure --disable-static
+%configure --disable-static --enable-gtk-doc
 make %{?_smp_mflags}
 
 
@@ -103,6 +97,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.0.5daily13.02.26-1
+- Version 4.0.5daily13.02.26
+
 * Sat Aug 18 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.0.4-2.0ubuntu2
 - Clean up spec file
 - Use pkgconfig for dependencies
