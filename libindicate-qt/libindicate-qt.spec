@@ -4,7 +4,7 @@
 
 Name:		libindicate-qt
 Version:	0.2.5.91
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Qt bindings for libindicate
 
 Group:		System Environment/Libraries
