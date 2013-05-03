@@ -1,0 +1,22 @@
+--- a/libindicator/indicator-0.4.pc.in.in
++++ b/libindicator/indicator-0.4.pc.in.in
+@@ -4,7 +4,7 @@
+ bindir=@bindir@
+ includedir=@includedir@
+ 
+-indicatordir=${exec_prefix}/lib/indicators/@indicator_abi_version@
++indicatordir=${libdir}/indicators/@indicator_abi_version@
+ iconsdir=@datarootdir@/@PACKAGE@/icons/
+ 
+ Cflags: -I${includedir}/libindicator-0.@indicator_api_version@
+--- a/libindicator/indicator3-0.4.pc.in.in
++++ b/libindicator/indicator3-0.4.pc.in.in
+@@ -4,7 +4,7 @@
+ bindir=@bindir@
+ includedir=@includedir@
+ 
+-indicatordir=${exec_prefix}/lib/indicators3/@indicator_abi_version@/
++indicatordir=${libdir}/indicators3/@indicator_abi_version@/
+ iconsdir=@datarootdir@/@PACKAGE@/icons/
+ 
+ Cflags: -I${includedir}/libindicator3-0.@indicator_api_version@

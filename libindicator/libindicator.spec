@@ -5,13 +5,15 @@
 
 Name:		libindicator
 Version:	12.10.2daily13.04.10
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Shared functions for Ayatana indicators
 
 Group:		System Environment/Libraries
 License:	GPLv3
 URL:		https://launchpad.net/libindicator
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libindicator_%{version}.orig.tar.gz
+
+Patch0:		0001_Fix_pkgconfig_indicatordir.patch
 
 # Cannot disable rpath during build or else the tests will fail to find the
 # libindicator library
@@ -93,6 +95,8 @@ This package contains the developer tools for the indicator-gtk3 library.
 
 %prep
 %setup -q
+
+%patch0 -p1 -b .indicatordir
 
 autoreconf -vfi
 
@@ -205,6 +209,9 @@ chrpath -d $RPM_BUILD_ROOT%{_libdir}/*.so
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2daily13.04.10-2
+- Fix indicatordir in the pkgconfig files
+
 * Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2daily13.04.10-1
 - Version 12.10.2daily13.04.10
 
