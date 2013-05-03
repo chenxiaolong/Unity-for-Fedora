@@ -1,5 +1,7 @@
 Build order:
 
+(TESTPKG: dbus-test-runner)
+
 01: gtk2-ubuntu                    -> GTK toolkit 2.0 with Ubuntu patches
 02: gtk3-ubuntu                    -> GTK toolkit 3.0 with Ubuntu patches
 03: libdbusmenu                    -> Library for passing menus over DBus
