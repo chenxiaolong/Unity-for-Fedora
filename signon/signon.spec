@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		signon
-Version:	8.46
+Version:	8.51
 Release:	1%{?dist}
 Summary:	Single Sign On Framework
 
@@ -240,8 +240,6 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 %{_libdir}/libsignon-plugins.a
 %{_libdir}/pkgconfig/signon-plugins-common.pc
 %{_libdir}/pkgconfig/signon-plugins.pc
-%{_qt4_prefix}/mkspecs/features/signon-plugins-common.prf
-%{_qt4_prefix}/mkspecs/features/signon-plugins.prf
 
 
 %files -n signon-plugins-docs
@@ -249,6 +247,9 @@ find $RPM_BUILD_ROOT -type f -name '*tests*' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.51-1
+- Version 8.51
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 8.46-1
 - Version 8.46
 

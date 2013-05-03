@@ -4,17 +4,17 @@
  Name: signon-plugins-common
  Description: SignonPluginsCommon
  Version: $$PROJECT_VERSION
--Libs.private: -L/usr/lib  -lQtCore
-+Libs.private: -L/usr/@LIB@  -lQtCore
+-Libs.private: -L/usr/lib -l$${LIBQTCORE}
++Libs.private: -L/usr/@LIB@ -l$${LIBQTCORE}
  Cflags:  -I${includedir}/signon-plugins -I${includedir}/signon-plugins/SignOn
 --- a/lib/plugins/signon-plugins.pc.in
 +++ b/lib/plugins/signon-plugins.pc.in
 @@ -8,6 +8,6 @@
  Description: SignonPlugins
  Version: $$PROJECT_VERSION
- Requires: libsignon-qt
--Libs.private: -L/usr/lib  -lQtCore
-+Libs.private: -L/usr/@LIB@  -lQtCore
+ Requires: $${LIBSIGNON}
+-Libs.private: -L/usr/lib -l$${LIBQTCORE}
++Libs.private: -L/usr/@LIB@ -l$${LIBQTCORE}
  Cflags:  -I${includedir}/signon-plugins -I${includedir}/signon-plugins/SignOn
  Libs: -lsignon-plugins
 --- a/src/plugins/example/exampleplugin.pro
