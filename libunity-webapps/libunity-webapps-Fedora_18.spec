@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130418
+
 Name:		libunity-webapps
-Version:	2.4.3daily13.01.10
+Version:	2.5.0~daily13.03.18
 Release:	1%{?dist}
 Summary:	WebApps: Library for the integration with the Unity desktop
 
@@ -10,6 +12,9 @@ License:	LGPLv3
 URL:		https://launchpad.net/libunity-webapps
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity-webapps_%{version}.orig.tar.gz
 
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-libunity-webapps.tar.gz
+
+BuildRequires:	chrpath
 BuildRequires:	gettext
 BuildRequires:	gnome-common
 BuildRequires:	intltool
@@ -31,6 +36,10 @@ BuildRequires:	pkgconfig(polkit-gobject-1)
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	pkgconfig(telepathy-glib)
 BuildRequires:	pkgconfig(unity)
+
+# CheckRequires
+BuildRequires:	dbus-test-runner
+BuildRequires:	xorg-x11-server-Xvfb
 
 Requires:	unity-webapps-service
 
@@ -60,20 +69,28 @@ for the unity-webapps library.
 %prep
 %setup -q
 
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/unity_webapps-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
+
 autoreconf -vfi
 intltoolize -f
 
 
 %build
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:$(pwd)/src/libunity-webapps/.libs:$(pwd)/src/libunity-webapps-repository/.libs"
-
 %configure --disable-static
 
-# Disable rpath
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-
 make %{?_smp_mflags}
+
+
+%check
+make check
 
 
 %install
@@ -81,6 +98,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
+
+chrpath -d $RPM_BUILD_ROOT%{_libdir}/*.so
 
 %find_lang unity_webapps
 
@@ -131,6 +150,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.5.0~daily13.03.18-1
+- Version 2.5.0~daily13.03.18
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.4.3daily13.01.10-1
 - Version 2.4.3daily13.01.10
 - Drop docs subpackage (non-existant documentation)
