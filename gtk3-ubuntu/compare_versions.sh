@@ -2,8 +2,6 @@
 
 source "$(dirname ${0})/../version_checker.sh"
 
-SPECFILE=gtk3-ubuntu-Fedora_17.spec
-echo -e "F17 spec version: $(get_spec_version) $(get_spec_release --ubuntu)"
 SPECFILE=gtk3-ubuntu-Fedora_18.spec
 echo -e "F18 spec version: $(get_spec_version) $(get_spec_release --ubuntu)"
 echo -e "Upstream version: $(get_gnome_version gtk+ 3.6)"
