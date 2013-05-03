@@ -35,6 +35,9 @@ BuildRequires:	pkgconfig(pygobject-2.0)
 BuildRequires:	pkgconfig(pygtk-2.0)
 BuildRequires:	pkgconfig(python2)
 
+# CheckDepends
+BuildRequires:	dbus-test-runner
+
 %description
 A small library for applications to raise "flags" on DBus for other components
 of the desktop to pick up and visualize. Currently used by the messaging
@@ -197,6 +200,16 @@ pushd build-gtk3
 %configure --with-gtk=3 --disable-scrollkeeper --enable-gtk-doc \
            --enable-introspection=yes --disable-static
 make -j1
+popd
+
+
+%check
+pushd build-gtk2
+make check
+popd
+
+pushd build-gtk3
+make check
 popd
 
 
