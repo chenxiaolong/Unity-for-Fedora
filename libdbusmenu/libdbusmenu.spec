@@ -1,16 +1,16 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libdbusmenu
-Version:	12.10.2
+Version:	12.10.3daily13.02.01
 Release:	1%{?dist}
 Summary:	Small library that passes a menu structure across DBus
 
 Group:		System Environment/Libraries
 License:	GPLv3 and LGPLv2 and LGPLv3
 URL:		https://launchpad.net/dbusmenu
-Source0:	https://launchpad.net/dbusmenu/12.10/%{version}/+download/libdbusmenu-%{version}.tar.gz
+Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libdbusmenu_%{version}.orig.tar.gz
 
-Patch0:		0001_Fix_sgml.patch
+Patch0:		revert_r438.patch
 
 # Require Ubuntu versions of GTK2 and GTK3
 BuildRequires:	gtk2-ubuntu-devel
@@ -32,6 +32,10 @@ BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(json-glib-1.0)
 BuildRequires:	pkgconfig(valgrind)
 BuildRequires:	pkgconfig(x11)
+
+# CheckRequires
+BuildRequires:	dbus-test-runner
+BuildRequires:	xorg-x11-server-Xvfb
 
 %description
 A small little library that was created by pulling out some comon code out of
@@ -165,9 +169,11 @@ This package contains the development files for the dbusmenu-jsonloader library.
 %prep
 %setup -q
 
-%patch0 -p1 -b .fix-sgml
+%patch0 -p0
 
+gtkdocize
 autoreconf -vfi
+intltoolize -f
 
 # Disable rpath (from Debian wiki)
 sed -i -r 's/(hardcode_into_libs)=.*$/\1=no/' configure
@@ -187,6 +193,12 @@ pushd build-gtk3
 %configure --disable-scrollkeeper --enable-gtk-doc --enable-introspection \
            --with-gtk=3 --disable-static
 make %{?_smp_mflags}
+popd
+
+
+%check
+pushd build-gtk3
+make check
 popd
 
 
@@ -339,6 +351,9 @@ mv $RPM_BUILD_ROOT%{_docdir}/%{name}/examples/glib-server-nomenu.c \
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily13.02.01-1
+- Version 12.10.3daily13.02.01
+
 * Sat Oct 06 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2-1
 - Version 12.10.2
 
