@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130419
+
 Name:		indicator-messages
-Version:	12.10.6daily13.01.25
+Version:	12.10.6daily13.04.09
 Release:	1%{?dist}
 Summary:	Indicator for collecting messages that need a response
 
@@ -9,6 +11,8 @@ Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-messages
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-messages_%{version}.orig.tar.gz
+
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-indicator-messages.tar.gz
 
 Patch0:		revert_r335.patch
 
@@ -49,6 +53,16 @@ for the messages indicator.
 
 %patch0 -p0
 
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
+
 gtkdocize
 autoreconf -vfi
 intltoolize
@@ -64,6 +78,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
+
+%find_lang indicator-messages
 
 
 %post
@@ -83,7 +99,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
-%files
+%files -f indicator-messages.lang
 %doc AUTHORS ChangeLog
 %{_libdir}/girepository-1.0/MessagingMenu-1.0.typelib
 %dir %{_libdir}/indicators3/
@@ -109,6 +125,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.6daily13.04.09-1
+- Version 12.10.6daily13.04.09
+- Add translations
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.6daily13.01.25-1
 - Version 12.10.6daily13.01.25
 
