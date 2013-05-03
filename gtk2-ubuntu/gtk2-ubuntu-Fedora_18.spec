@@ -4,7 +4,7 @@
 # Required when the package is not built in koji
 %global _host %{_target_platform}
 
-%define _ubuntu_rel 0ubuntu1
+%define _ubuntu_rel 0ubuntu2
 
 # Note that this is NOT a relocatable package
 
@@ -12,7 +12,7 @@
 
 Summary:	The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name:		gtk2
-Version:	2.24.14
+Version:	2.24.17
 Release:	1.%{_ubuntu_rel}%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -36,12 +36,6 @@ Patch8:		fedora_tooltip-positioning.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=611313
 # Included in Ubuntu patch 062_dnd_menubar.patch
 Patch15:	fedora_window-dragging.patch
-
-# fix dso.
-Patch17:	fedora_gtk2-fixdso.patch
-
-# automake 1.13 :-(
-Patch18:	fedora_gtk-automak.patch
 
 # Patch from Arch Linux TU, György Balló, to fix build with the Ubuntu menuproxy
 # code
@@ -176,8 +170,6 @@ This package contains developer documentation for the GTK+ widget toolkit.
 %patch8 -p1 -b .tooltip-positioning
 #%patch14 -p1 -b .landscape-pdf-print
 #%patch15 -p1 -b .window-dragging
-%patch17 -p1 -b .fixdso
-%patch18 -p1 -b .automak
 
 # Apply Ubuntu patches
 tar zxvf "%{SOURCE99}"
@@ -399,6 +391,10 @@ fi
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.17-1.0ubuntu2
+- Version 2.24.17
+- Ubuntu release 0ubuntu2
+
 * Fri Jan 25 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.24.14-1.0ubuntu1
 - Version 2.24.14
 - Ubuntu release 0ubuntu1
