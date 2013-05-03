@@ -1,7 +1,7 @@
 # Based off of Fedora 18's spec
 # Modifications by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu3
+%define _ubuntu_rel 0ubuntu8
 
 %global bin_version 3.0.0
 
@@ -138,10 +138,6 @@ tar zxvf "%{SOURCE99}"
     sed -i '/022_disable-viqr-im-for-vi-locale.patch/d' debian/patches/series
   # Not needed
     sed -i '/071_fix-installation-of-HTML-images.patch/d' debian/patches/series
-  # Drop git patches
-    sed -i '/git/d' debian/patches/series
-    # Except this one
-      echo 'git_gtkcellrenderer_grabbing_modifier.patch' >> debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
@@ -297,6 +293,10 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu8
+- Version 3.6.4
+- Ubuntu release 0ubuntu8
+
 * Sat Jan 26 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu3
 - Version 3.6.4
 - Ubuntu release 0ubuntu3
