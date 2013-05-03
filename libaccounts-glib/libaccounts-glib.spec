@@ -1,18 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu2
-
 Name:		libaccounts-glib
-Version:	1.5
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	1.8
+Release:	1%{?dist}
 Summary:	Account management library for GLib Applications
 
 Group:		System Environment/Libraries
 License:	LGPLv2
 URL:		https://code.google.com/p/accounts-sso/
 Source0:	https://accounts-sso.googlecode.com/files/libaccounts-glib-%{version}.tar.gz
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libaccounts-glib_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -69,12 +65,6 @@ This package contains the tools for the accounts-glib library.
 
 %prep
 %setup -q
-
-# Apply Ubuntu's patches
-tar zxvf '%{SOURCE99}'
-for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
-done
 
 autoreconf -vfi
 
@@ -152,6 +142,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.8-1
+- Version 1.8
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.5-1.0ubuntu2
 - Version 1.5
 - Ubuntu release 0ubuntu2
