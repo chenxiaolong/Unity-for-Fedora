@@ -10,65 +10,64 @@ Build order:
 06: libindicate-qt                 -> Qt bindings for libindicate
 07: libappindicator                -> Library to export menu bar to Unity
 08: appmenu-gtk                    -> Application menu module for GTK+
-09: appmenu-qt                     -> Application menu module for Qt
-10: dee                            -> Synchronize multiple instances over DBus
-11: libunity                       -> Library for integrating Unity
-12: libunity-misc                  -> Differently licensed stuff for Unity
-13: indicator-messages             -> Collects messages that need a response
-14: libunity-webapps               -> Library for integrating WebApps into Unity
-15: bamf                           -> Application matching framework
-16: sni-qt                         -> Turns Qt tray icons into appindicators
-17: ido                            -> Widgets and objects used for indicators
-18: libaccounts-glib               -> Account mgmt. library for GLib apps
-19: libaccounts-qt                 -> Qt library for Single Sign On
-20: signon                         -> Single Sign On Framework
-21: signon-ui                      -> Online Accounts Sign On UI
-22: libsignon-glib                 -> Authentication mgmt. library for GLib apps
-23: signon-keyring-extension       -> GNOME Keyring extension for signond
-24: signon-plugin-oauth2           -> Oauth2 plugin for the SSO Framework
-25: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
-26: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
-27: gnome-session-ubuntu           -> GNOME Session Manager
-28: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
-29: gnome-control-center-signon    -> GNOME Control Center extension for SSO
-30: account-plugins                -> Online Accounts Plugins
-31: activity-log-manager           -> Activity Log Manager for Zeitgeist
-32: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
-33: indicator-applet               -> GNOME panel indicator applet
-34: indicator-application          -> Takes menus and puts them in the panel
-35: indicator-appmenu              -> An indicator to host the menus from apps
-36: indicator-datetime             -> A very, very simple clock
-37: indicator-power                -> Indicator to show battery information
-38: indicator-printers             -> Indicator showing active print jobs
-39: indicator-session              -> Indicator for session management
-40: indicator-sound                -> Indicator displaying a unified sound menu
-41: notify-osd                     -> ##########################################
-42: NetworkManager-gnome-ubuntu    -> NetworkManager applet (Fedora 17 only)
-43: network-manager-applet-ubuntu  -> NetworkManager applet (Fedora 18 only)
-44: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
-45: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
-46: plasma-widget-menubar          -> KDE Plasma widget to display global menus
-47: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
-48: evemu                          -> Linux Evdev Event Emulation Library
-49: frame                          -> Open Input Framework Frame Library
-50: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
-51: libXfixes-ubuntu               -> X.Org fixes extension library
-52: xorg-x11-server-ubuntu         -> Xorg X11 server
-53: grail                          -> Gesture recognition and instantiation lib.
-54: geis                           -> Implementation of the GEIS interface
-55: gcc46                          -> GNU Compiler Collection version 4.6
-56: nux                            -> An OpenGL toolkit
-57: unity-asset-pool               -> Design assets for Unity
-58: gnome-menus301                 -> GNOME menu specifications
-59: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-60: python-oauthlib                -> Python implementation of OAuth
-61: unity-lens-applications        -> Unity applications lens
-62: unity-lens-files               -> Unity files lens
-63: unity-lens-music               -> Unity music lens
-64: unity-lens-photos              -> Unity photos lens
-65: unity-lens-video               -> Unity video lens
-66: unity-scope-video-remote       -> Remote video search for Unity video lens
-67: python3-distutils-extra        -> Enhancements to Python's distutils
-68: unity-scope-gdocs              -> Google Docs scope for Unity
-69: compiz                         -> Compiz core components
-70: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+09: dee                            -> Synchronize multiple instances over DBus
+10: libunity                       -> Library for integrating Unity
+11: libunity-misc                  -> Differently licensed stuff for Unity
+12: indicator-messages             -> Collects messages that need a response
+13: libunity-webapps               -> Library for integrating WebApps into Unity
+14: bamf                           -> Application matching framework
+15: sni-qt                         -> Turns Qt tray icons into appindicators
+16: ido                            -> Widgets and objects used for indicators
+17: libaccounts-glib               -> Account mgmt. library for GLib apps
+18: libaccounts-qt                 -> Qt library for Single Sign On
+19: signon                         -> Single Sign On Framework
+20: signon-ui                      -> Online Accounts Sign On UI
+21: libsignon-glib                 -> Authentication mgmt. library for GLib apps
+22: signon-keyring-extension       -> GNOME Keyring extension for signond
+23: signon-plugin-oauth2           -> Oauth2 plugin for the SSO Framework
+24: gsettings-desktop-schemas-ubuntu -> Shared GSettings schemas for the desktop
+25: gnome-settings-daemon-ubuntu   -> Daemon handling the GNOME session settings
+26: gnome-session-ubuntu           -> GNOME Session Manager
+27: gnome-control-center-ubuntu    -> Utilities to configure the GNOME desktop
+28: gnome-control-center-signon    -> GNOME Control Center extension for SSO
+29: account-plugins                -> Online Accounts Plugins
+30: activity-log-manager           -> Activity Log Manager for Zeitgeist
+31: gnome-screensaver-ubuntu       -> Screensaver and screen locking for GNOME
+32: indicator-applet               -> GNOME panel indicator applet
+33: indicator-application          -> Takes menus and puts them in the panel
+34: indicator-appmenu              -> An indicator to host the menus from apps
+35: indicator-datetime             -> A very, very simple clock
+36: indicator-power                -> Indicator to show battery information
+37: indicator-printers             -> Indicator showing active print jobs
+38: indicator-session              -> Indicator for session management
+39: indicator-sound                -> Indicator displaying a unified sound menu
+40: notify-osd                     -> ##########################################
+41: NetworkManager-gnome-ubuntu    -> NetworkManager applet (Fedora 17 only)
+42: network-manager-applet-ubuntu  -> NetworkManager applet (Fedora 18 only)
+43: gnome-bluetooth-ubuntu         -> Applet for connecting to bluetooth devices
+44: overlay-scrollbar              -> Overlay scrollbars for GTK2 and GTK 3
+45: plasma-widget-menubar          -> KDE Plasma widget to display global menus
+46: xfce4-indicator-plugin         -> XFCE 4 panel plugin to display indicators
+47: evemu                          -> Linux Evdev Event Emulation Library
+48: frame                          -> Open Input Framework Frame Library
+49: xorg-x11-proto-ubuntu-devel    -> X.Org X11 protocol headers
+50: libXfixes-ubuntu               -> X.Org fixes extension library
+51: xorg-x11-server-ubuntu         -> Xorg X11 server
+52: grail                          -> Gesture recognition and instantiation lib.
+53: geis                           -> Implementation of the GEIS interface
+54: gcc46                          -> GNU Compiler Collection version 4.6
+55: nux                            -> An OpenGL toolkit
+56: unity-asset-pool               -> Design assets for Unity
+57: gnome-menus301                 -> GNOME menu specifications
+58: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+59: python-oauthlib                -> Python implementation of OAuth
+60: unity-lens-applications        -> Unity applications lens
+61: unity-lens-files               -> Unity files lens
+62: unity-lens-music               -> Unity music lens
+63: unity-lens-photos              -> Unity photos lens
+64: unity-lens-video               -> Unity video lens
+65: unity-scope-video-remote       -> Remote video search for Unity video lens
+66: python3-distutils-extra        -> Enhancements to Python's distutils
+67: unity-scope-gdocs              -> Google Docs scope for Unity
+68: compiz                         -> Compiz core components
+69: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
