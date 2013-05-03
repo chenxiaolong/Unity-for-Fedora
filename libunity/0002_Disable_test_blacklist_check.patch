@@ -1,0 +1,35 @@
+--- a/test/vala/test-mpris-backend-client.vala
++++ b/test/vala/test-mpris-backend-client.vala
+@@ -237,8 +237,6 @@
+                              player_current_metadata); 
+     GLib.Test.add_data_func ("/Integration/SoundMenu/Mpris/Backend/Player/PlaybackStatus",
+                              player_current_playback_status);
+-    GLib.Test.add_data_func ("/Integration/SoundMenu/Mpris/Backend/Blacklisting",
+-                             test_blacklist_check);
+     GLib.Test.add_data_func ("/Integration/SoundMenu/Mpris/Backend/Playlist/CurrentPlaylist",
+                              playlists_current_playlist);                             
+     GLib.Test.add_data_func ("/Integration/SoundMenu/Mpris/Backend/Playlist/GetPlaylists",
+@@ -329,23 +327,6 @@
+     return false;
+   }
+   
+-  // This test is flaky, I'm unsure why ...
+-  internal static void test_blacklist_check()
+-  {
+-    var controller = new Mpris2Controller ("org.mpris.MediaPlayer2.rhythmbox");
+-    // TODO - timeout needed ?    
+-    var settings = new Settings ("com.canonical.indicator.sound");
+-    var blacklist = settings.get_strv ("blacklisted-media-players");
+-    bool present = false;
+-    foreach (var s in blacklist){
+-      //debug("%s is blacklisted", s);
+-      if (s == controller.mpris2_root.DesktopEntry){
+-        present = true;
+-      }
+-    }
+-    assert (present == false);
+-  }
+-
+   internal static void playlists_current_playlist()
+   {
+     var controller = new Mpris2Controller ("org.mpris.MediaPlayer2.rhythmbox");

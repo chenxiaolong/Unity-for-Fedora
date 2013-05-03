@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		libunity
-Version:	6.90.2daily13.01.11
+Version:	6.90.2daily13.04.05
 Release:	1%{?dist}
 Summary:	Library for integrating with Unity
 
@@ -11,9 +11,11 @@ URL:		https://launchpad.net/libunity
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/libunity_%{version}.orig.tar.gz
 
 Patch0:		0001_unity-protocol-private.patch
+Patch1:		0002_Disable_test_blacklist_check.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	chrpath
 BuildRequires:	pkgconfig
 BuildRequires:	python2
 BuildRequires:	vala-tools
@@ -24,6 +26,11 @@ BuildRequires:	pkgconfig(gee-1.0)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
+
+# CheckRequires
+BuildRequires:	pygobject2
+BuildRequires:	xorg-x11-server-Xvfb
+BuildRequires:	xorg-x11-xauth
 
 %description
 A library for instrumenting and integrating with all aspects of the Unity
@@ -58,6 +65,7 @@ This package contains the debugging tools for Unity lens.
 %setup -q
 
 %patch0 -p1 -b .unity-protocol-private
+%patch1 -p1 -b .test_blacklist_check
 
 autoreconf -vfi
 intltoolize -f
@@ -66,11 +74,12 @@ intltoolize -f
 %build
 %configure --enable-headless-tests --disable-static
 
-# Disable rpath
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-
 make %{?_smp_mflags}
+
+
+%check
+# Requires indicator-sound to be installed
+#make check
 
 
 %install
@@ -78,6 +87,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
+
+chrpath -d $RPM_BUILD_ROOT%{_libdir}/*.so
 
 
 %post -p /sbin/ldconfig
@@ -101,6 +112,8 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 %{_libdir}/girepository-1.0/UnityExtras-6.0.typelib
 %{python_sitearch}/gi/overrides/Unity.py*
 %{_datadir}/glib-2.0/schemas/com.canonical.Unity.Lenses.gschema.xml
+%dir %{_datadir}/unity/
+%{_datadir}/unity/client-scopes.json
 
 
 %files devel
@@ -130,6 +143,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.90.2daily13.04.05-1
+- Version 6.90.2daily13.04.05
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.90.2daily13.01.11-1
 - Version 6.90.2daily13.01.11
 
