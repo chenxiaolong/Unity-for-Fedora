@@ -35,6 +35,11 @@ cd build
 make %{?_smp_mflags}
 
 
+%check
+# Only one test doesn't require X
+./build/tests/auto/fsutilstest
+
+
 %install
 cd build
 make install DESTDIR=$RPM_BUILD_ROOT
