@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		bamf3
-Version:	0.4.0daily13.01.11
+Version:	0.4.0daily13.04.03
 Release:	1%{?dist}
 Summary:	Application Matching Framework
 
@@ -24,6 +24,9 @@ BuildRequires:	pkgconfig(gtk+-3.0)
 BuildRequires:	pkgconfig(libgtop-2.0)
 BuildRequires:	pkgconfig(libunity_webapps-0.2)
 BuildRequires:	pkgconfig(libwnck-3.0)
+
+# CheckRequires
+BuildRequires:	xorg-x11-server-Xvfb
 
 # No %{_isa} because the libraries are multilib, but bamf-daemon isn't
 Requires:	bamf-daemon = %{version}-%{release}
@@ -78,8 +81,12 @@ autoreconf -vfi
 
 
 %build
-%configure --enable-gtk-doc --disable-static
+%configure --enable-gtk-doc --disable-static --enable-headless-tests
 make %{?_smp_mflags}
+
+
+%check
+make check
 
 
 %install
@@ -127,6 +134,9 @@ touch $RPM_BUILD_ROOT%{_datadir}/applications/bamf.index
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.4.0daily13.04.03-1
+- Version 0.4.0daily13.04.03
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.4.0daily13.01.11-1
 - Version 0.4.0daily13.01.11
 - Drop deprecated GTK 2 subpackages
