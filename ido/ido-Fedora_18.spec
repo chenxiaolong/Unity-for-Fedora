@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		ido
-Version:	12.10.3daily13.01.11
+Version:	12.10.3daily13.03.01
 Release:	1%{?dist}
 Summary:	Widgets and other objects used for indicators
 
@@ -88,6 +88,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily13.03.01-1
+- Version 12.10.3daily13.03.01
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily13.01.11-1
 - 12.10.3daily13.01.11
 
