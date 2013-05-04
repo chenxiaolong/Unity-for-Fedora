@@ -3,7 +3,7 @@
 # Workaround: the overlay-scrollbar needs to be noarch, but the subpackages
 # need to be arch-dependent. RPM doesn't support this.
 Name:		abcdefghijklmnopqrstuvwxyz
-Version:	0.2.16+r359daily12.11.30
+Version:	0.2.16+r359daily13.02.06
 Release:	1%{?dist}
 Summary:	Overlayed scrollbar widget for GTK
 
@@ -133,6 +133,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.16+r359daily13.02.06-1
+- Version 0.2.16+r359daily13.02.06
+
 * Tue Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.2.16+r359daily12.11.30-1
 - Version 0.2.16+r359daily12.11.30
 
