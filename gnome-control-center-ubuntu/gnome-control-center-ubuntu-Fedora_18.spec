@@ -2,7 +2,9 @@
 
 # Partially based off of Fedora 18's spec file
 
-%define _ubuntu_rel 0ubuntu12
+%define _translations 20130418
+
+%define _ubuntu_rel 0ubuntu25
 
 Name:		control-center
 Epoch:		1
@@ -14,6 +16,7 @@ License:	GPLv2+ and GFDL
 URL:		http://www.gnome.org
 Source0:	http://download.gnome.org/sources/gnome-control-center/3.6/gnome-control-center-%{version}.tar.xz
 
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-gnome-control-center.tar.gz
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-control-center_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 # Fedora's patches
@@ -62,6 +65,7 @@ BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(polkit-agent-1)
 BuildRequires:	pkgconfig(pwquality)
 BuildRequires:	pkgconfig(upower-glib)
+BuildRequires:	pkgconfig(webkitgtk-3.0)
 BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xkbfile)
 BuildRequires:	pkgconfig(xrandr)
@@ -147,8 +151,6 @@ tar zxvf '%{SOURCE99}'
 # Disable patches
   # Ubuntu is too lazy to port their patches to the latest version of IBus
     sed -i '/revert_new_ibus_keyboard_use.patch/d' debian/patches/series
-  # systemd should make this obsolete
-    sed -i '/revert_git_datetime_port.patch/d' debian/patches/series
   # The gnome-settings-daemon-ubuntu patch for this conflicts with Fedora's
   # patches
     sed -i '/99_add_lock-on-suspend.patch/d' debian/patches/series
@@ -157,17 +159,45 @@ tar zxvf '%{SOURCE99}'
   # Ubuntu specific
     sed -i '/10_keyboard_layout_on_unity.patch/d' debian/patches/series
     sed -i '/50_ubuntu_systemwide_proxy.patch/d' debian/patches/series
-    sed -i '/52_ubuntu_language_list_mods.patch/d' debian/patches/series
+    sed -i '/52_region_language.patch/d' debian/patches/series
     sed -i '/53_use_ubuntu_help.patch/d' debian/patches/series
     sed -i '/56_use_ubuntu_info_branding.patch/d' debian/patches/series
     sed -i '/62_update_translations_template.patch/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
-  patch -p1 -i "debian/patches/${i}"
+  if [ "x${i}" = "xunity_notice_info.patch" ]; then
+    cat "debian/patches/${i}" | \
+      filterdiff --exclude gnome-control-center-3.6.3/configure.ac | patch -p1
+    # Base 64 because the tabs will screw up bash's parser
+    cat << EOF | base64 -d | patch -p1
+LS0tIGEvY29uZmlndXJlLmFjCisrKyBiL2NvbmZpZ3VyZS5hYwpAQCAtMTM3LDcgKzEzNyw3IEBA
+CiAgICAgICAgICAgICAgICAgICBnZGstcGl4YnVmLTIuMCA+PSAkR0RLUElYQlVGX1JFUVVJUkVE
+X1ZFUlNJT04pCiBQS0dfQ0hFQ0tfTU9EVUxFUyhESVNQTEFZX1BBTkVMLCAkQ09NTU9OX01PRFVM
+RVMgZ25vbWUtZGVza3RvcC0zLjAgPj0gMy4xLjApCiBQS0dfQ0hFQ0tfTU9EVUxFUyhJTkZPX1BB
+TkVMLCAkQ09NTU9OX01PRFVMRVMgbGliZ3RvcC0yLjAgZ2wgeDExCi0JCSAgcG9sa2l0LWdvYmpl
+Y3QtMSA+PSAkUE9MS0lUX1JFUVVJUkVEX1ZFUlNJT04pCisJCSAgcG9sa2l0LWdvYmplY3QtMSA+
+PSAkUE9MS0lUX1JFUVVJUkVEX1ZFUlNJT04gd2Via2l0Z3RrLTMuMCkKIFBLR19DSEVDS19NT0RV
+TEVTKEtFWUJPQVJEX1BBTkVMLCAkQ09NTU9OX01PRFVMRVMKICAgICAgICAgICAgICAgICAgIGdu
+b21lLWRlc2t0b3AtMy4wID49ICRHTk9NRV9ERVNLVE9QX1JFUVVJUkVEX1ZFUlNJT04KICAgICAg
+ICAgICAgICAgICAgIHgxMSkK
+EOF
+  else
+    patch -p1 -i "debian/patches/${i}"
+  fi
 done
 
 # Apply Fedora's patches
 %patch30 -p1 -b .wacom-osd-window
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/gnome-control-center-2.0-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
 
 autoreconf -vfi
 
@@ -207,6 +237,10 @@ rm -rvf $RPM_BUILD_ROOT%{_datadir}/gnome/cursor-fonts/
 install -dm755 $RPM_BUILD_ROOT%{_datadir}/indicators/session/applications/
 ln -s %{_datadir}/applications/gnome-control-center.desktop \
   $RPM_BUILD_ROOT%{_datadir}/indicators/session/applications/
+
+# Legal notice
+install -m644 debian/searchingthedashlegalnotice.html \
+  $RPM_BUILD_ROOT%{_datadir}/gnome-control-center/
 
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
@@ -407,6 +441,7 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 %{_datadir}/gnome-control-center/ui/GnomeLogoVerticalMedium.svg
 %{_datadir}/gnome-control-center/ui/scroll-test.svg
 %{_datadir}/gnome-control-center/ui/scroll-test-gegl.svg
+%{_datadir}/gnome-control-center/searchingthedashlegalnotice.html
 
 # GNOME Keybindings pkgconfig file
 %{_datadir}/pkgconfig/gnome-keybindings.pc
@@ -433,6 +468,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu25
+- Version 3.6.3
+- Ubuntu release 0ubuntu25
+
 * Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu12
 - Version 3.6.3
 - Ubuntu release 0ubuntu12
