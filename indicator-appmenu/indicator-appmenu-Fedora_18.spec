@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130418
+
 Name:		indicator-appmenu
-Version:	12.10.4daily13.01.25
+Version:	13.01.0daily13.03.28
 Release:	1%{?dist}
 Summary:	Indicator to host the menus from an application
 
@@ -9,6 +11,8 @@ Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-appmenu
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-appmenu_%{version}.orig.tar.gz
+
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-indicator-appmenu.tar.gz
 
 Patch0:		0001_Fix_dbusmenu-dumper_path.patch
 Patch1:		revert_r229.patch
@@ -53,6 +57,16 @@ This package contains debugging tools for the appmenu indicator.
 %patch0 -p1 -b .dbusmenu-dumper
 %patch1 -p0
 
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
+
 gtkdocize
 autoreconf -vfi
 intltoolize -f
@@ -77,6 +91,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
+%find_lang %{name}
+
 
 %postun
 if [ ${1} -eq 0 ] ; then
@@ -87,38 +103,26 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%files
+%files -f %{name}.lang
 %doc AUTHORS ChangeLog
 %dir %{_libdir}/indicators3/
 %dir %{_libdir}/indicators3/7/
 %{_libdir}/indicators3/7/libappmenu.so
-%{_libexecdir}/hud-service
-%{_datadir}/dbus-1/services/com.canonical.hud.service
 %{_datadir}/glib-2.0/schemas/com.canonical.indicator.appmenu.gschema.xml
-%{_datadir}/glib-2.0/schemas/com.canonical.indicator.appmenu.hud.gschema.xml
-%{_datadir}/glib-2.0/schemas/com.canonical.indicator.appmenu.hud.search.gschema.xml
 
 
 %files tools
 %doc AUTHORS ChangeLog
-%{_bindir}/hud-cli
-%{_bindir}/hud-dump-application
-%{_bindir}/hud-gtk
-%{_bindir}/hud-list-applications
-%{_bindir}/hud-verify-app-info
 %{_libexecdir}/current-menu
 %{_libexecdir}/current-menu-dump
 %{_libexecdir}/menu-pusher
 %{_libexecdir}/mock-json-app
-%{_mandir}/man1/hud-cli.1.gz
-%{_mandir}/man1/hud-dump-application.1.gz
-%{_mandir}/man1/hud-list-applications.1.gz
-%{_mandir}/man1/hud-verify-app-info.1.gz
-%dir %{_datadir}/hud-gtk/
-%{_datadir}/hud-gtk/hud-gtk.ui
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 13.01.0daily13.03.28-1
+- Version 13.01.0daily13.03.28
+
 * Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.4daily13.01.25-1
 - Version 12.10.4daily13.01.25
 
