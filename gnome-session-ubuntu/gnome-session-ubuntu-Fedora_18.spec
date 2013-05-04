@@ -2,7 +2,9 @@
 
 # Partially based off of Fedora 18's spec file
 
-%define _ubuntu_rel 0ubuntu3
+%define _translations 20130418
+
+%define _ubuntu_rel 0ubuntu6
 
 Name:		gnome-session
 Version:	3.6.2
@@ -14,7 +16,8 @@ License:	GPLv2+
 URL:		http://www.gnome.org/
 Source0:	http://download.gnome.org/sources/gnome-session/3.6/gnome-session-%{version}.tar.xz
 
-Source98:	55gnome-session_gnomerc
+Source97:	55gnome-session_gnomerc
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-gnome-session.tar.gz
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 Source1:	gnome-authentication-agent.desktop
@@ -112,6 +115,8 @@ tar zxvf '%{SOURCE99}'
     sed -i '/53_add_sessionmigration.patch/d' debian/patches/series
   # Part of Fedora's patches
     sed -i '/97_dont_blacklist_llvmpipe.patch/d' debian/patches/series
+  # ConsoleKit is deprecated
+    sed -i '/04_consolekit_init_upower.patch/d' debian/patches/series
 
 # Fix patches
   # Needed because 01_gnome-wm.patch is disabled
@@ -119,6 +124,16 @@ tar zxvf '%{SOURCE99}'
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
+done
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/gnome-session-3.0-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
 done
 
 autoreconf -vfi
@@ -151,7 +166,7 @@ desktop-file-validate \
 install -m755 debian/scripts/gnome-session-fallback $RPM_BUILD_ROOT%{_bindir}/
 
 install -dm755 $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
-install -m755 '%{SOURCE98}' $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
+install -m755 '%{SOURCE97}' $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/
 
 # /usr/lib/nux -> /usr/libexec
 sed -i 's,lib/nux,libexec,' \
@@ -221,6 +236,10 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-102.0ubuntu6
+- Version 3.6.2
+- Ubuntu release 0ubuntu6
+
 * Sat Feb 02 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.2-102.0ubuntu3
 - Make sure polkit-gnome-authentication-agent-1 does not start in GNOME Shell
 
