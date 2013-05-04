@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130419
+
 Name:		indicator-power
-Version:	12.10.6daily13.01.25
+Version:	12.10.6daily13.03.07
 Release:	1%{?dist}
 Summary:	Indicator to show the battery status
 
@@ -9,6 +11,8 @@ Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/indicator-power
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-power_%{version}.orig.tar.gz
+
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-indicator-power.tar.gz
 
 Patch0:		0001_Disable_-Werror.patch
 Patch1:		revert_r161.patch
@@ -42,6 +46,16 @@ hidden.
 %patch0 -p1
 %patch1 -p0
 
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
+
 autoreconf -vfi
 intltoolize -f
 
@@ -57,6 +71,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
+%find_lang indicator-power
+
 
 %postun
 if [ ${1} -eq 0 ]; then
@@ -68,7 +84,7 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
-%files
+%files -f indicator-power.lang
 %doc NEWS
 %dir %{_libdir}/indicators3/
 %dir %{_libdir}/indicators3/7/
@@ -77,6 +93,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.6daily13.03.07-1
+- Version 12.10.6daily13.03.07
+
 * Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.6daily13.01.25-1
 - Version 12.10.6daily13.01.25
 
