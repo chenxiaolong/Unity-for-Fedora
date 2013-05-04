@@ -1,9 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _unity_major_ver 6
+%define _translations 20130418
 
 Name:		unity-lens-video
-Version:	0.3.14daily12.12.05
+Version:	0.3.14daily13.04.15
 Release:	1%{?dist}
 Summary:	Unity video lens
 
@@ -11,27 +11,27 @@ Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/unity-lens-videos
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/unity-lens-video_%{version}.orig.tar.gz
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-unity-lens-video.tar.gz
 
-Patch0:		0001_Use_libexec.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	gnome-common
+BuildRequires:	vala-tools
 
-BuildRequires:	desktop-file-utils
-BuildRequires:	intltool
+BuildRequires:	pkgconfig(dee-1.0)
+BuildRequires:	pkgconfig(gee-1.0)
+BuildRequires:	pkgconfig(glib-2.0)
+BuildRequires:	pkgconfig(json-glib-1.0)
+BuildRequires:	pkgconfig(libsoup-gnome-2.4)
+BuildRequires:	pkgconfig(unity)
+BuildRequires:	pkgconfig(zeitgeist-1.0)
 
-BuildRequires:	python-distutils-extra
+# CheckRequires
+BuildRequires:	xorg-x11-server-Xvfb
 
-Requires:	pygobject3
-# For typelibs
-Requires:	dee
-Requires:	glib2
-Requires:	libunity
+Requires:	unity-lens-music
+Requires:	gvfs
 
-# For Python 2 zeitgeist bindings
-Requires:	zeitgeist
-
-# Why? (from debian/control)
-#Requires:	unity-lens-music
-
-BuildArch:	noarch
 
 %description
 This package contains the video lens which can be used for searching videos in
@@ -41,48 +41,55 @@ the dash of the Unity shell.
 %prep
 %setup -q
 
-%patch0 -p1 -b .use_libexec
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
 
-sed -i '/Icon/ s/^\(.*\)[0-9]\(.*\)/\1%{_unity_major_ver}\2/g' \
-  video.lens.in
-sed -i '/ThemedIcon/ s/^\(.*\)[0-9]\(.*\)/\1%{_unity_major_ver}\2/g' \
-  src/unity-lens-video
+autoreconf -vfi
+intltoolize -f
 
 
 %build
-%{__python} setup.py build
+%configure --enable-headless-tests
+
+
+%check
+make check
 
 
 %install
-%{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
 
-# Install video lens
-install -dm755 $RPM_BUILD_ROOT%{_datadir}/unity/lenses/video/
-install -m644 build/share/unity/lenses/video/video.lens \
-  $RPM_BUILD_ROOT%{_datadir}/unity/lenses/video/
-
-sed -i \
-  -e '/Encoding/d' \
-  -e '/Categories/ s/$/;/' \
-  $RPM_BUILD_ROOT%{_datadir}/applications/unity-lens-video.desktop
+#sed -i \
+#  -e '/Encoding/d' \
+#  -e '/Categories/ s/$/;/' \
+#  $RPM_BUILD_ROOT%{_datadir}/applications/unity-lens-video.desktop
 #desktop-file-validate \
 #  $RPM_BUILD_ROOT%{_datadir}/applications/unity-lens-video.desktop
 
+%find_lang unity-lens-video
 
-%files
+
+%files -f unity-lens-video.lang
 %doc COPYING
-%{python_sitelib}/unity_lens_video-*-py*.egg-info
-%{_libexecdir}/unity-lens-video
+%{_libexecdir}/unity-lens-video/
 %{_datadir}/dbus-1/services/unity-lens-video.service
-%{_datadir}/applications/unity-lens-video.desktop
-%{_datadir}/pixmaps/unity-lens-video.png
+%{_datadir}/dbus-1/services/unity-scope-video-remote.service
 %dir %{_datadir}/unity/
 %dir %{_datadir}/unity/lenses/
-%dir %{_datadir}/unity/lenses/video/
-%{_datadir}/unity/lenses/video/video.lens
+%{_datadir}/unity/lenses/video/
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.14daily13.04.15-1
+- Version 0.3.14daily13.04.15
+
 * Fri Feb 01 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.14daily12.12.05-1
 - Version 0.3.14daily12.12.05
 
