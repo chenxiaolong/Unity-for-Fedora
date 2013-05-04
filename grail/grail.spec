@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		grail
-Version:	3.0.9daily12.12.07.1
+Version:	3.1.0daily13.02.26
 Release:	1%{?dist}
 Summary:	Gesture Recognition And Instantiation Library
 
@@ -20,6 +20,7 @@ BuildRequires:	pkgconfig(frame)
 BuildRequires:	pkgconfig(mtdev)
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xfixes)
 BuildRequires:	pkgconfig(xi)
 
 BuildRequires:	xorg-x11-proto-devel
@@ -107,6 +108,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.1.0daily13.02.26-1
+- Version 3.1.0daily13.02.26
+
 * Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.0.9daily12.12.07.1-1
 - Version 3.0.9daily12.12.07.1
 
