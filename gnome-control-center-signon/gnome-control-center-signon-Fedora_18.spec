@@ -8,7 +8,7 @@
 # We'll use the same package names as Ubuntu (gnome-control-center-signon)
 
 Name:		gnome-control-center-signon
-Version:	0.1.2bzr12.12.05
+Version:	0.1.6bzr13.04.05
 Release:	1%{?dist}
 Summary:	GNOME Control Center extension for single signon
 
@@ -124,8 +124,11 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 %files -f web-credentials.lang
 %doc AUTHORS
+%{_bindir}/credentials-preferences
+%{_bindir}/online-accounts-preferences
 %{_libdir}/control-center-1/panels/libcredentials.so
 %{_libexecdir}/update-accounts
+%{_datadir}/applications/credentials-preferences.desktop
 %{_datadir}/applications/gnome-credentials-panel.desktop
 %{_datadir}/applications/update-accounts.desktop
 %{_datadir}/dbus-1/services/com.canonical.webcredentials.capture.service
@@ -151,6 +154,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.1.6bzr13.04.05-1
+- Version 0.1.6bzr13.04.05
+
 * Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.1.2bzr12.12.05-1
 - Version 0.1.2bzr12.12.05
 
