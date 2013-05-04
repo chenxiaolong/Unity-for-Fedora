@@ -5,7 +5,7 @@
 %filter_setup
 
 Name:		geis
-Version:	2.2.15daily12.12.10
+Version:	2.2.15daily13.04.03
 Release:	1%{?dist}
 Summary:	An implementation of the GEIS interface
 
@@ -152,10 +152,15 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 %{_datadir}/geisview/filter_list.ui
 %{_datadir}/geisview/geisview.ui
 %{_mandir}/man1/geistest.1.gz
+%{_mandir}/man1/geisview.1.gz
+%{_mandir}/man1/pygeis.1.gz
 %{_datadir}/pixmaps/geisview32x32.xpm
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.15daily13.04.03-1
+- Version 2.2.15daily13.04.03
+
 * Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.2.15daily12.12.10-1
 - Version 2.2.15daily12.12.10
 - Add build dependency for Python 3
