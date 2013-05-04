@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		unity-asset-pool
-Version:	0.8.24daily12.12.05
+Version:	0.8.24daily13.04.24
 Release:	1%{?dist}
 Summary:	Design assets for Unity
 
@@ -76,6 +76,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/unity-icon-theme/ &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.8.24daily13.04.24-1
+- Version 0.8.24daily13.04.24
+
 * Thu Jan 31 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.8.24daily12.12.05-1
 - Version 0.8.24daily12.12.05
 
