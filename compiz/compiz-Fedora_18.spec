@@ -10,11 +10,11 @@
 %define _gconf_schemas compiz-addhelper compiz-animation compiz-annotate compiz-bench compiz-ccp compiz-clone compiz-commands compiz-compiztoolbox compiz-composite compiz-copytex compiz-core compiz-crashhandler compiz-cube compiz-dbus compiz-decor compiz-expo compiz-extrawm compiz-ezoom compiz-fadedesktop compiz-fade compiz-firepaint compiz-gnomecompat compiz-grid compiz-imgjpeg compiz-imgpng compiz-imgsvg compiz-inotify compiz-kdecompat compiz-mag compiz-maximumize compiz-mblur compiz-mousepoll compiz-move compiz-neg compiz-notification compiz-obs compiz-opacify compiz-opengl compiz-place compiz-put compiz-regex compiz-resizeinfo compiz-resize compiz-ring compiz-rotate compiz-scaleaddon compiz-scalefilter compiz-scale compiz-screenshot compiz-session compiz-shelf compiz-shift compiz-showdesktop compiz-showmouse compiz-showrepaint compiz-snap compiz-splash compiz-staticswitcher compiz-switcher compiz-td compiz-text compiz-titleinfo compiz-trailfocus compiz-vpswitch compiz-wall compiz-water compiz-widget compiz-winrules compiz-wobbly compiz-workarounds compiz-workspacenames gwd
 
 %define _ubuntu_rel 0ubuntu1
-%define _compiz_abi 20121210
+%define _compiz_abi 20130125
 %define _disguised_as 0.9.9.0
 
 Name:		compiz
-Version:	0.9.9~daily13.01.25
+Version:	0.9.9~daily13.04.18.1~13.04
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	OpenGL compositing window manager
 
@@ -32,22 +32,25 @@ Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/compiz_%{version}
 # Do not hardcode /lib/ when setting PKG_CONFIG_PATH in FindCompiz.cmake
 Patch0:		0001_Fix_library_directory_F18.patch
 
+# Build fixes with GCC 4.8
+Patch1:		0001_GCC_4.8_Fixes.patch
+
 # Fix the directory for FindCompiz.cmake and FindCompizConfig.cmake
-Patch1:		0002_Fix_cmake_install_dir_F18.patch
+Patch2:		0002_Fix_cmake_install_dir_F18.patch
 
 # Compiz's build system appends --install-layout=deb to the python install
 # command (for python-compizconfig and ccsm) whether or not COMPIZ_DEB_BUILD is
 # set to 1
-Patch2:		0003_Fix_python_install_command.patch
+Patch3:		0003_Fix_python_install_command.patch
 
 # Install GSettings backend to libdir
-Patch3:		0004_Fix_gsettings_backend_libdir_F18.patch
+Patch4:		0004_Fix_gsettings_backend_libdir_F18.patch
 
 # Put profile conversion files in /usr/share instead of /usr/lib
-Patch4:		0005_Convert_files_libdir_to_datadir.patch
+Patch5:		0005_Convert_files_libdir_to_datadir.patch
 
 # Make sure everything is installed to the proper libdir
-Patch5:		0006_Fix_remaining_libdir_issues.patch
+Patch6:		0006_Fix_remaining_libdir_issues.patch
 
 BuildRequires:	cmake
 BuildRequires:	desktop-file-utils
@@ -219,11 +222,12 @@ its plugins' settings.
 %setup -q
 
 %patch0 -p1 -b .pkg_config_path
-%patch1 -p1 -b .cmake_install_dir
-%patch2 -p1 -b .py_install_command
-%patch3 -p1 -b .backend_libdir
-%patch4 -p1 -b .convert_files_datadir
-%patch5 -p1 -b .remaining_libdir
+%patch1 -p1 -b .gcc-4.8
+%patch2 -p1 -b .cmake_install_dir
+%patch3 -p1 -b .py_install_command
+%patch4 -p1 -b .backend_libdir
+%patch5 -p1 -b .convert_files_datadir
+%patch6 -p1 -b .remaining_libdir
 
 # Apply Ubuntu's patches
 zcat '%{SOURCE99}' | patch -Np1
@@ -457,6 +461,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_sysconfdir}/compizconfig/upgrades/
 %{_sysconfdir}/compizconfig/upgrades/com.canonical.unity.unity.01.upgrade
 %{_sysconfdir}/compizconfig/upgrades/com.canonical.unity.unity.02.upgrade
+%{_sysconfdir}/compizconfig/upgrades/com.canonical.unity.unity.03.upgrade
 %dir %{_datadir}/compiz/migration/
 %{_datadir}/compiz/migration/compiz-profile-Default.convert
 %{_datadir}/compiz/migration/compiz-profile-active-Default.convert
@@ -487,6 +492,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/glib-2.0/schemas/org.compiz.fade.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.fadedesktop.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.firepaint.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.compiz.gears.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.gnomecompat.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.grid.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.compiz.gwd.gschema.xml
@@ -569,6 +575,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/compiz/libfade.so
 %{_libdir}/compiz/libfadedesktop.so
 %{_libdir}/compiz/libfirepaint.so
+%{_libdir}/compiz/libgears.so
 %{_libdir}/compiz/libgnomecompat.so
 %{_libdir}/compiz/libgrid.so
 %{_libdir}/compiz/libimgjpeg.so
@@ -652,6 +659,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/compiz/fade.xml
 %{_datadir}/compiz/fadedesktop.xml
 %{_datadir}/compiz/firepaint.xml
+%{_datadir}/compiz/gears.xml
 %{_datadir}/compiz/gnomecompat.xml
 %{_datadir}/compiz/grid.xml
 %{_datadir}/compiz/icon.png
@@ -798,6 +806,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.9~daily13.04.18.1~13.04-1.0ubuntu1
+- Version 0.9.9~daily13.04.18.1~13.04
+- Ubuntu release 0ubuntu1
+
 * Fri Feb 01 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.9.9~daily13.01.25-1.0ubuntu1
 - Version 0.9.9~daily13.01.25
 - Ubuntu release 0ubuntu1

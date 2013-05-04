@@ -1,6 +1,5 @@
-diff -Nru compiz-0.9.8.2.orig/compizconfig/cmake/exec_setup_py_with_destdir.cmake compiz-0.9.8.2/compizconfig/cmake/exec_setup_py_with_destdir.cmake
---- compiz-0.9.8.2.orig/compizconfig/cmake/exec_setup_py_with_destdir.cmake	2012-09-14 09:12:02.570519812 -0400
-+++ compiz-0.9.8.2/compizconfig/cmake/exec_setup_py_with_destdir.cmake	2012-09-14 09:14:13.013261387 -0400
+--- a/compizconfig/cmake/exec_setup_py_with_destdir.cmake
++++ b/compizconfig/cmake/exec_setup_py_with_destdir.cmake
 @@ -4,7 +4,6 @@
  set (VERSION "" CACHE FORCE "Version")
  
