@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130419
+
 Name:		indicator-session
-Version:	12.10.5daily13.01.25
+Version:	12.10.5daily13.03.08
 Release:	1%{?dist}
 Summary:	Indicator for session management and status information
 
@@ -10,8 +12,13 @@ License:	GPLv3
 URL:		https://launchpad.net/indicator-session
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-session_%{version}.orig.tar.gz
 
-Patch1:		0002_There_is_no_help.patch
-Patch2:		revert_r382.patch
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-indicator-session.tar.gz
+
+Patch1:		0001_Lock_Screen_Live_CD_Detection.patch
+Patch2:		0002_There_is_no_help.patch
+Patch3:		0003_Link_Against_pthread.patch
+Patch4:		0004_Lock_Screen_Guest_Session_Detection.patch
+Patch5:		revert_r382.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -45,8 +52,22 @@ of the desktop to make them available and easy to use.
 %prep
 %setup -q
 
-%patch1 -p1 -b .nohelp
-%patch2 -p0
+%patch1 -p0
+%patch2 -p1
+%patch3 -p1
+# Arch Linux specific for now
+#patch4 -p1
+%patch5 -p0
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
 
 autoreconf -vfi
 intltoolize -f
@@ -98,6 +119,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.5daily13.03.08-1
+- Version 12.10.5daily13.03.08
+
 * Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.5daily13.01.25-1
 - Version 12.10.5daily13.01.25
 

@@ -1,6 +1,5 @@
-diff -Nru indicator-session-12.10.0.orig/src/session-menu-mgr.c indicator-session-12.10.0/src/session-menu-mgr.c
---- indicator-session-12.10.0.orig/src/session-menu-mgr.c	2012-08-14 01:43:57.250018022 -0400
-+++ indicator-session-12.10.0/src/session-menu-mgr.c	2012-08-14 01:48:59.151213002 -0400
+--- a/src/session-menu-mgr.c
++++ b/src/session-menu-mgr.c
 @@ -380,10 +380,10 @@
      g_signal_connect_swapped (mi, DBUSMENU_MENUITEM_SIGNAL_ITEM_ACTIVATED,
                                G_CALLBACK(action_func_spawn_async), CMD_INFO);
