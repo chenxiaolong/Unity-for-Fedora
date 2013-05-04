@@ -2,7 +2,9 @@
 
 # Based off of Fedora 18's spec file
 
-%define _ubuntu_rel 0ubuntu5
+%define _translations 20130418
+
+%define _ubuntu_rel 0ubuntu16
 
 Name:		nautilus
 Version:	3.6.3
@@ -13,6 +15,7 @@ Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://projects.gnome.org/nautilus/
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/nautilus/3.6/nautilus-%{version}.tar.xz
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-nautilus.tar.gz
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/nautilus_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 BuildRequires:	autoconf
@@ -98,9 +101,21 @@ tar zxvf '%{SOURCE99}'
     sed -i '/15_use-ubuntu-help.patch/d' debian/patches/series
   # Do not hide nautilus from the startup applications tool
     sed -i '/08_clean_session_capplet.patch/d' debian/patches/series
+  # Enable for Fedora 19
+    sed -i '/git_restore_from_missing_directories.patch/d' debian/patches/series
 
 for i in $(grep -v '#' debian/patches/series); do
   patch -Np1 -i "debian/patches/${i}"
+done
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
 done
 
 autoreconf -vfi
@@ -220,6 +235,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &>/dev/null || :
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu16
+- Version 3.6.3
+- Ubuntu release 0ubuntu16
+
 * Thu Jan 31 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.3-100.0ubuntu5
 - Version 3.6.3
 - Ubuntu release 0ubuntu5
