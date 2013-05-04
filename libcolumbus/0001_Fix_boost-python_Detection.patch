@@ -1,0 +1,11 @@
+--- a/cmake/python.cmake
++++ b/cmake/python.cmake
+@@ -23,7 +23,7 @@
+     # Linking against libboost_python does not work with Python 3.
+     # Working around this bug:
+     # http://public.kitware.com/Bug/view.php?id=12955
+-    find_library(BOOST_PYTHON_HACK boost_python-py${PYTHON_MAJOR}${PYTHON_MINOR})
++    find_library(BOOST_PYTHON_HACK boost_python${PYTHON_MAJOR})
+     if(NOT BOOST_PYTHON_HACK)
+       message(STATUS "Boost.Python hack library not found, not building Python bindings")
+     else()
