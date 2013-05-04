@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130418
+
 Name:		indicator-applet
-Version:	12.10.1
+Version:	12.10.2daily13.03.01
 Release:	1%{?dist}
 Summary:	Small applet for GNOME panel to display appindicators
 
@@ -10,6 +12,10 @@ License:	GPLv3 and LGPLv2 and LGPLv3
 URL:		https://launchpad.net/indicator-applet
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-applet_%{version}.orig.tar.gz
 
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-indicator-applet.tar.gz
+
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	gettext
 BuildRequires:	gnome-doc-utils
 BuildRequires:	gtk-doc
@@ -30,6 +36,19 @@ appindicators.
 
 %prep
 %setup -q
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
+
+autoreconf -vfi
+intltoolize -f
 
 
 %build
@@ -74,6 +93,9 @@ gtk-update-icon-cache -f %{_datadir}/icons/hicolor/ &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2daily13.03.01-1
+- Version 12.10.2daily13.03.01
+
 * Thu Sep 20 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.1-1
 - Version 12.10.1
 
