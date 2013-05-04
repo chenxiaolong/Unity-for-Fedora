@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		signon-plugin-oauth2
-Version:	0.14
+Version:	0.17
 Release:	1%{?dist}
 Summary:	Oauth2 plugin for the Single Sign On Framework
 
@@ -73,6 +73,9 @@ rm -v $RPM_BUILD_ROOT%{_sysconfdir}/signon-ui/webkit-options.d/*
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.17-1
+- Version 0.17
+
 * Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.14-1
 - Version 0.14
 
