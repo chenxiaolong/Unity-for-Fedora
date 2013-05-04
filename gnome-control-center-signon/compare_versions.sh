@@ -2,8 +2,6 @@
 
 source "$(dirname ${0})/../version_checker.sh"
 
-SPECFILE=gnome-control-center-signon-Fedora_17.spec
-echo -e "F17 spec version: $(get_spec_version)"
 SPECFILE=gnome-control-center-signon-Fedora_18.spec
 echo -e "F18 spec version: $(get_spec_version)"
 echo -e "Upstream version: $(get_launchpad_version online-accounts-gnome-control-center credentials-control-center)"
