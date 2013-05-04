@@ -55,7 +55,7 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %files
-%doc AUTHORS ChangeLog README
+%doc README
 %dir %{_libdir}/indicators3/
 %dir %{_libdir}/indicators3/7/
 %{_libdir}/indicators3/7/libapplication.so
