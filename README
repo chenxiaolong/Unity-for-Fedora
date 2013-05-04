@@ -64,7 +64,6 @@ Build order:
 60: python3-distutils-extra        -> Enhancements to Python's distutils
 61: unity-lens-photos              -> Unity photos lens
 62: unity-lens-video               -> Unity video lens
-63: unity-scope-video-remote       -> Remote video search for Unity video lens
-64: unity-scope-gdocs              -> Google Docs scope for Unity
-65: compiz                         -> Compiz core components
-66: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+63: unity-scope-gdocs              -> Google Docs scope for Unity
+64: compiz                         -> Compiz core components
+65: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
