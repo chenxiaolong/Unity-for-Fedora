@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		frame
-Version:	2.5.0daily12.12.13
+Version:	2.5.0daily13.03.12
 Release:	1%{?dist}
 Summary:	Open Input Framework Frame Library
 
@@ -99,6 +99,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.5.0daily13.03.12-1
+- Version 2.5.0daily13.03.12
+
 * Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 2.5.0daily12.12.13-1
 - Version 2.5.0daily12.12.13
 
