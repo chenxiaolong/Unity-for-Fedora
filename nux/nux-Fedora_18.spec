@@ -3,7 +3,7 @@
 %define _major_ver 4
 
 Name:		nux
-Version:	4.0.0daily13.01.25
+Version:	4.0.1daily13.04.17~13.04
 Release:	1%{?dist}
 # Summary from Ubuntu
 Summary:	Visual rendering toolkit for real-time applications
@@ -192,6 +192,9 @@ find $RPM_BUILD_ROOT -type f -empty -delete
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.0.1daily13.04.17~13.04-1
+- Version 4.0.1daily13.04.17~13.04
+
 * Wed Jan 30 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 4.0.0daily13.01.25-1
 - Version 4.0.0daily13.01.25
 - Drop X11 startup file
