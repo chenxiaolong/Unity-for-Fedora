@@ -2,8 +2,6 @@
 
 source "$(dirname ${0})/../version_checker.sh"
 
-SPECFILE=unity-asset-pool-Fedora_17.spec
-echo -e "F17 spec version: $(get_spec_version)"
 SPECFILE=unity-asset-pool-Fedora_18.spec
 echo -e "F18 spec version: $(get_spec_version)"
 echo -e "Upstream version: $(get_launchpad_version unity-asset-pool)"
