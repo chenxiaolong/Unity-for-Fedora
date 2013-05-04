@@ -2,8 +2,10 @@
 
 # Based off of Damian's spec file
 
+%define _translations 20130418
+
 Name:		indicator-sound
-Version:	12.10.2daily12.11.21.1
+Version:	12.10.2daily13.04.12
 Release:	1%{?dist}
 Summary:	Indicator for displaying a unified sound menu
 
@@ -12,8 +14,11 @@ License:	GPLv3
 URL:		https://launchpad.net/indicator-sound
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-sound_%{version}.orig.tar.gz
 
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-indicator-sound.tar.gz
+
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	intltool
 BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
 
@@ -40,6 +45,16 @@ players (ex: Banshee).
 %prep
 %setup -q
 
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
+
 autoreconf -vfi
 intltoolize -f
 
@@ -56,6 +71,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # Remove libtool files
 find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
+%find_lang indicator-sound
+
 
 %postun
 if [ ${1} -eq 0 ]; then
@@ -66,7 +83,7 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
-%files
+%files -f indicator-sound.lang
 %doc AUTHORS
 %dir %{_libdir}/indicators3/
 %dir %{_libdir}/indicators3/7/
@@ -79,6 +96,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2daily13.04.12-1
+- Version 12.10.2daily13.04.12
+
 * Mon Nov 26 2012 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.2daily12.11.21.1-1
 - Version 12.10.2
 - Ubuntu daily build from 2012-11-21
