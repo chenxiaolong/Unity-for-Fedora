@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130418
+
 Name:		unity-lens-files
-Version:	6.6.0daily12.12.05
+Version:	7.0~daily13.04.15
 Release:	1%{?dist}
 Summary:	Unity files lens
 
@@ -9,6 +11,7 @@ Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/unity-lens-files
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/unity-lens-files_%{version}.orig.tar.gz
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-unity-lens-files.tar.gz
 
 Patch0:		0001_unity-protocol-private.patch
 
@@ -34,6 +37,16 @@ documents and other files.
 %setup -q
 
 %patch0 -p1 -b unity-protocol-private
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
 
 autoreconf -vfi
 intltoolize -f
@@ -74,6 +87,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 7.0~daily13.04.15-1
+- Version 7.0~daily13.04.15
+
 * Fri Feb 01 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.6.0daily12.12.05-1
 - Version 6.6.0daily12.12.05
 
