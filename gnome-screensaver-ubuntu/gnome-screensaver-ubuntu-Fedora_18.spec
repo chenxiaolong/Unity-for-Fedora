@@ -2,7 +2,9 @@
 
 # Based off of the Fedora 18 spec file
 
-%define _ubuntu_rel 0ubuntu2
+%define _translations 20130418
+
+%define _ubuntu_rel 0ubuntu3
 
 Name:		gnome-screensaver
 Version:	3.6.1
@@ -14,6 +16,7 @@ License:	GPLv2+
 URL:		http://www.gnome.org
 Source0:	http://download.gnome.org/sources/gnome-screensaver/3.6/gnome-screensaver-%{version}.tar.xz
 
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-gnome-screensaver.tar.gz
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-screensaver_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 Patch0:		gnome-screensaver-2.20.0-selinux-permit.patch
@@ -68,7 +71,17 @@ secure defaults and be well integrated with the desktop.
 # Apply Ubuntu's patches
 tar zxvf '%{SOURCE99}'
 for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
+  patch -p1 -i "debian/patches/${i}"
+done
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
 done
 
 autoreconf -vfi
@@ -98,7 +111,11 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu2
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.0ubuntu3
+- Version 3.6.1
+- Ubuntu release 0ubuntu3
+
+* Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.1-100.0ubuntu2
 - Version 3.6.1
 - Ubuntu release 0ubuntu2
 
