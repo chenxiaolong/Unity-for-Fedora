@@ -3,7 +3,7 @@
 %define _ubuntu_rel 0ubuntu1
 
 Name:		python-oauthlib
-Version:	0.3.5
+Version:	0.3.7
 Release:	1.%{_ubuntu_rel}%{?dist}
 Summary:	A Python implementation of the OAuth request-signing logic
 
@@ -81,6 +81,10 @@ done
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.7-1.0ubuntu1
+- Version 0.3.7
+- Ubuntu release 0ubuntu1
+
 * Thu Jan 31 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 0.3.5-1.0ubuntu1
 - Version 0.3.5
 - Ubuntu release 0ubuntu1
