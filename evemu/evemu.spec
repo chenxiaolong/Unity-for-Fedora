@@ -1,7 +1,7 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
 Name:		evemu
-Version:	1.0.11daily12.11.29.1
+Version:	1.0.11daily13.02.20
 Release:	1%{?dist}
 Summary:	Linux Evdev Event Emulation Library
 
@@ -110,6 +110,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.11daily13.02.20-1
+- Version 1.0.11daily13.02.20
+
 * Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.0.11daily12.11.29.1-1
 - Version 1.0.11daily12.11.29.1
 
