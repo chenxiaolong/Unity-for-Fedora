@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130418
+
 Name:		unity-lens-music
-Version:	6.8.1daily13.01.11
+Version:	6.8.1daily13.04.18~13.04
 Release:	1%{?dist}
 Summary:	Unity music lens
 
@@ -9,9 +11,11 @@ Group:		User Interface/Desktops
 License:	GPLv3
 URL:		https://launchpad.net/unity-lens-music
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/unity-lens-music_%{version}.orig.tar.gz
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-unity-lens-music.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	intltool
 BuildRequires:	pkgconfig
 BuildRequires:	vala-tools
 
@@ -34,6 +38,16 @@ This package contains the music lens which can be used to browse media files.
 %prep
 %setup -q
 
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
+
 autoreconf -vfi
 intltoolize -f
 
@@ -46,9 +60,11 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
+%find_lang unity-lens-music
 
-%files
-%doc AUTHORS ChangeLog
+
+%files -f unity-lens-music.lang
+%doc AUTHORS
 %dir %{_libexecdir}/unity-lens-music/
 %{_libexecdir}/unity-lens-music/music-preview-player
 %{_libexecdir}/unity-lens-music/unity-music-daemon
@@ -64,6 +80,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 04 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.8.1daily13.04.18~13.04-1
+- Version 6.8.1daily13.04.18~13.04
+
 * Fri Feb 01 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 6.8.1daily13.01.11-1
 - Version 6.8.1daily13.01.11
 - Build dep on GStreamer 1.0
