@@ -2,9 +2,6 @@
 
 source "$(dirname ${0})/../version_checker.sh"
 
-SPECFILE=libXfixes-ubuntu-Fedora_17.spec
-echo -e "F17 spec version:   $(get_spec_version) $(get_spec_release --ubuntu)"
-echo -e "F18 Fedora version: $(get_fedora_version libXfixes 17)"
 SPECFILE=libXfixes-ubuntu-Fedora_18.spec
 echo -e "F18 spec version:   $(get_spec_version) $(get_spec_release --ubuntu)"
 echo -e "F18 Fedora version: $(get_fedora_version libXfixes 18)"
