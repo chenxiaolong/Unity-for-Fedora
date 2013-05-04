@@ -13,7 +13,7 @@
 %global extension_minor 0
 
 Name:		xorg-x11-server
-Version:	1.13.2
+Version:	1.13.3
 Release:	100%{?dist}
 Summary:	X.Org X11 X server
 
@@ -46,9 +46,9 @@ Patch15:	fedora_0001-xf86crtc-don-t-use-display-for-vx-vy-for-gpu-screens.patch
 Patch16:	fedora_0001-dix-allow-pixmap-dirty-helper-to-be-used-for-non-sha.patch
 Patch17:	fedora_0001-xserver-call-CSR-for-gpus.patch
 Patch18:	fedora_0001-xf86-actually-set-the-compat-output-in-the-failure-c.patch
-Patch19:	fedora_0001-randr-cleanup-provider-properly.patch
-Patch20:	fedora_0001-autoconfig-fixup-tell-changed-so-randr-clients-can-t.patch
-Patch21:	fedora_0001-dmx-don-t-include-dmx-config.h-from-xdmxconfig-37502.patch
+Patch19:	fedora_0001-autoconfig-fixup-tell-changed-so-randr-clients-can-t.patch
+Patch20:	fedora_0001-os-use-libunwind-to-generate-backtraces.patch
+Patch21:	fedora_0001-xf86-fix-flush-input-to-work-with-Linux-evdev-device.patch
 # From Ubuntu's packaging version 1.13.0 and release 0ubuntu4
 #Patch90:	500_pointer_barrier_thresholds.diff
 Source90:	500_pointer_barrier_thresholds.diff
@@ -95,6 +95,11 @@ BuildRequires:	pkgconfig(xv)
 BuildRequires:	audit-libs-devel
 BuildRequires:	systemtap-sdt-devel
 BuildRequires:	xorg-x11-proto-ubuntu-devel
+# libunwind is Exclusive for the following arches
+%ifarch %{arm} hppa ia64 mips ppc ppc64 %{ix86} x86_64
+# pre-1.0.1-5 is missing pkg-config
+BuildRequires:	libunwind-devel >= 1.0.1-5
+%endif
 
 %description
 X.Org X11 X server
@@ -487,6 +492,15 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.3-100
+- Version 1.13.3
+- Merge Fedora's changes:
+  - 1.13.2-4: Fix scrolling for Evoluent Vertical Mouse 3 (#612140#c20)
+  - 1.13.2.902-2: use libunwind for backtraces
+  - 1.13.3-2: libunwind is exists only on selected arches
+  - 1.13.3-3: CVE-2013-1940: Fix xf86FlushInput() to drain evdev events
+              (#950438, #952949)
+
 * Tue Jan 29 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.13.2-100
 - Version 1.13.2
 - Merge Fedora's changes:
