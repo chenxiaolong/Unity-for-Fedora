@@ -4,7 +4,7 @@
 
 %define _translations 20130418
 
-%define _ubuntu_rel 0ubuntu8
+%define _ubuntu_rel 0ubuntu9
 
 Name:		gnome-settings-daemon
 Version:	3.6.4
@@ -333,6 +333,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu9
+- Version 3.6.4
+- Ubuntu release 0ubuntu9
+
 * Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu8
 - Version 3.6.4
 - Ubuntu release 0ubuntu8
