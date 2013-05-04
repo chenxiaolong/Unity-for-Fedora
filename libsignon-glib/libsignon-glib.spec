@@ -1,18 +1,14 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
-%define _ubuntu_rel 0ubuntu1
-
 Name:		libsignon-glib
-Version:	1.8
-Release:	1.%{_ubuntu_rel}%{?dist}
+Version:	1.9
+Release:	1%{?dist}
 Summary:	Authentication management library for GLib applications
 
 Group:		System Environment/Libraries
 License:	LGPLv2
 URL:		https://code.google.com/p/accounts-sso/
 Source0:	https://accounts-sso.googlecode.com/files/libsignon-glib-%{version}.tar.gz
-
-Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/libsignon-glib_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -60,13 +56,6 @@ This package contains the documentation for the signon-glib library.
 
 %prep
 %setup -q
-
-# Apply Ubuntu's patches
-tar zxvf '%{SOURCE99}'
-
-for i in $(grep -v '#' debian/patches/series); do
-  patch -Np1 -i "debian/patches/${i}"
-done
 
 autoreconf -vfi
 
@@ -127,6 +116,9 @@ find $RPM_BUILD_ROOT -type f -name '*.la' -delete
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.9-1
+- Version 1.9
+
 * Sun Jan 27 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 1.8-1.0ubuntu1
 - Version 1.8
 
