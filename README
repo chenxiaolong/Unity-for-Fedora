@@ -55,16 +55,15 @@ Build order:
 51: grail                          -> Gesture recognition and instantiation lib.
 52: geis                           -> Implementation of the GEIS interface
 53: nux                            -> An OpenGL toolkit
-54: gnome-menus301                 -> GNOME menu specifications
-55: nautilus-ubuntu                -> File manager and graphics shell for GNOME
-56: python-oauthlib                -> Python implementation of OAuth
-57: unity-lens-applications        -> Unity applications lens
-58: unity-lens-files               -> Unity files lens
-59: unity-lens-music               -> Unity music lens
-60: unity-lens-photos              -> Unity photos lens
-61: unity-lens-video               -> Unity video lens
-62: unity-scope-video-remote       -> Remote video search for Unity video lens
-63: python3-distutils-extra        -> Enhancements to Python's distutils
-64: unity-scope-gdocs              -> Google Docs scope for Unity
-65: compiz                         -> Compiz core components
-66: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
+54: nautilus-ubuntu                -> File manager and graphics shell for GNOME
+55: python-oauthlib                -> Python implementation of OAuth
+56: unity-lens-applications        -> Unity applications lens
+57: unity-lens-files               -> Unity files lens
+58: unity-lens-music               -> Unity music lens
+59: unity-lens-photos              -> Unity photos lens
+60: unity-lens-video               -> Unity video lens
+61: unity-scope-video-remote       -> Remote video search for Unity video lens
+62: python3-distutils-extra        -> Enhancements to Python's distutils
+63: unity-scope-gdocs              -> Google Docs scope for Unity
+64: compiz                         -> Compiz core components
+65: unity                          -> Ubuntu's desktop shell (Ubuntu 12.10 ver)
