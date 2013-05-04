@@ -2,7 +2,9 @@
 
 # Partially based off of the Fedora 18 spec
 
-%define _ubuntu_rel 0ubuntu1
+%define _translations 20130418
+
+%define _ubuntu_rel 0ubuntu8
 
 Name:		gnome-settings-daemon
 Version:	3.6.4
@@ -14,6 +16,7 @@ License:	GPLv2+
 URL:		http://download.gnome.org/sources/gnome-settings-daemon
 Source0:	http://download.gnome.org/sources/gnome-settings-daemon/3.6/gnome-settings-daemon-%{version}.tar.xz
 
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-gnome-settings-daemon.tar.gz
 Source99:	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_%{version}-%{_ubuntu_rel}.debian.tar.gz
 
 # Fedora's patches
@@ -129,6 +132,16 @@ done
 %patch2 -p1
 %patch3 -p1 -b .wacom-osd-window
 %patch4 -p1
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
 
 autoreconf -vfi
 
@@ -320,6 +333,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas/ &> /dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu8
+- Version 3.6.4
+- Ubuntu release 0ubuntu8
+
 * Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 3.6.4-100.0ubuntu1
 - Version 3.6.4
 - Ubuntu release 0ubuntu1
