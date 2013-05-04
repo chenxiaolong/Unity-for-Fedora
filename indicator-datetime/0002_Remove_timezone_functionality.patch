@@ -1,6 +1,5 @@
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/configure.ac indicator-datetime-12.10.3daily12.11.23/configure.ac
---- indicator-datetime-12.10.3daily12.11.23.orig/configure.ac	2013-01-07 18:51:44.749541649 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/configure.ac	2013-01-07 18:53:07.129112325 -0500
+--- a/configure.ac
++++ b/configure.ac
 @@ -52,7 +52,6 @@
  DBUSMENUGTK_REQUIRED_VERSION=0.5.90
  GIO_REQUIRED_VERSION=2.25.11
@@ -34,9 +33,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/configure.ac indicator-da
     fi
     if test x${with_ccpanel} = xyes && test x${have_ccpanel} = xno; then
       AC_MSG_ERROR([Control Center panel configured but not found])
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/data/com.canonical.indicator.datetime.gschema.xml indicator-datetime-12.10.3daily12.11.23/data/com.canonical.indicator.datetime.gschema.xml
---- indicator-datetime-12.10.3daily12.11.23.orig/data/com.canonical.indicator.datetime.gschema.xml	2013-01-07 18:52:21.219350731 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/data/com.canonical.indicator.datetime.gschema.xml	2013-01-07 18:53:29.092331627 -0500
+--- a/data/com.canonical.indicator.datetime.gschema.xml
++++ b/data/com.canonical.indicator.datetime.gschema.xml
 @@ -85,34 +85,5 @@
  			  Shows events from Evolution in indicator-datetime's menu.
  			</description>
@@ -72,9 +70,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/data/com.canonical.indica
 -		</key>
  	</schema>
  </schemalist>
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/data/datetime-dialog.ui indicator-datetime-12.10.3daily12.11.23/data/datetime-dialog.ui
---- indicator-datetime-12.10.3daily12.11.23.orig/data/datetime-dialog.ui	2013-01-07 18:51:44.752874965 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/data/datetime-dialog.ui	2013-01-07 18:53:50.692219948 -0500
+--- a/data/datetime-dialog.ui
++++ b/data/datetime-dialog.ui
 @@ -7,152 +7,6 @@
      <property name="step_increment">86400</property>
      <property name="page_increment">864000</property>
@@ -346,7 +343,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/data/datetime-dialog.ui i
 -                          <object class="GtkRadioButton" id="automaticTimeRadio">
 -                            <property name="label" translatable="yes">_Automatically from the Internet</property>
 -                            <property name="visible">True</property>
--                            <property name="sensitive">False</property>
+-                            <property name="sensitive">True</property>
 -                            <property name="can_focus">True</property>
 -                            <property name="receives_default">False</property>
 -                            <property name="use_action_appearance">False</property>
@@ -595,9 +592,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/data/datetime-dialog.ui i
 -    </widgets>
 -  </object>
  </interface>
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/po/POTFILES.in indicator-datetime-12.10.3daily12.11.23/po/POTFILES.in
---- indicator-datetime-12.10.3daily12.11.23.orig/po/POTFILES.in	2013-01-07 18:51:44.749541649 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/po/POTFILES.in	2013-01-07 18:54:04.862146422 -0500
+--- a/po/POTFILES.in
++++ b/po/POTFILES.in
 @@ -1,7 +1,6 @@
  src/indicator-datetime.c
  src/datetime-service.c
@@ -606,9 +602,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/po/POTFILES.in indicator-
  src/utils.c
  src/settings-shared.h
  [type: gettext/glade]data/datetime-dialog.ui
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indicator-datetime-12.10.3daily12.11.23/src/datetime-prefs.c
---- indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c	2013-01-07 18:51:44.746208333 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/datetime-prefs.c	2013-01-07 19:03:39.925831282 -0500
+--- a/src/datetime-prefs.c
++++ b/src/datetime-prefs.c
 @@ -7,6 +7,7 @@
  Authors:
      Ted Gould <ted@canonical.com>
@@ -633,7 +628,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
  
  #define DATETIME_DIALOG_UI_FILE PKGDATADIR "/datetime-dialog.ui"
  
-@@ -59,19 +55,6 @@
+@@ -59,17 +55,6 @@
  struct _IndicatorDatetimePanelPrivate
  {
    GtkBuilder *         builder;
@@ -648,12 +643,10 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -  gboolean             changing_time;
 -  GtkWidget *          loc_dlg;
 -  CcTimezoneCompletion * completion;
--  GCancellable         * tz_query_cancel;
--  GCancellable         * ntp_query_cancel;
  };
  
  struct _IndicatorDatetimePanelClass
-@@ -141,526 +124,6 @@
+@@ -139,503 +124,6 @@
  }
  
  static void
@@ -709,7 +702,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -  GVariant * answers = g_dbus_proxy_call_finish (G_DBUS_PROXY (object), res, &error);
 -
 -  if (error != NULL) {
--    g_warning("Could not set '%s' for SettingsDaemon: %s", (gchar *)command, error->message);
+-    g_warning("Could not set '%s' using timedated: %s", (gchar *)command, error->message);
 -    g_error_free(error);
 -    return;
 -  }
@@ -722,33 +715,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -{
 -  gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (radio));
 -
--  g_dbus_proxy_call (self->priv->proxy, "SetUsingNtp", g_variant_new ("(b)", active),
--                     G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "using_ntp");
--}
--
--static void
--ntp_query_answered (GObject *object, GAsyncResult *res, IndicatorDatetimePanel * self)
--{
--  GError * error = NULL;
--  GVariant * answers = g_dbus_proxy_call_finish (G_DBUS_PROXY (object), res, &error);
--
--  g_clear_object (&self->priv->ntp_query_cancel);
--
--  if (error != NULL) {
--    g_warning("Could not query DBus proxy for SettingsDaemon: %s", error->message);
--    g_error_free(error);
--    return;
--  }
--
--  gboolean can_use_ntp, is_using_ntp;
--  g_variant_get (answers, "(bb)", &can_use_ntp, &is_using_ntp);
--
--  gtk_widget_set_sensitive (GTK_WIDGET (self->priv->auto_radio), can_use_ntp);
--  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->priv->auto_radio), is_using_ntp);
--
--  g_signal_connect (self->priv->auto_radio, "notify::active", G_CALLBACK (toggle_ntp), self);
--
--  g_variant_unref (answers);
+-  g_dbus_proxy_call (self->priv->proxy, "SetNTP", g_variant_new ("(bb)", active, TRUE),
+-                     G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "NTP");
 -}
 -
 -static void
@@ -771,7 +739,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -  gchar * zone;
 -  g_object_get (location, "zone", &zone, NULL);
 -
--  g_dbus_proxy_call (self->priv->proxy, "SetTimezone", g_variant_new ("(s)", zone),
+-  g_dbus_proxy_call (self->priv->proxy, "SetTimezone", g_variant_new ("(sb)", zone, TRUE),
 -                     G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "timezone");
 -
 -  sync_entry (self, zone);
@@ -780,55 +748,53 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -}
 -
 -static void
--tz_query_answered (GObject *object, GAsyncResult *res, IndicatorDatetimePanel * self)
--{
--  GError * error = NULL;
--  GVariant * answers = g_dbus_proxy_call_finish (G_DBUS_PROXY (object), res, &error);
--
--  g_clear_object (&self->priv->tz_query_cancel);
--
--  if (error != NULL) {
--    g_warning("Could not query DBus proxy for SettingsDaemon: %s", error->message);
--    g_error_free(error);
--    return;
--  }
--
--  const gchar * timezone;
--  g_variant_get (answers, "(&s)", &timezone);
--
--  cc_timezone_map_set_timezone (self->priv->tzmap, timezone);
--
--  sync_entry (self, timezone);
--  g_signal_connect (self->priv->tzmap, "location-changed", G_CALLBACK (tz_changed), self);
--
--  g_variant_unref (answers);
--}
--
--static void
 -proxy_ready (GObject *object, GAsyncResult *res, IndicatorDatetimePanel * self)
 -{
 -  GError * error = NULL;
 -  IndicatorDatetimePanelPrivate * priv = self->priv;
+-  GVariant *value;
 -
 -  self->priv->proxy = g_dbus_proxy_new_for_bus_finish (res, &error);
 -
 -  if (error != NULL) {
--    g_critical("Could not grab DBus proxy for SettingsDaemon: %s", error->message);
+-    g_critical("Could not grab DBus proxy for timedated: %s", error->message);
 -    g_error_free(error);
 -    return;
 -  }
 -
 -  /* And now, do initial proxy configuration */
--  if (priv->ntp_query_cancel == NULL) {
--    priv->ntp_query_cancel = g_cancellable_new();
--    g_dbus_proxy_call (priv->proxy, "GetUsingNtp", NULL, G_DBUS_CALL_FLAGS_NONE, -1,
--                       priv->ntp_query_cancel, (GAsyncReadyCallback)ntp_query_answered, self);
--  }
--  if (priv->tz_query_cancel == NULL) {
--    priv->tz_query_cancel = g_cancellable_new();
--    g_dbus_proxy_call (priv->proxy, "GetTimezone", NULL, G_DBUS_CALL_FLAGS_NONE, -1,
--                       priv->tz_query_cancel, (GAsyncReadyCallback)tz_query_answered, self);
--  }
+-  value = g_dbus_proxy_get_cached_property (priv->proxy, "CanNTP");
+-  if (value != NULL)
+-    {
+-      if (g_variant_is_of_type (value, G_VARIANT_TYPE_BOOLEAN))
+-        gtk_widget_set_sensitive (priv->auto_radio, g_variant_get_boolean (value));
+-      g_variant_unref (value);
+-    }
+-
+-  value = g_dbus_proxy_get_cached_property (priv->proxy, "NTP");
+-  if (value != NULL)
+-    {
+-      if (g_variant_is_of_type (value, G_VARIANT_TYPE_BOOLEAN))
+-        {
+-          gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->auto_radio), g_variant_get_boolean (value));
+-          g_signal_connect (priv->auto_radio, "notify::active", G_CALLBACK (toggle_ntp), self);
+-        }
+-      g_variant_unref (value);
+-    }
+-
+-  value = g_dbus_proxy_get_cached_property (priv->proxy, "Timezone");
+-  if (value != NULL)
+-    {
+-      if (g_variant_is_of_type (value, G_VARIANT_TYPE_STRING))
+-        {
+-          const gchar *timezone = g_variant_get_string (value, NULL);
+-
+-          cc_timezone_map_set_timezone (priv->tzmap, timezone);
+-          sync_entry (self, timezone);
+-          g_signal_connect (priv->tzmap, "location-changed", G_CALLBACK (tz_changed), self);
+-        }
+-      g_variant_unref (value);
+-    }
 -}
 -
 -static void
@@ -875,7 +841,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -{
 -  if (self->priv->user_edited_time) {
 -    gdouble current_value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (self->priv->date_spin));
--    g_dbus_proxy_call (self->priv->proxy, "SetTime", g_variant_new ("(x)", (guint64)current_value),
+-    g_dbus_proxy_call (self->priv->proxy, "SetTime",
+-                       g_variant_new ("(xbb)", (gint64) (current_value * G_TIME_SPAN_SECOND), FALSE, TRUE),
 -                       G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "time");
 -  }
 -  self->priv->user_edited_time = FALSE;
@@ -1014,7 +981,10 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -    }
 -  }
 -  else {
--    format = "%x";
+-    // This is intentionally not "%x".  See https://launchpad.net/bugs/1149696
+-    // If you are willing to do the hard work of writing a locale-sensitive
+-    // date parser, there is an open bug: https://launchpad.net/bugs/729056
+-    format = "%Y-%m-%d";
 -  }
 -
 -  GDateTime * datetime = g_date_time_new_from_unix_local (gtk_spin_button_get_value (GTK_SPIN_BUTTON (spinner)));
@@ -1180,7 +1150,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
  indicator_datetime_panel_init (IndicatorDatetimePanel * self)
  {
    self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-@@ -683,31 +146,6 @@
+@@ -658,31 +146,6 @@
  
  #define WIG(name) GTK_WIDGET (gtk_builder_get_object (self->priv->builder, name))
  
@@ -1194,7 +1164,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -  gtk_container_add (GTK_CONTAINER (alignment), polkit_button);
 -  gtk_box_pack_start (GTK_BOX (WIG ("timeDateBox")), alignment, FALSE, TRUE, 0);
 -
--  const gchar * polkit_name = "org.gnome.settingsdaemon.datetimemechanism.configure";
+-  const gchar * polkit_name = "org.gnome.controlcenter.datetime.configure";
 -  polkit_permission_new (polkit_name, NULL, NULL, polkit_perm_ready, polkit_button);
 -
 -  /* Add map */
@@ -1212,7 +1182,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
    /* Set up settings bindings */
    g_settings_bind (conf, SETTINGS_SHOW_CLOCK_S, WIG ("showClockCheck"),
                     "active", G_SETTINGS_BIND_DEFAULT);
-@@ -733,47 +171,17 @@
+@@ -708,47 +171,17 @@
                     "active", G_SETTINGS_BIND_DEFAULT);
    g_settings_bind (conf, SETTINGS_SHOW_EVENTS_S, WIG ("showEventsCheck"),
                     "active", G_SETTINGS_BIND_DEFAULT);
@@ -1243,9 +1213,9 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
 -
 -  /* Grab proxy for settings daemon */
 -  g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM, G_DBUS_PROXY_FLAGS_NONE, NULL,
--                            "org.gnome.SettingsDaemon.DateTimeMechanism",
--                            "/",                            
--                            "org.gnome.SettingsDaemon.DateTimeMechanism",
+-                            "org.freedesktop.timedate1",
+-                            "/org/freedesktop/timedate1",
+-                            "org.freedesktop.timedate1",
 -                            NULL, (GAsyncReadyCallback)proxy_ready, self);
 -
 -  /* Grab proxy for datetime service, to see if it's running.  It would
@@ -1260,21 +1230,11 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
  
  #undef WIG
  
-@@ -790,47 +198,6 @@
+@@ -765,37 +198,6 @@
    IndicatorDatetimePanelPrivate * priv = self->priv;
  
    g_clear_object (&priv->builder);
 -  g_clear_object (&priv->proxy);
--
--  if (priv->tz_query_cancel != NULL) {
--    g_cancellable_cancel (priv->tz_query_cancel);
--    g_clear_object (&priv->tz_query_cancel);
--  }
--
--  if (priv->ntp_query_cancel != NULL) {
--    g_cancellable_cancel (priv->ntp_query_cancel);
--    g_clear_object (&priv->ntp_query_cancel);
--  }
 -
 -  if (priv->loc_dlg) {
 -    gtk_widget_destroy (priv->loc_dlg);
@@ -1308,9 +1268,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs.c indi
  
    G_OBJECT_CLASS (indicator_datetime_panel_parent_class)->dispose (object);
  }
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs-locations.c indicator-datetime-12.10.3daily12.11.23/src/datetime-prefs-locations.c
---- indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs-locations.c	2013-01-07 18:51:44.746208333 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/datetime-prefs-locations.c	1969-12-31 19:00:00.000000000 -0500
+--- a/src/datetime-prefs-locations.c
++++ b/src/datetime-prefs-locations.c
 @@ -1,673 +0,0 @@
 -/* -*- Mode: C; coding: utf-8; indent-tabs-mode: nil; tab-width: 2 -*-
 -
@@ -1985,9 +1944,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs-locati
 -  return dlg;
 -}
 -
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs-locations.h indicator-datetime-12.10.3daily12.11.23/src/datetime-prefs-locations.h
---- indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs-locations.h	2013-01-07 18:51:44.746208333 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/datetime-prefs-locations.h	1969-12-31 19:00:00.000000000 -0500
+--- a/src/datetime-prefs-locations.h
++++ b/src/datetime-prefs-locations.h
 @@ -1,35 +0,0 @@
 -/* -*- Mode: C; coding: utf-8; indent-tabs-mode: nil; tab-width: 2 -*-
 -
@@ -2024,9 +1982,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-prefs-locati
 -G_END_DECLS
 -
 -#endif
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c indicator-datetime-12.10.3daily12.11.23/src/datetime-service.c
---- indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c	2013-01-07 18:52:21.219350731 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/datetime-service.c	2013-01-07 19:14:53.365664497 -0500
+--- a/src/datetime-service.c
++++ b/src/datetime-service.c
 @@ -35,9 +35,6 @@
  #include <libdbusmenu-glib/client.h>
  #include <libdbusmenu-glib/menuitem.h>
@@ -2235,7 +2192,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
 -  GVariant * answers = g_dbus_proxy_call_finish (G_DBUS_PROXY (object), res, &error);
 -
 -  if (error != NULL) {
--    g_warning("Could not set timezone for SettingsDaemon: %s", error->message);
+-    g_warning("Could not set timezone using timedated: %s", error->message);
 -    g_clear_error (&error);
 -    return;
 -  }
@@ -2251,13 +2208,13 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
 -	GDBusProxy * proxy = g_dbus_proxy_new_for_bus_finish (res, &error);
 -
 -	if (error != NULL) {
--		g_warning("Could not grab DBus proxy for SettingsDaemon: %s", error->message);
+-		g_warning("Could not grab DBus proxy for timedated: %s", error->message);
 -		g_clear_error (&error);
 -		g_free (zone);
 -		return;
 -	}
 -
--	g_dbus_proxy_call (proxy, "SetTimezone", g_variant_new ("(s)", zone),
+-	g_dbus_proxy_call (proxy, "SetTimezone", g_variant_new ("(sb)", zone, TRUE),
 -	                   G_DBUS_CALL_FLAGS_NONE, -1, NULL, quick_set_tz_cb, NULL);
 -	g_free (zone);
 -	g_object_unref (proxy);
@@ -2281,15 +2238,15 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
 -	g_object_unref (conf);
 -
 -	g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM, G_DBUS_PROXY_FLAGS_NONE, NULL,
--	                          "org.gnome.SettingsDaemon.DateTimeMechanism",
--	                          "/",                            
--	                          "org.gnome.SettingsDaemon.DateTimeMechanism",
+-	                          "org.freedesktop.timedate1",
+-	                          "/org/freedesktop/timedate1",
+-	                          "org.freedesktop.timedate1",
 -	                          NULL, quick_set_tz_proxy_cb, g_strdup (tz));
 -
  	return;
  }
  
-@@ -987,13 +771,6 @@
+@@ -989,13 +773,6 @@
  }
  
  static void
@@ -2303,7 +2260,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
  time_format_changed (void)
  {
  	update_appointment_menu_items(NULL);
-@@ -1033,11 +810,6 @@
+@@ -1035,11 +812,6 @@
  		dbusmenu_menuitem_property_set_bool (locations_separator, DBUSMENU_MENUITEM_PROP_VISIBLE, FALSE);
  		dbusmenu_menuitem_child_append(root, locations_separator);
  
@@ -2315,7 +2272,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
  		g_signal_connect (conf, "changed::" SETTINGS_SHOW_EVENTS_S, G_CALLBACK (show_events_changed), NULL);
  		g_signal_connect (conf, "changed::" SETTINGS_TIME_FORMAT_S, G_CALLBACK (time_format_changed), NULL);
  
-@@ -1195,177 +967,6 @@
+@@ -1197,177 +969,6 @@
  }
  
  
@@ -2493,7 +2450,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
  static gboolean
  get_greeter_mode (void)
  {
-@@ -1430,8 +1031,6 @@
+@@ -1447,8 +1048,6 @@
  
  	/* Set up GSettings */
  	conf = g_settings_new(SETTINGS_INTERFACE);
@@ -2502,7 +2459,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
  	// TODO Add a signal handler to catch other gsettings changes and respond to them
  
  	/* Build our list of appointment calendar sources.
-@@ -1457,10 +1056,6 @@
+@@ -1474,10 +1073,6 @@
  	/* Cache the timezone */
  	update_current_timezone();
  
@@ -2513,7 +2470,7 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
  	/* Setup dbus interface */
  	dbus = g_object_new(DATETIME_INTERFACE_TYPE, NULL);
  
-@@ -1498,7 +1093,5 @@
+@@ -1515,7 +1110,5 @@
  
  	icaltimezone_free_builtin_timezones();
  
@@ -2521,18 +2478,16 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/datetime-service.c in
 -
  	return 0;
  }
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/dbus-shared.h indicator-datetime-12.10.3daily12.11.23/src/dbus-shared.h
---- indicator-datetime-12.10.3daily12.11.23.orig/src/dbus-shared.h	2013-01-07 18:51:44.746208333 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/dbus-shared.h	2013-01-07 18:55:46.348286598 -0500
+--- a/src/dbus-shared.h
++++ b/src/dbus-shared.h
 @@ -38,5 +38,4 @@
  
  #define TIMEZONE_MENUITEM_TYPE             "timezone-item"	
  #define TIMEZONE_MENUITEM_PROP_ZONE        "timezone-zone"	
 -#define TIMEZONE_MENUITEM_PROP_NAME        "timezone-name"
  #define TIMEZONE_MENUITEM_PROP_RADIO       "timezone-radio"
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/indicator-datetime.c indicator-datetime-12.10.3daily12.11.23/src/indicator-datetime.c
---- indicator-datetime-12.10.3daily12.11.23.orig/src/indicator-datetime.c	2013-01-07 18:51:44.746208333 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/indicator-datetime.c	2013-01-07 18:55:35.975007069 -0500
+--- a/src/indicator-datetime.c
++++ b/src/indicator-datetime.c
 @@ -1130,9 +1130,6 @@
  timezone_update_labels (indicator_item_t * mi_data)
  {
@@ -2552,9 +2507,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/indicator-datetime.c 
  	} else if (!g_strcmp0(prop, TIMEZONE_MENUITEM_PROP_RADIO)) {
  		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(mi_data->gmi), g_variant_get_boolean(value));
  	}
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/Makefile.am indicator-datetime-12.10.3daily12.11.23/src/Makefile.am
---- indicator-datetime-12.10.3daily12.11.23.orig/src/Makefile.am	2013-01-07 18:52:21.222684047 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/Makefile.am	2013-01-07 18:55:21.475082318 -0500
+--- a/src/Makefile.am
++++ b/src/Makefile.am
 @@ -54,8 +54,6 @@
  if BUILD_CCPANEL
  libindicator_datetime_la_SOURCES =\
@@ -2564,9 +2518,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/Makefile.am indicator
  	timedate1.c \
  	timedate1.h \
  	utils.c \
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/settings-shared.h indicator-datetime-12.10.3daily12.11.23/src/settings-shared.h
---- indicator-datetime-12.10.3daily12.11.23.orig/src/settings-shared.h	2013-01-07 18:51:44.746208333 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/settings-shared.h	2013-01-07 18:55:10.225140733 -0500
+--- a/src/settings-shared.h
++++ b/src/settings-shared.h
 @@ -32,10 +32,6 @@
  #define SETTINGS_SHOW_CALENDAR_S        "show-calendar"
  #define SETTINGS_SHOW_WEEK_NUMBERS_S    "show-week-numbers"
@@ -2578,9 +2531,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/settings-shared.h ind
  
  enum {
  	SETTINGS_TIME_LOCALE = 0,
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/utils.c indicator-datetime-12.10.3daily12.11.23/src/utils.c
---- indicator-datetime-12.10.3daily12.11.23.orig/src/utils.c	2013-01-07 18:52:21.222684047 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/utils.c	2013-01-07 18:54:58.565201305 -0500
+--- a/src/utils.c
++++ b/src/utils.c
 @@ -51,73 +51,6 @@
  	return TRUE;
  }
@@ -2655,9 +2607,8 @@ diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/utils.c indicator-dat
  gchar *
  read_timezone ()
  {
-diff -Nru indicator-datetime-12.10.3daily12.11.23.orig/src/utils.h indicator-datetime-12.10.3daily12.11.23/src/utils.h
---- indicator-datetime-12.10.3daily12.11.23.orig/src/utils.h	2013-01-07 18:51:44.742875017 -0500
-+++ indicator-datetime-12.10.3daily12.11.23/src/utils.h	2013-01-07 18:54:46.245265282 -0500
+--- a/src/utils.h
++++ b/src/utils.h
 @@ -28,8 +28,6 @@
  G_BEGIN_DECLS
  

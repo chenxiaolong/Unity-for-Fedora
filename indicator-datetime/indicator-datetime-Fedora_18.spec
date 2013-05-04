@@ -1,7 +1,9 @@
 # Written by: Xiao-Long Chen <chenxiaolong@cxl.epac.to>
 
+%define _translations 20130418
+
 Name:		indicator-datetime
-Version:	12.10.3daily13.01.25
+Version:	12.10.3daily13.03.26
 Release:	1%{?dist}
 Summary:	Indicator for displaying the date and time
 
@@ -10,9 +12,12 @@ License:	GPLv3
 URL:		https://launchpad.net/indicator-datetime
 Source0:	https://launchpad.net/ubuntu/+archive/primary/+files/indicator-datetime_%{version}.orig.tar.gz
 
+Source98:	https://dl.dropboxusercontent.com/u/486665/Translations/translations-%{_translations}-indicator-datetime.tar.gz
+
 Patch1:		0001_Port_to_systemd_timedated.patch
 Patch2:		0002_Remove_timezone_functionality.patch
-Patch3:		revert_r201.patch
+Patch3:		0003_Link_pthread.patch
+Patch4:		revert_r201.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -57,7 +62,20 @@ panel.
 # - Removes ability to changes timezone based on physical location
 %patch2 -p1 -b .timezone
 
-%patch3 -p0
+# Tests need to link against pthread
+%patch3 -p1 -b .pthread
+
+%patch4 -p0
+
+mkdir po_new
+tar zxvf '%{SOURCE98}' -C po_new
+rm -f po/LINGUAS po/*.pot
+mv po_new/po/*.pot po/
+for i in po_new/po/*.po; do
+  FILE=$(sed -n "s|.*/%{name}-||p" <<< ${i})
+  mv ${i} po/${FILE}
+  echo ${FILE%.*} >> po/LINGUAS
+done
 
 autoreconf -vfi
 intltoolize -f
@@ -102,6 +120,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Fri May 03 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily13.03.26-1
+- Version 12.10.3daily13.03.26
+
 * Mon Jan 28 2013 Xiao-Long Chen <chenxiaolong@cxl.epac.to> - 12.10.3daily13.01.25-1
 - Version 12.10.3daily13.01.25
 
